@@ -140,7 +140,14 @@ nav .wrap { display: flex; justify-content: space-between; align-items: baseline
    .plate     one tetrad, pushed back along z by the 3.3 A rise
    .badge     the Na+ label, counter-rotated so it always faces you
 ------------------------------------ */
-.motif-col { position: relative; display: flex; justify-content: center; }
+.motif-col {
+  position: relative;
+  display: flex; justify-content: center;
+  /* Sized to the figure, not stretched to the grid track. When this stretched,
+     left:50% on the caption was the column's centre rather than the tetrad's. */
+  justify-self: center;
+  width: max-content;
+}
 
 .tilt {
   perspective: 1250px;
@@ -189,8 +196,12 @@ nav .wrap { display: flex; justify-content: space-between; align-items: baseline
 .js .plate--front { opacity: var(--on, 1); }
 
 /* every tetrad behind the front one is hidden until you tilt */
+/* Depth falloff moved off the plate and onto --dim, which the skeleton, the
+   nitrogens and the H-bonds read inside the tetrad. The plate itself only
+   handles reveal and intro gating, so the O6 oxygens, which sit outside the
+   dimming group, stay as red on the last tetrad as on the first. */
 .plate--deep {
-  opacity: calc(var(--o, 0.5) * var(--reveal, 0) * var(--on, 1));
+  opacity: calc(var(--reveal, 0) * var(--on, 1));
   transition: opacity 0.28s ease;
 }
 
@@ -211,28 +222,52 @@ nav .wrap { display: flex; justify-content: space-between; align-items: baseline
 .motif-caption {
   /* Out of flow, so the column's height is the figure alone and the names
      centre on the tetrad rather than on figure-plus-caption. */
-  position: absolute; top: 100%; left: 50%;
-  transform: translateX(-50%);
-  width: max-content; max-width: 90vw;
-  margin-top: 1.1rem;
+  position: absolute; top: 100%;
+  /* --cap-x nudges the block off the tetrad's centre line. Negative moves left.
+     Set it to 0 to sit dead centre under the figure.
+
+     This uses the independent `translate` property, NOT transform. The `rise`
+     animation ends on `transform: none` with fill-mode forwards, and a filled
+     animation value beats the rule's own declaration, so a transform here would
+     be silently cancelled the moment the intro finished. */
+  left: 50%;
+  --cap-x: 0rem;
+  translate: calc(-50% + var(--cap-x)) 0;
+  /* max-content, not 100%. Absolute 100% resolves against .motif-col (figure
+     width), which is narrower than the longest caption line, so the text
+     overflowed its own centred box. Hugging the content fixes the centring. */
+  width: max-content; max-width: min(92vw, 34rem);
+  margin-top: 1.25rem;
   font-family: var(--mono);
   font-size: 0.64rem; letter-spacing: 0.14em;
   text-transform: uppercase; color: var(--muted);
-  text-align: center; line-height: 1.8;
+  text-align: center; line-height: 1.85;
+  /* letter-spacing adds a trailing gap after the last character of every line,
+     which biases centred text left by half that gap. Padding the box shifts all
+     lines together; text-indent would only move the first one. */
+  padding-left: 0.14em;
   opacity: 0; animation: rise 1s ease forwards 1.4s;
 }
-.motif-caption em {
-  font-family: var(--serif); font-style: italic;
-  font-size: 0.9rem; letter-spacing: 0;
-  text-transform: none; color: var(--accent);
+/* Each line is its own block, so each centres on its own width. No <br>, so
+   nothing depends on where a line happens to break. The trailing gap that
+   letter-spacing leaves after the last character is clipped off on the right,
+   which is what pulled centred lines off-centre. */
+.motif-caption .line {
+  display: block;
+  margin-right: -0.14em;
 }
-.motif-caption .hint {
-  display: block; margin-top: 0.5rem;
-  color: var(--accent); opacity: 0.75; font-size: 0.62rem;
+.motif-caption em {
+  display: block; margin-top: 0.4rem;
+  font-family: var(--serif); font-style: italic;
+  font-size: 0.92rem; letter-spacing: 0;
+  text-transform: none; color: var(--muted); opacity: 0.85;
 }
 
 .hero-foot {
-  text-align: center; margin-top: 4.25rem;   /* clears the out-of-flow caption */
+  /* The caption is out of flow, so this margin is the only thing keeping the
+     tagline off it. Measured against the caption's real stack height (~83px
+     now the hint line is gone), not guessed. */
+  text-align: center; margin-top: 6.75rem;
   opacity: 0; animation: rise 1s ease forwards 0.9s;
 }
 .tagline {
@@ -251,12 +286,6 @@ nav .wrap { display: flex; justify-content: space-between; align-items: baseline
 section { padding: 5.5rem 0; border-bottom: 1px solid var(--rule); }
 section:last-of-type { border-bottom: none; }
 
-.section-label {
-  font-family: var(--mono); font-size: 0.72rem;
-  letter-spacing: 0.18em; text-transform: uppercase;
-  color: var(--muted); display: block; margin-bottom: 2rem;
-}
-.section-label .accent { color: var(--accent); }
 
 h2 {
   font-family: var(--serif);
@@ -429,7 +458,8 @@ footer .signoff em {
   .name-l { order: 1; } .motif-col { order: 2; } .name-r { order: 3; }
   .name { font-size: clamp(2.9rem, 14vw, 4.6rem); line-height: 1.05; }
   .tilt { width: min(66vw, 300px); }
-  .hero-foot { margin-top: 4.5rem; }
+  .motif-caption { --cap-x: 0rem; }   /* stacked layout, so centre it */
+  .hero-foot { margin-top: 6.25rem; }   /* clears the out-of-flow caption */
   .about-grid { grid-template-columns: 1fr; gap: 2.75rem; }
   .portrait { max-width: 380px; }
   .triptych { grid-template-columns: 1fr; gap: 2.5rem; }
@@ -438,7 +468,6 @@ footer .signoff em {
   .wrap, .wrap-hero { padding: 0 1.5rem; }
   section { padding: 4rem 0; }
   .hero { padding: 2.5rem 0 4rem; }
-  .hero-foot { margin-top: 2.5rem; }
 }
 @media (max-width: 520px) {
   .nav-links { gap: 1.25rem; }
@@ -493,7 +522,7 @@ footer .signoff em {
     -->
     <g id="gua">
       <g fill="none" stroke="currentColor" stroke-width="1.15"
-         stroke-linecap="round" stroke-linejoin="round">
+         stroke-linecap="round" stroke-linejoin="round" style="opacity:var(--dim,1)">
         <polygon points="-11,0 -5.5,9.53 5.5,9.53 11,0 5.5,-9.53 -5.5,-9.53"/>
         <polyline points="11,0 21.759,-2.29 22.908,-13.23 12.859,-17.704 5.5,-9.53"/>
         <!-- C6=O6 carbonyl, the atom that grips the ion -->
@@ -508,21 +537,27 @@ footer .signoff em {
         <line x1="7.735" y1="-0.656" x2="4.435" y2="-6.374"/>
         <line x1="13.934" y1="-14.708" x2="19.963" y2="-12.024"/>
       </g>
-      <!-- heteroatoms: nitrogens in ink, the O6 oxygen in red -->
-      <g stroke="none">
+      <!-- nitrogens recede with the rest of the skeleton -->
+      <g stroke="none" style="opacity:var(--dim,1)">
         <circle cx="-11"    cy="0"      r="1.7" fill="currentColor"/> <!-- N1 -->
         <circle cx="5.5"    cy="9.53"   r="1.7" fill="currentColor"/> <!-- N3 -->
         <circle cx="12.859" cy="-17.704" r="1.7" fill="currentColor"/> <!-- N7 -->
         <circle cx="21.759" cy="-2.29"  r="1.7" fill="currentColor"/> <!-- N9 -->
         <circle cx="-11"    cy="19.06"  r="1.7" fill="currentColor"/> <!-- N2 -->
-        <circle cx="-11"    cy="-19.06" r="2.5" fill="#AE3A22"/>      <!-- O6, oxygen -->
+      </g>
+      <!-- O6 sits outside the dimming group. These are the atoms that grip the
+           ion, so they stay full strength all the way down the wire and the
+           coordination column reads as one continuous red thread. -->
+      <g stroke="none">
+        <circle cx="-11" cy="-19.06" r="2.5" fill="#AE3A22"/>
       </g>
     </g>
 
     <!-- Cyclic Hoogsteen pairing: N1-H donates to the next base's O6,
          N2-H donates to that same base's N7. Repeats four times. -->
     <g id="hbond" stroke="#2E5D57" stroke-width="0.9"
-       stroke-dasharray="2 2.4" stroke-linecap="round" fill="none">
+       stroke-dasharray="2 2.4" stroke-linecap="round" fill="none"
+       style="opacity:var(--dim,1)">
       <line x1="90.617" y1="128.340" x2="82.861" y2="109.581"/>
       <line x1="76.491" y1="142.155" x2="65.679" y2="125.155"/>
     </g>
@@ -633,11 +668,11 @@ footer .signoff em {
           </div>
         </div>
 
-        <p class="motif-caption">
-          G-wire down the c-axis &middot; Na&#8314; in the channel &middot; 3.3 &#8491; rise, 30&deg; twist<br>
-          14 tetrads, one full helical turn &middot; <em>Chapter I</em>
-          <span class="hint" id="hint">&#8598; move your cursor to tilt the fibril</span>
-        </p>
+        <div class="motif-caption">
+          <span class="line">G-wire down the c-axis &middot; Na&#8314; in the channel</span>
+          <span class="line">3.3 &#8491; rise, 30&deg; twist per tetrad &middot; 14 tetrads total</span>
+          <em>Chapter I</em>
+        </div>
       </div>
 
       <div class="name name-r"><span class="j">J</span>ibrin</div>
@@ -653,7 +688,6 @@ footer .signoff em {
 
 <section id="about">
   <div class="wrap">
-    <span class="section-label"><span class="accent">&sect;</span> 01 &nbsp;/&nbsp; About</span>
     <h2>How life leaves its fingerprint on the minerals it makes.</h2>
 
     <div class="about-grid">
@@ -677,7 +711,6 @@ footer .signoff em {
 
 <section id="research">
   <div class="wrap">
-    <span class="section-label"><span class="accent">&sect;</span> 02 &nbsp;/&nbsp; Research</span>
     <h2>Three scales of biosignature.</h2>
     <div class="prose">
       <p>My dissertation reads biosignatures across the scales at which minerals record them, from the moment molecules first assemble in prebiotic brines to the way whole crystals align in a biomineralized tissue.</p>
@@ -708,7 +741,6 @@ footer .signoff em {
 
 <section id="writing">
   <div class="wrap">
-    <span class="section-label"><span class="accent">&sect;</span> 03 &nbsp;/&nbsp; Selected writing</span>
     <h2>Manuscripts, proposals, and talks.</h2>
     <ul class="writing-list">
 
@@ -885,7 +917,6 @@ footer .signoff em {
 
 <section id="elsewhere">
   <div class="wrap">
-    <span class="section-label"><span class="accent">&sect;</span> 04 &nbsp;/&nbsp; Elsewhere</span>
     <h2>Reach out.</h2>
     <div class="elsewhere">
       <a href="mailto:REPLACE_ME@rutgers.edu">
@@ -947,7 +978,6 @@ footer .signoff em {
   var front   = document.getElementById('plate0');
   var badge   = document.getElementById('badge');
   var hero    = document.getElementById('hero');
-  var hint    = document.getElementById('hint');
   if (!tilt || !fibril || !spin || !front || !channel) return;
 
   document.documentElement.classList.add('js');
@@ -992,7 +1022,7 @@ footer .signoff em {
     var p = document.createElement('div');
     p.className = 'plate plate--deep';
     p.dataset.k = k;
-    p.style.setProperty('--o', o);
+    p.style.setProperty('--dim', o);   // skeleton fades; O6 oxygens do not
     p.innerHTML =
       '<svg viewBox="26 26 148 148" aria-hidden="true" focusable="false">' +
         '<use href="#tetrad"></use>' +
@@ -1077,7 +1107,6 @@ footer .signoff em {
     else {
       // No pointer to follow, so hold a fixed three-quarter view.
       aim(-16, 13); reveal(0.8); setSpin(0.8);
-      if (hint) hint.textContent = 'stacked tetrads, seen off-axis';
     }
   }
 
