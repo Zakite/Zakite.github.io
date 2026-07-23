@@ -3,27 +3,35 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zak Jibrin — Earth and Planetary Sciences, Rutgers</title>
+<title>Zak Jibrin &middot; Earth and Planetary Sciences, Rutgers</title>
 <meta name="description" content="Zakaria (Zak) Jibrin, PhD candidate in Earth and Planetary Sciences at Rutgers University. Reading biology in the deviations of mineral lattices.">
 
 <!--
   index.html for Zak Jibrin's github.io site.
-  Drop this at the root of your username.github.io repo, next to zak.jpg and cv.pdf.
-  Things to fill in are marked REPLACE_ME.
+  Single self-contained file. Drop it at the root of your username.github.io repo,
+  next to zak.jpg and cv.pdf. Placeholders to fill are marked REPLACE_ME.
 -->
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..700,0..100,0..1;1,9..144,300..700,0..100,0..1&family=Lora:ital,wght@0,400..600;1,400..600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..700,0..100,0..1;1,9..144,300..700,0..100,0..1&family=Lora:ital,wght@0,400..600;1,400..600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Permanent+Marker&display=swap" rel="stylesheet">
 
 <style>
 :root {
+  /* The whole layout is scaled to 70%, which is the size it was designed to
+     read at. zoom reflows and stays crisp, the way Chrome's own page zoom does,
+     unlike transform: scale which would leave gaps and blur. */
+  zoom: 0.7;
+  /* Cool paper white rather than limestone beige. The neutrals carry a faint
+     green-grey cast so they sit under the verdigris accent instead of fighting
+     it, and the ink is cooled to match. */
   --bg: #EDE7DA;
-  --bg-warm: #E4DCC9;
-  --ink: #1C1A18;
-  --muted: #75706A;
-  --rule: #C4BCAE;
-  --accent: #2E5D57;
+  --bg-warm: #E4DCC9;   /* the recessed tone: hover fills, alternating bands */
+  --ink: #16191A;
+  --muted: #555555;
+  --rule: #B8BFBD;
+  --accent: #007A74;   /* #00FFF1 hue at the intensity the verdigris carried;
+                          the literal neon is 1.17:1 here and vanishes */
   --oxy: #AE3A22;   /* oxygen, CPK red pulled toward hematite for the palette */
 
   --serif: 'Fraunces', Georgia, serif;
@@ -36,7 +44,7 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+html { font-size: 23px; scroll-behavior: smooth; background: #FFFFFF; }
 
 body {
   background: var(--bg);
@@ -47,6 +55,7 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
+  margin-inline: 9vw;   /* white gutters on left and right; the whole page becomes a centered column */
 }
 
 ::selection { background: var(--accent); color: var(--bg); }
@@ -59,7 +68,7 @@ nav {
   padding: 1.4rem 0;
   border-bottom: 1px solid var(--rule);
   position: sticky; top: 0; z-index: 20;
-  background: rgba(237, 231, 218, 0.88);
+  background: rgba(237, 231, 218, 0.82);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
@@ -75,11 +84,71 @@ nav .wrap { display: flex; justify-content: space-between; align-items: baseline
 .brand em { font-style: italic; color: var(--accent); font-weight: 400; }
 .nav-links { display: flex; gap: 2rem; list-style: none; }
 .nav-links a {
+  position: relative;
   color: var(--muted); text-decoration: none;
-  font-size: 0.85rem; font-weight: 500;
-  transition: color 0.2s ease;
+  font-size: 0.85rem; font-weight: 600;
+  transition: color 0.25s ease;
+}
+/* coordination bond: a dashed cyan line that grows in just above the word,
+   echoing the Hoogsteen and Na-O6 bonds in the fibril */
+.nav-links a::after {
+  content: "";
+  position: absolute; left: 0; top: -9px;
+  height: 2px; width: 0;
+  background: repeating-linear-gradient(90deg,
+              var(--accent) 0 3px, transparent 3px 6px);
+  transition: width 0.42s cubic-bezier(.2,.8,.2,1);
+}
+/* the ion: nucleates and migrates just above the word, laying the bond
+   behind it. Same gradient as the sodium spheres in the hero. */
+.nav-links a::before {
+  content: "";
+  position: absolute; left: 0; top: -12px;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: radial-gradient(circle at 32% 26%,
+              #A7FFFA 0%, #2AFFF3 22%, #00B7AD 55%, #00645F 100%);
+  box-shadow: 0 0 7px rgba(0, 255, 241, 0.7);
+  opacity: 0; transform: scale(0.2);
+  transition: left 0.42s cubic-bezier(.2,.8,.2,1),
+              transform 0.3s cubic-bezier(.2,.8,.2,1),
+              opacity 0.25s ease;
 }
 .nav-links a:hover, .nav-links a:focus-visible { color: var(--accent); outline: none; }
+.nav-links a:hover::after, .nav-links a:focus-visible::after { width: 100%; }
+.nav-links a:hover::before, .nav-links a:focus-visible::before {
+  left: calc(100% - 8px); opacity: 1; transform: scale(1);
+}
+/* where the ion attaches, a faceted crystal nucleates: particle attachment,
+   in miniature, tying the nav to the CPA figure below */
+.nav-links a i.xtal {
+  position: absolute; right: 4px; top: -13px;
+  width: 10px; height: 10px; pointer-events: none;
+  opacity: 0; transform: scale(0) rotate(-45deg);
+  transition: opacity 0.18s ease, transform 0.32s cubic-bezier(.3,1.5,.5,1);
+}
+.nav-links a i.xtal::before {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(135deg, #39E6DC, #00A69C 55%, #00615C);
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+  box-shadow: 0 0 6px rgba(0, 255, 241, 0.55);
+}
+.nav-links a:hover i.xtal, .nav-links a:focus-visible i.xtal {
+  opacity: 1; transform: scale(1) rotate(0deg);
+  transition-delay: 0.34s, 0.34s;   /* waits for the ion to arrive */
+}
+/* the crystal then organizes into a real biomineral. ion -> crystal ->
+   organism, a different mineralized creature per link, no repeats. */
+.nav-links a i.bio {
+  position: absolute; right: -20px; top: -20px;
+  width: 30px; height: 30px; pointer-events: none;
+  opacity: 0; transform: scale(0.2) rotate(-12deg);
+  transition: opacity 0.24s ease, transform 0.44s cubic-bezier(.3,1.3,.5,1);
+}
+.nav-links a i.bio svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.nav-links a:hover i.bio, .nav-links a:focus-visible i.bio {
+  opacity: 1; transform: scale(1) rotate(0deg);
+  transition-delay: 0.6s, 0.6s;     /* the organism forms last */
+}
 
 /* ---------- Hero ---------- */
 .hero {
@@ -90,7 +159,7 @@ nav .wrap { display: flex; justify-content: space-between; align-items: baseline
 
 .eyebrow {
   font-family: var(--mono);
-  font-size: 0.7rem; letter-spacing: 0.2em;
+  font-size: 0.7rem; letter-spacing: 0.2em; font-weight: 600;
   text-transform: uppercase; color: var(--muted);
   display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
   gap: 0.8rem; margin-bottom: 1.5rem;
@@ -133,6 +202,57 @@ nav .wrap { display: flex; justify-content: space-between; align-items: baseline
 @keyframes slide-l { from { opacity: 0; transform: translateX(1.5rem);  } to { opacity: 1; transform: none; } }
 @keyframes rise    { from { opacity: 0; transform: translateY(0.6rem);  } to { opacity: 1; transform: none; } }
 
+/* The entire Z is a hidden button. It reads as a plain letter until hovered,
+   then lights up in the accent cyan. Font settings inherit so it matches "ak". */
+.secret-z {
+  font: inherit;
+  font-variation-settings: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  display: inline;
+  position: relative;
+  cursor: pointer;
+  transition: color 0.25s ease, text-shadow 0.3s ease;
+}
+.secret-z:hover, .secret-z:focus-visible {
+  color: var(--accent);
+  text-shadow: 0 0 22px rgba(0, 255, 241, 0.6),
+               0 0 6px rgba(0, 255, 241, 0.45);
+  outline: none;
+}
+/* a ghost tags "Chz" over the Z a second into the hover: faint blue graffiti
+   that blurs in like drying spray paint, hinting at the Cheez-It underneath */
+.secret-z::after {
+  content: "Chz";
+  position: absolute;
+  right: 108%; top: 50%;
+  transform: translate(10px, -50%) rotate(-8deg) scale(0.96);
+  font-family: "Permanent Marker", "Bradley Hand", cursive;
+  font-variation-settings: normal;
+  font-size: 0.5em; font-weight: 400; letter-spacing: 0.01em;
+  white-space: nowrap; pointer-events: none;
+  color: #55D8FF;
+  text-shadow: 0 0 4px rgba(0, 200, 255, 0.55),
+               0 0 9px rgba(0, 170, 255, 0.35);
+  opacity: 0; filter: blur(1.2px);
+  transition: opacity 0.6s ease, filter 0.6s ease, transform 0.6s cubic-bezier(.2,.9,.3,1);
+}
+.secret-z:hover::after, .secret-z:focus-visible::after {
+  opacity: 0.9; filter: blur(0);
+  transform: translate(0, -50%) rotate(-8deg) scale(1);
+  transition-delay: 1s;   /* the one-second wait before the ghost tags it */
+}
+@media (prefers-reduced-motion: reduce) {
+  .secret-z::after { transition: opacity 0.4s ease; filter: none; transform: translate(0,-50%) rotate(-8deg); }
+}
+
 /* ---------- The fibril ----------
    .tilt      camera, holds the perspective
    .fibril    tilted by the pointer, real 3D
@@ -150,11 +270,17 @@ nav .wrap { display: flex; justify-content: space-between; align-items: baseline
 }
 
 .tilt {
-  perspective: 1250px;
+  perspective: 875px;                  /* 1250 x 0.7, to match the reduced size below */
   /* viewBox is cropped to the artwork, so this box is almost all molecule */
-  width: clamp(230px, 26vw, 340px);
+  width: clamp(161px, 18.2vw, 238px);  /* the design size x 0.7 */
   aspect-ratio: 1;
   position: relative;
+  /* The page is scaled to 70% via zoom on :root. Fractional zoom distorts an
+     ancestor's 3D perspective in Chrome, which was warping the tilting tetrad.
+     This cancels the zoom on the 3D scene only (0.7 x 1.4286 = 1.0), so the
+     perspective renders at true scale with no warp, while the reduced width and
+     perspective above keep the molecule visually at 70% like everything else. */
+  zoom: 1.4285714;
 }
 
 .fibril {
@@ -263,6 +389,40 @@ nav .wrap { display: flex; justify-content: space-between; align-items: baseline
   text-transform: none; color: var(--muted); opacity: 0.85;
 }
 
+/* ---- secret Z: flip the tetrad into a Cheez-It, toggled by the Z button ---- */
+/* The Cheez-It is the fibril itself: every plate carries both a tetrad and a
+   cracker tile, and toggling swaps which one shows. Spin, pointer-tilt, and the
+   stacked layers are the exact same machinery, so the crackers stack, spin, and
+   tilt identically. The sodium channel and Na label hide, since crackers have
+   neither. */
+.asCheezit { display: none; }
+.cheezit-on .asTetrad { display: none; }
+.cheezit-on .asCheezit { display: inline; }
+.channel { transition: opacity 0.4s ease; }
+.cheezit-on .channel { opacity: 0; }
+.cheezit-on .badge { opacity: 0 !important; }
+.cheez-cap {
+  position: absolute; top: 100%; left: 50%;
+  translate: -50% 0;
+  width: max-content; max-width: min(92vw, 34rem);
+  margin-top: 1.25rem;
+  font-family: var(--mono);
+  font-size: 0.64rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted); text-align: center; line-height: 1.85;
+  padding-left: 0.14em;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.42s ease;
+}
+.cheez-cap .line { display: block; margin-right: -0.14em; }
+.cheez-cap em {
+  display: block; margin-top: 0.4rem;
+  font-family: var(--serif); font-style: italic;
+  font-size: 0.92rem; letter-spacing: 0; text-transform: none;
+  color: var(--accent);
+}
+.cheezit-on .motif-caption { opacity: 0 !important; }
+.cheezit-on .cheez-cap { opacity: 1; }
+
 .hero-foot {
   /* The caption is out of flow, so this margin is the only thing keeping the
      tagline off it. Measured against the caption's real stack height (~83px
@@ -278,7 +438,7 @@ nav .wrap { display: flex; justify-content: space-between; align-items: baseline
   line-height: 1.3; margin: 0 auto 1rem; max-width: 24ch;
 }
 .subtitle {
-  font-size: 0.97rem; color: var(--muted);
+  font-size: 0.97rem; color: #555;
   max-width: 54ch; margin: 0 auto; line-height: 1.65;
 }
 
@@ -289,9 +449,9 @@ section:last-of-type { border-bottom: none; }
 
 h2 {
   font-family: var(--serif);
-  font-variation-settings: "opsz" 96, "SOFT" 30, "wght" 400;
+  font-variation-settings: "opsz" 96, "SOFT" 30, "wght" 500;
   font-size: clamp(2rem, 4.5vw, 3rem);
-  font-weight: 400; line-height: 1.05;
+  font-weight: 600; line-height: 1.05;
   letter-spacing: -0.02em; margin-bottom: 2rem; max-width: 20ch;
 }
 
@@ -327,9 +487,9 @@ h2 {
 }
 .portrait:hover img { filter: saturate(1) contrast(1.03); }
 .portrait figcaption {
-  font-family: var(--mono); font-size: 0.66rem;
+  font-family: var(--mono); font-size: 0.66rem; font-weight: 600;
   letter-spacing: 0.14em; text-transform: uppercase;
-  color: var(--muted); line-height: 1.7;
+  color: #555; line-height: 1.7;
   margin-top: 1.5rem; padding-top: 0.85rem;
   border-top: 1px solid var(--rule);
 }
@@ -337,7 +497,24 @@ h2 {
 
 /* ---------- Research ---------- */
 .triptych { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem; margin-top: 3rem; }
-.pillar { border-top: 1px solid var(--ink); padding-top: 1.25rem; }
+.pillar { border-top: 1px solid var(--ink); padding-top: 1.25rem; transition: transform 0.2s ease; }
+.pillar:hover {
+  transform: translateY(-2px);
+}
+.pillar::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.pillar:hover::before {
+  opacity: 0.6;
+}
 .pillar .roman {
   font-family: var(--serif); font-variation-settings: "opsz" 60;
   font-style: italic; font-size: 1.6rem; color: var(--accent);
@@ -345,11 +522,11 @@ h2 {
 }
 .pillar h3 {
   font-family: var(--serif);
-  font-variation-settings: "opsz" 36, "SOFT" 20, "wght" 500;
-  font-size: 1.4rem; font-weight: 500; line-height: 1.2;
+  font-variation-settings: "opsz" 36, "SOFT" 20, "wght" 600;
+  font-size: 1.4rem; font-weight: 600; line-height: 1.2;
   margin-bottom: 0.75rem; letter-spacing: -0.01em;
 }
-.pillar p { font-size: 0.95rem; color: var(--muted); line-height: 1.7; margin-bottom: 1rem; }
+.pillar p { font-size: 0.95rem; color: #444; line-height: 1.7; margin-bottom: 1rem; }
 .pillar .scale {
   font-family: var(--mono); font-size: 0.68rem;
   letter-spacing: 0.15em; text-transform: uppercase;
@@ -373,13 +550,30 @@ h2 {
 .fig {
   aspect-ratio: 4 / 3;
   border: 1px solid var(--rule);
-  background: rgba(255, 255, 255, 0.32);
+  /* Pure white, not translucent white. Against the old beige a 32% white wash
+     read as a lifted panel; against a near-white page it disappeared. */
+  background: #FFFFFF;
   color: var(--ink);
-  transition: border-color 0.25s ease, background 0.25s ease;
+  transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.3s ease;
+  position: relative;
+}
+.fig::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(0, 122, 116, 0.08) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  border-radius: 1px;
+}
+.writing-list li:hover .fig::before {
+  opacity: 1;
 }
 .writing-list li:hover .fig {
   border-color: var(--accent);
-  background: rgba(255, 255, 255, 0.62);
+  background: #FFFFFF;
+  box-shadow: 0 0 12px rgba(0, 122, 116, 0.15);
 }
 .fig svg { display: block; width: 100%; height: 100%; }
 .fig text {
@@ -392,17 +586,17 @@ h2 {
 .fig .acc { fill: var(--accent); }
 
 .entry-meta {
-  font-family: var(--mono); font-size: 0.68rem;
+  font-family: var(--mono); font-size: 0.68rem; font-weight: 600;
   letter-spacing: 0.16em; text-transform: uppercase;
-  color: var(--muted); display: block; margin-bottom: 0.8rem;
+  color: #666; display: block; margin-bottom: 0.8rem;
 }
 .entry-meta .venue { color: var(--accent); }
 .entry-meta .sep { opacity: 0.45; margin: 0 0.5rem; }
 
 .writing-list .title {
   font-family: var(--serif);
-  font-variation-settings: "opsz" 36, "wght" 500, "WONK" 0;
-  font-size: 1.25rem; font-weight: 500; line-height: 1.3;
+  font-variation-settings: "opsz" 36, "wght" 600, "WONK" 0;
+  font-size: 1.25rem; font-weight: 600; line-height: 1.3;
   letter-spacing: -0.008em; display: block;
 }
 .writing-list .sub {
@@ -421,19 +615,33 @@ h2 {
   display: block; padding: 1.5rem 1.25rem 1.5rem 0;
   color: var(--ink); text-decoration: none;
   border-bottom: 1px solid var(--rule);
-  transition: background 0.2s ease, padding-left 0.2s ease;
+  transition: background 0.2s ease, padding-left 0.2s ease, box-shadow 0.3s ease;
+  position: relative;
+}
+.elsewhere a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 15% 50%, rgba(0, 122, 116, 0.1) 0%, transparent 40%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.elsewhere a:hover::after {
+  opacity: 1;
 }
 .elsewhere a:hover, .elsewhere a:focus-visible {
   background: var(--bg-warm); padding-left: 0.75rem; outline: none;
+  box-shadow: inset 2px 0 0 var(--accent);
 }
 .elsewhere .label {
-  font-family: var(--mono); font-size: 0.68rem;
+  font-family: var(--mono); font-size: 0.68rem; font-weight: 600;
   letter-spacing: 0.16em; text-transform: uppercase;
-  color: var(--muted); display: block; margin-bottom: 0.4rem;
+  color: #666; display: block; margin-bottom: 0.4rem;
 }
 .elsewhere .link-text {
-  font-family: var(--serif); font-variation-settings: "opsz" 24, "wght" 500;
-  font-size: 1.15rem; font-weight: 500; transition: color 0.2s ease;
+  font-family: var(--serif); font-variation-settings: "opsz" 24, "wght" 600;
+  font-size: 1.15rem; font-weight: 600; transition: color 0.2s ease;
 }
 .elsewhere .arrow { color: var(--accent); display: inline-block; transition: transform 0.2s ease; }
 .elsewhere a:hover .link-text { color: var(--accent); }
@@ -443,7 +651,7 @@ h2 {
 footer {
   padding: 2.5rem 0 3rem; border-top: 1px solid var(--rule);
   font-family: var(--mono); font-size: 0.72rem;
-  color: var(--muted); letter-spacing: 0.05em;
+  color: #666; letter-spacing: 0.05em;
 }
 footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
 footer .signoff em {
@@ -451,13 +659,69 @@ footer .signoff em {
   font-size: 0.85rem; color: var(--accent); letter-spacing: 0;
 }
 
-/* ---------- Responsive ---------- */
+/* ---------- CPA figure ---------- */
+.cpa-fig {
+  margin: 3rem 0 0;
+  border: 1px solid #1A2436;
+  background: #080C15;
+  padding: 1.25rem 1.25rem 0.5rem;
+}
+.cpa-scroll { width: 100%; }
+.cpa-fig svg { display: block; width: 100%; height: auto; pointer-events: none; }
+.cpa-fig figcaption {
+  font-family: var(--serif); font-style: italic;
+  font-size: 0.95rem; color: #93A8BC; line-height: 1.55;
+  max-width: 70ch; margin: 1.25rem auto 1.25rem; text-align: center;
+}
+
+/* arcs draw themselves in when the figure enters view */
+.cpa-arcs .arc {
+  stroke-dasharray: var(--len, 1200);
+  stroke-dashoffset: var(--len, 1200);
+}
+.cpa-classic { stroke-dasharray: 2 5; opacity: 0; transition: opacity 0.6s ease; }
+.cpa-bulk { transform-box: fill-box; transform-origin: center; }
+
+/* label + pool fade */
+.cpa-labels text, .cpa-pool { opacity: 0; transition: opacity 0.7s ease; }
+
+/* the running state, toggled by script when scrolled into view */
+.cpa-run .cpa-pool { opacity: 1; }
+.cpa-run .cpa-labels text { opacity: 1; }
+.cpa-run .cpa-arcs .arc {
+  animation: cpa-draw 1.15s cubic-bezier(.3,.7,.3,1) forwards;
+  animation-delay: var(--d, 0s);
+}
+.cpa-run .cpa-classic { opacity: 1; transition-delay: 1s; }
+.cpa-run .cpa-progress-fill { animation: cpa-progress 2.4s ease-in-out forwards 0.6s; }
+.cpa-run .cpa-bulk { animation: cpa-grow 2.6s ease-out forwards; }
+
+
+@keyframes cpa-draw { to { stroke-dashoffset: 0; } }
+@keyframes cpa-progress { from { width: 0; } to { width: 701px; } }
+@keyframes cpa-grow {
+  0%   { transform: scale(0.72); }
+  70%  { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cpa-arcs .arc { stroke-dashoffset: 0; }
+  .cpa-pool, .cpa-labels text, .cpa-classic { opacity: 1; }
+  .cpa-run .cpa-arcs .arc, .cpa-run .cpa-progress-fill,
+  .cpa-run .cpa-bulk { animation: none; }
+  .cpa-progress-fill { width: 701px; }
+}
+
+
 @media (max-width: 900px) {
+  html { font-size: 20px; }
+  body { margin-inline: 4vw; }
   .stage { grid-template-columns: 1fr; justify-items: center; gap: 0.75rem; }
   .name-l, .name-r { text-align: center; }
   .name-l { order: 1; } .motif-col { order: 2; } .name-r { order: 3; }
   .name { font-size: clamp(2.9rem, 14vw, 4.6rem); line-height: 1.05; }
-  .tilt { width: min(66vw, 300px); }
+  .tilt { width: min(46.2vw, 210px); }
   .motif-caption { --cap-x: 0rem; }   /* stacked layout, so centre it */
   .hero-foot { margin-top: 6.25rem; }   /* clears the out-of-flow caption */
   .about-grid { grid-template-columns: 1fr; gap: 2.75rem; }
@@ -465,14 +729,40 @@ footer .signoff em {
   .triptych { grid-template-columns: 1fr; gap: 2.5rem; }
   .writing-list li { grid-template-columns: 1fr; gap: 1.5rem; padding: 2rem 0; }
   .fig { max-width: 300px; }
+  .writing-list .fig { max-width: none; }
   .wrap, .wrap-hero { padding: 0 1.5rem; }
   section { padding: 4rem 0; }
   .hero { padding: 2.5rem 0 4rem; }
 }
-@media (max-width: 520px) {
-  .nav-links { gap: 1.25rem; }
+@media (max-width: 600px) {
+  html { font-size: 18px; }
+  body { margin-inline: 3vw; }
+  /* stack the nav: brand on top, links wrapping and centred below */
+  nav { padding: 0.85rem 0; }
+  nav .wrap { flex-direction: column; align-items: center; gap: 0.5rem; }
+  .brand { font-size: 1.05rem; }
+  .nav-links { flex-wrap: wrap; justify-content: center; gap: 0.55rem 1.05rem; }
+  .nav-links a { font-size: 0.82rem; }
+  .name { font-size: clamp(2rem, 12vw, 3.2rem); }
+  section { padding: 3rem 0; }
+  .hero { padding: 2rem 0 3rem; }
+  .portrait { max-width: 320px; }
+  footer .wrap { flex-direction: column; align-items: flex-start; }
+  /* wide science figure scrolls sideways so its labels stay legible */
+  .cpa-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .cpa-fig svg { min-width: 600px; }
+}
+@media (max-width: 600px) {
+  .motif-col { flex-direction: column; align-items: center; }
+  .motif-caption, .cheez-cap { display: none; }   /* dense technical caption clutters phones */
+  .hero-foot { margin-top: 2.25rem; }
+}
+@media (max-width: 400px) {
+  html { font-size: 16px; }
+  body { margin-inline: 2vw; }
+  .name { font-size: clamp(1.7rem, 11.5vw, 2.6rem); }
+  .nav-links { gap: 0.5rem 0.85rem; }
   .nav-links a { font-size: 0.78rem; }
-  footer .wrap { flex-direction: column; }
 }
 
 /* ---------- Reduced motion: flat, still, one tetrad ---------- */
@@ -487,29 +777,57 @@ footer .signoff em {
 </head>
 <body>
 
-<!-- Geometry library. Hidden; every tetrad plate references #tetrad from here. -->
 <svg id="lib" width="0" height="0" aria-hidden="true" focusable="false"
      style="position:absolute;overflow:hidden">
   <defs>
     <radialGradient id="halo">
-      <stop offset="0%"   stop-color="#2E5D57" stop-opacity="0.30"/>
-      <stop offset="55%"  stop-color="#2E5D57" stop-opacity="0.09"/>
-      <stop offset="100%" stop-color="#2E5D57" stop-opacity="0"/>
+      <stop offset="0%"   stop-color="#00FFF1" stop-opacity="0.20"/>
+      <stop offset="55%"  stop-color="#00FFF1" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#00FFF1" stop-opacity="0"/>
     </radialGradient>
 
     <!-- Sodium as a lit sphere rather than a flat disc. Key light up and to the
          left, plus a weak bounce on the lower right; the bounce is what stops a
          shaded circle from reading as a coin. -->
     <radialGradient id="naBall" cx="32%" cy="26%" r="86%">
-      <stop offset="0%"   stop-color="#C2E4DA"/>
-      <stop offset="20%"  stop-color="#77B2A6"/>
-      <stop offset="50%"  stop-color="#3C7B72"/>
-      <stop offset="83%"  stop-color="#1F453F"/>
-      <stop offset="100%" stop-color="#112E2A"/>
+      <stop offset="0%"   stop-color="#A7FFFA"/>
+      <stop offset="20%"  stop-color="#2AFFF3"/>
+      <stop offset="50%"  stop-color="#00B7AD"/>
+      <stop offset="83%"  stop-color="#00645F"/>
+      <stop offset="100%" stop-color="#003F3C"/>
     </radialGradient>
     <radialGradient id="naRim" cx="72%" cy="78%" r="50%">
-      <stop offset="0%"   stop-color="#86CCBF" stop-opacity="0.55"/>
-      <stop offset="100%" stop-color="#86CCBF" stop-opacity="0"/>
+      <stop offset="0%"   stop-color="#53FFF6" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#53FFF6" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="oxBall" cx="35%" cy="30%" r="72%">
+      <stop offset="0%"   stop-color="#FFD8C4"/>
+      <stop offset="14%"  stop-color="#FF8266"/>
+      <stop offset="42%"  stop-color="#E0492C"/>
+      <stop offset="72%"  stop-color="#A82A15"/>
+      <stop offset="92%"  stop-color="#6E1808"/>
+      <stop offset="100%" stop-color="#4A0F05"/>
+    </radialGradient>
+    <radialGradient id="oxRim" cx="72%" cy="78%" r="50%">
+      <stop offset="0%"   stop-color="#FF9E86" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#FF9E86" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- fills for the mineralized organisms that grow in on nav hover -->
+    <linearGradient id="ammoF" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#EAFBF9"/><stop offset="55%" stop-color="#9FE3DC"/><stop offset="100%" stop-color="#5FC0B8"/>
+    </linearGradient>
+    <linearGradient id="toothF" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F2FEFD"/><stop offset="60%" stop-color="#C8EFEA"/><stop offset="100%" stop-color="#8AD3CC"/>
+    </linearGradient>
+    <linearGradient id="nautF" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#EAFBF9"/><stop offset="60%" stop-color="#A3E4DD"/><stop offset="100%" stop-color="#63C2BA"/>
+    </linearGradient>
+    <radialGradient id="urchF" cx="38%" cy="32%" r="72%">
+      <stop offset="0%" stop-color="#7FD8D0"/><stop offset="70%" stop-color="#12A69B"/><stop offset="100%" stop-color="#006963"/>
+    </radialGradient>
+    <radialGradient id="foramF" cx="36%" cy="30%" r="78%">
+      <stop offset="0%" stop-color="#EDFCFA"/><stop offset="60%" stop-color="#B4EAE4"/><stop offset="100%" stop-color="#74C8C0"/>
     </radialGradient>
 
     <!--
@@ -530,8 +848,6 @@ footer .signoff em {
         <line x1="-4.03" y1="-10.38" x2="-9.53" y2="-19.91"/>
         <!-- C2-N2 exocyclic amine, the second donor -->
         <line x1="-5.5" y1="9.53" x2="-11" y2="19.06"/>
-        <!-- N9 stub: H, or the sugar if this were GMP -->
-        <line x1="21.759" y1="-2.29" x2="29.934" y2="5.07"/>
         <!-- ring unsaturation: C2=N3, C4=C5, N7=C8 -->
         <line x1="-4" y1="7" x2="4" y2="7"/>
         <line x1="7.735" y1="-0.656" x2="4.435" y2="-6.374"/>
@@ -549,13 +865,16 @@ footer .signoff em {
            ion, so they stay full strength all the way down the wire and the
            coordination column reads as one continuous red thread. -->
       <g stroke="none">
-        <circle cx="-11" cy="-19.06" r="2.5" fill="#AE3A22"/>
+        <circle cx="-11" cy="-19.06" r="3.6" fill="url(#oxBall)"/>
+        <circle cx="-11" cy="-19.06" r="3.6" fill="url(#oxRim)"/>
+        <ellipse cx="-12.35" cy="-20.65" rx="1.15" ry="0.72" fill="#FFF3EA" opacity="0.75"
+                 transform="rotate(-32 -12.35 -20.65)"/>
       </g>
     </g>
 
     <!-- Cyclic Hoogsteen pairing: N1-H donates to the next base's O6,
          N2-H donates to that same base's N7. Repeats four times. -->
-    <g id="hbond" stroke="#2E5D57" stroke-width="0.9"
+    <g id="hbond" stroke="#007A74" stroke-width="0.9"
        stroke-dasharray="2 2.4" stroke-linecap="round" fill="none"
        style="opacity:var(--dim,1)">
       <line x1="90.617" y1="128.340" x2="82.861" y2="109.581"/>
@@ -575,9 +894,8 @@ footer .signoff em {
     </g>
 
     <!-- Na+ to O6 coordination, drawn on the front tetrad only -->
-    <g id="coord" stroke="#2E5D57" stroke-width="0.95"
+    <g id="coord" stroke="#007A74" stroke-width="0.95"
        stroke-dasharray="1.8 2" stroke-linecap="round" fill="none">
-      <line x1="102.53" y1="108.33" x2="104.48" y2="114.73"/>
     </g>
     <g id="coordset">
       <use href="#coord"/>
@@ -585,17 +903,24 @@ footer .signoff em {
       <use href="#coord" transform="rotate(180 100 100)"/>
       <use href="#coord" transform="rotate(270 100 100)"/>
     </g>
+
+    <!-- Cheez-It tile: same 200x200 frame as the tetrad, drawn face-on so a
+         stack of them reads as stacked crackers, and fading with --dim so the
+         deep layers recede exactly like the tetrads do. -->
+    <radialGradient id="czFace" cx="42%" cy="38%" r="76%"><stop offset="0%" stop-color="#FDD570"/><stop offset="38%" stop-color="#F5B830"/><stop offset="72%" stop-color="#EBA320"/><stop offset="100%" stop-color="#D48C14"/></radialGradient><radialGradient id="czSpec" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#FFF8E0" stop-opacity="0.6"/><stop offset="100%" stop-color="#FFF8E0" stop-opacity="0"/></radialGradient><radialGradient id="czShade" cx="62%" cy="66%" r="58%"><stop offset="50%" stop-color="#AA6F18" stop-opacity="0"/><stop offset="100%" stop-color="#AA6F18" stop-opacity="0.22"/></radialGradient><radialGradient id="czLight" cx="36%" cy="30%" r="55%"><stop offset="0%" stop-color="#FFE0A0" stop-opacity="0.75"/><stop offset="100%" stop-color="#FFE0A0" stop-opacity="0"/></radialGradient><radialGradient id="czVig" cx="50%" cy="52%" r="62%"><stop offset="55%" stop-color="#7A3B08" stop-opacity="0"/><stop offset="100%" stop-color="#7A3B08" stop-opacity="0.5"/></radialGradient><linearGradient id="czEdge" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#B46011" stop-opacity="0.9"/><stop offset="30%" stop-color="#9A4E0E"/><stop offset="100%" stop-color="#6E360A"/></linearGradient>
+    <clipPath id="czClip"><path d="M 55.0,46.0 L 56.5,45.8 58.0,45.1 59.5,44.5 61.0,44.7 62.5,45.5 64.0,46.0 65.5,45.4 67.0,44.1 68.5,43.4 70.0,43.9 71.5,45.3 73.0,46.0 74.5,45.2 76.0,43.6 77.5,42.7 79.0,43.5 80.5,45.1 82.0,46.0 83.5,45.1 85.0,43.3 86.5,42.3 88.0,43.2 89.5,45.1 91.0,46.0 92.5,45.0 94.0,43.1 95.5,42.1 97.0,43.1 98.5,45.0 100.0,46.0 101.5,45.0 103.0,43.1 104.5,42.1 106.0,43.1 107.5,45.0 109.0,46.0 110.5,45.1 112.0,43.2 113.5,42.3 115.0,43.3 116.5,45.1 118.0,46.0 119.5,45.1 121.0,43.5 122.5,42.7 124.0,43.6 125.5,45.2 127.0,46.0 128.5,45.3 130.0,43.9 131.5,43.4 133.0,44.1 134.5,45.4 136.0,46.0 137.5,45.5 139.0,44.7 140.5,44.5 142.0,45.1 143.5,45.8 145.0,46.0 Q 154.0,46.0 154.0,55.0 L 154.2,56.5 154.9,58.0 155.5,59.5 155.3,61.0 154.5,62.5 154.0,64.0 154.6,65.5 155.9,67.0 156.6,68.5 156.1,70.0 154.7,71.5 154.0,73.0 154.8,74.5 156.4,76.0 157.3,77.5 156.5,79.0 154.9,80.5 154.0,82.0 154.9,83.5 156.7,85.0 157.7,86.5 156.8,88.0 154.9,89.5 154.0,91.0 155.0,92.5 156.9,94.0 157.9,95.5 156.9,97.0 155.0,98.5 154.0,100.0 155.0,101.5 156.9,103.0 157.9,104.5 156.9,106.0 155.0,107.5 154.0,109.0 154.9,110.5 156.8,112.0 157.7,113.5 156.7,115.0 154.9,116.5 154.0,118.0 154.9,119.5 156.5,121.0 157.3,122.5 156.4,124.0 154.8,125.5 154.0,127.0 154.7,128.5 156.1,130.0 156.6,131.5 155.9,133.0 154.6,134.5 154.0,136.0 154.5,137.5 155.3,139.0 155.5,140.5 154.9,142.0 154.2,143.5 154.0,145.0 Q 154.0,154.0 145.0,154.0 L 143.5,154.2 142.0,154.9 140.5,155.5 139.0,155.3 137.5,154.5 136.0,154.0 134.5,154.6 133.0,155.9 131.5,156.6 130.0,156.1 128.5,154.7 127.0,154.0 125.5,154.8 124.0,156.4 122.5,157.3 121.0,156.5 119.5,154.9 118.0,154.0 116.5,154.9 115.0,156.7 113.5,157.7 112.0,156.8 110.5,154.9 109.0,154.0 107.5,155.0 106.0,156.9 104.5,157.9 103.0,156.9 101.5,155.0 100.0,154.0 98.5,155.0 97.0,156.9 95.5,157.9 94.0,156.9 92.5,155.0 91.0,154.0 89.5,154.9 88.0,156.8 86.5,157.7 85.0,156.7 83.5,154.9 82.0,154.0 80.5,154.9 79.0,156.5 77.5,157.3 76.0,156.4 74.5,154.8 73.0,154.0 71.5,154.7 70.0,156.1 68.5,156.6 67.0,155.9 65.5,154.6 64.0,154.0 62.5,154.5 61.0,155.3 59.5,155.5 58.0,154.9 56.5,154.2 55.0,154.0 Q 46.0,154.0 46.0,145.0 L 45.8,143.5 45.1,142.0 44.5,140.5 44.7,139.0 45.5,137.5 46.0,136.0 45.4,134.5 44.1,133.0 43.4,131.5 43.9,130.0 45.3,128.5 46.0,127.0 45.2,125.5 43.6,124.0 42.7,122.5 43.5,121.0 45.1,119.5 46.0,118.0 45.1,116.5 43.3,115.0 42.3,113.5 43.2,112.0 45.1,110.5 46.0,109.0 45.0,107.5 43.1,106.0 42.1,104.5 43.1,103.0 45.0,101.5 46.0,100.0 45.0,98.5 43.1,97.0 42.1,95.5 43.1,94.0 45.0,92.5 46.0,91.0 45.1,89.5 43.2,88.0 42.3,86.5 43.3,85.0 45.1,83.5 46.0,82.0 45.1,80.5 43.5,79.0 42.7,77.5 43.6,76.0 45.2,74.5 46.0,73.0 45.3,71.5 43.9,70.0 43.4,68.5 44.1,67.0 45.4,65.5 46.0,64.0 45.5,62.5 44.7,61.0 44.5,59.5 45.1,58.0 45.8,56.5 46.0,55.0 Q 46.0,46.0 55.0,46.0 Z"/></clipPath><g id="cheezit" style="opacity:var(--dim,1)"><path d="M 55.0,46.0 L 56.5,45.8 58.0,45.1 59.5,44.5 61.0,44.7 62.5,45.5 64.0,46.0 65.5,45.4 67.0,44.1 68.5,43.4 70.0,43.9 71.5,45.3 73.0,46.0 74.5,45.2 76.0,43.6 77.5,42.7 79.0,43.5 80.5,45.1 82.0,46.0 83.5,45.1 85.0,43.3 86.5,42.3 88.0,43.2 89.5,45.1 91.0,46.0 92.5,45.0 94.0,43.1 95.5,42.1 97.0,43.1 98.5,45.0 100.0,46.0 101.5,45.0 103.0,43.1 104.5,42.1 106.0,43.1 107.5,45.0 109.0,46.0 110.5,45.1 112.0,43.2 113.5,42.3 115.0,43.3 116.5,45.1 118.0,46.0 119.5,45.1 121.0,43.5 122.5,42.7 124.0,43.6 125.5,45.2 127.0,46.0 128.5,45.3 130.0,43.9 131.5,43.4 133.0,44.1 134.5,45.4 136.0,46.0 137.5,45.5 139.0,44.7 140.5,44.5 142.0,45.1 143.5,45.8 145.0,46.0 Q 154.0,46.0 154.0,55.0 L 154.2,56.5 154.9,58.0 155.5,59.5 155.3,61.0 154.5,62.5 154.0,64.0 154.6,65.5 155.9,67.0 156.6,68.5 156.1,70.0 154.7,71.5 154.0,73.0 154.8,74.5 156.4,76.0 157.3,77.5 156.5,79.0 154.9,80.5 154.0,82.0 154.9,83.5 156.7,85.0 157.7,86.5 156.8,88.0 154.9,89.5 154.0,91.0 155.0,92.5 156.9,94.0 157.9,95.5 156.9,97.0 155.0,98.5 154.0,100.0 155.0,101.5 156.9,103.0 157.9,104.5 156.9,106.0 155.0,107.5 154.0,109.0 154.9,110.5 156.8,112.0 157.7,113.5 156.7,115.0 154.9,116.5 154.0,118.0 154.9,119.5 156.5,121.0 157.3,122.5 156.4,124.0 154.8,125.5 154.0,127.0 154.7,128.5 156.1,130.0 156.6,131.5 155.9,133.0 154.6,134.5 154.0,136.0 154.5,137.5 155.3,139.0 155.5,140.5 154.9,142.0 154.2,143.5 154.0,145.0 Q 154.0,154.0 145.0,154.0 L 143.5,154.2 142.0,154.9 140.5,155.5 139.0,155.3 137.5,154.5 136.0,154.0 134.5,154.6 133.0,155.9 131.5,156.6 130.0,156.1 128.5,154.7 127.0,154.0 125.5,154.8 124.0,156.4 122.5,157.3 121.0,156.5 119.5,154.9 118.0,154.0 116.5,154.9 115.0,156.7 113.5,157.7 112.0,156.8 110.5,154.9 109.0,154.0 107.5,155.0 106.0,156.9 104.5,157.9 103.0,156.9 101.5,155.0 100.0,154.0 98.5,155.0 97.0,156.9 95.5,157.9 94.0,156.9 92.5,155.0 91.0,154.0 89.5,154.9 88.0,156.8 86.5,157.7 85.0,156.7 83.5,154.9 82.0,154.0 80.5,154.9 79.0,156.5 77.5,157.3 76.0,156.4 74.5,154.8 73.0,154.0 71.5,154.7 70.0,156.1 68.5,156.6 67.0,155.9 65.5,154.6 64.0,154.0 62.5,154.5 61.0,155.3 59.5,155.5 58.0,154.9 56.5,154.2 55.0,154.0 Q 46.0,154.0 46.0,145.0 L 45.8,143.5 45.1,142.0 44.5,140.5 44.7,139.0 45.5,137.5 46.0,136.0 45.4,134.5 44.1,133.0 43.4,131.5 43.9,130.0 45.3,128.5 46.0,127.0 45.2,125.5 43.6,124.0 42.7,122.5 43.5,121.0 45.1,119.5 46.0,118.0 45.1,116.5 43.3,115.0 42.3,113.5 43.2,112.0 45.1,110.5 46.0,109.0 45.0,107.5 43.1,106.0 42.1,104.5 43.1,103.0 45.0,101.5 46.0,100.0 45.0,98.5 43.1,97.0 42.1,95.5 43.1,94.0 45.0,92.5 46.0,91.0 45.1,89.5 43.2,88.0 42.3,86.5 43.3,85.0 45.1,83.5 46.0,82.0 45.1,80.5 43.5,79.0 42.7,77.5 43.6,76.0 45.2,74.5 46.0,73.0 45.3,71.5 43.9,70.0 43.4,68.5 44.1,67.0 45.4,65.5 46.0,64.0 45.5,62.5 44.7,61.0 44.5,59.5 45.1,58.0 45.8,56.5 46.0,55.0 Q 46.0,46.0 55.0,46.0 Z" fill="url(#czFace)" stroke="#A87C1F" stroke-width="2" stroke-linejoin="round"/><g clip-path="url(#czClip)"><path d="M 55.0,46.0 L 56.5,45.8 58.0,45.1 59.5,44.5 61.0,44.7 62.5,45.5 64.0,46.0 65.5,45.4 67.0,44.1 68.5,43.4 70.0,43.9 71.5,45.3 73.0,46.0 74.5,45.2 76.0,43.6 77.5,42.7 79.0,43.5 80.5,45.1 82.0,46.0 83.5,45.1 85.0,43.3 86.5,42.3 88.0,43.2 89.5,45.1 91.0,46.0 92.5,45.0 94.0,43.1 95.5,42.1 97.0,43.1 98.5,45.0 100.0,46.0 101.5,45.0 103.0,43.1 104.5,42.1 106.0,43.1 107.5,45.0 109.0,46.0 110.5,45.1 112.0,43.2 113.5,42.3 115.0,43.3 116.5,45.1 118.0,46.0 119.5,45.1 121.0,43.5 122.5,42.7 124.0,43.6 125.5,45.2 127.0,46.0 128.5,45.3 130.0,43.9 131.5,43.4 133.0,44.1 134.5,45.4 136.0,46.0 137.5,45.5 139.0,44.7 140.5,44.5 142.0,45.1 143.5,45.8 145.0,46.0 Q 154.0,46.0 154.0,55.0 L 154.2,56.5 154.9,58.0 155.5,59.5 155.3,61.0 154.5,62.5 154.0,64.0 154.6,65.5 155.9,67.0 156.6,68.5 156.1,70.0 154.7,71.5 154.0,73.0 154.8,74.5 156.4,76.0 157.3,77.5 156.5,79.0 154.9,80.5 154.0,82.0 154.9,83.5 156.7,85.0 157.7,86.5 156.8,88.0 154.9,89.5 154.0,91.0 155.0,92.5 156.9,94.0 157.9,95.5 156.9,97.0 155.0,98.5 154.0,100.0 155.0,101.5 156.9,103.0 157.9,104.5 156.9,106.0 155.0,107.5 154.0,109.0 154.9,110.5 156.8,112.0 157.7,113.5 156.7,115.0 154.9,116.5 154.0,118.0 154.9,119.5 156.5,121.0 157.3,122.5 156.4,124.0 154.8,125.5 154.0,127.0 154.7,128.5 156.1,130.0 156.6,131.5 155.9,133.0 154.6,134.5 154.0,136.0 154.5,137.5 155.3,139.0 155.5,140.5 154.9,142.0 154.2,143.5 154.0,145.0 Q 154.0,154.0 145.0,154.0 L 143.5,154.2 142.0,154.9 140.5,155.5 139.0,155.3 137.5,154.5 136.0,154.0 134.5,154.6 133.0,155.9 131.5,156.6 130.0,156.1 128.5,154.7 127.0,154.0 125.5,154.8 124.0,156.4 122.5,157.3 121.0,156.5 119.5,154.9 118.0,154.0 116.5,154.9 115.0,156.7 113.5,157.7 112.0,156.8 110.5,154.9 109.0,154.0 107.5,155.0 106.0,156.9 104.5,157.9 103.0,156.9 101.5,155.0 100.0,154.0 98.5,155.0 97.0,156.9 95.5,157.9 94.0,156.9 92.5,155.0 91.0,154.0 89.5,154.9 88.0,156.8 86.5,157.7 85.0,156.7 83.5,154.9 82.0,154.0 80.5,154.9 79.0,156.5 77.5,157.3 76.0,156.4 74.5,154.8 73.0,154.0 71.5,154.7 70.0,156.1 68.5,156.6 67.0,155.9 65.5,154.6 64.0,154.0 62.5,154.5 61.0,155.3 59.5,155.5 58.0,154.9 56.5,154.2 55.0,154.0 Q 46.0,154.0 46.0,145.0 L 45.8,143.5 45.1,142.0 44.5,140.5 44.7,139.0 45.5,137.5 46.0,136.0 45.4,134.5 44.1,133.0 43.4,131.5 43.9,130.0 45.3,128.5 46.0,127.0 45.2,125.5 43.6,124.0 42.7,122.5 43.5,121.0 45.1,119.5 46.0,118.0 45.1,116.5 43.3,115.0 42.3,113.5 43.2,112.0 45.1,110.5 46.0,109.0 45.0,107.5 43.1,106.0 42.1,104.5 43.1,103.0 45.0,101.5 46.0,100.0 45.0,98.5 43.1,97.0 42.1,95.5 43.1,94.0 45.0,92.5 46.0,91.0 45.1,89.5 43.2,88.0 42.3,86.5 43.3,85.0 45.1,83.5 46.0,82.0 45.1,80.5 43.5,79.0 42.7,77.5 43.6,76.0 45.2,74.5 46.0,73.0 45.3,71.5 43.9,70.0 43.4,68.5 44.1,67.0 45.4,65.5 46.0,64.0 45.5,62.5 44.7,61.0 44.5,59.5 45.1,58.0 45.8,56.5 46.0,55.0 Q 46.0,46.0 55.0,46.0 Z" fill="url(#czShade)"/><ellipse cx="95.7" cy="105.4" rx="8.6" ry="7.6" fill="#FADA9B" opacity="0.20"/><ellipse cx="71.6" cy="101.1" rx="7.1" ry="5.7" fill="#D49628" opacity="0.15"/><ellipse cx="63.2" cy="127.9" rx="7.5" ry="7.4" fill="#FADA9B" opacity="0.26"/><ellipse cx="113.9" cy="110.4" rx="4.8" ry="3.4" fill="#FADA9B" opacity="0.20"/><ellipse cx="72.1" cy="76.8" rx="4.2" ry="4.0" fill="#FADA9B" opacity="0.19"/><ellipse cx="101.7" cy="112.6" rx="6.5" ry="5.1" fill="#D49628" opacity="0.19"/><ellipse cx="144.8" cy="144.6" rx="8.2" ry="6.3" fill="#D49628" opacity="0.18"/><ellipse cx="81.0" cy="61.3" rx="7.8" ry="6.4" fill="#FADA9B" opacity="0.24"/><ellipse cx="141.2" cy="131.3" rx="4.0" ry="3.4" fill="#FADA9B" opacity="0.25"/><ellipse cx="143.2" cy="90.8" rx="4.4" ry="3.4" fill="#D49628" opacity="0.23"/><ellipse cx="62.8" cy="84.9" rx="8.8" ry="6.8" fill="#D49628" opacity="0.15"/><ellipse cx="64.1" cy="60.4" rx="8.0" ry="6.7" fill="#FADA9B" opacity="0.21"/><ellipse cx="72.2" cy="120.9" rx="4.7" ry="3.8" fill="#D49628" opacity="0.15"/><ellipse cx="74.2" cy="79.3" rx="8.9" ry="8.5" fill="#D49628" opacity="0.18"/><ellipse cx="74.0" cy="90.5" rx="8.3" ry="8.2" fill="#D49628" opacity="0.15"/><ellipse cx="74.2" cy="78.2" rx="7.9" ry="5.7" fill="#FADA9B" opacity="0.18"/><circle cx="63.9" cy="107.3" r="2.1" fill="#D49628" opacity="0.3"/><circle cx="63.3" cy="106.5" r="1.2" fill="#FFDDAA" opacity="0.4"/><circle cx="108.9" cy="88.7" r="2.4" fill="#D49628" opacity="0.3"/><circle cx="108.2" cy="87.9" r="1.3" fill="#FFDDAA" opacity="0.4"/><circle cx="140.4" cy="98.6" r="2.6" fill="#D49628" opacity="0.3"/><circle cx="139.6" cy="97.7" r="1.4" fill="#FFDDAA" opacity="0.4"/><circle cx="132.3" cy="72.1" r="2.0" fill="#D49628" opacity="0.3"/><circle cx="131.6" cy="71.4" r="1.1" fill="#FFDDAA" opacity="0.4"/><circle cx="135.9" cy="128.0" r="2.1" fill="#D49628" opacity="0.3"/><circle cx="135.3" cy="127.2" r="1.2" fill="#FFDDAA" opacity="0.4"/><circle cx="72.7" cy="121.1" r="3.1" fill="#D49628" opacity="0.3"/><circle cx="71.8" cy="120.0" r="1.7" fill="#FFDDAA" opacity="0.4"/><circle cx="73.3" cy="139.6" r="3.0" fill="#D49628" opacity="0.3"/><circle cx="72.4" cy="138.5" r="1.7" fill="#FFDDAA" opacity="0.4"/><circle cx="109.1" cy="93.1" r="1.9" fill="#D49628" opacity="0.3"/><circle cx="108.5" cy="92.4" r="1.1" fill="#FFDDAA" opacity="0.4"/><circle cx="59.4" cy="140.7" r="2.1" fill="#D49628" opacity="0.3"/><circle cx="58.8" cy="140.0" r="1.2" fill="#FFDDAA" opacity="0.4"/><circle cx="118.0" cy="78.6" r="3.0" fill="#D49628" opacity="0.3"/><circle cx="117.1" cy="77.6" r="1.6" fill="#FFDDAA" opacity="0.4"/><circle cx="108.5" cy="81.8" r="2.0" fill="#D49628" opacity="0.3"/><circle cx="107.9" cy="81.1" r="1.1" fill="#FFDDAA" opacity="0.4"/><circle cx="120.7" cy="59.5" r="0.8" fill="#B07F1F" opacity="0.37"/><circle cx="110.7" cy="79.3" r="0.6" fill="#FFDFA0" opacity="0.20"/><circle cx="78.3" cy="94.9" r="0.6" fill="#B07F1F" opacity="0.27"/><circle cx="106.8" cy="65.4" r="0.9" fill="#B07F1F" opacity="0.40"/><circle cx="114.8" cy="118.0" r="0.6" fill="#B07F1F" opacity="0.21"/><circle cx="54.7" cy="138.6" r="1.0" fill="#FFDFA0" opacity="0.20"/><circle cx="112.8" cy="98.3" r="0.7" fill="#FFDFA0" opacity="0.40"/><circle cx="60.1" cy="104.3" r="1.0" fill="#FFDFA0" opacity="0.35"/><circle cx="119.1" cy="127.6" r="0.7" fill="#FFDFA0" opacity="0.34"/><circle cx="137.7" cy="134.9" r="0.9" fill="#B07F1F" opacity="0.37"/><circle cx="106.8" cy="111.7" r="0.8" fill="#B07F1F" opacity="0.32"/><circle cx="60.5" cy="113.1" r="0.9" fill="#FFDFA0" opacity="0.35"/><circle cx="89.5" cy="122.1" r="0.7" fill="#B07F1F" opacity="0.37"/><circle cx="60.9" cy="123.5" r="0.8" fill="#B07F1F" opacity="0.30"/><circle cx="74.6" cy="118.6" r="0.8" fill="#B07F1F" opacity="0.38"/><circle cx="77.0" cy="54.1" r="0.8" fill="#B07F1F" opacity="0.24"/><circle cx="68.9" cy="138.1" r="0.7" fill="#FFDFA0" opacity="0.38"/><circle cx="83.7" cy="115.6" r="0.7" fill="#B07F1F" opacity="0.36"/><circle cx="138.9" cy="135.7" r="0.8" fill="#B07F1F" opacity="0.26"/><circle cx="65.8" cy="99.7" r="0.9" fill="#FFDFA0" opacity="0.34"/><circle cx="142.3" cy="79.0" r="0.7" fill="#B07F1F" opacity="0.26"/><circle cx="73.1" cy="91.9" r="0.7" fill="#FFDFA0" opacity="0.26"/><circle cx="131.9" cy="145.3" r="0.5" fill="#B07F1F" opacity="0.21"/><circle cx="135.0" cy="56.9" r="0.8" fill="#FFDFA0" opacity="0.26"/><circle cx="127.4" cy="54.8" r="0.7" fill="#B07F1F" opacity="0.20"/><circle cx="131.0" cy="75.3" r="0.5" fill="#B07F1F" opacity="0.33"/><circle cx="95.0" cy="112.2" r="0.9" fill="#FFDFA0" opacity="0.39"/><circle cx="117.3" cy="71.7" r="0.6" fill="#B07F1F" opacity="0.20"/><circle cx="97.4" cy="120.1" r="0.6" fill="#B07F1F" opacity="0.27"/><circle cx="118.5" cy="101.9" r="0.9" fill="#FFDFA0" opacity="0.28"/><circle cx="127.4" cy="138.2" r="1.0" fill="#B07F1F" opacity="0.34"/><circle cx="65.2" cy="95.6" r="1.0" fill="#FFDFA0" opacity="0.28"/><circle cx="106.5" cy="135.7" r="1.0" fill="#FFDFA0" opacity="0.29"/><circle cx="114.2" cy="72.3" r="0.9" fill="#FFDFA0" opacity="0.33"/><ellipse cx="79" cy="75" rx="30" ry="20" fill="url(#czSpec)"/><ellipse cx="100" cy="100" rx="4" ry="3.6" fill="#9B6F14"/><path d="M96.4,98.2 a4 3.6 0 0 1 7.2 0" fill="none" stroke="#5A330A" stroke-width="0.8" opacity="0.7"/><path d="M96.8,101.4 a4 3.6 0 0 0 6.4 0" fill="none" stroke="#FFE3A6" stroke-width="0.7" opacity="0.45"/><circle cx="120.5" cy="73.0" r="1.6" fill="#FFFFFF" opacity="0.94"/><circle cx="103.5" cy="127.3" r="1.1" fill="#FFFFFF" opacity="0.91"/><circle cx="85.8" cy="60.8" r="1.2" fill="#FFFFFF" opacity="0.88"/><circle cx="99.3" cy="56.2" r="1.5" fill="#8B6614" opacity="0.25"/><circle cx="98.8" cy="55.7" r="1.5" fill="#FFFFFF" opacity="0.89"/><circle cx="69.8" cy="85.0" r="1.5" fill="#8B6614" opacity="0.25"/><circle cx="69.3" cy="84.5" r="1.5" fill="#FFFFFF" opacity="0.69"/><circle cx="101.6" cy="121.0" r="1.6" fill="#FFFFFF" opacity="0.93"/><circle cx="99.8" cy="142.7" r="0.9" fill="#8B6614" opacity="0.25"/><circle cx="99.3" cy="142.2" r="0.9" fill="#FFFFFF" opacity="0.81"/><circle cx="80.3" cy="121.5" r="1.4" fill="#FFFFFF" opacity="0.90"/><circle cx="105.6" cy="82.3" r="1.1" fill="#FFFFFF" opacity="0.92"/><circle cx="72.6" cy="133.0" r="1.7" fill="#FFFFFF" opacity="0.82"/><circle cx="71.9" cy="103.4" r="1.3" fill="#FFFFFF" opacity="0.66"/><circle cx="144.1" cy="101.5" r="1.2" fill="#FFFFFF" opacity="0.82"/><circle cx="99.2" cy="118.0" r="0.9" fill="#FFFFFF" opacity="0.77"/><circle cx="142.9" cy="139.8" r="1.0" fill="#FFFFFF" opacity="0.69"/><circle cx="93.8" cy="129.7" r="1.6" fill="#FFFFFF" opacity="0.75"/><circle cx="71.5" cy="111.6" r="1.6" fill="#8B6614" opacity="0.25"/><circle cx="71.0" cy="111.1" r="1.6" fill="#FFFFFF" opacity="0.88"/><circle cx="55.1" cy="71.2" r="1.0" fill="#FFFFFF" opacity="0.75"/><circle cx="86.4" cy="111.3" r="0.9" fill="#FFFFFF" opacity="0.69"/><circle cx="101.0" cy="76.6" r="1.0" fill="#FFFFFF" opacity="0.78"/><circle cx="88.8" cy="92.4" r="1.3" fill="#8B6614" opacity="0.25"/><circle cx="88.3" cy="91.9" r="1.3" fill="#FFFFFF" opacity="0.71"/><circle cx="112.3" cy="113.0" r="1.3" fill="#FFFFFF" opacity="0.83"/><circle cx="133.5" cy="74.9" r="1.5" fill="#FFFFFF" opacity="0.92"/><circle cx="83.2" cy="83.1" r="1.6" fill="#8B6614" opacity="0.25"/><circle cx="82.7" cy="82.6" r="1.6" fill="#FFFFFF" opacity="0.95"/><circle cx="136.4" cy="65.6" r="1.0" fill="#FFFFFF" opacity="0.73"/><ellipse cx="59.5" cy="47.1" rx="2.3" ry="1.5" fill="#FFF0C8" opacity="0.20" transform="rotate(0 59.5 47.1)"/><ellipse cx="68.5" cy="46.0" rx="2.3" ry="1.5" fill="#FFF0C8" opacity="0.34" transform="rotate(0 68.5 46.0)"/><ellipse cx="77.5" cy="45.3" rx="2.3" ry="1.5" fill="#FFF0C8" opacity="0.42" transform="rotate(0 77.5 45.3)"/><ellipse cx="86.5" cy="44.9" rx="2.3" ry="1.5" fill="#FFF0C8" opacity="0.47" transform="rotate(0 86.5 44.9)"/><ellipse cx="95.5" cy="44.7" rx="2.3" ry="1.5" fill="#FFF0C8" opacity="0.50" transform="rotate(0 95.5 44.7)"/><ellipse cx="104.5" cy="44.7" rx="2.3" ry="1.5" fill="#FFF0C8" opacity="0.50" transform="rotate(0 104.5 44.7)"/><ellipse cx="113.5" cy="44.9" rx="2.3" ry="1.5" fill="#FFF0C8" opacity="0.47" transform="rotate(0 113.5 44.9)"/><ellipse cx="122.5" cy="45.3" rx="2.3" ry="1.5" fill="#FFF0C8" opacity="0.42" transform="rotate(0 122.5 45.3)"/><ellipse cx="131.5" cy="46.0" rx="2.3" ry="1.5" fill="#FFF0C8" opacity="0.34" transform="rotate(0 131.5 46.0)"/><ellipse cx="140.5" cy="47.1" rx="2.3" ry="1.5" fill="#FFF0C8" opacity="0.20" transform="rotate(0 140.5 47.1)"/><ellipse cx="47.1" cy="140.5" rx="2.3" ry="1.5" fill="#FFF0C8" opacity="0.20" transform="rotate(270 47.1 140.5)"/><ellipse cx="46.0" cy="131.5" rx="2.3" ry="1.5" fill="#FFF0C8" opacity="0.34" transform="rotate(270 46.0 131.5)"/><ellipse cx="45.3" cy="122.5" rx="2.3" ry="1.5" fill="#FFF0C8" opacity="0.42" transform="rotate(270 45.3 122.5)"/><ellipse cx="44.9" cy="113.5" rx="2.3" ry="1.5" fill="#FFF0C8" opacity="0.47" transform="rotate(270 44.9 113.5)"/><ellipse cx="44.7" cy="104.5" rx="2.3" ry="1.5" fill="#FFF0C8" opacity="0.50" transform="rotate(270 44.7 104.5)"/><ellipse cx="44.7" cy="95.5" rx="2.3" ry="1.5" fill="#FFF0C8" opacity="0.50" transform="rotate(270 44.7 95.5)"/><ellipse cx="44.9" cy="86.5" rx="2.3" ry="1.5" fill="#FFF0C8" opacity="0.47" transform="rotate(270 44.9 86.5)"/><ellipse cx="45.3" cy="77.5" rx="2.3" ry="1.5" fill="#FFF0C8" opacity="0.42" transform="rotate(270 45.3 77.5)"/><ellipse cx="46.0" cy="68.5" rx="2.3" ry="1.5" fill="#FFF0C8" opacity="0.34" transform="rotate(270 46.0 68.5)"/><ellipse cx="47.1" cy="59.5" rx="2.3" ry="1.5" fill="#FFF0C8" opacity="0.20" transform="rotate(270 47.1 59.5)"/><ellipse cx="140.5" cy="153.2" rx="2.2" ry="1.4" fill="#9B6F14" opacity="0.13" transform="rotate(180 140.5 153.2)"/><ellipse cx="131.5" cy="154.3" rx="2.2" ry="1.4" fill="#9B6F14" opacity="0.23" transform="rotate(180 131.5 154.3)"/><ellipse cx="122.5" cy="155.0" rx="2.2" ry="1.4" fill="#9B6F14" opacity="0.29" transform="rotate(180 122.5 155.0)"/><ellipse cx="113.5" cy="155.4" rx="2.2" ry="1.4" fill="#9B6F14" opacity="0.32" transform="rotate(180 113.5 155.4)"/><ellipse cx="104.5" cy="155.6" rx="2.2" ry="1.4" fill="#9B6F14" opacity="0.34" transform="rotate(180 104.5 155.6)"/><ellipse cx="95.5" cy="155.6" rx="2.2" ry="1.4" fill="#9B6F14" opacity="0.34" transform="rotate(180 95.5 155.6)"/><ellipse cx="86.5" cy="155.4" rx="2.2" ry="1.4" fill="#9B6F14" opacity="0.32" transform="rotate(180 86.5 155.4)"/><ellipse cx="77.5" cy="155.0" rx="2.2" ry="1.4" fill="#9B6F14" opacity="0.29" transform="rotate(180 77.5 155.0)"/><ellipse cx="68.5" cy="154.3" rx="2.2" ry="1.4" fill="#9B6F14" opacity="0.23" transform="rotate(180 68.5 154.3)"/><ellipse cx="59.5" cy="153.2" rx="2.2" ry="1.4" fill="#9B6F14" opacity="0.13" transform="rotate(180 59.5 153.2)"/><ellipse cx="153.2" cy="59.5" rx="2.2" ry="1.4" fill="#9B6F14" opacity="0.13" transform="rotate(90 153.2 59.5)"/><ellipse cx="154.3" cy="68.5" rx="2.2" ry="1.4" fill="#9B6F14" opacity="0.23" transform="rotate(90 154.3 68.5)"/><ellipse cx="155.0" cy="77.5" rx="2.2" ry="1.4" fill="#9B6F14" opacity="0.29" transform="rotate(90 155.0 77.5)"/><ellipse cx="155.4" cy="86.5" rx="2.2" ry="1.4" fill="#9B6F14" opacity="0.32" transform="rotate(90 155.4 86.5)"/><ellipse cx="155.6" cy="95.5" rx="2.2" ry="1.4" fill="#9B6F14" opacity="0.34" transform="rotate(90 155.6 95.5)"/><ellipse cx="155.6" cy="104.5" rx="2.2" ry="1.4" fill="#9B6F14" opacity="0.34" transform="rotate(90 155.6 104.5)"/><ellipse cx="155.4" cy="113.5" rx="2.2" ry="1.4" fill="#9B6F14" opacity="0.32" transform="rotate(90 155.4 113.5)"/><ellipse cx="155.0" cy="122.5" rx="2.2" ry="1.4" fill="#9B6F14" opacity="0.29" transform="rotate(90 155.0 122.5)"/><ellipse cx="154.3" cy="131.5" rx="2.2" ry="1.4" fill="#9B6F14" opacity="0.23" transform="rotate(90 154.3 131.5)"/><ellipse cx="153.2" cy="140.5" rx="2.2" ry="1.4" fill="#9B6F14" opacity="0.13" transform="rotate(90 153.2 140.5)"/></g><path d="M 55.0,46.0 L 56.5,45.8 58.0,45.1 59.5,44.5 61.0,44.7 62.5,45.5 64.0,46.0 65.5,45.4 67.0,44.1 68.5,43.4 70.0,43.9 71.5,45.3 73.0,46.0 74.5,45.2 76.0,43.6 77.5,42.7 79.0,43.5 80.5,45.1 82.0,46.0 83.5,45.1 85.0,43.3 86.5,42.3 88.0,43.2 89.5,45.1 91.0,46.0 92.5,45.0 94.0,43.1 95.5,42.1 97.0,43.1 98.5,45.0 100.0,46.0 101.5,45.0 103.0,43.1 104.5,42.1 106.0,43.1 107.5,45.0 109.0,46.0 110.5,45.1 112.0,43.2 113.5,42.3 115.0,43.3 116.5,45.1 118.0,46.0 119.5,45.1 121.0,43.5 122.5,42.7 124.0,43.6 125.5,45.2 127.0,46.0 128.5,45.3 130.0,43.9 131.5,43.4 133.0,44.1 134.5,45.4 136.0,46.0 137.5,45.5 139.0,44.7 140.5,44.5 142.0,45.1 143.5,45.8 145.0,46.0 Q 154.0,46.0 154.0,55.0 L 154.2,56.5 154.9,58.0 155.5,59.5 155.3,61.0 154.5,62.5 154.0,64.0 154.6,65.5 155.9,67.0 156.6,68.5 156.1,70.0 154.7,71.5 154.0,73.0 154.8,74.5 156.4,76.0 157.3,77.5 156.5,79.0 154.9,80.5 154.0,82.0 154.9,83.5 156.7,85.0 157.7,86.5 156.8,88.0 154.9,89.5 154.0,91.0 155.0,92.5 156.9,94.0 157.9,95.5 156.9,97.0 155.0,98.5 154.0,100.0 155.0,101.5 156.9,103.0 157.9,104.5 156.9,106.0 155.0,107.5 154.0,109.0 154.9,110.5 156.8,112.0 157.7,113.5 156.7,115.0 154.9,116.5 154.0,118.0 154.9,119.5 156.5,121.0 157.3,122.5 156.4,124.0 154.8,125.5 154.0,127.0 154.7,128.5 156.1,130.0 156.6,131.5 155.9,133.0 154.6,134.5 154.0,136.0 154.5,137.5 155.3,139.0 155.5,140.5 154.9,142.0 154.2,143.5 154.0,145.0 Q 154.0,154.0 145.0,154.0 L 143.5,154.2 142.0,154.9 140.5,155.5 139.0,155.3 137.5,154.5 136.0,154.0 134.5,154.6 133.0,155.9 131.5,156.6 130.0,156.1 128.5,154.7 127.0,154.0 125.5,154.8 124.0,156.4 122.5,157.3 121.0,156.5 119.5,154.9 118.0,154.0 116.5,154.9 115.0,156.7 113.5,157.7 112.0,156.8 110.5,154.9 109.0,154.0 107.5,155.0 106.0,156.9 104.5,157.9 103.0,156.9 101.5,155.0 100.0,154.0 98.5,155.0 97.0,156.9 95.5,157.9 94.0,156.9 92.5,155.0 91.0,154.0 89.5,154.9 88.0,156.8 86.5,157.7 85.0,156.7 83.5,154.9 82.0,154.0 80.5,154.9 79.0,156.5 77.5,157.3 76.0,156.4 74.5,154.8 73.0,154.0 71.5,154.7 70.0,156.1 68.5,156.6 67.0,155.9 65.5,154.6 64.0,154.0 62.5,154.5 61.0,155.3 59.5,155.5 58.0,154.9 56.5,154.2 55.0,154.0 Q 46.0,154.0 46.0,145.0 L 45.8,143.5 45.1,142.0 44.5,140.5 44.7,139.0 45.5,137.5 46.0,136.0 45.4,134.5 44.1,133.0 43.4,131.5 43.9,130.0 45.3,128.5 46.0,127.0 45.2,125.5 43.6,124.0 42.7,122.5 43.5,121.0 45.1,119.5 46.0,118.0 45.1,116.5 43.3,115.0 42.3,113.5 43.2,112.0 45.1,110.5 46.0,109.0 45.0,107.5 43.1,106.0 42.1,104.5 43.1,103.0 45.0,101.5 46.0,100.0 45.0,98.5 43.1,97.0 42.1,95.5 43.1,94.0 45.0,92.5 46.0,91.0 45.1,89.5 43.2,88.0 42.3,86.5 43.3,85.0 45.1,83.5 46.0,82.0 45.1,80.5 43.5,79.0 42.7,77.5 43.6,76.0 45.2,74.5 46.0,73.0 45.3,71.5 43.9,70.0 43.4,68.5 44.1,67.0 45.4,65.5 46.0,64.0 45.5,62.5 44.7,61.0 44.5,59.5 45.1,58.0 45.8,56.5 46.0,55.0 Q 46.0,46.0 55.0,46.0 Z" transform="translate(10 10) scale(0.9)" fill="none" stroke="#B4691C" stroke-width="1.1" opacity="0.3"/></g>
   </defs>
 </svg>
 
 <nav>
   <div class="wrap">
-    <a href="#" class="brand">Zak <em><span class="j">J</span>ibrin</em></a>
+    <a href="#" class="brand">Zakaria <em><span class="j">J</span>ibrin</em></a>
     <ul class="nav-links">
-      <li><a href="#about">About</a></li>
-      <li><a href="#research">Research</a></li>
-      <li><a href="#writing">Writing</a></li>
-      <li><a href="#elsewhere">Elsewhere</a></li>
+      <li><a href="#about">About<i class="xtal"></i><i class="bio"><svg viewBox="0 0 40 40"><g fill="none" stroke="#0A3F3B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 20 m0 0 a2.2 2.2 0 1 1 2 -3 a5 5 0 1 1 -1 8 a8 8 0 1 1 -3 -13 a11.5 11.5 0 1 1 -1.5 20" fill="url(#ammoF)"/><path d="M22 20 a2.2 2.2 0 1 1 2 -3 a5 5 0 1 1 -1 8 a8 8 0 1 1 -3 -13 a11.5 11.5 0 1 1 -1.5 20"/><path d="M20.5 8.6 L17.2 12.2 M25.3 10.4 L21.4 13.4 M28.2 15 L23.4 17 M28.8 21 L23.6 21.4 M26.8 27 L22.6 24.6 M13 10.5 L15.8 14 M9.8 15.5 L13.6 17.6 M9 21.5 L13.2 21.2"/></g></svg></i></a></li>
+      <li><a href="#research">Research<i class="xtal"></i><i class="bio"><svg viewBox="0 0 40 40"><path d="M20 3 C27 6 30 12 30.5 20 C31 28 27 34 20.5 37 C20.2 32 20 26 20 20 C20 14 20.1 8 20 3 Z" fill="url(#toothF)" stroke="#0A3F3B" stroke-width="1.6" stroke-linejoin="round"/><path d="M20.5 37 C14 34 10 28 10.5 20 C11 12 14 6 20 3" fill="none" stroke="#0A3F3B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 8 L17 30 M23 9 L23 30" stroke="#0A3F3B" stroke-width="1" opacity="0.4" fill="none"/><path d="M12.5 30 C16 33 24 33 27.5 30" fill="none" stroke="#0A3F3B" stroke-width="1.2" opacity="0.55"/></svg></i></a></li>
+      <li><a href="#writing">Writing<i class="xtal"></i><i class="bio"><svg viewBox="0 0 40 40"><path d="M20 20 a1.8 1.8 0 1 1 1.8 -2 a4.4 4.4 0 1 1 -1.4 6.6 a8 8 0 1 1 -2 -12 a12.5 12.5 0 1 1 -3.4 20.5 L20 30 Z" fill="url(#nautF)" stroke="#0A3F3B" stroke-width="1.6" stroke-linejoin="round"/><g stroke="#0A3F3B" stroke-width="0.9" opacity="0.5" fill="none"><path d="M20 20 L19 8.5 M20 20 L30 12 M20 20 L31.5 22 M20 20 L28 30 M20 20 L9 14 M20 20 L8.5 24"/></g></svg></i></a></li>
+      <li><a href="#cpa">CPA<i class="xtal"></i><i class="bio"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="9.5" fill="url(#urchF)" stroke="#0A3F3B" stroke-width="1.4"/><g stroke="#0A3F3B" stroke-width="1.4" stroke-linecap="round"><path d="M20 10.5 L20 3 M20 29.5 L20 37 M10.5 20 L3 20 M29.5 20 L37 20 M13.3 13.3 L8 8 M26.7 13.3 L32 8 M13.3 26.7 L8 32 M26.7 26.7 L32 32 M16.4 11.2 L14.5 4.5 M23.6 11.2 L25.5 4.5 M11.2 16.4 L4.5 14.5 M11.2 23.6 L4.5 25.5 M28.8 16.4 L35.5 14.5 M28.8 23.6 L35.5 25.5 M16.4 28.8 L14.5 35.5 M23.6 28.8 L25.5 35.5"/></g><circle cx="17" cy="17" r="2.2" fill="#8FF3EC" opacity="0.6"/></svg></i></a></li>
+      <li><a href="#elsewhere">Elsewhere<i class="xtal"></i><i class="bio"><svg viewBox="0 0 40 40"><g fill="url(#foramF)" stroke="#0A3F3B" stroke-width="1.3"><circle cx="20" cy="27" r="9"/><circle cx="17" cy="16" r="6.5"/><circle cx="22.5" cy="9.5" r="4.6"/><circle cx="26" cy="5" r="3"/></g><g fill="#8FF3EC" opacity="0.5" stroke="none"><circle cx="17" cy="24" r="2"/><circle cx="15" cy="14.5" r="1.4"/></g></svg></i></a></li>
     </ul>
   </div>
 </nav>
@@ -610,7 +935,7 @@ footer .signoff em {
     </div>
 
     <div class="stage">
-      <div class="name name-l">Zak</div>
+      <div class="name name-l"><button type="button" class="secret-z" id="secretZ" aria-label="Z">Z</button>ak</div>
 
       <div class="motif-col">
         <div class="tilt" id="tilt">
@@ -626,8 +951,9 @@ footer .signoff em {
                      role="img"
                      aria-label="A guanine wire seen down its c-axis. Four guanine bases are joined by cyclic Hoogsteen hydrogen bonds into a tetrad, with a sodium ion held in the plane by the four O6 carbonyl oxygens. Tilting the figure reveals further tetrads stacked behind it along the fibril.">
                   <circle class="glow" cx="100" cy="100" r="72" fill="url(#halo)"/>
-                  <use href="#tetrad"/>
-                  <use href="#coordset"/>
+                  <use class="asTetrad" href="#tetrad"/>
+                  <use class="asCheezit" href="#cheezit"/>
+                  <use class="asTetrad" href="#coordset"/>
                 </svg>
               </div>
             </div>
@@ -649,7 +975,7 @@ footer .signoff em {
               <circle cx="100" cy="100" r="9.4" fill="url(#naBall)"/>
               <circle cx="100" cy="100" r="9.4" fill="url(#naRim)"/>
               <!-- Highlight kept small and pushed to the rim, clear of the type -->
-              <ellipse cx="95.2" cy="94.6" rx="2.4" ry="1.5" fill="#EAF6F1" opacity="0.62"
+              <ellipse cx="95.2" cy="94.6" rx="2.4" ry="1.5" fill="#E1FFFD" opacity="0.62"
                        transform="rotate(-32 95.2 94.6)"/>
               <!-- Na and its charge are separate elements. As one string with
                    text-anchor="middle", the superscript is folded into the
@@ -657,7 +983,7 @@ footer .signoff em {
                    the two are placed by hand to center the whole "Na+" cluster
                    on the ion. paint-order draws the stroke before the fill, so
                    the dark edge sits around the letterforms, not inside them. -->
-              <g style="paint-order:stroke fill" stroke="#0B211E" stroke-width="0.9"
+              <g style="paint-order:stroke fill" stroke="#002C2A" stroke-width="0.9"
                  stroke-linejoin="round">
                 <text x="98.2" y="100" text-anchor="middle" dominant-baseline="central"
                       font-size="7.6" fill="#FFFFFF">Na</text>
@@ -673,13 +999,20 @@ footer .signoff em {
           <span class="line">3.3 &#8491; rise, 30&deg; twist per tetrad &middot; 14 tetrads total</span>
           <em>Chapter I</em>
         </div>
+
+        <div class="cheez-cap" aria-hidden="true">
+          <span class="line">Guanine tetrad &middot; now 100% more snackable</span>
+          <span class="line">a Cheez-It has entered the channel</span>
+          <em>off the record</em>
+        </div>
+
       </div>
 
       <div class="name name-r"><span class="j">J</span>ibrin</div>
     </div>
 
     <div class="hero-foot">
-      <p class="tagline">Reading biology in the deviations of mineral lattices.</p>
+      <p class="tagline">Reading biology in the assembly, structure, and organization of minerals.</p>
       <p class="subtitle">PhD candidate tracing life's fingerprint across the scales at which minerals record it, from the molecular assembly of prebiotic brines to the atomic strain in biogenic unit cells.</p>
     </div>
 
@@ -692,14 +1025,14 @@ footer .signoff em {
 
     <div class="about-grid">
       <div class="prose">
-        <p>I am a PhD candidate in Earth and Planetary Sciences at <a href="https://eps.rutgers.edu">Rutgers University</a>, working with Shaunna Morrison. My committee includes Nathan Yee, Vikas Nanda, Paul Falkowski, and Richard Remsing.</p>
+        <p>I am a PhD candidate in Earth and Planetary Sciences at <a href="https://eps.rutgers.edu/people/graduate-students/graduate-student/1565-jibrin-zakaria">Rutgers University</a>, working with Shaunna Morrison. My committee includes Nathan Yee, Vikas Nanda, Paul Falkowski, and Richard Remsing.</p>
         <p>My master's work with Henry Sun at UNLV documented how halophilic bacteria precipitate a calcite, struvite, and guanine mineral succession out of their own metabolic waste. That succession still frames what I do now: asking whether life leaves a readable signature in the atoms, the unit cells, and the aggregate textures of the minerals it forms.</p>
         <p>The question runs in both directions. If a mineral can record the life that made it, then the same reading applies to a sample returned from somewhere that has never had a confirmed biosphere.</p>
       </div>
 
       <figure class="portrait">
-        <img src="zak.jpg" width="772" height="900" loading="lazy" decoding="async"
-             alt="Zak Jibrin standing in front of a large panoramic photograph of the Curiosity rover on Mars.">
+        <img src="zak_rover.jpg" width="860" height="1002" loading="lazy" decoding="async"
+             alt="Zak Jibrin standing beside a full-scale Mars rover.">
         <figcaption>
           Zak Jibrin <span class="accent">&#9671;</span> standing in for a rover that is<br>
           still doing mineralogy 140 million miles away
@@ -915,19 +1248,37 @@ footer .signoff em {
   </div>
 </section>
 
+<section id="cpa">
+  <div class="wrap">
+    <h2>Crystallization by particle attachment.</h2>
+    <div class="prose">
+      <p>Classical models grow a crystal one monomer at a time. The biomineralization literature shows a second route: ions cluster into higher-order species, prenucleation clusters, droplets, amorphous particles, and even whole nanocrystals, that attach to the growing solid. My work on guanine and urate precursors sits on these upper pathways, where the particle that attaches is already partly ordered before it arrives.</p>
+    </div>
+
+    <figure class="cpa-fig" id="cpaFig" aria-labelledby="cpaCap">
+      <div class="cpa-scroll"><svg viewBox="0 0 1040 660" role="img" aria-label="Pathways to crystallization by particle attachment, after De Yoreo and colleagues: ions, atoms and molecules to oligomers, complexes, droplets, amorphous nanoparticles, poorly crystalline nanoparticles and nanocrystals, joining by oriented and nearly-oriented attachment with amorphous solid and polymers, to a bulk crystal, with a dashed classical monomer-by-monomer arc."><defs><radialGradient id="dropG" cx="36%" cy="30%" r="72%"><stop offset="0%" stop-color="#BFEBFF"/><stop offset="45%" stop-color="#4FA6E8"/><stop offset="100%" stop-color="#1B4E85"/></radialGradient><radialGradient id="amorphG" cx="38%" cy="32%" r="76%"><stop offset="0%" stop-color="#6FC3EE"/><stop offset="60%" stop-color="#2E7DC8"/><stop offset="100%" stop-color="#123E70"/></radialGradient><radialGradient id="clustG" cx="34%" cy="30%" r="74%"><stop offset="0%" stop-color="#9AD4F2"/><stop offset="60%" stop-color="#3B7EC0"/><stop offset="100%" stop-color="#123A66"/></radialGradient><radialGradient id="amsolidG" cx="36%" cy="30%" r="78%"><stop offset="0%" stop-color="#7E74C8"/><stop offset="60%" stop-color="#4A3F9E"/><stop offset="100%" stop-color="#241C5E"/></radialGradient><linearGradient id="arcGrad" x1="150" y1="0" x2="900" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#3FE6EA"/><stop offset="55%" stop-color="#33AEE0"/><stop offset="100%" stop-color="#2A78D2"/></linearGradient><linearGradient id="progG" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#3FE6EA"/><stop offset="100%" stop-color="#2A6ED0"/></linearGradient><linearGradient id="bulkTop" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#A8E0FF"/><stop offset="100%" stop-color="#4C9EE6"/></linearGradient><filter id="cpaGlow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur in="SourceGraphic" stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><filter id="cpaGlowSoft" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur in="SourceGraphic" stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><marker id="cpaArc" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#2E86DC"/></marker><marker id="cpaProgHead" markerWidth="10" markerHeight="10" refX="6" refY="3.2" orient="auto"><path d="M0,0 L6,3.2 L0,6.4 Z" fill="#2A6ED0"/></marker></defs><rect x="0" y="0" width="1040" height="660" rx="4" fill="#080C15"/><g class="cpa-arcs" fill="none" stroke="url(#arcGrad)" stroke-width="2.4" stroke-linecap="round" filter="url(#cpaGlow)"><path class="arc" id="arc1" d="M172,486 C300,434 857,434 886,470" marker-end="url(#cpaArc)"/><path class="arc" id="arc2" d="M172,486 C300,342 857,342 886,470" marker-end="url(#cpaArc)"/><path class="arc" id="arc3" d="M172,486 C300,250 857,250 886,470" marker-end="url(#cpaArc)"/><path class="arc" id="arc4" d="M172,486 C300,158 857,158 886,470" marker-end="url(#cpaArc)"/><path class="arc" id="arc5" d="M172,486 C300,66 857,66 886,470" marker-end="url(#cpaArc)"/><path class="arc" id="arc6" d="M172,486 C300,-26 857,-26 886,470" marker-end="url(#cpaArc)"/></g><g filter="url(#cpaGlow)"><g transform="translate(798.0,110.0) rotate(40) scale(0.62)"><polygon points="0,-10 0,0 -9,0" fill="#8CD2F6"/><polygon points="0,-10 9,0 0,0" fill="#4F9EE0"/><polygon points="0,10 -9,0 0,0" fill="#285E9C"/><polygon points="0,10 9,0 0,0" fill="#1B4E85"/><polygon points="0,-10 9,0 0,10 -9,0" fill="none" stroke="#0C3358" stroke-width="0.8" stroke-linejoin="round"/></g><g transform="translate(813.0,123.5) rotate(40) scale(0.62)"><polygon points="0,-10 0,0 -9,0" fill="#8CD2F6"/><polygon points="0,-10 9,0 0,0" fill="#4F9EE0"/><polygon points="0,10 -9,0 0,0" fill="#285E9C"/><polygon points="0,10 9,0 0,0" fill="#1B4E85"/><polygon points="0,-10 9,0 0,10 -9,0" fill="none" stroke="#0C3358" stroke-width="0.8" stroke-linejoin="round"/></g><g transform="translate(828.0,137.0) rotate(40) scale(0.62)"><polygon points="0,-10 0,0 -9,0" fill="#8CD2F6"/><polygon points="0,-10 9,0 0,0" fill="#4F9EE0"/><polygon points="0,10 -9,0 0,0" fill="#285E9C"/><polygon points="0,10 9,0 0,0" fill="#1B4E85"/><polygon points="0,-10 9,0 0,10 -9,0" fill="none" stroke="#0C3358" stroke-width="0.8" stroke-linejoin="round"/></g><g transform="translate(843.0,150.5) rotate(40) scale(0.62)"><polygon points="0,-10 0,0 -9,0" fill="#8CD2F6"/><polygon points="0,-10 9,0 0,0" fill="#4F9EE0"/><polygon points="0,10 -9,0 0,0" fill="#285E9C"/><polygon points="0,10 9,0 0,0" fill="#1B4E85"/><polygon points="0,-10 9,0 0,10 -9,0" fill="none" stroke="#0C3358" stroke-width="0.8" stroke-linejoin="round"/></g><g transform="translate(858.0,164.0) rotate(40) scale(0.62)"><polygon points="0,-10 0,0 -9,0" fill="#8CD2F6"/><polygon points="0,-10 9,0 0,0" fill="#4F9EE0"/><polygon points="0,10 -9,0 0,0" fill="#285E9C"/><polygon points="0,10 9,0 0,0" fill="#1B4E85"/><polygon points="0,-10 9,0 0,10 -9,0" fill="none" stroke="#0C3358" stroke-width="0.8" stroke-linejoin="round"/></g><g transform="translate(873.0,177.5) rotate(40) scale(0.62)"><polygon points="0,-10 0,0 -9,0" fill="#8CD2F6"/><polygon points="0,-10 9,0 0,0" fill="#4F9EE0"/><polygon points="0,10 -9,0 0,0" fill="#285E9C"/><polygon points="0,10 9,0 0,0" fill="#1B4E85"/><polygon points="0,-10 9,0 0,10 -9,0" fill="none" stroke="#0C3358" stroke-width="0.8" stroke-linejoin="round"/></g><g transform="translate(804.0,216.0) rotate(38) scale(0.6)"><polygon points="0,-10 0,0 -9,0" fill="#8CD2F6"/><polygon points="0,-10 9,0 0,0" fill="#4F9EE0"/><polygon points="0,10 -9,0 0,0" fill="#285E9C"/><polygon points="0,10 9,0 0,0" fill="#1B4E85"/><polygon points="0,-10 9,0 0,10 -9,0" fill="none" stroke="#0C3358" stroke-width="0.8" stroke-linejoin="round"/></g><g transform="translate(819.0,229.5) rotate(40) scale(0.6)"><polygon points="0,-10 0,0 -9,0" fill="#8CD2F6"/><polygon points="0,-10 9,0 0,0" fill="#4F9EE0"/><polygon points="0,10 -9,0 0,0" fill="#285E9C"/><polygon points="0,10 9,0 0,0" fill="#1B4E85"/><polygon points="0,-10 9,0 0,10 -9,0" fill="none" stroke="#0C3358" stroke-width="0.8" stroke-linejoin="round"/></g><g transform="translate(834.0,243.0) rotate(42) scale(0.6)"><polygon points="0,-10 0,0 -9,0" fill="#8CD2F6"/><polygon points="0,-10 9,0 0,0" fill="#4F9EE0"/><polygon points="0,10 -9,0 0,0" fill="#285E9C"/><polygon points="0,10 9,0 0,0" fill="#1B4E85"/><polygon points="0,-10 9,0 0,10 -9,0" fill="none" stroke="#0C3358" stroke-width="0.8" stroke-linejoin="round"/></g><g transform="translate(849.0,256.5) rotate(39) scale(0.6)"><polygon points="0,-10 0,0 -9,0" fill="#8CD2F6"/><polygon points="0,-10 9,0 0,0" fill="#4F9EE0"/><polygon points="0,10 -9,0 0,0" fill="#285E9C"/><polygon points="0,10 9,0 0,0" fill="#1B4E85"/><polygon points="0,-10 9,0 0,10 -9,0" fill="none" stroke="#0C3358" stroke-width="0.8" stroke-linejoin="round"/></g><g transform="translate(864.0,270.0) rotate(41) scale(0.6)"><polygon points="0,-10 0,0 -9,0" fill="#8CD2F6"/><polygon points="0,-10 9,0 0,0" fill="#4F9EE0"/><polygon points="0,10 -9,0 0,0" fill="#285E9C"/><polygon points="0,10 9,0 0,0" fill="#1B4E85"/><polygon points="0,-10 9,0 0,10 -9,0" fill="none" stroke="#0C3358" stroke-width="0.8" stroke-linejoin="round"/></g><g transform="translate(879.0,283.5) rotate(38) scale(0.6)"><polygon points="0,-10 0,0 -9,0" fill="#8CD2F6"/><polygon points="0,-10 9,0 0,0" fill="#4F9EE0"/><polygon points="0,10 -9,0 0,0" fill="#285E9C"/><polygon points="0,10 9,0 0,0" fill="#1B4E85"/><polygon points="0,-10 9,0 0,10 -9,0" fill="none" stroke="#0C3358" stroke-width="0.8" stroke-linejoin="round"/></g><g transform="translate(788.0,322.0)"><circle r="7.0" fill="url(#clustG)"/><circle cx="0.0" cy="0.0" r="2.5" fill="url(#clustG)"/><circle cx="3.5" cy="0.0" r="2.5" fill="url(#clustG)"/><circle cx="2.2" cy="2.7" r="2.5" fill="url(#clustG)"/><circle cx="-0.8" cy="3.4" r="2.5" fill="url(#clustG)"/><circle cx="-3.2" cy="1.5" r="2.5" fill="url(#clustG)"/><circle cx="-3.2" cy="-1.5" r="2.5" fill="url(#clustG)"/><circle cx="-0.8" cy="-3.4" r="2.5" fill="url(#clustG)"/><circle cx="2.2" cy="-2.7" r="2.5" fill="url(#clustG)"/><circle cx="5.5" cy="1.7" r="2.5" fill="url(#clustG)"/><circle cx="3.7" cy="4.4" r="2.5" fill="url(#clustG)"/><circle cx="0.7" cy="5.7" r="2.5" fill="url(#clustG)"/><circle cx="-2.5" cy="5.2" r="2.5" fill="url(#clustG)"/><circle cx="-4.9" cy="3.0" r="2.5" fill="url(#clustG)"/><circle cx="-5.7" cy="-0.1" r="2.5" fill="url(#clustG)"/><circle cx="-4.8" cy="-3.2" r="2.5" fill="url(#clustG)"/><circle cx="-2.3" cy="-5.3" r="2.5" fill="url(#clustG)"/><circle cx="0.9" cy="-5.7" r="2.5" fill="url(#clustG)"/><circle cx="3.8" cy="-4.3" r="2.5" fill="url(#clustG)"/><circle cx="5.5" cy="-1.5" r="2.5" fill="url(#clustG)"/><circle cx="-2.0" cy="-2.4" r="1.8" fill="#CDEBFB" opacity="0.35"/></g><g transform="translate(806.0,334.0)"><circle r="7.0" fill="url(#clustG)"/><circle cx="0.0" cy="0.0" r="2.5" fill="url(#clustG)"/><circle cx="3.5" cy="0.0" r="2.5" fill="url(#clustG)"/><circle cx="2.2" cy="2.7" r="2.5" fill="url(#clustG)"/><circle cx="-0.8" cy="3.4" r="2.5" fill="url(#clustG)"/><circle cx="-3.2" cy="1.5" r="2.5" fill="url(#clustG)"/><circle cx="-3.2" cy="-1.5" r="2.5" fill="url(#clustG)"/><circle cx="-0.8" cy="-3.4" r="2.5" fill="url(#clustG)"/><circle cx="2.2" cy="-2.7" r="2.5" fill="url(#clustG)"/><circle cx="5.5" cy="1.7" r="2.5" fill="url(#clustG)"/><circle cx="3.7" cy="4.4" r="2.5" fill="url(#clustG)"/><circle cx="0.7" cy="5.7" r="2.5" fill="url(#clustG)"/><circle cx="-2.5" cy="5.2" r="2.5" fill="url(#clustG)"/><circle cx="-4.9" cy="3.0" r="2.5" fill="url(#clustG)"/><circle cx="-5.7" cy="-0.1" r="2.5" fill="url(#clustG)"/><circle cx="-4.8" cy="-3.2" r="2.5" fill="url(#clustG)"/><circle cx="-2.3" cy="-5.3" r="2.5" fill="url(#clustG)"/><circle cx="0.9" cy="-5.7" r="2.5" fill="url(#clustG)"/><circle cx="3.8" cy="-4.3" r="2.5" fill="url(#clustG)"/><circle cx="5.5" cy="-1.5" r="2.5" fill="url(#clustG)"/><circle cx="-2.0" cy="-2.4" r="1.8" fill="#CDEBFB" opacity="0.35"/></g><g transform="translate(824.0,346.0)"><circle r="7.0" fill="url(#clustG)"/><circle cx="0.0" cy="0.0" r="2.5" fill="url(#clustG)"/><circle cx="3.5" cy="0.0" r="2.5" fill="url(#clustG)"/><circle cx="2.2" cy="2.7" r="2.5" fill="url(#clustG)"/><circle cx="-0.8" cy="3.4" r="2.5" fill="url(#clustG)"/><circle cx="-3.2" cy="1.5" r="2.5" fill="url(#clustG)"/><circle cx="-3.2" cy="-1.5" r="2.5" fill="url(#clustG)"/><circle cx="-0.8" cy="-3.4" r="2.5" fill="url(#clustG)"/><circle cx="2.2" cy="-2.7" r="2.5" fill="url(#clustG)"/><circle cx="5.5" cy="1.7" r="2.5" fill="url(#clustG)"/><circle cx="3.7" cy="4.4" r="2.5" fill="url(#clustG)"/><circle cx="0.7" cy="5.7" r="2.5" fill="url(#clustG)"/><circle cx="-2.5" cy="5.2" r="2.5" fill="url(#clustG)"/><circle cx="-4.9" cy="3.0" r="2.5" fill="url(#clustG)"/><circle cx="-5.7" cy="-0.1" r="2.5" fill="url(#clustG)"/><circle cx="-4.8" cy="-3.2" r="2.5" fill="url(#clustG)"/><circle cx="-2.3" cy="-5.3" r="2.5" fill="url(#clustG)"/><circle cx="0.9" cy="-5.7" r="2.5" fill="url(#clustG)"/><circle cx="3.8" cy="-4.3" r="2.5" fill="url(#clustG)"/><circle cx="5.5" cy="-1.5" r="2.5" fill="url(#clustG)"/><circle cx="-2.0" cy="-2.4" r="1.8" fill="#CDEBFB" opacity="0.35"/></g><g transform="translate(842.0,358.0)"><circle r="7.0" fill="url(#clustG)"/><circle cx="0.0" cy="0.0" r="2.5" fill="url(#clustG)"/><circle cx="3.5" cy="0.0" r="2.5" fill="url(#clustG)"/><circle cx="2.2" cy="2.7" r="2.5" fill="url(#clustG)"/><circle cx="-0.8" cy="3.4" r="2.5" fill="url(#clustG)"/><circle cx="-3.2" cy="1.5" r="2.5" fill="url(#clustG)"/><circle cx="-3.2" cy="-1.5" r="2.5" fill="url(#clustG)"/><circle cx="-0.8" cy="-3.4" r="2.5" fill="url(#clustG)"/><circle cx="2.2" cy="-2.7" r="2.5" fill="url(#clustG)"/><circle cx="5.5" cy="1.7" r="2.5" fill="url(#clustG)"/><circle cx="3.7" cy="4.4" r="2.5" fill="url(#clustG)"/><circle cx="0.7" cy="5.7" r="2.5" fill="url(#clustG)"/><circle cx="-2.5" cy="5.2" r="2.5" fill="url(#clustG)"/><circle cx="-4.9" cy="3.0" r="2.5" fill="url(#clustG)"/><circle cx="-5.7" cy="-0.1" r="2.5" fill="url(#clustG)"/><circle cx="-4.8" cy="-3.2" r="2.5" fill="url(#clustG)"/><circle cx="-2.3" cy="-5.3" r="2.5" fill="url(#clustG)"/><circle cx="0.9" cy="-5.7" r="2.5" fill="url(#clustG)"/><circle cx="3.8" cy="-4.3" r="2.5" fill="url(#clustG)"/><circle cx="5.5" cy="-1.5" r="2.5" fill="url(#clustG)"/><circle cx="-2.0" cy="-2.4" r="1.8" fill="#CDEBFB" opacity="0.35"/></g><g transform="translate(860.0,369.0)"><circle r="7.0" fill="url(#clustG)"/><circle cx="0.0" cy="0.0" r="2.5" fill="url(#clustG)"/><circle cx="3.5" cy="0.0" r="2.5" fill="url(#clustG)"/><circle cx="2.2" cy="2.7" r="2.5" fill="url(#clustG)"/><circle cx="-0.8" cy="3.4" r="2.5" fill="url(#clustG)"/><circle cx="-3.2" cy="1.5" r="2.5" fill="url(#clustG)"/><circle cx="-3.2" cy="-1.5" r="2.5" fill="url(#clustG)"/><circle cx="-0.8" cy="-3.4" r="2.5" fill="url(#clustG)"/><circle cx="2.2" cy="-2.7" r="2.5" fill="url(#clustG)"/><circle cx="5.5" cy="1.7" r="2.5" fill="url(#clustG)"/><circle cx="3.7" cy="4.4" r="2.5" fill="url(#clustG)"/><circle cx="0.7" cy="5.7" r="2.5" fill="url(#clustG)"/><circle cx="-2.5" cy="5.2" r="2.5" fill="url(#clustG)"/><circle cx="-4.9" cy="3.0" r="2.5" fill="url(#clustG)"/><circle cx="-5.7" cy="-0.1" r="2.5" fill="url(#clustG)"/><circle cx="-4.8" cy="-3.2" r="2.5" fill="url(#clustG)"/><circle cx="-2.3" cy="-5.3" r="2.5" fill="url(#clustG)"/><circle cx="0.9" cy="-5.7" r="2.5" fill="url(#clustG)"/><circle cx="3.8" cy="-4.3" r="2.5" fill="url(#clustG)"/><circle cx="5.5" cy="-1.5" r="2.5" fill="url(#clustG)"/><circle cx="-2.0" cy="-2.4" r="1.8" fill="#CDEBFB" opacity="0.35"/></g><g transform="translate(858,412) scale(1.05)"><path d="M-28,-6 C-33,-19 -15,-28 -2,-24 C11,-30 30,-19 28,-4 C36,9 21,24 6,22 C-7,32 -30,22 -28,6 Z" fill="url(#amsolidG)"/><ellipse cx="-10" cy="-10" rx="10" ry="6" fill="#A79EE8" opacity="0.4"/></g><g transform="translate(812.0,505.0)"><path d="M-32.0,0.0 -22.9,4.6 -13.7,3.7 -4.6,-1.5 4.6,-5.0 13.7,-2.5 22.9,2.9 32.0,4.9" fill="none" stroke="#6FB2E8" stroke-width="1.8" opacity="0.75" stroke-linecap="round" stroke-linejoin="round"/><circle cx="-32.0" cy="0.0" r="3.4" fill="url(#dropG)"/><ellipse cx="-33.1" cy="-1.2" rx="1.1" ry="0.7" fill="#E4F5FF" opacity="0.72"/><circle cx="-22.9" cy="4.6" r="3.4" fill="url(#dropG)"/><ellipse cx="-23.9" cy="3.3" rx="1.1" ry="0.7" fill="#E4F5FF" opacity="0.72"/><circle cx="-13.7" cy="3.7" r="3.4" fill="url(#dropG)"/><ellipse cx="-14.8" cy="2.5" rx="1.1" ry="0.7" fill="#E4F5FF" opacity="0.72"/><circle cx="-4.6" cy="-1.5" r="3.4" fill="url(#dropG)"/><ellipse cx="-5.7" cy="-2.7" rx="1.1" ry="0.7" fill="#E4F5FF" opacity="0.72"/><circle cx="4.6" cy="-5.0" r="3.4" fill="url(#dropG)"/><ellipse cx="3.5" cy="-6.2" rx="1.1" ry="0.7" fill="#E4F5FF" opacity="0.72"/><circle cx="13.7" cy="-2.5" r="3.4" fill="url(#dropG)"/><ellipse cx="12.6" cy="-3.8" rx="1.1" ry="0.7" fill="#E4F5FF" opacity="0.72"/><circle cx="22.9" cy="2.9" r="3.4" fill="url(#dropG)"/><ellipse cx="21.8" cy="1.7" rx="1.1" ry="0.7" fill="#E4F5FF" opacity="0.72"/><circle cx="32.0" cy="4.9" r="3.4" fill="url(#dropG)"/><ellipse cx="30.9" cy="3.7" rx="1.1" ry="0.7" fill="#E4F5FF" opacity="0.72"/></g></g><g filter="url(#cpaGlow)"><g transform="translate(506.0,100.0) rotate(-3) scale(0.75)"><polygon points="0,-10 0,0 -9,0" fill="#8CD2F6"/><polygon points="0,-10 9,0 0,0" fill="#4F9EE0"/><polygon points="0,10 -9,0 0,0" fill="#285E9C"/><polygon points="0,10 9,0 0,0" fill="#1B4E85"/><polygon points="0,-10 9,0 0,10 -9,0" fill="none" stroke="#0C3358" stroke-width="0.8" stroke-linejoin="round"/></g><g transform="translate(536.0,100.0) rotate(1) scale(0.75)"><polygon points="0,-10 0,0 -9,0" fill="#8CD2F6"/><polygon points="0,-10 9,0 0,0" fill="#4F9EE0"/><polygon points="0,10 -9,0 0,0" fill="#285E9C"/><polygon points="0,10 9,0 0,0" fill="#1B4E85"/><polygon points="0,-10 9,0 0,10 -9,0" fill="none" stroke="#0C3358" stroke-width="0.8" stroke-linejoin="round"/></g><g transform="translate(566.0,100.0) rotate(-2) scale(0.75)"><polygon points="0,-10 0,0 -9,0" fill="#8CD2F6"/><polygon points="0,-10 9,0 0,0" fill="#4F9EE0"/><polygon points="0,10 -9,0 0,0" fill="#285E9C"/><polygon points="0,10 9,0 0,0" fill="#1B4E85"/><polygon points="0,-10 9,0 0,10 -9,0" fill="none" stroke="#0C3358" stroke-width="0.8" stroke-linejoin="round"/></g><g transform="translate(596.0,100.0) rotate(2) scale(0.75)"><polygon points="0,-10 0,0 -9,0" fill="#8CD2F6"/><polygon points="0,-10 9,0 0,0" fill="#4F9EE0"/><polygon points="0,10 -9,0 0,0" fill="#285E9C"/><polygon points="0,10 9,0 0,0" fill="#1B4E85"/><polygon points="0,-10 9,0 0,10 -9,0" fill="none" stroke="#0C3358" stroke-width="0.8" stroke-linejoin="round"/></g><g transform="translate(626.0,100.0) rotate(-1) scale(0.75)"><polygon points="0,-10 0,0 -9,0" fill="#8CD2F6"/><polygon points="0,-10 9,0 0,0" fill="#4F9EE0"/><polygon points="0,10 -9,0 0,0" fill="#285E9C"/><polygon points="0,10 9,0 0,0" fill="#1B4E85"/><polygon points="0,-10 9,0 0,10 -9,0" fill="none" stroke="#0C3358" stroke-width="0.8" stroke-linejoin="round"/></g><g transform="translate(520.0,169.0)"><circle r="14.0" fill="url(#clustG)"/><circle cx="0.0" cy="0.0" r="5.0" fill="url(#clustG)"/><circle cx="7.0" cy="0.0" r="5.0" fill="url(#clustG)"/><circle cx="4.4" cy="5.5" r="5.0" fill="url(#clustG)"/><circle cx="-1.6" cy="6.8" r="5.0" fill="url(#clustG)"/><circle cx="-6.3" cy="3.0" r="5.0" fill="url(#clustG)"/><circle cx="-6.3" cy="-3.0" r="5.0" fill="url(#clustG)"/><circle cx="-1.6" cy="-6.8" r="5.0" fill="url(#clustG)"/><circle cx="4.4" cy="-5.5" r="5.0" fill="url(#clustG)"/><circle cx="11.0" cy="3.4" r="5.0" fill="url(#clustG)"/><circle cx="7.4" cy="8.8" r="5.0" fill="url(#clustG)"/><circle cx="1.5" cy="11.4" r="5.0" fill="url(#clustG)"/><circle cx="-4.9" cy="10.4" r="5.0" fill="url(#clustG)"/><circle cx="-9.7" cy="6.1" r="5.0" fill="url(#clustG)"/><circle cx="-11.5" cy="-0.2" r="5.0" fill="url(#clustG)"/><circle cx="-9.6" cy="-6.3" r="5.0" fill="url(#clustG)"/><circle cx="-4.6" cy="-10.5" r="5.0" fill="url(#clustG)"/><circle cx="1.8" cy="-11.3" r="5.0" fill="url(#clustG)"/><circle cx="7.6" cy="-8.6" r="5.0" fill="url(#clustG)"/><circle cx="11.1" cy="-3.1" r="5.0" fill="url(#clustG)"/><circle cx="-3.9" cy="-4.8" r="3.6" fill="#CDEBFB" opacity="0.35"/></g><g transform="translate(566.0,169.0)"><circle r="14.0" fill="url(#clustG)"/><circle cx="0.0" cy="0.0" r="5.0" fill="url(#clustG)"/><circle cx="7.0" cy="0.0" r="5.0" fill="url(#clustG)"/><circle cx="4.4" cy="5.5" r="5.0" fill="url(#clustG)"/><circle cx="-1.6" cy="6.8" r="5.0" fill="url(#clustG)"/><circle cx="-6.3" cy="3.0" r="5.0" fill="url(#clustG)"/><circle cx="-6.3" cy="-3.0" r="5.0" fill="url(#clustG)"/><circle cx="-1.6" cy="-6.8" r="5.0" fill="url(#clustG)"/><circle cx="4.4" cy="-5.5" r="5.0" fill="url(#clustG)"/><circle cx="11.0" cy="3.4" r="5.0" fill="url(#clustG)"/><circle cx="7.4" cy="8.8" r="5.0" fill="url(#clustG)"/><circle cx="1.5" cy="11.4" r="5.0" fill="url(#clustG)"/><circle cx="-4.9" cy="10.4" r="5.0" fill="url(#clustG)"/><circle cx="-9.7" cy="6.1" r="5.0" fill="url(#clustG)"/><circle cx="-11.5" cy="-0.2" r="5.0" fill="url(#clustG)"/><circle cx="-9.6" cy="-6.3" r="5.0" fill="url(#clustG)"/><circle cx="-4.6" cy="-10.5" r="5.0" fill="url(#clustG)"/><circle cx="1.8" cy="-11.3" r="5.0" fill="url(#clustG)"/><circle cx="7.6" cy="-8.6" r="5.0" fill="url(#clustG)"/><circle cx="11.1" cy="-3.1" r="5.0" fill="url(#clustG)"/><circle cx="-3.9" cy="-4.8" r="3.6" fill="#CDEBFB" opacity="0.35"/></g><g transform="translate(612.0,169.0)"><circle r="14.0" fill="url(#clustG)"/><circle cx="0.0" cy="0.0" r="5.0" fill="url(#clustG)"/><circle cx="7.0" cy="0.0" r="5.0" fill="url(#clustG)"/><circle cx="4.4" cy="5.5" r="5.0" fill="url(#clustG)"/><circle cx="-1.6" cy="6.8" r="5.0" fill="url(#clustG)"/><circle cx="-6.3" cy="3.0" r="5.0" fill="url(#clustG)"/><circle cx="-6.3" cy="-3.0" r="5.0" fill="url(#clustG)"/><circle cx="-1.6" cy="-6.8" r="5.0" fill="url(#clustG)"/><circle cx="4.4" cy="-5.5" r="5.0" fill="url(#clustG)"/><circle cx="11.0" cy="3.4" r="5.0" fill="url(#clustG)"/><circle cx="7.4" cy="8.8" r="5.0" fill="url(#clustG)"/><circle cx="1.5" cy="11.4" r="5.0" fill="url(#clustG)"/><circle cx="-4.9" cy="10.4" r="5.0" fill="url(#clustG)"/><circle cx="-9.7" cy="6.1" r="5.0" fill="url(#clustG)"/><circle cx="-11.5" cy="-0.2" r="5.0" fill="url(#clustG)"/><circle cx="-9.6" cy="-6.3" r="5.0" fill="url(#clustG)"/><circle cx="-4.6" cy="-10.5" r="5.0" fill="url(#clustG)"/><circle cx="1.8" cy="-11.3" r="5.0" fill="url(#clustG)"/><circle cx="7.6" cy="-8.6" r="5.0" fill="url(#clustG)"/><circle cx="11.1" cy="-3.1" r="5.0" fill="url(#clustG)"/><circle cx="-3.9" cy="-4.8" r="3.6" fill="#CDEBFB" opacity="0.35"/></g><g transform="translate(506.0,238.0) scale(0.92)"><path d="M-13,-3 C-15,-12 -5,-15 2,-12 C12,-14 15,-4 12,4 C15,11 5,16 -2,12 C-11,15 -15,5 -13,-3 Z" fill="url(#amorphG)"/><ellipse cx="-5" cy="-6" rx="5" ry="3.2" fill="#BFE6FA" opacity="0.32"/></g><g transform="translate(550.0,238.0) scale(0.92)"><path d="M-12,-5 C-15,-13 -3,-14 4,-11 C11,-15 16,-5 12,3 C16,10 6,16 -1,12 C-10,15 -16,4 -12,-5 Z" fill="url(#amorphG)"/><ellipse cx="-5" cy="-6" rx="5" ry="3.2" fill="#BFE6FA" opacity="0.32"/></g><g transform="translate(594.0,238.0) scale(0.92)"><path d="M-13,-2 C-14,-11 -6,-16 1,-13 C10,-15 15,-6 13,2 C16,9 7,15 -1,13 C-11,14 -14,6 -13,-2 Z" fill="url(#amorphG)"/><ellipse cx="-5" cy="-6" rx="5" ry="3.2" fill="#BFE6FA" opacity="0.32"/></g><g transform="translate(636.0,238.0) scale(0.92)"><path d="M-13,-3 C-15,-12 -5,-15 2,-12 C12,-14 15,-4 12,4 C15,11 5,16 -2,12 C-11,15 -15,5 -13,-3 Z" fill="url(#amorphG)"/><ellipse cx="-5" cy="-6" rx="5" ry="3.2" fill="#BFE6FA" opacity="0.32"/></g><circle cx="534.0" cy="307.0" r="11.5" fill="url(#dropG)"/><ellipse cx="530.3" cy="302.9" rx="3.7" ry="2.5" fill="#E4F5FF" opacity="0.72"/><circle cx="568.0" cy="307.0" r="11.5" fill="url(#dropG)"/><ellipse cx="564.3" cy="302.9" rx="3.7" ry="2.5" fill="#E4F5FF" opacity="0.72"/><circle cx="602.0" cy="307.0" r="11.5" fill="url(#dropG)"/><ellipse cx="598.3" cy="302.9" rx="3.7" ry="2.5" fill="#E4F5FF" opacity="0.72"/><g transform="translate(566.0,376.0)"><g stroke="#6FB2E8" stroke-width="1.6" opacity="0.75" stroke-linecap="round"><line x1="0" y1="0" x2="-10" y2="-6"/><line x1="0" y1="0" x2="10" y2="-5"/><line x1="0" y1="0" x2="1" y2="10"/></g><circle cx="0.0" cy="0.0" r="6.0" fill="url(#dropG)"/><ellipse cx="-1.9" cy="-2.2" rx="1.9" ry="1.3" fill="#E4F5FF" opacity="0.72"/><circle cx="-10.0" cy="-6.0" r="3.8" fill="url(#dropG)"/><ellipse cx="-11.2" cy="-7.4" rx="1.2" ry="0.8" fill="#E4F5FF" opacity="0.72"/><circle cx="10.0" cy="-5.0" r="3.8" fill="url(#dropG)"/><ellipse cx="8.8" cy="-6.4" rx="1.2" ry="0.8" fill="#E4F5FF" opacity="0.72"/><circle cx="1.0" cy="10.0" r="3.8" fill="url(#dropG)"/><ellipse cx="-0.2" cy="8.6" rx="1.2" ry="0.8" fill="#E4F5FF" opacity="0.72"/></g><g transform="translate(566.0,445.0)"><g stroke="#6FB2E8" stroke-width="1.8" opacity="0.75" stroke-linecap="round"><line x1="-15" y1="2" x2="-5" y2="-3"/><line x1="-5" y1="-3" x2="5" y2="3"/><line x1="5" y1="3" x2="15" y2="-2"/></g><circle cx="-15.0" cy="2.0" r="4.2" fill="url(#dropG)"/><ellipse cx="-16.3" cy="0.5" rx="1.3" ry="0.9" fill="#E4F5FF" opacity="0.72"/><circle cx="-5.0" cy="-3.0" r="4.2" fill="url(#dropG)"/><ellipse cx="-6.3" cy="-4.5" rx="1.3" ry="0.9" fill="#E4F5FF" opacity="0.72"/><circle cx="5.0" cy="3.0" r="4.2" fill="url(#dropG)"/><ellipse cx="3.7" cy="1.5" rx="1.3" ry="0.9" fill="#E4F5FF" opacity="0.72"/><circle cx="15.0" cy="-2.0" r="4.2" fill="url(#dropG)"/><ellipse cx="13.7" cy="-3.5" rx="1.3" ry="0.9" fill="#E4F5FF" opacity="0.72"/></g></g><g class="cpa-pool" filter="url(#cpaGlow)"><circle cx="120" cy="486" r="3.6" fill="url(#dropG)"/><circle cx="140" cy="480" r="3.6" fill="url(#dropG)"/><circle cx="158" cy="488" r="3.6" fill="url(#dropG)"/><circle cx="112" cy="500" r="3.6" fill="url(#dropG)"/><circle cx="132" cy="498" r="3.6" fill="url(#dropG)"/><circle cx="150" cy="504" r="3.6" fill="url(#dropG)"/><circle cx="126" cy="512" r="3.6" fill="url(#dropG)"/><circle cx="146" cy="514" r="3.6" fill="url(#dropG)"/><circle cx="108" cy="514" r="3.6" fill="url(#dropG)"/><circle cx="164" cy="500" r="3.6" fill="url(#dropG)"/><circle cx="120" cy="524" r="3.6" fill="url(#dropG)"/><circle cx="140" cy="526" r="3.6" fill="url(#dropG)"/><circle cx="158" cy="520" r="3.6" fill="url(#dropG)"/><circle cx="132" cy="486" r="3.6" fill="url(#dropG)"/><circle cx="114" cy="494" r="3.6" fill="url(#dropG)"/><circle cx="150" cy="492" r="3.6" fill="url(#dropG)"/><circle cx="128" cy="506" r="3.6" fill="url(#dropG)"/><circle cx="154" cy="510" r="3.6" fill="url(#dropG)"/><circle cx="118" cy="510" r="3.6" fill="url(#dropG)"/><circle cx="138" cy="516" r="3.6" fill="url(#dropG)"/></g><g class="cpa-aggregate"><g transform="translate(-3,2)"><circle r="1.0" opacity="0" fill="url(#dropG)"><animateMotion dur="4.4s" begin="0.13s" repeatCount="indefinite" rotate="0" calcMode="linear" keyPoints="0;0.5;0.5;1" keyTimes="0;0.38;0.56;1"><mpath href="#arc1"/></animateMotion><animate attributeName="r" dur="4.4s" begin="0.13s" repeatCount="indefinite" calcMode="linear" values="1.0;1.0;2.0;2.0" keyTimes="0;0.38;0.56;1"/><animate attributeName="opacity" dur="4.4s" begin="0.13s" repeatCount="indefinite" calcMode="linear" values="0;1;1;1;0" keyTimes="0;0.05;0.5;0.9;1"/></circle></g><g transform="translate(2.5,-3)"><circle r="1.0" opacity="0" fill="url(#dropG)"><animateMotion dur="4.4s" begin="1.01s" repeatCount="indefinite" rotate="0" calcMode="linear" keyPoints="0;0.5;0.5;1" keyTimes="0;0.38;0.56;1"><mpath href="#arc1"/></animateMotion><animate attributeName="r" dur="4.4s" begin="1.01s" repeatCount="indefinite" calcMode="linear" values="1.0;1.0;2.0;2.0" keyTimes="0;0.38;0.56;1"/><animate attributeName="opacity" dur="4.4s" begin="1.01s" repeatCount="indefinite" calcMode="linear" values="0;1;1;1;0" keyTimes="0;0.05;0.5;0.9;1"/></circle></g><g transform="translate(4,3)"><circle r="1.0" opacity="0" fill="url(#dropG)"><animateMotion dur="4.4s" begin="1.89s" repeatCount="indefinite" rotate="0" calcMode="linear" keyPoints="0;0.5;0.5;1" keyTimes="0;0.38;0.56;1"><mpath href="#arc1"/></animateMotion><animate attributeName="r" dur="4.4s" begin="1.89s" repeatCount="indefinite" calcMode="linear" values="1.0;1.0;2.0;2.0" keyTimes="0;0.38;0.56;1"/><animate attributeName="opacity" dur="4.4s" begin="1.89s" repeatCount="indefinite" calcMode="linear" values="0;1;1;1;0" keyTimes="0;0.05;0.5;0.9;1"/></circle></g><g transform="translate(-4,-2)"><circle r="1.0" opacity="0" fill="url(#dropG)"><animateMotion dur="4.4s" begin="2.77s" repeatCount="indefinite" rotate="0" calcMode="linear" keyPoints="0;0.5;0.5;1" keyTimes="0;0.38;0.56;1"><mpath href="#arc1"/></animateMotion><animate attributeName="r" dur="4.4s" begin="2.77s" repeatCount="indefinite" calcMode="linear" values="1.0;1.0;2.0;2.0" keyTimes="0;0.38;0.56;1"/><animate attributeName="opacity" dur="4.4s" begin="2.77s" repeatCount="indefinite" calcMode="linear" values="0;1;1;1;0" keyTimes="0;0.05;0.5;0.9;1"/></circle></g><g transform="translate(0.5,4)"><circle r="1.0" opacity="0" fill="url(#dropG)"><animateMotion dur="4.4s" begin="3.65s" repeatCount="indefinite" rotate="0" calcMode="linear" keyPoints="0;0.5;0.5;1" keyTimes="0;0.38;0.56;1"><mpath href="#arc1"/></animateMotion><animate attributeName="r" dur="4.4s" begin="3.65s" repeatCount="indefinite" calcMode="linear" values="1.0;1.0;2.0;2.0" keyTimes="0;0.38;0.56;1"/><animate attributeName="opacity" dur="4.4s" begin="3.65s" repeatCount="indefinite" calcMode="linear" values="0;1;1;1;0" keyTimes="0;0.05;0.5;0.9;1"/></circle></g><g transform="translate(-3,2)"><circle r="1.0" opacity="0" fill="url(#dropG)"><animateMotion dur="4.4s" begin="0.26s" repeatCount="indefinite" rotate="0" calcMode="linear" keyPoints="0;0.5;0.5;1" keyTimes="0;0.38;0.56;1"><mpath href="#arc2"/></animateMotion><animate attributeName="r" dur="4.4s" begin="0.26s" repeatCount="indefinite" calcMode="linear" values="1.0;1.0;2.0;2.0" keyTimes="0;0.38;0.56;1"/><animate attributeName="opacity" dur="4.4s" begin="0.26s" repeatCount="indefinite" calcMode="linear" values="0;1;1;1;0" keyTimes="0;0.05;0.5;0.9;1"/></circle></g><g transform="translate(2.5,-3)"><circle r="1.0" opacity="0" fill="url(#dropG)"><animateMotion dur="4.4s" begin="1.14s" repeatCount="indefinite" rotate="0" calcMode="linear" keyPoints="0;0.5;0.5;1" keyTimes="0;0.38;0.56;1"><mpath href="#arc2"/></animateMotion><animate attributeName="r" dur="4.4s" begin="1.14s" repeatCount="indefinite" calcMode="linear" values="1.0;1.0;2.0;2.0" keyTimes="0;0.38;0.56;1"/><animate attributeName="opacity" dur="4.4s" begin="1.14s" repeatCount="indefinite" calcMode="linear" values="0;1;1;1;0" keyTimes="0;0.05;0.5;0.9;1"/></circle></g><g transform="translate(4,3)"><circle r="1.0" opacity="0" fill="url(#dropG)"><animateMotion dur="4.4s" begin="2.02s" repeatCount="indefinite" rotate="0" calcMode="linear" keyPoints="0;0.5;0.5;1" keyTimes="0;0.38;0.56;1"><mpath href="#arc2"/></animateMotion><animate attributeName="r" dur="4.4s" begin="2.02s" repeatCount="indefinite" calcMode="linear" values="1.0;1.0;2.0;2.0" keyTimes="0;0.38;0.56;1"/><animate attributeName="opacity" dur="4.4s" begin="2.02s" repeatCount="indefinite" calcMode="linear" values="0;1;1;1;0" keyTimes="0;0.05;0.5;0.9;1"/></circle></g><g transform="translate(-4,-2)"><circle r="1.0" opacity="0" fill="url(#dropG)"><animateMotion dur="4.4s" begin="2.9s" repeatCount="indefinite" rotate="0" calcMode="linear" keyPoints="0;0.5;0.5;1" keyTimes="0;0.38;0.56;1"><mpath href="#arc2"/></animateMotion><animate attributeName="r" dur="4.4s" begin="2.9s" repeatCount="indefinite" calcMode="linear" values="1.0;1.0;2.0;2.0" keyTimes="0;0.38;0.56;1"/><animate attributeName="opacity" dur="4.4s" begin="2.9s" repeatCount="indefinite" calcMode="linear" values="0;1;1;1;0" keyTimes="0;0.05;0.5;0.9;1"/></circle></g><g transform="translate(0.5,4)"><circle r="1.0" opacity="0" fill="url(#dropG)"><animateMotion dur="4.4s" begin="3.78s" repeatCount="indefinite" rotate="0" calcMode="linear" keyPoints="0;0.5;0.5;1" keyTimes="0;0.38;0.56;1"><mpath href="#arc2"/></animateMotion><animate attributeName="r" dur="4.4s" begin="3.78s" repeatCount="indefinite" calcMode="linear" values="1.0;1.0;2.0;2.0" keyTimes="0;0.38;0.56;1"/><animate attributeName="opacity" dur="4.4s" begin="3.78s" repeatCount="indefinite" calcMode="linear" values="0;1;1;1;0" keyTimes="0;0.05;0.5;0.9;1"/></circle></g><g transform="translate(-3,2)"><circle r="1.0" opacity="0" fill="url(#dropG)"><animateMotion dur="4.4s" begin="0.39s" repeatCount="indefinite" rotate="0" calcMode="linear" keyPoints="0;0.5;0.5;1" keyTimes="0;0.38;0.56;1"><mpath href="#arc3"/></animateMotion><animate attributeName="r" dur="4.4s" begin="0.39s" repeatCount="indefinite" calcMode="linear" values="1.0;1.0;2.0;2.0" keyTimes="0;0.38;0.56;1"/><animate attributeName="opacity" dur="4.4s" begin="0.39s" repeatCount="indefinite" calcMode="linear" values="0;1;1;1;0" keyTimes="0;0.05;0.5;0.9;1"/></circle></g><g transform="translate(2.5,-3)"><circle r="1.0" opacity="0" fill="url(#dropG)"><animateMotion dur="4.4s" begin="1.27s" repeatCount="indefinite" rotate="0" calcMode="linear" keyPoints="0;0.5;0.5;1" keyTimes="0;0.38;0.56;1"><mpath href="#arc3"/></animateMotion><animate attributeName="r" dur="4.4s" begin="1.27s" repeatCount="indefinite" calcMode="linear" values="1.0;1.0;2.0;2.0" keyTimes="0;0.38;0.56;1"/><animate attributeName="opacity" dur="4.4s" begin="1.27s" repeatCount="indefinite" calcMode="linear" values="0;1;1;1;0" keyTimes="0;0.05;0.5;0.9;1"/></circle></g><g transform="translate(4,3)"><circle r="1.0" opacity="0" fill="url(#dropG)"><animateMotion dur="4.4s" begin="2.15s" repeatCount="indefinite" rotate="0" calcMode="linear" keyPoints="0;0.5;0.5;1" keyTimes="0;0.38;0.56;1"><mpath href="#arc3"/></animateMotion><animate attributeName="r" dur="4.4s" begin="2.15s" repeatCount="indefinite" calcMode="linear" values="1.0;1.0;2.0;2.0" keyTimes="0;0.38;0.56;1"/><animate attributeName="opacity" dur="4.4s" begin="2.15s" repeatCount="indefinite" calcMode="linear" values="0;1;1;1;0" keyTimes="0;0.05;0.5;0.9;1"/></circle></g><g transform="translate(-4,-2)"><circle r="1.0" opacity="0" fill="url(#dropG)"><animateMotion dur="4.4s" begin="3.03s" repeatCount="indefinite" rotate="0" calcMode="linear" keyPoints="0;0.5;0.5;1" keyTimes="0;0.38;0.56;1"><mpath href="#arc3"/></animateMotion><animate attributeName="r" dur="4.4s" begin="3.03s" repeatCount="indefinite" calcMode="linear" values="1.0;1.0;2.0;2.0" keyTimes="0;0.38;0.56;1"/><animate attributeName="opacity" dur="4.4s" begin="3.03s" repeatCount="indefinite" calcMode="linear" values="0;1;1;1;0" keyTimes="0;0.05;0.5;0.9;1"/></circle></g><g transform="translate(0.5,4)"><circle r="1.0" opacity="0" fill="url(#dropG)"><animateMotion dur="4.4s" begin="3.91s" repeatCount="indefinite" rotate="0" calcMode="linear" keyPoints="0;0.5;0.5;1" keyTimes="0;0.38;0.56;1"><mpath href="#arc3"/></animateMotion><animate attributeName="r" dur="4.4s" begin="3.91s" repeatCount="indefinite" calcMode="linear" values="1.0;1.0;2.0;2.0" keyTimes="0;0.38;0.56;1"/><animate attributeName="opacity" dur="4.4s" begin="3.91s" repeatCount="indefinite" calcMode="linear" values="0;1;1;1;0" keyTimes="0;0.05;0.5;0.9;1"/></circle></g><g transform="translate(-3,2)"><circle r="1.0" opacity="0" fill="url(#dropG)"><animateMotion dur="4.4s" begin="0.52s" repeatCount="indefinite" rotate="0" calcMode="linear" keyPoints="0;0.5;0.5;1" keyTimes="0;0.38;0.56;1"><mpath href="#arc4"/></animateMotion><animate attributeName="r" dur="4.4s" begin="0.52s" repeatCount="indefinite" calcMode="linear" values="1.0;1.0;2.0;2.0" keyTimes="0;0.38;0.56;1"/><animate attributeName="opacity" dur="4.4s" begin="0.52s" repeatCount="indefinite" calcMode="linear" values="0;1;1;1;0" keyTimes="0;0.05;0.5;0.9;1"/></circle></g><g transform="translate(2.5,-3)"><circle r="1.0" opacity="0" fill="url(#dropG)"><animateMotion dur="4.4s" begin="1.4s" repeatCount="indefinite" rotate="0" calcMode="linear" keyPoints="0;0.5;0.5;1" keyTimes="0;0.38;0.56;1"><mpath href="#arc4"/></animateMotion><animate attributeName="r" dur="4.4s" begin="1.4s" repeatCount="indefinite" calcMode="linear" values="1.0;1.0;2.0;2.0" keyTimes="0;0.38;0.56;1"/><animate attributeName="opacity" dur="4.4s" begin="1.4s" repeatCount="indefinite" calcMode="linear" values="0;1;1;1;0" keyTimes="0;0.05;0.5;0.9;1"/></circle></g><g transform="translate(4,3)"><circle r="1.0" opacity="0" fill="url(#dropG)"><animateMotion dur="4.4s" begin="2.28s" repeatCount="indefinite" rotate="0" calcMode="linear" keyPoints="0;0.5;0.5;1" keyTimes="0;0.38;0.56;1"><mpath href="#arc4"/></animateMotion><animate attributeName="r" dur="4.4s" begin="2.28s" repeatCount="indefinite" calcMode="linear" values="1.0;1.0;2.0;2.0" keyTimes="0;0.38;0.56;1"/><animate attributeName="opacity" dur="4.4s" begin="2.28s" repeatCount="indefinite" calcMode="linear" values="0;1;1;1;0" keyTimes="0;0.05;0.5;0.9;1"/></circle></g><g transform="translate(-4,-2)"><circle r="1.0" opacity="0" fill="url(#dropG)"><animateMotion dur="4.4s" begin="3.16s" repeatCount="indefinite" rotate="0" calcMode="linear" keyPoints="0;0.5;0.5;1" keyTimes="0;0.38;0.56;1"><mpath href="#arc4"/></animateMotion><animate attributeName="r" dur="4.4s" begin="3.16s" repeatCount="indefinite" calcMode="linear" values="1.0;1.0;2.0;2.0" keyTimes="0;0.38;0.56;1"/><animate attributeName="opacity" dur="4.4s" begin="3.16s" repeatCount="indefinite" calcMode="linear" values="0;1;1;1;0" keyTimes="0;0.05;0.5;0.9;1"/></circle></g><g transform="translate(0.5,4)"><circle r="1.0" opacity="0" fill="url(#dropG)"><animateMotion dur="4.4s" begin="4.04s" repeatCount="indefinite" rotate="0" calcMode="linear" keyPoints="0;0.5;0.5;1" keyTimes="0;0.38;0.56;1"><mpath href="#arc4"/></animateMotion><animate attributeName="r" dur="4.4s" begin="4.04s" repeatCount="indefinite" calcMode="linear" values="1.0;1.0;2.0;2.0" keyTimes="0;0.38;0.56;1"/><animate attributeName="opacity" dur="4.4s" begin="4.04s" repeatCount="indefinite" calcMode="linear" values="0;1;1;1;0" keyTimes="0;0.05;0.5;0.9;1"/></circle></g><g transform="translate(-3,2)"><circle r="1.0" opacity="0" fill="url(#dropG)"><animateMotion dur="4.4s" begin="0.65s" repeatCount="indefinite" rotate="0" calcMode="linear" keyPoints="0;0.5;0.5;1" keyTimes="0;0.38;0.56;1"><mpath href="#arc5"/></animateMotion><animate attributeName="r" dur="4.4s" begin="0.65s" repeatCount="indefinite" calcMode="linear" values="1.0;1.0;2.0;2.0" keyTimes="0;0.38;0.56;1"/><animate attributeName="opacity" dur="4.4s" begin="0.65s" repeatCount="indefinite" calcMode="linear" values="0;1;1;1;0" keyTimes="0;0.05;0.5;0.9;1"/></circle></g><g transform="translate(2.5,-3)"><circle r="1.0" opacity="0" fill="url(#dropG)"><animateMotion dur="4.4s" begin="1.53s" repeatCount="indefinite" rotate="0" calcMode="linear" keyPoints="0;0.5;0.5;1" keyTimes="0;0.38;0.56;1"><mpath href="#arc5"/></animateMotion><animate attributeName="r" dur="4.4s" begin="1.53s" repeatCount="indefinite" calcMode="linear" values="1.0;1.0;2.0;2.0" keyTimes="0;0.38;0.56;1"/><animate attributeName="opacity" dur="4.4s" begin="1.53s" repeatCount="indefinite" calcMode="linear" values="0;1;1;1;0" keyTimes="0;0.05;0.5;0.9;1"/></circle></g><g transform="translate(4,3)"><circle r="1.0" opacity="0" fill="url(#dropG)"><animateMotion dur="4.4s" begin="2.41s" repeatCount="indefinite" rotate="0" calcMode="linear" keyPoints="0;0.5;0.5;1" keyTimes="0;0.38;0.56;1"><mpath href="#arc5"/></animateMotion><animate attributeName="r" dur="4.4s" begin="2.41s" repeatCount="indefinite" calcMode="linear" values="1.0;1.0;2.0;2.0" keyTimes="0;0.38;0.56;1"/><animate attributeName="opacity" dur="4.4s" begin="2.41s" repeatCount="indefinite" calcMode="linear" values="0;1;1;1;0" keyTimes="0;0.05;0.5;0.9;1"/></circle></g><g transform="translate(-4,-2)"><circle r="1.0" opacity="0" fill="url(#dropG)"><animateMotion dur="4.4s" begin="3.29s" repeatCount="indefinite" rotate="0" calcMode="linear" keyPoints="0;0.5;0.5;1" keyTimes="0;0.38;0.56;1"><mpath href="#arc5"/></animateMotion><animate attributeName="r" dur="4.4s" begin="3.29s" repeatCount="indefinite" calcMode="linear" values="1.0;1.0;2.0;2.0" keyTimes="0;0.38;0.56;1"/><animate attributeName="opacity" dur="4.4s" begin="3.29s" repeatCount="indefinite" calcMode="linear" values="0;1;1;1;0" keyTimes="0;0.05;0.5;0.9;1"/></circle></g><g transform="translate(0.5,4)"><circle r="1.0" opacity="0" fill="url(#dropG)"><animateMotion dur="4.4s" begin="4.17s" repeatCount="indefinite" rotate="0" calcMode="linear" keyPoints="0;0.5;0.5;1" keyTimes="0;0.38;0.56;1"><mpath href="#arc5"/></animateMotion><animate attributeName="r" dur="4.4s" begin="4.17s" repeatCount="indefinite" calcMode="linear" values="1.0;1.0;2.0;2.0" keyTimes="0;0.38;0.56;1"/><animate attributeName="opacity" dur="4.4s" begin="4.17s" repeatCount="indefinite" calcMode="linear" values="0;1;1;1;0" keyTimes="0;0.05;0.5;0.9;1"/></circle></g><g transform="translate(-3,2)"><circle r="1.0" opacity="0" fill="url(#dropG)"><animateMotion dur="4.4s" begin="0.78s" repeatCount="indefinite" rotate="0" calcMode="linear" keyPoints="0;0.5;0.5;1" keyTimes="0;0.38;0.56;1"><mpath href="#arc6"/></animateMotion><animate attributeName="r" dur="4.4s" begin="0.78s" repeatCount="indefinite" calcMode="linear" values="1.0;1.0;2.0;2.0" keyTimes="0;0.38;0.56;1"/><animate attributeName="opacity" dur="4.4s" begin="0.78s" repeatCount="indefinite" calcMode="linear" values="0;1;1;1;0" keyTimes="0;0.05;0.5;0.9;1"/></circle></g><g transform="translate(2.5,-3)"><circle r="1.0" opacity="0" fill="url(#dropG)"><animateMotion dur="4.4s" begin="1.66s" repeatCount="indefinite" rotate="0" calcMode="linear" keyPoints="0;0.5;0.5;1" keyTimes="0;0.38;0.56;1"><mpath href="#arc6"/></animateMotion><animate attributeName="r" dur="4.4s" begin="1.66s" repeatCount="indefinite" calcMode="linear" values="1.0;1.0;2.0;2.0" keyTimes="0;0.38;0.56;1"/><animate attributeName="opacity" dur="4.4s" begin="1.66s" repeatCount="indefinite" calcMode="linear" values="0;1;1;1;0" keyTimes="0;0.05;0.5;0.9;1"/></circle></g><g transform="translate(4,3)"><circle r="1.0" opacity="0" fill="url(#dropG)"><animateMotion dur="4.4s" begin="2.54s" repeatCount="indefinite" rotate="0" calcMode="linear" keyPoints="0;0.5;0.5;1" keyTimes="0;0.38;0.56;1"><mpath href="#arc6"/></animateMotion><animate attributeName="r" dur="4.4s" begin="2.54s" repeatCount="indefinite" calcMode="linear" values="1.0;1.0;2.0;2.0" keyTimes="0;0.38;0.56;1"/><animate attributeName="opacity" dur="4.4s" begin="2.54s" repeatCount="indefinite" calcMode="linear" values="0;1;1;1;0" keyTimes="0;0.05;0.5;0.9;1"/></circle></g><g transform="translate(-4,-2)"><circle r="1.0" opacity="0" fill="url(#dropG)"><animateMotion dur="4.4s" begin="3.42s" repeatCount="indefinite" rotate="0" calcMode="linear" keyPoints="0;0.5;0.5;1" keyTimes="0;0.38;0.56;1"><mpath href="#arc6"/></animateMotion><animate attributeName="r" dur="4.4s" begin="3.42s" repeatCount="indefinite" calcMode="linear" values="1.0;1.0;2.0;2.0" keyTimes="0;0.38;0.56;1"/><animate attributeName="opacity" dur="4.4s" begin="3.42s" repeatCount="indefinite" calcMode="linear" values="0;1;1;1;0" keyTimes="0;0.05;0.5;0.9;1"/></circle></g><g transform="translate(0.5,4)"><circle r="1.0" opacity="0" fill="url(#dropG)"><animateMotion dur="4.4s" begin="4.3s" repeatCount="indefinite" rotate="0" calcMode="linear" keyPoints="0;0.5;0.5;1" keyTimes="0;0.38;0.56;1"><mpath href="#arc6"/></animateMotion><animate attributeName="r" dur="4.4s" begin="4.3s" repeatCount="indefinite" calcMode="linear" values="1.0;1.0;2.0;2.0" keyTimes="0;0.38;0.56;1"/><animate attributeName="opacity" dur="4.4s" begin="4.3s" repeatCount="indefinite" calcMode="linear" values="0;1;1;1;0" keyTimes="0;0.05;0.5;0.9;1"/></circle></g></g><path class="cpa-classic" d="M182,508 C430,478 690,478 876,508" fill="none" stroke="#5E6E86" stroke-width="2" stroke-dasharray="2 6" stroke-linecap="round"/><g class="cpa-progress"><rect x="175" y="614" width="705" height="15" rx="7.5" fill="none" stroke="#2A3A52" stroke-width="1.4"/><rect class="cpa-progress-fill" x="177" y="616" width="0" height="11" rx="5.5" fill="url(#progG)"/><polygon points="880,614 905,621.5 880,629" fill="#2A6ED0"/></g><g transform="translate(935,478)"><g class="cpa-bulk" filter="url(#cpaGlowSoft)"><polygon points="0,-56 0,0 -46,0" fill="url(#bulkTop)"/><polygon points="0,-56 46,0 0,0" fill="#3F92DC"/><polygon points="0,56 -46,0 0,0" fill="#245F9E"/><polygon points="0,56 46,0 0,0" fill="#173F72"/><g stroke="#0C3358" stroke-width="0.8" opacity="0.35" fill="none"><path d="M-23,-28 L0,0"/><path d="M23,-28 L0,0"/><path d="M-23,28 L0,0"/><path d="M23,28 L0,0"/></g><polygon points="0,-56 -9,-42 -23,-3 -11,-2" fill="#FFFFFF" opacity="0.3"/><polygon points="0,-56 46,0 0,56 -46,0" fill="none" stroke="#0C3358" stroke-width="1.6" stroke-linejoin="round"/></g></g><g class="cpa-labels" font-family="var(--sans)"><text x="145" y="594" text-anchor="middle" font-size="18" font-weight="500" fill="#EAF3FA">Ions, atoms, molecules</text><text x="935" y="560" text-anchor="middle" font-size="18" font-weight="600" fill="#5FD3E4">Bulk crystal</text><text x="566" y="142" text-anchor="middle" font-size="16" font-weight="500" fill="#EAF3FA">Nanocrystals</text><text x="566" y="211" text-anchor="middle" font-size="16" font-weight="500" fill="#EAF3FA">Poorly crystalline nanoparticles</text><text x="566" y="280" text-anchor="middle" font-size="16" font-weight="500" fill="#EAF3FA">Amorphous nanoparticles</text><text x="566" y="349" text-anchor="middle" font-size="16" font-weight="500" fill="#EAF3FA">Droplets</text><text x="566" y="418" text-anchor="middle" font-size="16" font-weight="500" fill="#EAF3FA">Complexes</text><text x="566" y="487" text-anchor="middle" font-size="16" font-weight="500" fill="#EAF3FA">Oligomers</text><text x="864" y="98" text-anchor="middle" font-size="15" font-weight="500" fill="#5FD3E4" transform="rotate(40 864 98)">Oriented attachment (OA)</text><text x="902" y="222" text-anchor="middle" font-size="14" font-weight="500" fill="#5FD3E4" transform="rotate(40 902 222)">Nearly-OA</text><text x="836" y="312" text-anchor="middle" font-size="14" font-weight="500" fill="#5FD3E4" transform="rotate(40 836 312)">Nearly-OA</text><text x="866" y="446" text-anchor="middle" font-size="16" font-weight="500" fill="#EAF3FA">Amorphous</text><text x="866" y="465" text-anchor="middle" font-size="16" font-weight="500" fill="#EAF3FA">solid</text><text x="812" y="540" text-anchor="middle" font-size="16" font-weight="500" fill="#EAF3FA">Polymers</text><text x="556" y="536" text-anchor="middle" font-size="15" font-style="italic" fill="#8CA0B8">Monomer-by-monomer crystal growth</text><text x="527" y="625" text-anchor="middle" font-size="14" font-weight="600" fill="#EAF3FA">Progress</text></g></svg></div>
+      <figcaption id="cpaCap">
+        Pathways to crystallization by particle attachment, after De Yoreo and colleagues. Higher-order
+        species, from multi-ion complexes to fully formed nanocrystals, add to the growing solid, in
+        contrast to classical monomer-by-monomer addition.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
 <section id="elsewhere">
   <div class="wrap">
     <h2>Reach out.</h2>
     <div class="elsewhere">
-      <a href="mailto:REPLACE_ME@rutgers.edu">
+      <a href="mailto:zakjibrin@gmail.com">
         <span class="label">Email</span>
-        <span class="link-text">REPLACE_ME@rutgers.edu <span class="arrow">&rarr;</span></span>
+        <span class="link-text">zakjibrin@gmail.com <span class="arrow">&rarr;</span></span>
       </a>
       <a href="https://scholar.google.com/citations?user=REPLACE_ME">
         <span class="label">Publications</span>
         <span class="link-text">Google Scholar <span class="arrow">&rarr;</span></span>
       </a>
-      <a href="https://orcid.org/REPLACE_ME">
+      <a href="https://orcid.org/0000-0002-7922-0959">
         <span class="label">ID</span>
         <span class="link-text">ORCID <span class="arrow">&rarr;</span></span>
       </a>
@@ -1025,7 +1376,8 @@ footer .signoff em {
     p.style.setProperty('--dim', o);   // skeleton fades; O6 oxygens do not
     p.innerHTML =
       '<svg viewBox="26 26 148 148" aria-hidden="true" focusable="false">' +
-        '<use href="#tetrad"></use>' +
+        '<use class="asTetrad" href="#tetrad"></use>' +
+        '<use class="asCheezit" href="#cheezit"></use>' +
       '</svg>';
     spin.insertBefore(p, front);
     deep.push(p);
@@ -1040,7 +1392,7 @@ footer .signoff em {
         '<svg viewBox="26 26 148 148" aria-hidden="true" focusable="false">' +
           '<circle cx="100" cy="100" r="7.2" fill="url(#naBall)"></circle>' +
           '<circle cx="100" cy="100" r="7.2" fill="url(#naRim)"></circle>' +
-          '<ellipse cx="97.3" cy="96.8" rx="2.3" ry="1.5" fill="#EAF6F1" opacity="0.62"' +
+          '<ellipse cx="97.3" cy="96.8" rx="2.3" ry="1.5" fill="#E1FFFD" opacity="0.62"' +
           ' transform="rotate(-32 97.3 96.8)"></ellipse>' +
         '</svg>' +
       '</div>';
@@ -1214,6 +1566,66 @@ footer .signoff em {
     if (intro.running) return;
     want = [0, 0, 0];              // flat, and back up to full speed
     if (!raf) raf = requestAnimationFrame(apply);
+  });
+})();
+</script>
+
+<script>
+/* --------------------------------------------------------------------------
+   CPA figure. Each species rides its own arc with an SVG <animateMotion> that
+   references that arc's own <path>, so particle and line always agree. This is
+   native SVG motion (works in every browser), unlike CSS offset-path, which is
+   unreliable on SVG elements. Everything is gated on scroll: the arcs, crystal,
+   ammonite and progress bar draw via CSS on the .cpa-run class, and the SMIL
+   particle motion is frozen with pauseAnimations() until the figure is in view.
+-------------------------------------------------------------------------- */
+(function () {
+  var fig = document.getElementById('cpaFig');
+  if (!fig) return;
+  var svg = fig.querySelector('svg');
+
+  // measure each arc for the draw-in dash, and give it a stagger
+  svg.querySelectorAll('.cpa-arcs .arc').forEach(function (a, i) {
+    var len = a.getTotalLength();
+    a.style.setProperty('--len', len.toFixed(0));
+    a.style.setProperty('--d', (i * 0.13).toFixed(2) + 's');
+  });
+
+  // freeze the particle motion until the figure is scrolled into view
+  try { svg.pauseAnimations(); } catch (e) {}
+
+  var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function run() {
+    fig.classList.add('cpa-run');
+    if (!still) { try { svg.unpauseAnimations(); } catch (e) {} }
+  }
+
+  if (still) { run(); return; }   // static figure, particles stay frozen
+
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { run(); io.disconnect(); }
+      });
+    }, { threshold: 0.33 });
+    io.observe(fig);
+  } else {
+    run();
+  }
+})();
+</script>
+
+<script>
+/* Secret Z. Click the Z in "Zak" to swap the live G-tetrad for a spinning 3D
+   Cheez-It, built in pure CSS 3D. Click again to swap back. */
+(function () {
+  var z   = document.getElementById('secretZ');
+  var col = document.querySelector('.motif-col');
+  if (!z || !col) return;
+  z.addEventListener('click', function () {
+    var on = col.classList.toggle('cheezit-on');
+    z.setAttribute('aria-pressed', on ? 'true' : 'false');
   });
 })();
 </script>
