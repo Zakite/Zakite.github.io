@@ -1617,7 +1617,7 @@ footer .signoff em {
   var T_SETTLE = 950;    // camera swing onto the c-axis
 
   var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var fine  = window.matchMedia('(pointer: fine)').matches;
+  var fine  = window.matchMedia('(any-pointer: fine)').matches;
 
   // ---- build the stack, deepest first in the DOM -------------------------
   var deep = [], ions = [], balls = [];
