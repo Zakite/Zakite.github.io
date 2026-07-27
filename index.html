@@ -873,6 +873,11 @@ footer .signoff em {
   .stage { grid-template-columns: 1fr; justify-items: center; gap: 0.75rem; }
   .name-l, .name-r { text-align: center; }
   .name-l { order: 1; } .motif-col { order: 2; } .name-r { order: 3; }
+  /* Stacked layout puts name-r directly after motif-col in its own grid row,
+     but the caption below the tetrad is absolutely positioned and doesn't
+     count toward that row's height, so name-r would otherwise land on top of
+     it. Same fix as hero-foot below: push it past the caption's real height. */
+  .name-r { margin-top: 6.5rem; }
   .name { font-size: clamp(2.9rem, 14vw, 4.6rem); line-height: 1.05; }
   .tilt { width: min(46.2vw, 210px); }
   .motif-caption { --cap-x: 0rem; }   /* stacked layout, so centre it */
@@ -1428,7 +1433,7 @@ footer .signoff em {
 
   <div class="cs-stage">
     <canvas class="cs-canvas" id="csCanvas" role="img"
-            aria-label="A simulated solution seen as a micrograph. Solute drifts and gathers into amorphous calcium carbonate nanoparticles, blobs, which attach to one another while still amorphous. Each blob then ripens into an ordered lattice on its own, some templated by a crystalline neighbour they already touch, some picking a random orientation when they have no neighbour to copy. When two of these crystallites, bricks, come into contact they rotate toward a shared orientation if they started close enough to align, fusing into an extended co-oriented domain the way courses of brick build a wall; joins that started out too misoriented stay fixed as visible grain boundaries. The result keeps its granular, brick-like texture while its lattice fringes run parallel within each domain."></canvas>
+            aria-label="A simulated solution seen as a micrograph. Ions drift like tiny magnets and pack onto their nearest neighbours, building amorphous calcium carbonate blobs with no lattice in them yet. Each blob then ripens in place, a solid-state transformation with no spinning or rotation, into a small flat-faced euhedral crystallite: some templated by a crystalline neighbour they already touch, some picking a random orientation when they have no neighbour to copy. When two of these crystallites first touch, their fixed orientations are compared once, on the spot; if they already align they fuse into one shared lattice, and if they do not the join still holds but stays a visible grain boundary. The result is a masonry-like aggregate of euhedral bricks, a mesocrystal, whose lattice fringes run parallel within each co-oriented domain."></canvas>
     <div class="cs-hint" id="csHint">Scroll into view to start</div>
   </div>
 
@@ -1491,25 +1496,25 @@ footer .signoff em {
 
   <figcaption>
     The same few rules run every frame on whatever is in the field. There is no stage list and no
-    lattice to aim at. What matters here is the order, and it is not the intuitive one. Amorphous
-    calcium carbonate nanoparticles form in solution and attach to one another <em>while still
-    amorphous</em>, growing into blobs. Only then does each blob ripen, on its own clock, into an
-    ordered lattice: one already touching a crystallite tends to order along that crystallite's
-    lattice, and an isolated blob with nothing to copy just picks its own orientation at random.
-    Either way the result is a small ordered brick, and what happens when two bricks meet is
-    <em>oriented attachment</em>, not inheritance: two crystallites already in contact swivel toward
-    a shared orientation whenever they started close enough to align, fusing into an extended
-    co-oriented domain the way courses of brick build a wall. A join that started out too
-    misoriented never rotates and stays exactly what it is, a real grain boundary. Particles keep
-    their irregular outlines after ripening, because biomineral nanoparticles are reported as
-    non-euhedral even once crystalline. Drag the stabilisation control to change the competition:
-    strong stabilisation keeps precursors small and spontaneous ripening rare, so ordering happens
-    almost entirely by templating off whatever crystallised first, the bricks arrive already close
-    to aligned, and the whole mass converges on one domain with its spread under a degree, close to
-    what nano-diffraction finds in a sea urchin spine. Weak stabilisation lets many blobs ripen
-    independently before they ever touch, most of those random orientations miss each other's
-    capture window, and the warm lines mark real grain boundaries between the domains that result.
-    This is a cartoon in two dimensions with coarsened lattice planes, not a quantitative model.
+    lattice to aim at. What matters here is the order, and it is not the intuitive one. Ions behave
+    like tiny magnets, pulling in whichever neighbour is nearest, and amorphous calcium carbonate
+    nanoparticles attach to one another <em>while still amorphous</em>, packing however the
+    collisions fall into a blob with no lattice anywhere in it. Only then does each blob ripen: a
+    solid-state transformation, <em>in place</em>, with no spinning or tumbling, that reorders its
+    interior into a lattice and leaves it a small, flat-faced, euhedral crystallite. One already
+    touching a crystallite tends to order along that crystallite's lattice; an isolated blob with
+    nothing to copy just picks its own orientation at random, once, for good. What happens when two
+    of these crystallites meet is <em>oriented attachment</em>, and it is a decision, not a search:
+    the instant they first touch, their fixed orientations are compared, and if they already line up
+    the join fuses into a shared lattice; if they do not, the join still holds, but it is a genuine,
+    permanent grain boundary. Drag the stabilisation control to change the competition: strong
+    stabilisation keeps precursors small and spontaneous ripening rare, so ordering happens almost
+    entirely by templating off whatever crystallised first, crystallites arrive already aligned, and
+    the whole mass converges on one domain with its spread under a degree, close to what
+    nano-diffraction finds in a sea urchin spine. Weak stabilisation lets many blobs ripen
+    independently before they ever touch, most of those random pairings miss each other's alignment
+    on first contact, and the warm lines mark the real grain boundaries that result. This is a
+    cartoon in two dimensions with coarsened lattice planes, not a quantitative model.
   </figcaption>
 </figure>
   </div>
@@ -1531,7 +1536,7 @@ footer .signoff em {
         <span class="label">ID</span>
         <span class="link-text">ORCID <span class="arrow">&rarr;</span></span>
       </a>
-      <a href="https://github.com/REPLACE_ME">
+      <a href="https://github.com/Zakite">
         <span class="label">Code</span>
         <span class="link-text">GitHub <span class="arrow">&rarr;</span></span>
       </a>
@@ -1875,38 +1880,49 @@ footer .signoff em {
 
 <script>
 /* Crystallization by particle attachment, the calcium carbonate route.
-   Physics core: ACC accretion into amorphous blobs, blob-by-blob ripening
-   into independently oriented crystallites, then oriented attachment. */
+   Physics core: ions pack into amorphous blobs, each blob ripens into a
+   euhedral crystallite in place with no rotation, and crystallites join by
+   oriented attachment, decided once, at first contact, into a mesocrystal. */
 /* --------------------------------------------------------------------------
    Crystallization by particle attachment, CaCO3 pathway.
 
-   The order matters and it is not the obvious one. Amorphous calcium
-   carbonate nanoparticles, ions condensing out of solution, form in solution
-   and attach to each other while still amorphous, growing into blobs that
-   densify wherever they touch. Only then does each blob ripen: it orders
-   into a lattice on its own clock, not as a single front sweeping a finished
-   mass. A blob already touching a crystallite tends to order along that
-   crystallite's lattice, heteroepitaxial templating; an isolated blob still
-   ripens eventually and, with no neighbour's lattice to copy, picks its own
-   orientation at random. Either way what results is a small ordered brick.
+   The order matters and it is not the obvious one. Ions condensing out of
+   solution behave like tiny magnets: they pull in whichever neighbour is
+   nearest, amorphous calcium carbonate nanoparticles that attach to each
+   other while still amorphous and pack together however the collisions fall,
+   with no regard for orientation, because an amorphous particle has none.
+   That packing is what builds a blob.
 
-   What happens when two bricks meet is oriented attachment, and it is not
-   inheritance. Two crystallites already in contact swivel toward each
-   other's orientation while their misfit is still small enough to fall
-   inside a capture window, the way particles are seen to rock into register
-   in situ. A join that starts out more badly misoriented than that never
-   rotates and stays exactly what it is, a real grain boundary. Bricks that
-   keep aligning with more bricks build outward the way courses of masonry
-   build a wall: a mesocrystal, made of many crystallites, reading as one
-   crystal in diffraction while staying visibly granular under the lens.
+   Only then does each blob ripen. This is a solid-state transformation, in
+   place: the blob does not spin or tumble to find some better arrangement,
+   it reorders internally into a lattice and comes out the other side a
+   small, flat-faced, euhedral crystallite. A blob already touching a
+   crystallite tends to order along that crystallite's lattice,
+   heteroepitaxial templating, so its new orientation is simply copied, once,
+   at the moment it transforms; an isolated blob still ripens eventually and,
+   with no neighbour's lattice to copy, picks an orientation at random. Either
+   way, once a particle is a crystallite its orientation is permanent. Nothing
+   in this simulation ever rotates a particle to make it fit.
 
-   That is what the readout measures. Independently ripened bricks (nuclei)
-   are one count; how many of them actually rotated into a shared register
-   (domains) is another. A field can throw down a dozen separate nuclei and
-   still end up as a single domain if they all swivel into line, or it can
-   freeze several domains in place as a true mosaic with grain boundaries
-   between them. The stabilisation control moves between the two: it holds
-   ions in a metastable amorphous state, so it suppresses spontaneous,
+   What happens when two crystallites meet is oriented attachment, and here
+   that means a decision, not a search: the instant two crystallites first
+   touch, their fixed orientations are compared once. If they already happen
+   to align, the join fuses into a shared lattice, coherent, part of the same
+   mesocrystal domain; if they do not, the join still holds, the crystallites
+   are still one physical object, but it is a genuine, permanent grain
+   boundary. Bricks that keep meeting more bricks and keep landing in
+   register are how the aggregate reads as courses of a masonry wall rather
+   than a single fused crystal: a mesocrystal, made of many crystallites,
+   reading as one crystal in diffraction while staying visibly granular.
+
+   That is what the readout measures. Independently ripened crystallites
+   (nuclei) are one count; how many of them ended up fused into a shared
+   register by chance or by templating (domains) is another. A field can
+   throw down a dozen separate nuclei and still read as a single domain if
+   templating dominates, or freeze several domains in place as a true mosaic
+   if too many isolated blobs ripened before they ever touched one another.
+   The stabilisation control moves between the two: it holds ions in a
+   metastable amorphous state, so it suppresses spontaneous,
    independently-oriented ripening far more than it suppresses templated
    ripening off a crystallite already there.
 
@@ -1924,9 +1940,8 @@ function makeSim(seedFn) {
 
   var QUAD = Math.PI / 2;        // 4-fold lattice symmetry in projection
   var MAXMIS = QUAD / 2;         // 45 deg, largest distinguishable misfit
-  var COH = 1.0 * Math.PI / 180; // join counts as coherent below this misfit
-  var CAPTURE = 20 * Math.PI / 180; // bricks this close in orientation can still rotate into register
-  var ROT = 0.014;               // how fast two touching bricks swivel toward alignment, per time unit
+  var COH = 1.0 * Math.PI / 180; // join counts as coherent below this misfit; also the tolerance
+                                  // for oriented attachment below, since neither rotates to find it
 
   var RMIN = 3.0, RCAP = 7.4;    // ACC nanoparticle radius window, nm
 
@@ -2038,7 +2053,22 @@ function makeSim(seedFn) {
     var pa = par[a], pb = par[b];
     if (pa.bl.indexOf(b) >= 0) return;
     pa.bl.push(b); pb.bl.push(a);
-    bonds.push({ a: a, b: b, mis: 0, coh: true, born: t });
+    var bo = { a: a, b: b, mis: 0, coh: true, born: t };
+    bonds.push(bo);
+
+    // Two already-formed crystallites meeting for the first time: this is
+    // the oriented-attachment moment itself, decided once and never revised.
+    // Neither one turns to find a match. If their fixed orientations already
+    // happen to line up, the join fuses into a shared domain; if they do
+    // not, it locks together anyway as a real, permanent grain boundary.
+    if (pa.xtal && pb.xtal) {
+      bo.mis = misfit(pa.th, pb.th);
+      bo.coh = bo.mis <= COH;
+      if (bo.coh) {
+        var da = find(domP, a), db = find(domP, b);
+        if (da !== db) domP[db] = da;
+      }
+    }
 
     var ra = find(aggP, a), rb = find(aggP, b);
     if (ra !== rb) {
@@ -2217,15 +2247,17 @@ function makeSim(seedFn) {
       if (p.y > H - m) { p.y = H - m; p.vy = -Math.abs(p.vy) * 0.5; }
     }
 
-    /* ---- ripening. Every blob ripens on its own timetable, once it is past
-       its first instant as a seed: there is no single "the aggregate" that
-       has to finish assembling first. A blob already touching a crystalline
+    /* ---- ripening: a solid-state transformation, in place, no spinning.
+       Every blob ripens on its own timetable, once it is past its first
+       instant as a seed; there is no single "the aggregate" that has to
+       finish assembling first. A blob already touching a crystalline
        neighbour tends to order along that neighbour's lattice, heteroepitaxial
        templating; an isolated blob still ripens eventually, on its own clock,
        and then just has to pick an orientation with nothing to copy, so it
-       picks one at random. Either way what results is a small ordered brick.
-       What happens when two independently-oriented bricks meet is a separate
-       step, below. ---- */
+       picks one at random. Either way what results is a small euhedral
+       brick, and its orientation is fixed for good right here: it is never
+       revised or rotated afterward. What happens when two of these bricks
+       meet is decided once, at the instant they first touch, in bondUp(). ---- */
     var big = 0, bigRoot = -1, counts = {};
     for (i = 0; i < par.length; i++) {
       p = par[i]; if (!p || !p.alive) continue;
@@ -2258,31 +2290,6 @@ function makeSim(seedFn) {
       }
     }
 
-    /* ---- oriented attachment. Two bricks already in physical contact but
-       still in different domains swivel toward each other's orientation
-       while the misfit between them is small enough to fall inside the
-       capture window, the way crystals are seen to rock into register in
-       situ TEM. A join that starts out more badly misoriented than that
-       never rotates and stays exactly what it is, a real grain boundary,
-       which is what the warm lines mark. Co-oriented bricks that keep
-       meeting more bricks are how the aggregate reads as courses of a
-       masonry wall rather than a single fused crystal. ---- */
-    for (k = 0; k < bonds.length; k++) {
-      var bo = bonds[k];
-      var A = par[bo.a], B = par[bo.b];
-      if (!A || !B || !A.alive || !B.alive || !A.xtal || !B.xtal) continue;
-      var ra = find(domP, A.i), rb = find(domP, B.i);
-      if (ra === rb) { bo.mis = 0; bo.coh = true; continue; }
-      var sd = (B.th - A.th) % QUAD;
-      if (sd > MAXMIS) sd -= QUAD; else if (sd < -MAXMIS) sd += QUAD;
-      if (Math.abs(sd) > CAPTURE) { bo.mis = Math.abs(sd); bo.coh = false; continue; }
-      var wA = B.V / (A.V + B.V), wB = A.V / (A.V + B.V);   // the smaller brick turns more
-      A.th += sd * ROT * dt * wA;
-      B.th -= sd * ROT * dt * wB;
-      bo.mis = misfit(A.th, B.th);
-      bo.coh = bo.mis <= COH;
-      if (bo.coh) domP[rb] = ra;
-    }
 
     /* ---- feed the edges so the field does not run dry instantly ---- */
     var want = Math.round(SOL_CAP * (0.30 + 0.62 * S.sat));
@@ -2495,9 +2502,12 @@ function makeSim(seedFn) {
   }
 
   /* ---- shapes ----
-     Every particle keeps one irregular outline for its whole life. Biomineral
-     nanoparticles are reported as non-euhedral even after they crystallise, so
-     converting a particle changes what is drawn inside it, never its shape. */
+     An amorphous blob keeps one irregular, wobbled outline for as long as it
+     stays amorphous. Ripening is a solid-state transformation, not a rebuild:
+     the particle does not tumble or rotate, but the outline itself does
+     change, from a formless blob to a small euhedral brick with flat faces
+     set by its now-fixed lattice orientation, because that is what actually
+     happens when a disordered solid orders into a lattice in place. */
   function amPath(p) {
     var path = new Path2D(), n = 12;
     for (var k = 0; k < n; k++) {
@@ -2505,6 +2515,19 @@ function makeSim(seedFn) {
       var rr = p.r * p.wob[k];
       var px = X(p.x + rr * Math.cos(ang)), py = Y(p.y + rr * Math.sin(ang));
       if (k === 0) path.moveTo(px, py); else path.lineTo(px, py);
+    }
+    path.closePath();
+    return path;
+  }
+  function xtalPath(p) {
+    var cs = Math.cos(p.th), sn = Math.sin(p.th);
+    var hw = p.r * 1.05, hh = p.r * 0.80;   // a brick, not a blob: elongated along its own lattice axis
+    var path = new Path2D(), i;
+    var uv = [[-hw, -hh], [hw, -hh], [hw, hh], [-hw, hh]];
+    for (i = 0; i < 4; i++) {
+      var u = uv[i][0], v = uv[i][1];
+      var px = X(p.x + u * cs - v * sn), py = Y(p.y + u * sn + v * cs);
+      if (i === 0) path.moveTo(px, py); else path.lineTo(px, py);
     }
     path.closePath();
     return path;
@@ -2576,7 +2599,7 @@ function makeSim(seedFn) {
     for (i = 0; i < sim.par.length; i++) {
       p = sim.par[i];
       if (!p || !p.alive) { shapeCache.push(null); continue; }
-      shapeCache.push(amPath(p));
+      shapeCache.push(p.xtal ? xtalPath(p) : amPath(p));
     }
     // a join that has locked into register fills in, so the two crystallites read
     // as one body with the lattice running straight through
