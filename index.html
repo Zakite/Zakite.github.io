@@ -25,10 +25,6 @@
 
 <style>
 :root {
-  /* The whole layout is scaled to 70%, which is the size it was designed to
-     read at. zoom reflows and stays crisp, the way Chrome's own page zoom does,
-     unlike transform: scale which would leave gaps and blur. */
-  zoom: 0.7;
   /* Cool paper white rather than limestone beige. The neutrals carry a faint
      green-grey cast so they sit under the verdigris accent instead of fighting
      it, and the ink is cooled to match. */
@@ -283,17 +279,11 @@ nav .wrap { display: flex; justify-content: space-between; align-items: baseline
 }
 
 .tilt {
-  perspective: 875px;                  /* 1250 x 0.7, to match the reduced size below */
+  perspective: 1250px;
   /* viewBox is cropped to the artwork, so this box is almost all molecule */
-  width: clamp(161px, 18.2vw, 238px);  /* the design size x 0.7 */
+  width: clamp(230px, 26vw, 340px);
   aspect-ratio: 1;
   position: relative;
-  /* The page is scaled to 70% via zoom on :root. Fractional zoom distorts an
-     ancestor's 3D perspective in Chrome, which was warping the tilting tetrad.
-     This cancels the zoom on the 3D scene only (0.7 x 1.4286 = 1.0), so the
-     perspective renders at true scale with no warp, while the reduced width and
-     perspective above keep the molecule visually at 70% like everything else. */
-  zoom: 1.4285714;
 }
 
 .fibril {
@@ -399,7 +389,7 @@ nav .wrap { display: flex; justify-content: space-between; align-items: baseline
   display: block; margin-top: 0.4rem;
   font-family: var(--serif); font-style: italic;
   font-size: 0.92rem; letter-spacing: 0;
-  text-transform: none; color: var(--muted); opacity: 0.85;
+  text-transform: none; color: var(--muted);
 }
 
 /* ---- secret Z: flip the tetrad into a Cheez-It, toggled by the Z button ---- */
@@ -601,7 +591,7 @@ h2 {
 .entry-meta {
   font-family: var(--mono); font-size: 0.68rem; font-weight: 600;
   letter-spacing: 0.16em; text-transform: uppercase;
-  color: #666; display: block; margin-bottom: 0.8rem;
+  color: var(--muted); display: block; margin-bottom: 0.8rem;
 }
 .entry-meta .venue { color: var(--accent); }
 .entry-meta .sep { opacity: 0.45; margin: 0 0.5rem; }
@@ -650,7 +640,7 @@ h2 {
 .elsewhere .label {
   font-family: var(--mono); font-size: 0.68rem; font-weight: 600;
   letter-spacing: 0.16em; text-transform: uppercase;
-  color: #666; display: block; margin-bottom: 0.4rem;
+  color: var(--muted); display: block; margin-bottom: 0.4rem;
 }
 .elsewhere .link-text {
   font-family: var(--serif); font-variation-settings: "opsz" 24, "wght" 600;
@@ -664,7 +654,7 @@ h2 {
 footer {
   padding: 2.5rem 0 3rem; border-top: 1px solid var(--rule);
   font-family: var(--mono); font-size: 0.72rem;
-  color: #666; letter-spacing: 0.05em;
+  color: var(--muted); letter-spacing: 0.05em;
 }
 footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
 footer .signoff em {
@@ -710,10 +700,10 @@ footer .signoff em {
   display: flex; align-items: baseline; gap: 0.75rem;
   padding: 0.15rem 0.2rem 0.6rem;
   font-family: var(--mono);
-  font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase;
+  font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase;
 }
 .cs-title { color: var(--cs-cyan); font-weight: 500; }
-.cs-sub { color: #55697A; letter-spacing: 0.12em; }
+.cs-sub { color: var(--cs-dim); letter-spacing: 0.12em; }
 
 .cs-stage { position: relative; line-height: 0; }
 .cs-canvas {
@@ -747,8 +737,8 @@ footer .signoff em {
 .cs-block { min-width: 0; }
 .cs-label {
   font-family: var(--mono);
-  font-size: 0.56rem; letter-spacing: 0.17em; text-transform: uppercase;
-  color: #55697A; margin-bottom: 0.6rem;
+  font-size: 0.64rem; letter-spacing: 0.17em; text-transform: uppercase;
+  color: var(--cs-dim); margin-bottom: 0.6rem;
 }
 
 .cs-bar {
@@ -761,7 +751,7 @@ footer .signoff em {
 .cs-key {
   display: flex; flex-wrap: wrap; gap: 0.15rem 1.1rem;
   margin-top: 0.6rem;
-  font-family: var(--mono); font-size: 0.6rem;
+  font-family: var(--mono); font-size: 0.68rem;
   letter-spacing: 0.05em; color: var(--cs-dim);
 }
 .cs-key span { display: inline-flex; align-items: center; gap: 0.4rem; white-space: nowrap; }
@@ -772,8 +762,8 @@ footer .signoff em {
 
 .cs-nums { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.55rem 0.9rem; }
 .cs-nums dt {
-  font-family: var(--mono); font-size: 0.56rem;
-  letter-spacing: 0.12em; text-transform: uppercase; color: #55697A;
+  font-family: var(--mono); font-size: 0.64rem;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--cs-dim);
 }
 .cs-nums dd {
   font-family: var(--mono); font-size: 0.95rem; font-weight: 500;
@@ -782,7 +772,7 @@ footer .signoff em {
 
 .cs-coh {
   display: flex; align-items: center; gap: 0.5rem;
-  font-family: var(--mono); font-size: 0.6rem; color: var(--cs-dim);
+  font-family: var(--mono); font-size: 0.68rem; color: var(--cs-dim);
   letter-spacing: 0.05em;
 }
 .cs-coh b { color: #D6E7F0; font-weight: 500; font-variant-numeric: tabular-nums; }
@@ -801,17 +791,17 @@ footer .signoff em {
 }
 .cs-hist em {
   font-family: var(--mono); font-style: normal;
-  font-size: 0.5rem; color: #55697A; margin-top: 3px; letter-spacing: 0.06em;
+  font-size: 0.6rem; color: var(--cs-dim); margin-top: 3px; letter-spacing: 0.06em;
 }
 .cs-hist-cap {
-  font-family: var(--mono); font-size: 0.52rem;
+  font-family: var(--mono); font-size: 0.62rem;
   letter-spacing: 0.1em; text-transform: uppercase;
-  color: #45596A; margin-top: 0.2rem;
+  color: var(--cs-dim); margin-top: 0.2rem;
 }
 
 .cs-controls { display: flex; flex-direction: column; gap: 0.55rem; align-items: flex-start; }
 .cs-btn {
-  font-family: var(--mono); font-size: 0.6rem; font-weight: 500;
+  font-family: var(--mono); font-size: 0.68rem; font-weight: 500;
   letter-spacing: 0.15em; text-transform: uppercase;
   color: var(--cs-dim); background: transparent;
   border: 1px solid var(--cs-rule);
@@ -825,8 +815,8 @@ footer .signoff em {
 .cs-slider { display: block; width: 100%; margin-top: 0.2rem; }
 .cs-slider span {
   display: block; margin-bottom: 0.35rem;
-  font-family: var(--mono); font-size: 0.56rem;
-  letter-spacing: 0.12em; text-transform: uppercase; color: #55697A;
+  font-family: var(--mono); font-size: 0.64rem;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--cs-dim);
 }
 .cs-slider input[type="range"] {
   -webkit-appearance: none; appearance: none;
@@ -1438,7 +1428,7 @@ footer .signoff em {
 
   <div class="cs-stage">
     <canvas class="cs-canvas" id="csCanvas" role="img"
-            aria-label="A simulated solution seen as a micrograph. Solute drifts and gathers into amorphous calcium carbonate nanoparticles. Those particles attach to one another while still amorphous and settle into a dense, space filling aggregate with no lattice anywhere in it. Crystallinity then nucleates at a single point inside the aggregate and spreads outward through contacts, converting each amorphous neighbour and handing on its lattice orientation as it goes, so lattice fringes appear particle by particle along a travelling front. The result keeps its granular texture while its fringes run almost parallel throughout."></canvas>
+            aria-label="A simulated solution seen as a micrograph. Solute drifts and gathers into amorphous calcium carbonate nanoparticles, blobs, which attach to one another while still amorphous. Each blob then ripens into an ordered lattice on its own, some templated by a crystalline neighbour they already touch, some picking a random orientation when they have no neighbour to copy. When two of these crystallites, bricks, come into contact they rotate toward a shared orientation if they started close enough to align, fusing into an extended co-oriented domain the way courses of brick build a wall; joins that started out too misoriented stay fixed as visible grain boundaries. The result keeps its granular, brick-like texture while its lattice fringes run parallel within each domain."></canvas>
     <div class="cs-hint" id="csHint">Scroll into view to start</div>
   </div>
 
@@ -1502,19 +1492,24 @@ footer .signoff em {
   <figcaption>
     The same few rules run every frame on whatever is in the field. There is no stage list and no
     lattice to aim at. What matters here is the order, and it is not the intuitive one. Amorphous
-    calcium carbonate nanoparticles form in solution, attach to one another <em>while still
-    amorphous</em>, and settle into a dense aggregate that has no lattice anywhere in it.
-    Crystallinity nucleates afterwards, usually at a single point, and then travels outward through
-    contacts: a crystalline domain converts the amorphous domains it touches and hands on its
-    orientation, with a small angular error at every hop. Orientation is inherited through the
-    aggregate rather than negotiated by rotation, which is why the object ends up diffracting almost
-    as a single crystal while staying visibly granular. Particles keep their irregular outlines after
-    converting, because biomineral nanoparticles are reported as non-euhedral even once crystalline.
-    Drag the stabilisation control to change the competition: strong stabilisation keeps precursors
-    small and nucleation rare, so one site claims the whole mass and the spread stays under a degree,
-    close to what nano-diffraction finds in a sea urchin spine. Weak stabilisation lets several sites
-    nucleate independently, their fronts collide, and the warm lines are real grain boundaries. This
-    is a cartoon in two dimensions with coarsened lattice planes, not a quantitative model.
+    calcium carbonate nanoparticles form in solution and attach to one another <em>while still
+    amorphous</em>, growing into blobs. Only then does each blob ripen, on its own clock, into an
+    ordered lattice: one already touching a crystallite tends to order along that crystallite's
+    lattice, and an isolated blob with nothing to copy just picks its own orientation at random.
+    Either way the result is a small ordered brick, and what happens when two bricks meet is
+    <em>oriented attachment</em>, not inheritance: two crystallites already in contact swivel toward
+    a shared orientation whenever they started close enough to align, fusing into an extended
+    co-oriented domain the way courses of brick build a wall. A join that started out too
+    misoriented never rotates and stays exactly what it is, a real grain boundary. Particles keep
+    their irregular outlines after ripening, because biomineral nanoparticles are reported as
+    non-euhedral even once crystalline. Drag the stabilisation control to change the competition:
+    strong stabilisation keeps precursors small and spontaneous ripening rare, so ordering happens
+    almost entirely by templating off whatever crystallised first, the bricks arrive already close
+    to aligned, and the whole mass converges on one domain with its spread under a degree, close to
+    what nano-diffraction finds in a sea urchin spine. Weak stabilisation lets many blobs ripen
+    independently before they ever touch, most of those random orientations miss each other's
+    capture window, and the warm lines mark real grain boundaries between the domains that result.
+    This is a cartoon in two dimensions with coarsened lattice planes, not a quantitative model.
   </figcaption>
 </figure>
   </div>
@@ -1880,23 +1875,40 @@ footer .signoff em {
 
 <script>
 /* Crystallization by particle attachment, the calcium carbonate route.
-   Physics core: ACC accretion, then secondary nucleation through contacts. */
+   Physics core: ACC accretion into amorphous blobs, blob-by-blob ripening
+   into independently oriented crystallites, then oriented attachment. */
 /* --------------------------------------------------------------------------
    Crystallization by particle attachment, CaCO3 pathway.
 
    The order matters and it is not the obvious one. Amorphous calcium
-   carbonate nanoparticles form in solution, attach to each other while still
-   amorphous, and densify into a space filling aggregate. Only then does
-   crystallinity nucleate, at one site or a few, and spread through the
-   aggregate by secondary nucleation: a crystalline domain converts the
-   amorphous domains it touches, and each conversion inherits its neighbour's
-   lattice orientation with a small angular error. Orientation is therefore
-   propagated through contacts rather than negotiated by rotation.
+   carbonate nanoparticles, ions condensing out of solution, form in solution
+   and attach to each other while still amorphous, growing into blobs that
+   densify wherever they touch. Only then does each blob ripen: it orders
+   into a lattice on its own clock, not as a single front sweeping a finished
+   mass. A blob already touching a crystallite tends to order along that
+   crystallite's lattice, heteroepitaxial templating; an isolated blob still
+   ripens eventually and, with no neighbour's lattice to copy, picks its own
+   orientation at random. Either way what results is a small ordered brick.
 
-   That single difference is what the readout measures. One nucleus gives a
-   co-oriented nanoparticle array that diffracts as a single crystal while
-   staying visibly granular. Many nuclei give a mosaic with real grain
-   boundaries. The stabilisation control moves between the two.
+   What happens when two bricks meet is oriented attachment, and it is not
+   inheritance. Two crystallites already in contact swivel toward each
+   other's orientation while their misfit is still small enough to fall
+   inside a capture window, the way particles are seen to rock into register
+   in situ. A join that starts out more badly misoriented than that never
+   rotates and stays exactly what it is, a real grain boundary. Bricks that
+   keep aligning with more bricks build outward the way courses of masonry
+   build a wall: a mesocrystal, made of many crystallites, reading as one
+   crystal in diffraction while staying visibly granular under the lens.
+
+   That is what the readout measures. Independently ripened bricks (nuclei)
+   are one count; how many of them actually rotated into a shared register
+   (domains) is another. A field can throw down a dozen separate nuclei and
+   still end up as a single domain if they all swivel into line, or it can
+   freeze several domains in place as a true mosaic with grain boundaries
+   between them. The stabilisation control moves between the two: it holds
+   ions in a metastable amorphous state, so it suppresses spontaneous,
+   independently-oriented ripening far more than it suppresses templated
+   ripening off a crystallite already there.
 
    No stages, no target lattice. The same rules run every frame.
 -------------------------------------------------------------------------- */
@@ -1913,12 +1925,16 @@ function makeSim(seedFn) {
   var QUAD = Math.PI / 2;        // 4-fold lattice symmetry in projection
   var MAXMIS = QUAD / 2;         // 45 deg, largest distinguishable misfit
   var COH = 1.0 * Math.PI / 180; // join counts as coherent below this misfit
+  var CAPTURE = 20 * Math.PI / 180; // bricks this close in orientation can still rotate into register
+  var ROT = 0.014;               // how fast two touching bricks swivel toward alignment, per time unit
 
   var RMIN = 3.0, RCAP = 7.4;    // ACC nanoparticle radius window, nm
 
   // stab: how strongly the amorphous phase is stabilised (Mg, macromolecules).
-  // Low  -> ACC grows larger, crystallinity nucleates readily, many nuclei.
-  // High -> ACC capped small, nucleation rare, one nucleus wins the whole mass.
+  // Low  -> ACC grows larger, blobs ripen readily and independently, many
+  //         randomly-oriented bricks that mostly miss each other's register.
+  // High -> ACC capped small, spontaneous ripening rare, ordering happens
+  //         mostly by templating off whatever crystallised first.
   var S = { stab: 0.72, sat: 0.60 };
 
   var sol = [], par = [], bonds = [], freeSlots = [];
@@ -2046,10 +2062,17 @@ function makeSim(seedFn) {
   }
 
   /* ---- crystallinity spreads through contacts, inheriting orientation ---- */
-  function ignite(i, th, nuc, hop, mis) {
+  // A blob ripens: it orders into a lattice and picks an orientation. If nuc
+  // is its own index this is a fresh, independent brick (an isolated blob
+  // ordering on its own); if nuc is inherited from a neighbour, the ripening
+  // was templated by a crystalline particle it was already touching. Either
+  // way orientation is fixed once and only ever changed afterward by the
+  // oriented-attachment rotation below, never by re-inheriting.
+  function ignite(i, th, nuc) {
     var p = par[i];
-    p.xtal = true; p.th = th; p.nuc = nuc; p.hop = hop; p.mis = mis; p.tX = t;
-    // recompute the misfit stored on every bond this particle already has
+    p.xtal = true; p.th = th; p.nuc = nuc; p.tX = t;
+    xtalOn = true;
+    if (nuc === i) nuclei.push(i);
     for (var k = 0; k < p.bl.length; k++) {
       var q = par[p.bl[k]];
       if (!q || !q.alive || !q.xtal) continue;
@@ -2194,8 +2217,15 @@ function makeSim(seedFn) {
       if (p.y > H - m) { p.y = H - m; p.vy = -Math.abs(p.vy) * 0.5; }
     }
 
-    /* ---- crystallisation. Nothing here happens until an aggregate has
-       actually assembled, which is the whole point of the ordering. ---- */
+    /* ---- ripening. Every blob ripens on its own timetable, once it is past
+       its first instant as a seed: there is no single "the aggregate" that
+       has to finish assembling first. A blob already touching a crystalline
+       neighbour tends to order along that neighbour's lattice, heteroepitaxial
+       templating; an isolated blob still ripens eventually, on its own clock,
+       and then just has to pick an orientation with nothing to copy, so it
+       picks one at random. Either way what results is a small ordered brick.
+       What happens when two independently-oriented bricks meet is a separate
+       step, below. ---- */
     var big = 0, bigRoot = -1, counts = {};
     for (i = 0; i < par.length; i++) {
       p = par[i]; if (!p || !p.alive) continue;
@@ -2203,64 +2233,55 @@ function makeSim(seedFn) {
       counts[r] = (counts[r] || 0) + 1;
       if (counts[r] > big) { big = counts[r]; bigRoot = r; }
     }
-    // Does the aggregate that matters actually contain a crystal yet? Clusters
-    // merge and overtake one another while the array is still assembling, so a
-    // one-shot latch can leave the largest body permanently amorphous.
-    var bigHasXtal = false;
+
+    var u = 1 - S.stab;
+    // stabiliser holds ions in a metastable amorphous state, so it suppresses
+    // spontaneous ripening far more than templated ripening: a stabilised
+    // field ends up ordering almost entirely by templating off whatever
+    // crystallised first, while a poorly stabilised one throws down many
+    // independently-oriented bricks before they ever touch one another.
+    var rTempl = (0.0028 + 0.0026 * u) * dt;
+    var rSpont = (0.00003 + 0.0022 * u * u * u) * dt;
+    var errSigma = (0.13 + 0.34 * u) * Math.PI / 180;
     for (i = 0; i < par.length; i++) {
-      p = par[i];
-      if (p && p.alive && p.xtal && find(aggP, i) === bigRoot) { bigHasXtal = true; break; }
-    }
-
-    if (big >= 26 && !bigHasXtal) {
-      xtalOn = true;
-      // Crystallinity has to start somewhere. One unit inside the finished
-      // amorphous array orders first, and its orientation becomes the
-      // reference that everything downstream inherits through contacts.
-      var cand0 = [];
-      for (i = 0; i < par.length; i++) {
-        p = par[i];
-        if (p && p.alive && !p.xtal && !p.held && find(aggP, i) === bigRoot) cand0.push(i);
+      p = par[i]; if (!p || !p.alive || p.xtal || p.held) continue;
+      if (p.r < RMIN || t - p.born < 40) continue;   // not ripe yet
+      var templ = -1;
+      for (k = 0; k < p.bl.length; k++) {
+        q = par[p.bl[k]];
+        if (q && q.alive && q.xtal) { templ = q.i; break; }
       }
-      if (cand0.length) {
-        var s0 = cand0[(rnd() * cand0.length) | 0];
-        ignite(s0, rnd() * Math.PI * 2, s0, 0, 0);
-        nuclei.push(s0);
+      if (templ >= 0) {
+        if (rnd() < rTempl) ignite(p.i, par[templ].th + gauss() * errSigma, par[templ].nuc);
+      } else if (rnd() < rSpont) {
+        ignite(p.i, rnd() * Math.PI * 2, p.i);
       }
     }
 
-    if (xtalOn) {
-      // Further independent nuclei, competing with the front already running.
-      // The stabiliser suppresses these, which is why a well stabilised array
-      // ends up templated by the first nucleus alone and diffracts as one
-      // crystal, while a poorly stabilised one breaks into real grains.
-      var u = 1 - S.stab;
-      var pr = (0.000008 + 0.0075 * u * u * u * u * u) * dt;
-      for (i = 0; i < par.length; i++) {
-        p = par[i]; if (!p || !p.alive || p.xtal || p.held) continue;
-        if (find(aggP, i) !== bigRoot) continue;
-        if (rnd() < pr) {
-          ignite(i, rnd() * Math.PI * 2, i, 0, 0);
-          nuclei.push(i);
-        }
-      }
-      // secondary nucleation: a crystalline domain converts what it touches,
-      // handing on its orientation with a small error per hop.
-      var sr = (0.0028 + 0.0026 * u) * dt;
-      var sigma = (0.13 + 0.34 * u) * Math.PI / 180;
-      for (k = 0; k < bonds.length; k++) {
-        var b2 = bonds[k];
-        var A = par[b2.a], B = par[b2.b];
-        if (!A || !B || !A.alive || !B.alive) continue;
-        var src = null, dst = null;
-        if (A.xtal && !B.xtal) { src = A; dst = B; }
-        else if (B.xtal && !A.xtal) { src = B; dst = A; }
-        if (!src || !dst || dst.held) continue;
-        if (rnd() < sr) {
-          var err = gauss() * sigma;
-          ignite(dst.i, src.th + err, src.nuc, src.hop + 1, src.mis + err);
-        }
-      }
+    /* ---- oriented attachment. Two bricks already in physical contact but
+       still in different domains swivel toward each other's orientation
+       while the misfit between them is small enough to fall inside the
+       capture window, the way crystals are seen to rock into register in
+       situ TEM. A join that starts out more badly misoriented than that
+       never rotates and stays exactly what it is, a real grain boundary,
+       which is what the warm lines mark. Co-oriented bricks that keep
+       meeting more bricks are how the aggregate reads as courses of a
+       masonry wall rather than a single fused crystal. ---- */
+    for (k = 0; k < bonds.length; k++) {
+      var bo = bonds[k];
+      var A = par[bo.a], B = par[bo.b];
+      if (!A || !B || !A.alive || !B.alive || !A.xtal || !B.xtal) continue;
+      var ra = find(domP, A.i), rb = find(domP, B.i);
+      if (ra === rb) { bo.mis = 0; bo.coh = true; continue; }
+      var sd = (B.th - A.th) % QUAD;
+      if (sd > MAXMIS) sd -= QUAD; else if (sd < -MAXMIS) sd += QUAD;
+      if (Math.abs(sd) > CAPTURE) { bo.mis = Math.abs(sd); bo.coh = false; continue; }
+      var wA = B.V / (A.V + B.V), wB = A.V / (A.V + B.V);   // the smaller brick turns more
+      A.th += sd * ROT * dt * wA;
+      B.th -= sd * ROT * dt * wB;
+      bo.mis = misfit(A.th, B.th);
+      bo.coh = bo.mis <= COH;
+      if (bo.coh) domP[rb] = ra;
     }
 
     /* ---- feed the edges so the field does not run dry instantly ---- */
@@ -2291,7 +2312,7 @@ function makeSim(seedFn) {
     var st = {
       solute: sol.length, particles: 0, crystalline: 0, amorphous: 0,
       amorphInAgg: 0, retained: 0, free: 0, biggest: 0, bigRoot: -1,
-      byMono: 0, byPart: 0, nuclei: 0, coherent: 0, incoherent: 0,
+      byMono: 0, byPart: 0, nuclei: 0, domains: 0, coherent: 0, incoherent: 0,
       misMax: 0, misMean: 0, coOriented: 0, spanNm: 0, hist: [0, 0, 0, 0, 0]
     };
     var counts = {}, big = 0, bigRoot = -1;
@@ -2340,6 +2361,12 @@ function makeSim(seedFn) {
       domCount[dr] = (domCount[dr] || 0) + 1;
       if (domCount[dr] > bestN) { bestN = domCount[dr]; bestDom = dr; }
     }
+    // How many bricks actually rotated into register with one another, as
+    // opposed to how many ripened independently: two different counts. A
+    // field can throw down a dozen separate nuclei and still read as a
+    // single mesocrystal if they all swivelled into the same domain.
+    st.domains = 0;
+    for (k in domCount) st.domains++;
     var ref = null;
     for (i = 0; i < par.length; i++) {
       p = par[i];
@@ -2703,15 +2730,16 @@ function makeSim(seedFn) {
     if (el.csVerdict) {
       var v = '--';
       if (s.crystalline > 2) {
-        if (s.nuclei === 1) {
-          /* One nucleus means one inherited domain, never a mosaic. If the
-             spread is still wide, the errors accumulated along the propagation
-             path have bent the lattice rather than broken it into grains. */
+        if (s.domains <= 1) {
+          /* One domain means every brick rotated into the same register,
+             however many separate nuclei it took to get there. If the spread
+             is still wide, small residual errors from the last rotations
+             have bent the lattice rather than broken it into grains. */
           v = s.misMax <= 1.5
             ? 'mesocrystal, diffracts as one'
             : 'one domain, lattice bent ' + s.misMax.toFixed(1) + '\u00B0';
         } else {
-          v = 'mosaic, ' + s.nuclei + ' domains';
+          v = 'mosaic, ' + s.domains + ' domains';
         }
       } else if (s.biggest > 6) v = 'amorphous aggregate';
       el.csVerdict.textContent = v;
