@@ -43,10 +43,13 @@ ROOT = os.path.dirname(HERE)
 SRC = os.path.join(ROOT, 'bio', 'src')
 OUT = os.path.join(ROOT, 'bio')
 
-# Duotone endpoints for the micrograph, taken from the site's own palette:
-# the page's recessed panel colour and the verdigris accent.
-DARK = np.array([16, 22, 30], dtype=float)      # --bg
-LIGHT = np.array([120, 240, 228], dtype=float)  # a lift above --accent #3FD9CB
+# Duotone endpoints for the micrograph, from the site's own palette: the
+# page's recessed panel colour, and the neon blue the drawn biominerals use.
+# The silhouettes carry no colour at all -- the stylesheet tints those with
+# --neon -- so this pair is the only place the icon hue is fixed in a file,
+# and it exists only because a photograph has tone worth keeping.
+DARK = np.array([16, 22, 30], dtype=float)      # --bg   #10161E
+LIGHT = np.array([150, 224, 255], dtype=float)  # a lift above --neon #4FC8FF
 
 JOBS = {
     # name          treatment       notes
