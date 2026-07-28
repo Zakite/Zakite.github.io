@@ -140,36 +140,20 @@ nav .wrap { display: flex; justify-content: space-between; align-items: baseline
 .nav-links a:hover::before, .nav-links a:focus-visible::before {
   left: calc(100% - 8px); opacity: 1; transform: scale(1);
 }
-/* where the ion attaches, a faceted crystal nucleates: particle attachment,
-   in miniature, tying the nav to the CPA figure below */
-.nav-links a i.xtal {
-  position: absolute; right: 4px; top: -13px;
-  width: 10px; height: 10px; pointer-events: none;
-  opacity: 0; transform: scale(0) rotate(-45deg);
-  transition: opacity 0.18s ease, transform 0.32s cubic-bezier(.3,1.5,.5,1);
-}
-.nav-links a i.xtal::before {
-  content: ""; position: absolute; inset: 0;
-  background: linear-gradient(135deg, #39E6DC, #00A69C 55%, #00615C);
-  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
-  box-shadow: 0 0 6px rgba(0, 255, 241, 0.55);
-}
-.nav-links a:hover i.xtal, .nav-links a:focus-visible i.xtal {
-  opacity: 1; transform: scale(1) rotate(0deg);
-  transition-delay: 0.34s, 0.34s;   /* waits for the ion to arrive */
-}
-/* the crystal then organizes into a real biomineral. ion -> crystal ->
-   organism, a different mineralized creature per link, no repeats. */
+/* The ion migrates along the bond and a mineralised organism grows where it
+   lands: a different one per link, no repeats. There used to be a faceted
+   crystal in between, but with the creature drawn at this size the crystal
+   just sat on top of it, so the sequence is now ion -> organism. */
 .nav-links a i.bio {
-  position: absolute; right: -20px; top: -20px;
-  width: 30px; height: 30px; pointer-events: none;
+  position: absolute; right: -28px; top: -28px;
+  width: 42px; height: 42px; pointer-events: none;   /* 40% up from 30px */
   opacity: 0; transform: scale(0.2) rotate(-12deg);
   transition: opacity 0.24s ease, transform 0.44s cubic-bezier(.3,1.3,.5,1);
 }
 .nav-links a i.bio svg { display: block; width: 100%; height: 100%; overflow: visible; }
 .nav-links a:hover i.bio, .nav-links a:focus-visible i.bio {
   opacity: 1; transform: scale(1) rotate(0deg);
-  transition-delay: 0.6s, 0.6s;     /* the organism forms last */
+  transition-delay: 0.42s, 0.42s;   /* waits for the ion to finish its run */
 }
 
 /* The CV is the one thing most visitors actually came for, so it leaves the
@@ -1093,10 +1077,10 @@ footer .signoff em {
     <linearGradient id="ammoF" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0%" stop-color="#EAFBF9"/><stop offset="55%" stop-color="#9FE3DC"/><stop offset="100%" stop-color="#5FC0B8"/>
     </linearGradient>
-    <linearGradient id="toothF" x1="0" y1="0" x2="0" y2="1">
+    <linearGradient id="coccoF" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="#F2FEFD"/><stop offset="60%" stop-color="#C8EFEA"/><stop offset="100%" stop-color="#8AD3CC"/>
     </linearGradient>
-    <linearGradient id="nautF" x1="0" y1="0" x2="1" y2="1">
+    <linearGradient id="trilobF" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0%" stop-color="#EAFBF9"/><stop offset="60%" stop-color="#A3E4DD"/><stop offset="100%" stop-color="#63C2BA"/>
     </linearGradient>
     <radialGradient id="urchF" cx="38%" cy="32%" r="72%">
@@ -1192,11 +1176,11 @@ footer .signoff em {
   <div class="wrap">
     <a href="#" class="brand">Zakaria <em><span class="j">J</span>ibrin</em></a>
     <ul class="nav-links">
-      <li><a href="#about">About<i class="xtal"></i><i class="bio"><svg viewBox="0 0 40 40"><g fill="none" stroke="#0A3F3B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 20 m0 0 a2.2 2.2 0 1 1 2 -3 a5 5 0 1 1 -1 8 a8 8 0 1 1 -3 -13 a11.5 11.5 0 1 1 -1.5 20" fill="url(#ammoF)"/><path d="M22 20 a2.2 2.2 0 1 1 2 -3 a5 5 0 1 1 -1 8 a8 8 0 1 1 -3 -13 a11.5 11.5 0 1 1 -1.5 20"/><path d="M20.5 8.6 L17.2 12.2 M25.3 10.4 L21.4 13.4 M28.2 15 L23.4 17 M28.8 21 L23.6 21.4 M26.8 27 L22.6 24.6 M13 10.5 L15.8 14 M9.8 15.5 L13.6 17.6 M9 21.5 L13.2 21.2"/></g></svg></i></a></li>
-      <li><a href="#research">Research<i class="xtal"></i><i class="bio"><svg viewBox="0 0 40 40"><path d="M20 3 C27 6 30 12 30.5 20 C31 28 27 34 20.5 37 C20.2 32 20 26 20 20 C20 14 20.1 8 20 3 Z" fill="url(#toothF)" stroke="#0A3F3B" stroke-width="1.6" stroke-linejoin="round"/><path d="M20.5 37 C14 34 10 28 10.5 20 C11 12 14 6 20 3" fill="none" stroke="#0A3F3B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 8 L17 30 M23 9 L23 30" stroke="#0A3F3B" stroke-width="1" opacity="0.4" fill="none"/><path d="M12.5 30 C16 33 24 33 27.5 30" fill="none" stroke="#0A3F3B" stroke-width="1.2" opacity="0.55"/></svg></i></a></li>
-      <li><a href="#writing">Writing<i class="xtal"></i><i class="bio"><svg viewBox="0 0 40 40"><path d="M20 20 a1.8 1.8 0 1 1 1.8 -2 a4.4 4.4 0 1 1 -1.4 6.6 a8 8 0 1 1 -2 -12 a12.5 12.5 0 1 1 -3.4 20.5 L20 30 Z" fill="url(#nautF)" stroke="#0A3F3B" stroke-width="1.6" stroke-linejoin="round"/><g stroke="#0A3F3B" stroke-width="0.9" opacity="0.5" fill="none"><path d="M20 20 L19 8.5 M20 20 L30 12 M20 20 L31.5 22 M20 20 L28 30 M20 20 L9 14 M20 20 L8.5 24"/></g></svg></i></a></li>
-      <li><a href="#cpa">CPA<i class="xtal"></i><i class="bio"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="9.5" fill="url(#urchF)" stroke="#0A3F3B" stroke-width="1.4"/><g stroke="#0A3F3B" stroke-width="1.4" stroke-linecap="round"><path d="M20 10.5 L20 3 M20 29.5 L20 37 M10.5 20 L3 20 M29.5 20 L37 20 M13.3 13.3 L8 8 M26.7 13.3 L32 8 M13.3 26.7 L8 32 M26.7 26.7 L32 32 M16.4 11.2 L14.5 4.5 M23.6 11.2 L25.5 4.5 M11.2 16.4 L4.5 14.5 M11.2 23.6 L4.5 25.5 M28.8 16.4 L35.5 14.5 M28.8 23.6 L35.5 25.5 M16.4 28.8 L14.5 35.5 M23.6 28.8 L25.5 35.5"/></g><circle cx="17" cy="17" r="2.2" fill="#8FF3EC" opacity="0.6"/></svg></i></a></li>
-      <li><a href="#elsewhere">Elsewhere<i class="xtal"></i><i class="bio"><svg viewBox="0 0 40 40"><g fill="url(#foramF)" stroke="#0A3F3B" stroke-width="1.3"><circle cx="20" cy="27" r="9"/><circle cx="17" cy="16" r="6.5"/><circle cx="22.5" cy="9.5" r="4.6"/><circle cx="26" cy="5" r="3"/></g><g fill="#8FF3EC" opacity="0.5" stroke="none"><circle cx="17" cy="24" r="2"/><circle cx="15" cy="14.5" r="1.4"/></g></svg></i></a></li>
+      <li><a href="#about">About<i class="bio"><svg viewBox="0 0 40 40"><path d="M20 2.6c6.1 0 10.4 3.3 10.4 7.6 0 1.9-.6 3.3-1.3 4.4-.6 5.6-2.1 13.4-4.6 19.1-1.3 3-2.9 4.3-4.5 4.3s-3.2-1.3-4.5-4.3c-2.5-5.7-4-13.5-4.6-19.1-.7-1.1-1.3-2.5-1.3-4.4 0-4.3 4.3-7.6 10.4-7.6Z" fill="url(#trilobF)" stroke="#0A3F3B" stroke-width="1.25" stroke-linejoin="round"/><path d="M16.4 14.4c.3 6.5 1.3 14.4 3.6 20.3 2.3-5.9 3.3-13.8 3.6-20.3Z" fill="#C9F0EB" stroke="#0A3F3B" stroke-width=".95" stroke-linejoin="round"/><path d="M16.1 5c1.1-.9 2.4-1.4 3.9-1.4s2.8.5 3.9 1.4c.6 1.7.8 3.5.5 5.4-1.3.9-2.8 1.4-4.4 1.4s-3.1-.5-4.4-1.4c-.3-1.9-.1-3.7.5-5.4Z" fill="#C9F0EB" stroke="#0A3F3B" stroke-width=".95" stroke-linejoin="round"/><g stroke="#0A3F3B" stroke-width=".8" opacity=".55" fill="none" stroke-linecap="round"><path d="M11.4 16.6q8.6 2 17.2 0M11.9 20q8.1 2 16.2 0M12.6 23.4q7.4 1.9 14.8 0M13.6 26.8q6.4 1.8 12.8 0M14.9 30.1q5.1 1.6 10.2 0"/></g><ellipse cx="13.5" cy="8.4" rx="1.9" ry="1.3" fill="#0A3F3B" transform="rotate(-20 13.5 8.4)"/><ellipse cx="26.5" cy="8.4" rx="1.9" ry="1.3" fill="#0A3F3B" transform="rotate(20 26.5 8.4)"/></svg></i></a></li>
+      <li><a href="#research">Research<i class="bio"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="16.6" fill="url(#coccoF)" stroke="#0A3F3B" stroke-width="1.25"/><circle cx="20" cy="20" r="10.6" fill="#DDF6F2" stroke="#0A3F3B" stroke-width=".95"/><g stroke="#0A3F3B" stroke-width=".85" opacity=".65" fill="none" stroke-linecap="round"><g transform="rotate(0 20 20)"><path d="M20 3.4 23.6 10"/></g><g transform="rotate(30 20 20)"><path d="M20 3.4 23.6 10"/></g><g transform="rotate(60 20 20)"><path d="M20 3.4 23.6 10"/></g><g transform="rotate(90 20 20)"><path d="M20 3.4 23.6 10"/></g><g transform="rotate(120 20 20)"><path d="M20 3.4 23.6 10"/></g><g transform="rotate(150 20 20)"><path d="M20 3.4 23.6 10"/></g><g transform="rotate(180 20 20)"><path d="M20 3.4 23.6 10"/></g><g transform="rotate(210 20 20)"><path d="M20 3.4 23.6 10"/></g><g transform="rotate(240 20 20)"><path d="M20 3.4 23.6 10"/></g><g transform="rotate(270 20 20)"><path d="M20 3.4 23.6 10"/></g><g transform="rotate(300 20 20)"><path d="M20 3.4 23.6 10"/></g><g transform="rotate(330 20 20)"><path d="M20 3.4 23.6 10"/></g></g><circle cx="20" cy="20" r="5" fill="url(#coccoF)" stroke="#0A3F3B" stroke-width=".95"/><ellipse cx="15.4" cy="14.6" rx="3.2" ry="2.2" fill="#EAFDFB" opacity=".4" transform="rotate(-35 15.4 14.6)"/></svg></i></a></li>
+      <li><a href="#writing">Writing<i class="bio"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="16.4" fill="url(#ammoF)" stroke="#0A3F3B" stroke-width="1.25"/><path d="M3.6 20a16.4 16.4 0 0 1 32.8 0a11.8 11.8 0 0 1-23.6 0a8.5 8.5 0 0 1 17 0a6.1 6.1 0 0 1-12.2 0a4.4 4.4 0 0 1 8.8 0a3.2 3.2 0 0 1-6.4 0" fill="none" stroke="#0A3F3B" stroke-width="1.1" stroke-linecap="round"/><g stroke="#0A3F3B" stroke-width=".75" opacity=".45" fill="none" stroke-linecap="round"><path d="M20 3.6 20 8.2M28.6 6.2 26 10M34.4 13.2 30.2 15M34.4 26.8 30.2 25M28.6 33.8 26 30M11.4 33.8 14 30M5.6 26.8 9.8 25M5.6 13.2 9.8 15M11.4 6.2 14 10"/></g><ellipse cx="14.6" cy="13.8" rx="3.2" ry="2.2" fill="#EAFDFB" opacity=".4" transform="rotate(-35 14.6 13.8)"/></svg></i></a></li>
+      <li><a href="#cpa">CPA<i class="bio"><svg viewBox="0 0 40 40"><g stroke="#0A3F3B" stroke-width="1.15" stroke-linecap="round" fill="none"><path d="M20 8.6V1.4M20 31.4v7.2M8.6 20H1.4M31.4 20h7.2M12 12 6.9 6.9M28 12l5.1-5.1M12 28l-5.1 5.1M28 28l5.1 5.1M15.9 9.2 13.4 2.5M24.1 9.2l2.5-6.7M9.2 15.9 2.5 13.4M9.2 24.1l-6.7 2.5M30.8 15.9l6.7-2.5M30.8 24.1l6.7 2.5M15.9 30.8l-2.5 6.7M24.1 30.8l2.5 6.7"/></g><circle cx="20" cy="20" r="11.6" fill="url(#urchF)" stroke="#0A3F3B" stroke-width="1.25"/><g stroke="#0A3F3B" stroke-width=".8" opacity=".45" fill="none"><path d="M20 8.4v23.2M9.6 14.4v11.2M30.4 14.4v11.2"/></g><g fill="#0A3F3B" opacity=".4"><circle cx="15.4" cy="15" r=".9"/><circle cx="24.6" cy="15" r=".9"/><circle cx="15.4" cy="25" r=".9"/><circle cx="24.6" cy="25" r=".9"/><circle cx="20" cy="20" r="1"/></g><ellipse cx="16" cy="15.6" rx="3" ry="2.1" fill="#9CF5EE" opacity=".35" transform="rotate(-30 16 15.6)"/></svg></i></a></li>
+      <li><a href="#elsewhere">Elsewhere<i class="bio"><svg viewBox="0 0 40 40"><g fill="url(#foramF)" stroke="#0A3F3B" stroke-width="1.15"><circle cx="20.5" cy="26.5" r="11.2"/><circle cx="13.6" cy="15.8" r="7.9"/><circle cx="20.4" cy="9.2" r="5.7"/><circle cx="26.8" cy="5.6" r="4"/><circle cx="31" cy="3.2" r="2.6"/></g><g fill="#0A3F3B" opacity=".33"><circle cx="17" cy="24" r=".85"/><circle cx="23.5" cy="27.5" r=".85"/><circle cx="20" cy="30.6" r=".85"/><circle cx="11.8" cy="14.6" r=".7"/></g><ellipse cx="16" cy="22" rx="3.4" ry="2.4" fill="#EAFDFB" opacity=".45" transform="rotate(-35 16 22)"/></svg></i></a></li>
       <li class="nav-cv-item"><a href="cv.html" class="nav-cv">CV</a></li>
     </ul>
   </div>
@@ -2066,8 +2050,8 @@ footer .signoff em {
   // existing ones can grow, and the supply fragments into dozens of clusters
   // that never reach a usable size instead of a handful that do
   var JOIN_R = 4.5, NUCLEATE_R = 1.3;
-  var MIN_MORPH_PTS = 4, MIN_MORPH_AGE = 14, MORPH_DUR = 20;
   var GROW_TARGET = IONS_PER_TILE;
+  var CLUSTER_TIMEOUT = 320;            // safety net: reshape even if a few stragglers never find a partner
   var ATTACH_DUR = 46;
   var FILL_RATE = 3.4;                  // new off-screen tiles claimed per unit time, once seeding is under way
 
@@ -2107,13 +2091,14 @@ footer .signoff em {
     cells.sort(function (a, b) { return (a[0] * a[0] + a[1] * a[1]) - (b[0] * b[0] + b[1] * b[1]); });
     return cells.slice(0, n);
   }
-  var MICRO_CELLS = spiralSquareCells(GROW_TARGET + 8).map(function (c) {
-    return { lx: c[0] * MICRO_SPACING, ly: c[1] * MICRO_SPACING * 1.3 };
-  });
+  function microCellsFor(n) {
+    return spiralSquareCells(n).map(function (c) { return { lx: c[0] * MICRO_SPACING, ly: c[1] * MICRO_SPACING * 1.3 }; });
+  }
+  var MICRO_CELLS_FILL = microCellsFor(GROW_TARGET);   // fixed grain pattern for the schematic off-screen spawns
   var ORDER_K = 0.05, ORDER_REF = MICRO_SPACING * 2.6, ORDER_DONE = 0.86;
 
   var clusters, ions, phase, phaseT, t;
-  var mesoTh, nextCellIdx, fillBank;
+  var mesoTh, nextCellIdx, fillBank, depletionT;
 
   function reset() {
     mesoTh = rnd() * TAU;              // every crystallite in the episode shares this one orientation
@@ -2123,7 +2108,7 @@ footer .signoff em {
       var ang = rnd() * TAU, rad = rnd() * 30;
       ions.push({ x: Math.cos(ang) * rad, y: Math.sin(ang) * rad, vx: (rnd() - 0.5) * 0.5, vy: (rnd() - 0.5) * 0.5, cluster: -1 });
     }
-    nextCellIdx = 0; fillBank = 0;
+    nextCellIdx = 0; fillBank = 0; depletionT = -1;
     phase = 'ions'; phaseT = 0; t = 0;
   }
   reset();
@@ -2132,7 +2117,7 @@ footer .signoff em {
     var c = {
       pts: [{ x: x, y: y, vx: 0, vy: 0, lx: 0, ly: 0 }],   // real member ions: position and velocity, not a shape
       cx: x, cy: y, vx: 0, vy: 0,
-      born: t, state: 'blob', microIdx: 0, th: mesoTh, orderFrac: 0,
+      born: t, state: 'blob', th: mesoTh, orderFrac: 0, orderDelay: undefined,
       hw: 0.6, hh: 0.6,
       lpts: null,                      // handed off once ordering has actually settled
       tx: 0, ty: 0, attaching: false, attachT: 0, fromX: 0, fromY: 0, bowSign: rnd() < 0.5 ? 1 : -1,
@@ -2179,8 +2164,7 @@ footer .signoff em {
         var bestC = -1, bestD = JOIN_R;
         for (j = 0; j < clusters.length; j++) {
           c = clusters[j];
-          if (c.state !== 'blob' && c.state !== 'order') continue;
-          if (c.pts.length >= GROW_TARGET) continue;   // already at the shared target size: stop absorbing, just keep ordering
+          if (c.state !== 'blob') continue;   // ordering has already begun elsewhere: that cluster is done growing
           var surfD = Infinity;
           for (var m = 0; m < c.pts.length; m++) {
             var dd = Math.hypot(c.pts[m].x - ia.x, c.pts[m].y - ia.y);
@@ -2190,13 +2174,7 @@ footer .signoff em {
         }
         if (bestC >= 0) {
           ia.cluster = bestC;
-          var cl = clusters[bestC];
-          var newPt = { x: ia.x, y: ia.y, vx: 0, vy: 0, lx: 0, ly: 0 };
-          if (cl.state === 'order') {
-            var mc = MICRO_CELLS[Math.min(cl.microIdx++, MICRO_CELLS.length - 1)];
-            newPt.lx = mc.lx; newPt.ly = mc.ly;
-          }
-          cl.pts.push(newPt);
+          clusters[bestC].pts.push({ x: ia.x, y: ia.y, vx: 0, vy: 0, lx: 0, ly: 0 });
           continue;
         }
         // no cluster nearby: does it happen to be right next to another free ion?
@@ -2215,6 +2193,12 @@ footer .signoff em {
       }
       // remove absorbed ions from the free-floating pool once they are inside a cluster
       for (i = ions.length - 1; i >= 0; i--) if (ions[i].cluster >= 0) ions.splice(i, 1);
+
+      // the blobs keep feeding on whatever's left in solution -- reshaping
+      // only begins once there is essentially nothing left for them to eat
+      // (a couple of unpaired stragglers may just never meet a partner, so a
+      // generous timeout stands in for "nothing left" if that happens)
+      if (depletionT < 0 && (ions.length <= 2 || phaseT > CLUSTER_TIMEOUT)) depletionT = t;
 
       for (j = 0; j < clusters.length; j++) {
         c = clusters[j];
@@ -2240,16 +2224,20 @@ footer .signoff em {
           for (pI = 0; pI < c.pts.length; pI++) { mxT += c.pts[pI].x; myT += c.pts[pI].y; }
           c.cx = mxT / c.pts.length; c.cy = myT / c.pts.length;
 
-          if (c.pts.length >= MIN_MORPH_PTS && t - c.born > MIN_MORPH_AGE) {
-            // ordering starts now, on whatever the blob happens to be at this
-            // moment: every ion it already has gets a site in the growing
-            // lattice, and from here a real restoring force, not a timer,
-            // pulls each one there
-            for (var qI = 0; qI < c.pts.length; qI++) {
-              var mc0 = MICRO_CELLS[Math.min(c.microIdx++, MICRO_CELLS.length - 1)];
-              c.pts[qI].lx = mc0.lx; c.pts[qI].ly = mc0.ly;
+          if (depletionT >= 0) {
+            // reshaping starts once the solution has run dry, staggered a
+            // little per blob so the whole field doesn't snap at once: every
+            // ion this blob has by now gets a site in its own lattice, sized
+            // to exactly how many ions it actually gathered, and from here a
+            // real restoring force, not a timer, pulls each one into place
+            if (c.orderDelay === undefined) c.orderDelay = rnd() * 10;
+            if (t - depletionT >= c.orderDelay) {
+              var myCells = microCellsFor(c.pts.length);
+              for (var qI = 0; qI < c.pts.length; qI++) {
+                c.pts[qI].lx = myCells[qI].lx; c.pts[qI].ly = myCells[qI].ly;
+              }
+              c.state = 'order';
             }
-            c.state = 'order';
           }
         } else {
           // continuous relaxation toward each ion's assigned lattice site: a
@@ -2271,7 +2259,7 @@ footer .signoff em {
           for (pI = 0; pI < c.pts.length; pI++) { mxT += c.pts[pI].x; myT += c.pts[pI].y; }
           c.cx = mxT / c.pts.length; c.cy = myT / c.pts.length;
 
-          if (c.pts.length >= GROW_TARGET && c.orderFrac >= ORDER_DONE) {
+          if (c.orderFrac >= ORDER_DONE) {
             // settled: hand off to the same fixed, faceted representation
             // every crystallite ends up in, for oriented attachment onward
             c.lpts = c.pts.map(function (pp) { return { lx: pp.lx, ly: pp.ly }; });
@@ -2319,7 +2307,7 @@ footer .signoff em {
           var nc2 = newCluster(tgt.x + tgt.x / d0 * SPACING * 2.2, tgt.y + tgt.y / d0 * SPACING * 2.2);
           nc2.state = 'attach'; nc2.hw = TILE_R * 0.62; nc2.hh = nc2.hw * 1.3; nc2.th = mesoTh;
           nc2.pts = null;
-          nc2.lpts = MICRO_CELLS.slice(0, GROW_TARGET).map(function (m2) { return { lx: m2.lx, ly: m2.ly }; });
+          nc2.lpts = MICRO_CELLS_FILL.slice();
           nc2.tx = tgt.x; nc2.ty = tgt.y; nc2.tth = mesoTh;
           nc2.fromX = nc2.cx; nc2.fromY = nc2.cy;
           nc2.attaching = true; nc2.attachT = 0;
