@@ -173,6 +173,12 @@ nav .wrap { display: flex; justify-content: space-between; align-items: baseline
 #cvBody p { margin: 0.55rem 0; max-width: 74ch; }
 #cvBody strong { font-weight: 600; }
 
+/* The document can hand us tokens with no break opportunity in them: a
+   slash-joined heading like WORKSHOPS/PROFESSIONAL DEVELOPMENT/COURSES, a
+   chemical name, a bare URL. On a narrow screen one of those pushes the whole
+   page sideways, so let them break instead. */
+#cvBody h2, #cvBody p, #cvBody li, .cv-row .cv-what { overflow-wrap: break-word; }
+
 /* a title line with a right-aligned date */
 .cv-row {
   display: flex; justify-content: space-between; align-items: baseline;
@@ -211,7 +217,7 @@ footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; g
   .cv-head { padding: 2.5rem 0 1.5rem; }
 }
 @media (max-width: 600px) {
-  html { font-size: 16px; }
+  html { font-size: 17.5px; }
   body { margin-inline: 3vw; }
   nav .wrap { flex-direction: column; align-items: flex-start; }
   .cv-actions { margin-left: 0; }

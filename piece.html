@@ -156,6 +156,12 @@ nav .wrap { display: flex; justify-content: space-between; align-items: baseline
 #pieceBody h2:first-child { margin-top: 0; }
 #pieceBody p { margin: 0.9rem 0; max-width: 70ch; }
 #pieceBody strong { font-weight: 600; }
+
+/* The document can hand us tokens with no break opportunity in them: a
+   slash-joined heading, a chemical name, a bare URL. On a narrow screen one
+   of those pushes the whole page sideways, so let them break instead. */
+#pieceBody h2, #pieceBody p, #pieceBody li,
+.piece-head h1, .cv-row .cv-what { overflow-wrap: break-word; }
 #pieceBody a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
 
 .cv-row {
@@ -191,9 +197,19 @@ footer a { color: var(--accent); text-decoration: none; }
   .piece-head { padding: 2.5rem 0 1.5rem; }
 }
 @media (max-width: 600px) {
-  html { font-size: 16px; }
+  html { font-size: 17.5px; }
   body { margin-inline: 3vw; }
-  nav .wrap { flex-direction: column; align-items: flex-start; }
+  /* Same stacked nav as the home page, so moving between the two does not
+     rearrange the furniture: brand on top, section links wrapped and centred,
+     CV large on a line of its own. */
+  nav .wrap { flex-direction: column; align-items: center; gap: 0.5rem; }
+  .nav-links { justify-content: center; gap: 0.55rem 1.05rem; }
+  .nav-links .nav-cv-item {
+    flex-basis: 100%;
+    display: flex; justify-content: center;
+    margin-top: 0.2rem;
+  }
+  .nav-links .nav-cv { font-size: 1.9rem; }
   .cv-row { flex-direction: column; gap: 0.15rem; }
 }
 
@@ -222,7 +238,7 @@ footer a { color: var(--accent); text-decoration: none; }
       <li><a href="index.html#writing">Writing</a></li>
       <li><a href="index.html#cpa">CPA</a></li>
       <li><a href="index.html#elsewhere">Elsewhere</a></li>
-      <li><a href="cv.html" class="nav-cv">CV</a></li>
+      <li class="nav-cv-item"><a href="cv.html" class="nav-cv">CV</a></li>
     </ul>
   </div>
 </nav>
