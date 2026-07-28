@@ -2196,10 +2196,15 @@ footer .signoff em {
   // The tablets are stacked, not tiled: the view tips over so the sheets are
   // seen at a low angle, each plate carrying a visible edge, piled in courses
   // that are offset from one another the way brickwork is.
-  var NACRE_DUR = 300, NACRE_LAYERS = 7;
-  var PLATE_SQUASH = 0.44;              // vertical foreshortening of the sheets
-  var PLATE_THICK = 0.20;               // plate edge depth, as a fraction of the apothem
+  var NACRE_DUR = 250, NACRE_LAYERS = 7;
+  // Only a slight foreshortening. Squashing hard turned the tablets into
+  // wide smears; at this angle they still read as hexagons and the stacking
+  // is carried by the plate edges and the offset between courses instead.
+  var PLATE_SQUASH = 0.80;
+  var PLATE_THICK = 0.30;               // plate edge depth, as a fraction of the apothem
   var NACRE_STAGGER = 0.31;             // lateral offset between courses
+  var TIP_FRAC = 0.16;                  // how much of the nacre beat the tip-over takes
+  var plateSquash = PLATE_SQUASH;       // animated: 1 is flat on, PLATE_SQUASH is in line with the stack
   // Then everything goes: pull back far enough and you are looking at the
   // shell itself, the whole structure resolved into the one thing it was
   // building all along.
@@ -2240,7 +2245,7 @@ footer .signoff em {
 
   var clusters, ions, phase, phaseT, t;
   var mesoTh, fillBank, depletionT, seedSizes;
-  var occupied, frontier, frontierAt, seeded;
+  var occupied, frontier, frontierAt, seeded, seedX, seedY;
 
   function reset() {
     mesoTh = rnd() * TAU;              // every crystallite in the episode shares this one orientation
@@ -2254,7 +2259,7 @@ footer .signoff em {
         vx: (rnd() - 0.5) * 0.5, vy: (rnd() - 0.5) * 0.5
       });
     }
-    occupied = {}; frontier = []; frontierAt = {}; seeded = false;
+    occupied = {}; frontier = []; frontierAt = {}; seeded = false; seedX = 0; seedY = 0;
     fillBank = 0; depletionT = -1; seedSizes = [];
     phase = 'ions'; phaseT = 0; t = 0;
   }
@@ -2345,7 +2350,7 @@ footer .signoff em {
     }
     return c2;
   }
-  function claimCell(px, py) {
+  function claimCell() {
     for (var guard = 0; guard < 40; guard++) {
       var pick = null;
       if (!frontier.length) {
@@ -2359,15 +2364,20 @@ footer .signoff em {
           if (dd < bd) { bd = dd; best = hc; }
         }
         pick = best;
+        seedX = pick.x; seedY = pick.y;
         seeded = true;
       } else {
+        // Everything builds outward off the seed: the site taken next is the
+        // one closest to it, so the crystal grows by adding to its own
+        // outside rather than racing away and backfilling the middle later.
+        // A site with more occupied neighbours is a notch and gets taken
+        // first, which keeps the body solid and the edge merely rough.
         var bestS = Infinity;
         for (var f = 0; f < frontier.length; f++) {
           var fc = frontier[f];
-          var d2 = Math.hypot(fc.x - px, fc.y - py);
-          // a notch costs more to reach than a tip, which is what makes the
-          // front break up into branches instead of staying smooth
-          var sco = d2 * (1 + 0.55 * (occNeighbours(fc) - 1)) + rnd() * SPACING * 0.5;
+          var sco = Math.hypot(fc.x - seedX, fc.y - seedY)
+            - 0.5 * SPACING * occNeighbours(fc)
+            + rnd() * SPACING * 1.15;
           if (sco < bestS) { bestS = sco; pick = fc; }
         }
       }
@@ -2742,8 +2752,7 @@ footer .signoff em {
         c.hw = blockHalf(c.lpts.length);   // square, and sized by how many ions it actually gathered
         c.hh = c.hw;
         if (c.seedborn) seedSizes.push(c.lpts.length);
-        // attaches to whatever part of the aggregate is nearest to it
-        var slot = claimCell(c.cx, c.cy);
+        var slot = claimCell();
         if (!slot) {
           // array already complete: a late crystal attaches where it is, an
           // off-lattice grain on the platelet rim
@@ -2795,7 +2804,11 @@ footer .signoff em {
       // the array keeps extending itself outward -- with block sizes drawn
       // from the same distribution the real seeds produced, so the far array
       // is just as polydisperse as the part that assembled on screen
-      if (!arrayComplete() && (phase === 'fill' || clusters.filter(function (c2) { return c2.state === 'attached'; }).length > 5)) {
+      // Three particles stuck together is the nucleus that gets past the
+      // barrier -- below that an aggregate is as likely to come apart again.
+      // Once one survives, everything else in solution is crystallizing on
+      // much the same schedule, and the assembly ramps up.
+      if (!arrayComplete() && (phase === 'fill' || clusters.filter(function (c2) { return c2.state === 'attached'; }).length >= 3)) {
         // aggregation proper begins here: the solution is spent, so the last
         // of it is taken up rather than left hanging around the array
         if (phase !== 'fill') ions.length = 0;
@@ -2803,11 +2816,7 @@ footer .signoff em {
         fillBank += FILL_RATE * dt;
         while (fillBank >= 1 && !arrayComplete()) {
           fillBank -= 1;
-          // a crystallite drifts in from somewhere outside and joins the
-          // aggregate at the nearest point of its perimeter
-          var appAng = rnd() * TAU;
-          var farX = Math.cos(appAng) * HEX_A * 2.2, farY = Math.sin(appAng) * HEX_A * 2.2;
-          var slot2 = claimCell(farX, farY);
+          var slot2 = claimCell();
           if (!slot2) break;
           var d0 = Math.hypot(slot2.x, slot2.y) || 1;
           var nIons = seedSizes.length ? seedSizes[Math.floor(rnd() * seedSizes.length)] : GROW_TARGET;
@@ -2971,7 +2980,7 @@ footer .signoff em {
     for (var k = 0; k < 6; k++) {
       var th = Math.PI / 6 + k * Math.PI / 3;
       var px = X(pcx + R * Math.cos(th));
-      var py = Y(pcy + R * Math.sin(th) * PLATE_SQUASH) + dy;
+      var py = Y(pcy + R * Math.sin(th) * plateSquash) + dy;
       if (k === 0) p.moveTo(px, py); else p.lineTo(px, py);
     }
     p.closePath();
@@ -2988,8 +2997,11 @@ footer .signoff em {
     if (tabPx < TABLET_MIN_PX) return false;
     var mx2 = camW / 2 + PLATE_A * 1.15, my2 = camH / 2 + PLATE_A * 1.15;
     var wf = warm || 0;
-    var thick = PLATE_A * PLATE_THICK * PLATE_SQUASH * sc;   // edge depth, in pixels
-    var rowH = PLATE_A * Math.sqrt(3) * PLATE_SQUASH;
+    // while the sheet is still tipping over, the plates have no visible edge
+    // and no stack yet -- both come in as it comes into line
+    var tipped = (1 - plateSquash) / (1 - PLATE_SQUASH);
+    var thick = PLATE_A * PLATE_THICK * plateSquash * sc * tipped;
+    var rowH = PLATE_A * Math.sqrt(3) * plateSquash;
     // the wider the shot the more tablets are on screen, so drop courses as
     // they shrink -- the stack still reads, and the frame stays cheap
     var nL = Math.max(3, Math.min(NACRE_LAYERS, Math.round(tabPx / 17)));
@@ -3374,11 +3386,15 @@ footer .signoff em {
     var w = cv.width, h = cv.height, i, c;
 
     var nacreA = 0, shellA = 0, shellZoom = 1, opticsA = 0;
+    plateSquash = PLATE_SQUASH;
     if (phase === 'zoomout') camW = VIEW_W + (Z1 - VIEW_W) * ease(Math.min(1, phaseT / 260));
     else if (phase === 'nacre') {
       var nf = Math.min(1, phaseT / NACRE_DUR);
       camW = Z1 + (Z2 - Z1) * ease(nf);
-      nacreA = Math.min(1, nf / 0.4);   // the neighbours fade up as they come into frame
+      nacreA = Math.min(1, nf / 0.22);   // the neighbours fade up as they come into frame
+      // the sheet tips out of plan view and into line with the stack, and it
+      // does it quickly -- there is nothing to look at while it is halfway
+      plateSquash = 1 - (1 - PLATE_SQUASH) * ease(Math.min(1, nf / TIP_FRAC));
     } else if (phase === 'optics') {
       // hold the wide shot of the stack; the explanation is drawn over it
       camW = Z2;
