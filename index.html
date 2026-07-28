@@ -21,7 +21,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..700,0..100,0..1;1,9..144,300..700,0..100,0..1&family=Lora:ital,wght@0,400..600;1,400..600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Permanent+Marker&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Lora:ital,wght@0,400..600;1,400..600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Permanent+Marker&display=swap" rel="stylesheet">
 
 <style>
 :root {
@@ -37,8 +37,14 @@
                           the literal neon is 1.17:1 here and vanishes */
   --oxy: #AE3A22;   /* oxygen, CPK red pulled toward hematite for the palette */
 
-  --serif: 'Fraunces', Georgia, serif;
-  --display: 'Fraunces', Georgia, serif;
+  /* Newsreader, not Fraunces. Fraunces draws a descending, hooked lowercase f
+     that reads as a question mark at display size, and hooks its J hard left
+     below the baseline (which is why the J was borrowed from Lora below).
+     Newsreader keeps the warm editorial serif voice with conventional
+     letterforms, and carries the same opsz axis, so the optical-size tuning
+     throughout this stylesheet still applies. */
+  --serif: 'Newsreader', Georgia, serif;
+  --display: 'Newsreader', Georgia, serif;
   --sans: 'Inter', system-ui, -apple-system, sans-serif;
   --mono: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
 
@@ -186,18 +192,20 @@ nav .wrap { display: flex; justify-content: space-between; align-items: baseline
   gap: clamp(0.75rem, 1.8vw, 2rem);
 }
 .name {
-  /* Back on Fraunces. Instrument Serif is a condensed face with a tall x-height,
-     so at display size it read as vertically stretched against the rest of the
-     page. The J is handled below instead of by swapping the whole face. */
+  /* Newsreader at its largest optical size. Its opsz axis tops out at 72, so
+     the value below is clamped by the font rather than honoured literally;
+     it is left high to say "as display as this face goes". */
   font-family: var(--serif);
-  font-variation-settings: "opsz" 144, "SOFT" 30, "wght" 400, "WONK" 0;
+  font-variation-settings: "opsz" 144, "wght" 400;
   font-size: clamp(2.5rem, 5.8vw, 4.8rem);
   font-weight: 400; line-height: 1.05;
   letter-spacing: -0.02em; white-space: nowrap;
   opacity: 0;
 }
-/* Only the J comes from elsewhere. Fraunces hooks it hard left below the
-   baseline at every WONK setting; Lora drops it straight. Sized up slightly
+/* Only the J comes from elsewhere. This started as a workaround for Fraunces,
+   which hooked its J hard left below the baseline; Newsreader draws a perfectly
+   straight one, so the swap is now a deliberate signature rather than a fix.
+   Delete this rule to set the wordmark in a single face. Sized up slightly
    since Lora runs a touch smaller on the cap line. */
 .name .j {
   font-family: 'Lora', Georgia, serif;
@@ -456,6 +464,17 @@ h2 {
   font-size: clamp(2rem, 4.5vw, 3rem);
   font-weight: 600; line-height: 1.05;
   letter-spacing: -0.02em; margin-bottom: 2rem; max-width: 20ch;
+}
+
+/* A pull-quote heading. Italic, a little wider than a normal h2 so the quote
+   breaks over fewer lines, with the attribution dropped out of the display
+   face so the joke reads as an aside rather than as part of the quote. */
+.h2-quote { font-style: italic; max-width: 26ch; }
+.h2-quote .attrib {
+  display: block; margin-top: 0.9rem;
+  font-family: var(--sans); font-style: normal;
+  font-size: 0.92rem; font-weight: 500;
+  letter-spacing: 0.02em; color: var(--muted);
 }
 
 .prose { max-width: 58ch; font-size: 1.05rem; line-height: 1.75; }
@@ -1178,7 +1197,7 @@ footer .signoff em {
 
 <section id="about">
   <div class="wrap">
-    <h2>How life leaves its fingerprint on the minerals it makes.</h2>
+    <h2 class="h2-quote">&ldquo;Life leaves a fingerprint in stone. We just have to learn how to read it&rdquo;<span class="attrib">&ndash; Someone, probably</span></h2>
 
     <div class="about-grid">
       <div class="prose">
@@ -1540,7 +1559,7 @@ footer .signoff em {
         <span class="label">Code</span>
         <span class="link-text">GitHub <span class="arrow">&rarr;</span></span>
       </a>
-      <a href="cv.pdf">
+      <a href="cv.html">
         <span class="label">Long form</span>
         <span class="link-text">Curriculum vitae <span class="arrow">&rarr;</span></span>
       </a>
@@ -1551,7 +1570,7 @@ footer .signoff em {
 <footer>
   <div class="wrap">
     <span>Rutgers University &middot; Piscataway, NJ</span>
-    <span class="signoff">Set in <em>Fraunces</em>, <em>Lora</em>, and <em>Inter</em>. Last updated 2026.</span>
+    <span class="signoff">Set in <em>Newsreader</em>, <em>Lora</em>, and <em>Inter</em>. Last updated 2026.</span>
   </div>
 </footer>
 
@@ -1933,8 +1952,8 @@ function makeSim(seedFn) {
   var rnd = seedFn || Math.random;
 
   var W = 94, H = 54;            // field of view, nm
-  var VP = 2.1;                  // volume carried by one solute parcel, nm^3
-  var SOL_CAP = 700;
+  var VP = 16;                   // volume carried by one solute parcel, nm^3
+  var SOL_CAP = 900;              // the entire ion budget for the episode: closed system, no refill
   var PMAX = 76;
   var DEP = 5.4;                 // nm, depletion halo around a growing particle
 
@@ -1955,7 +1974,7 @@ function makeSim(seedFn) {
   var sol = [], par = [], bonds = [], freeSlots = [];
   var aggP = [], domP = [], aggAcc = {};
   var nuclei = [];
-  var stats = null, t = 0, nucBank = 0, phase = 'grow', holdT = 0, xtalOn = false;
+  var stats = null, t = 0, nucBank = 0, phase = 'aggregate', holdT = 0, orderT = 0, xtalOn = false;
 
   function find(p, i) { while (p[i] !== i) { p[i] = p[p[i]]; i = p[i]; } return i; }
   function rOf(V) { return Math.cbrt(3 * V / (4 * Math.PI)); }
@@ -2004,7 +2023,7 @@ function makeSim(seedFn) {
   function reset() {
     sol.length = 0; bonds.length = 0; freeSlots.length = 0; aggAcc = {};
     par.length = 0; aggP.length = 0; domP.length = 0; nuclei.length = 0;
-    t = 0; nucBank = 0; phase = 'grow'; holdT = 0; xtalOn = false;
+    t = 0; nucBank = 0; phase = 'aggregate'; holdT = 0; orderT = 0; xtalOn = false;
     for (var i = 0; i < Math.round(SOL_CAP * 0.78); i++)
       addSolute(rnd() * W, rnd() * H, (rnd() - 0.5) * 0.4, (rnd() - 0.5) * 0.4);
     stats = null;
@@ -2124,10 +2143,28 @@ function makeSim(seedFn) {
     /* ---- solute: random walk, absorb onto amorphous surfaces, bounce off
        crystalline ones. A crystalline particle inside the aggregate is
        shielded anyway, so growth stays rim-only. ---- */
+    var stragglers = sol.length <= 40;
     var absorbed = [];
     for (i = sol.length - 1; i >= 0; i--) {
       var s = sol[i];
       s.vx += (rnd() - 0.5) * 0.55 * dt; s.vy += (rnd() - 0.5) * 0.55 * dt;
+      if (stragglers) {
+        // with so few ions left, a pure random walk can wander the empty
+        // field for a very long time before it happens to drift within
+        // reach of a particle. Real ions would eventually diffuse to a
+        // surface regardless; this just biases the walk toward the nearest
+        // one so the reservoir actually finishes draining on screen.
+        var near1 = -1, nd1 = Infinity;
+        for (k = 0; k < par.length; k++) {
+          var pp = par[k]; if (!pp || !pp.alive) continue;
+          var ddx = pp.x - s.x, ddy = pp.y - s.y, dd = Math.hypot(ddx, ddy);
+          if (dd < nd1) { nd1 = dd; near1 = k; }
+        }
+        if (near1 >= 0 && nd1 > 0) {
+          var hpx = par[near1], hdx = hpx.x - s.x, hdy = hpx.y - s.y, hd = Math.hypot(hdx, hdy) || 1;
+          s.vx += hdx / hd * 0.16 * dt; s.vy += hdy / hd * 0.16 * dt;
+        }
+      }
       s.vx *= 0.90; s.vy *= 0.90;
       s.x += s.vx * dt; s.y += s.vy * dt;
       if (s.x < 0) { s.x = -s.x; s.vx = -s.vx; }
@@ -2147,6 +2184,11 @@ function makeSim(seedFn) {
         // amorphous surface takes it up; a crystalline face turns most away
         var take = p.xtal ? 0.14 : 0.86;
         if (p.r >= capR() * 1.04) take *= 0.10;      // stabiliser caps ACC size
+        // but the budget is closed and finite: as the last few ions run out
+        // of anywhere else to go, whatever they do touch takes them up, so
+        // aggregation actually finishes instead of leaving a few stragglers
+        // wandering forever against a near-zero absorption chance.
+        if (sol.length <= 40) take += (1 - take) * (40 - sol.length) / 40;
         if (rnd() < take) {
           p.V += VP; p.r = rOf(p.V); p.vMono += VP;
           accOf(find(aggP, hit)).byMono += VP;
@@ -2247,17 +2289,6 @@ function makeSim(seedFn) {
       if (p.y > H - m) { p.y = H - m; p.vy = -Math.abs(p.vy) * 0.5; }
     }
 
-    /* ---- ripening: a solid-state transformation, in place, no spinning.
-       Every blob ripens on its own timetable, once it is past its first
-       instant as a seed; there is no single "the aggregate" that has to
-       finish assembling first. A blob already touching a crystalline
-       neighbour tends to order along that neighbour's lattice, heteroepitaxial
-       templating; an isolated blob still ripens eventually, on its own clock,
-       and then just has to pick an orientation with nothing to copy, so it
-       picks one at random. Either way what results is a small euhedral
-       brick, and its orientation is fixed for good right here: it is never
-       revised or rotated afterward. What happens when two of these bricks
-       meet is decided once, at the instant they first touch, in bondUp(). ---- */
     var big = 0, bigRoot = -1, counts = {};
     for (i = 0; i < par.length; i++) {
       p = par[i]; if (!p || !p.alive) continue;
@@ -2266,48 +2297,74 @@ function makeSim(seedFn) {
       if (counts[r] > big) { big = counts[r]; bigRoot = r; }
     }
 
-    var u = 1 - S.stab;
-    // stabiliser holds ions in a metastable amorphous state, so it suppresses
-    // spontaneous ripening far more than templated ripening: a stabilised
-    // field ends up ordering almost entirely by templating off whatever
-    // crystallised first, while a poorly stabilised one throws down many
-    // independently-oriented bricks before they ever touch one another.
-    var rTempl = (0.0028 + 0.0026 * u) * dt;
-    var rSpont = (0.00003 + 0.0022 * u * u * u) * dt;
-    var errSigma = (0.13 + 0.34 * u) * Math.PI / 180;
-    for (i = 0; i < par.length; i++) {
-      p = par[i]; if (!p || !p.alive || p.xtal || p.held) continue;
-      if (p.r < RMIN || t - p.born < 40) continue;   // not ripe yet
-      var templ = -1;
-      for (k = 0; k < p.bl.length; k++) {
-        q = par[p.bl[k]];
-        if (q && q.alive && q.xtal) { templ = q.i; break; }
+    /* ---- ripening: a solid-state transformation, in place, no spinning.
+       This does not start until the ions are gone. The ion supply is a
+       closed budget, not a tap: it drains as the field above absorbs and
+       nucleates, and only once every last one of them has found a particle
+       to join does the sequence continue into ordering. Every blob then
+       ripens on its own timetable; there is no single "the aggregate" that
+       has to finish assembling first. A blob already touching a crystalline
+       neighbour tends to order along that neighbour's lattice, heteroepitaxial
+       templating; an isolated blob still ripens eventually, on its own clock,
+       and then just has to pick an orientation with nothing to copy, so it
+       picks one at random. Either way what results is a small euhedral
+       brick, and its orientation is fixed for good right here: it is never
+       revised or rotated afterward. What happens when two of these bricks
+       meet is decided once, at the instant they first touch, in bondUp(). ---- */
+    if (phase === 'order') {
+      var u = 1 - S.stab;
+      // stabiliser holds ions in a metastable amorphous state, so it suppresses
+      // spontaneous ripening far more than templated ripening: a stabilised
+      // field ends up ordering almost entirely by templating off whatever
+      // crystallised first, while a poorly stabilised one throws down many
+      // independently-oriented bricks before they ever touch one another.
+      var rTempl = (0.0028 + 0.0026 * u) * dt;
+      var rSpont = (0.00003 + 0.0022 * u * u * u) * dt;
+      var errSigma = (0.13 + 0.34 * u) * Math.PI / 180;
+      for (i = 0; i < par.length; i++) {
+        p = par[i]; if (!p || !p.alive || p.xtal || p.held) continue;
+        if (p.r < RMIN || t - p.born < 40) continue;   // not ripe yet
+        var templ = -1;
+        for (k = 0; k < p.bl.length; k++) {
+          q = par[p.bl[k]];
+          if (q && q.alive && q.xtal) { templ = q.i; break; }
+        }
+        if (templ >= 0) {
+          if (rnd() < rTempl) ignite(p.i, par[templ].th + gauss() * errSigma, par[templ].nuc);
+        } else if (rnd() < rSpont) {
+          ignite(p.i, rnd() * Math.PI * 2, p.i);
+        }
       }
-      if (templ >= 0) {
-        if (rnd() < rTempl) ignite(p.i, par[templ].th + gauss() * errSigma, par[templ].nuc);
-      } else if (rnd() < rSpont) {
-        ignite(p.i, rnd() * Math.PI * 2, p.i);
-      }
-    }
-
-
-    /* ---- feed the edges so the field does not run dry instantly ---- */
-    var want = Math.round(SOL_CAP * (0.30 + 0.62 * S.sat));
-    var addN = Math.min(2, want - sol.length);
-    for (k = 0; k < addN; k++) {
-      var edge = (rnd() * 4) | 0, ex, ey;
-      if (edge === 0) { ex = 0.5; ey = rnd() * H; }
-      else if (edge === 1) { ex = W - 0.5; ey = rnd() * H; }
-      else if (edge === 2) { ex = rnd() * W; ey = 0.5; }
-      else { ex = rnd() * W; ey = H - 0.5; }
-      addSolute(ex, ey, (rnd() - 0.5) * 0.4, (rnd() - 0.5) * 0.4);
     }
 
     /* ---- episode state ---- */
     tally();
-    if (phase === 'grow') {
+    if (phase === 'aggregate') {
+      // the whole ion budget is seeded once, in reset(); nothing tops it up.
+      // Aggregation is over when it is genuinely over: no ions left in
+      // solution at all. The timeout is only a backstop against a pathological
+      // last straggler with nothing left to find.
+      if (sol.length === 0 || t > 3200) {
+        phase = 'order'; orderT = 0;
+        // ordering has to start somewhere: some blob is always first to
+        // ripen. Seeding that one deterministically, right as the sequence
+        // continues, means the field never just sits there fully amorphous
+        // waiting on a spontaneous roll that, at high stabilisation, can be
+        // rare enough not to happen within the episode at all.
+        var seedCand = [];
+        for (i = 0; i < par.length; i++) {
+          p = par[i];
+          if (p && p.alive && !p.xtal && !p.held && find(aggP, i) === bigRoot) seedCand.push(i);
+        }
+        if (seedCand.length) {
+          var seedI = seedCand[(rnd() * seedCand.length) | 0];
+          ignite(seedI, rnd() * Math.PI * 2, seedI);
+        }
+      }
+    } else if (phase === 'order') {
+      orderT += dt;
       var done = stats.amorphInAgg <= stats.retained && stats.crystalline > 0 && big >= 20;
-      if (done || t > 2600) { phase = 'hold'; holdT = 0; }
+      if (done || orderT > 3200) { phase = 'hold'; holdT = 0; }
     } else if (phase === 'hold') {
       holdT += dt;
       if (holdT > 230) phase = 'done';
@@ -2450,20 +2507,20 @@ function makeSim(seedFn) {
   function simT() { return sim.time(); }
   var SP_NM = 0.62;             // drawn lattice plane spacing, coarsened for legibility
   var C = {
-    field: '#060B12',
-    solute: 'rgba(64,150,178,0.62)',
-    amCore: '#2E627A',
-    amEdge: '#123044',
-    xtBody: '#123A4E',
-    xtRim: 'rgba(110,205,235,0.34)',
-    fringe: 'rgba(140,232,255,0.40)',
-    node: 'rgba(190,245,255,0.52)',
+    field: '#080C15',
+    solute: 'rgba(127,217,239,0.55)',
+    amBody: '#2A5872',
+    amRim: 'rgba(150,210,232,0.55)',
+    amHeld: 'rgba(214,168,120,0.65)',
+    xtBody: '#173F58',
+    xtRim: 'rgba(127,217,239,0.55)',
+    fringe: 'rgba(196,238,250,0.55)',
     warm: '#FF8A63',
-    rule: '#93A8BC'
+    rule: '#8FA5B8'
   };
 
   /* ---- sizing ---- */
-  var sc = 1, dpr = 1, spPx = 7, noise = null, vign = null;
+  var sc = 1, dpr = 1, spPx = 7;
   function fit() {
     var rect = cv.getBoundingClientRect();
     var cssW = Math.max(240, rect.width || cv.clientWidth || 640);
@@ -2473,33 +2530,9 @@ function makeSim(seedFn) {
     if (cv.width !== bw || cv.height !== bh) { cv.width = bw; cv.height = bh; }
     sc = cv.width / W;
     spPx = Math.max(4, Math.round(SP_NM * sc));
-    noise = makeNoise();
-    vign = makeVignette();
   }
   function X(x) { return x * sc; }
   function Y(y) { return y * sc; }
-
-  function makeNoise() {
-    var n = 128, c = document.createElement('canvas');
-    c.width = n; c.height = n;
-    var g = c.getContext('2d'), img = g.createImageData(n, n), d = img.data;
-    for (var i = 0; i < n * n; i++) {
-      var v = 150 + Math.random() * 105 | 0;
-      d[i * 4] = v; d[i * 4 + 1] = v + 6; d[i * 4 + 2] = v + 14;
-      d[i * 4 + 3] = Math.random() * 16 | 0;
-    }
-    g.putImageData(img, 0, 0);
-    try { return ctx.createPattern(c, 'repeat'); } catch (e) { return null; }
-  }
-  function makeVignette() {
-    try {
-      var g = ctx.createRadialGradient(cv.width / 2, cv.height / 2, cv.height * 0.22,
-                                       cv.width / 2, cv.height / 2, cv.width * 0.72);
-      g.addColorStop(0, 'rgba(0,0,0,0)');
-      g.addColorStop(1, 'rgba(0,0,0,0.55)');
-      return g;
-    } catch (e) { return null; }
-  }
 
   /* ---- shapes ----
      An amorphous blob keeps one irregular, wobbled outline for as long as it
@@ -2512,7 +2545,7 @@ function makeSim(seedFn) {
     var path = new Path2D(), n = 12;
     for (var k = 0; k < n; k++) {
       var ang = k / n * TAU;
-      var rr = p.r * p.wob[k];
+      var rr = p.r * (1 + (p.wob[k] - 1) * 0.32);   // barely-irregular circle, not a wobbly blob
       var px = X(p.x + rr * Math.cos(ang)), py = Y(p.y + rr * Math.sin(ang));
       if (k === 0) path.moveTo(px, py); else path.lineTo(px, py);
     }
@@ -2580,7 +2613,6 @@ function makeSim(seedFn) {
     ctx.globalAlpha = 1;
     ctx.fillStyle = C.field;
     ctx.fillRect(0, 0, w, h);
-    if (noise) { ctx.fillStyle = noise; ctx.fillRect(0, 0, w, h); }
 
     ctx.globalAlpha = alpha;
 
@@ -2612,29 +2644,23 @@ function makeSim(seedFn) {
       neckCache.push({ path: neckPath(p, q), a: B.a });
     }
 
-    // amorphous precursors
+    // amorphous precursors: flat fill, crisp rim, one small highlight for
+    // roundness. No gradient, no mottling, nothing to read as texture.
     for (i = 0; i < sim.par.length; i++) {
       p = sim.par[i];
       if (!p || !p.alive || p.xtal || !shapeCache[i]) continue;
-      var g = ctx.createRadialGradient(X(p.x - p.r * 0.3), Y(p.y - p.r * 0.3), p.r * sc * 0.1,
-                                       X(p.x), Y(p.y), p.r * sc * 1.15);
-      g.addColorStop(0, C.amCore);
-      g.addColorStop(1, C.amEdge);
-      ctx.fillStyle = g;
+      ctx.fillStyle = C.amBody;
       ctx.fill(shapeCache[i]);
+      ctx.lineWidth = Math.max(1, 0.11 * sc);
+      ctx.strokeStyle = p.held ? C.amHeld : C.amRim;
+      ctx.stroke(shapeCache[i]);
       ctx.save();
       ctx.clip(shapeCache[i]);
-      ctx.fillStyle = 'rgba(10,28,40,0.42)';
-      for (k = 0; k < 3; k++) {
-        var wa = p.wob[k + 4] * TAU, wr = p.r * 0.5 * p.wob[k + 7];
-        ctx.beginPath();
-        ctx.arc(X(p.x + Math.cos(wa) * p.r * 0.4), Y(p.y + Math.sin(wa) * p.r * 0.4), wr * sc, 0, TAU);
-        ctx.fill();
-      }
+      ctx.fillStyle = 'rgba(255,255,255,0.10)';
+      ctx.beginPath();
+      ctx.arc(X(p.x - p.r * 0.32), Y(p.y - p.r * 0.32), p.r * sc * 0.45, 0, TAU);
+      ctx.fill();
       ctx.restore();
-      ctx.lineWidth = Math.max(1, 0.09 * sc);
-      ctx.strokeStyle = p.held ? 'rgba(190,150,110,0.42)' : 'rgba(90,170,200,0.28)';
-      ctx.stroke(shapeCache[i]);
     }
 
     // crystallites: body, then the lattice, then a whisper of an outline so the
@@ -2652,8 +2678,8 @@ function makeSim(seedFn) {
       ctx.strokeStyle = C.fringe;
       ctx.stroke(fringes(p, anchor));
       ctx.restore();
-      // a particle that just converted glows briefly, so the secondary
-      // nucleation front is legible as it travels through the aggregate
+      // a particle that just ripened glows briefly, so each individual
+      // solid-state transformation is legible as it happens
       var age = simT() - p.tX;
       if (p.tX >= 0 && age < 26) {
         var fl = 1 - age / 26;
@@ -2685,7 +2711,7 @@ function makeSim(seedFn) {
       ctx.stroke(shapeCache[i]);
     }
 
-    // boundaries that could not rotate out: the whole point of the figure
+    // real grain boundaries: joins that were never going to line up
     for (k = 0; k < sim.bonds.length; k++) {
       B = sim.bonds[k];
       if (B.dead || B.coh) continue;
@@ -2708,8 +2734,7 @@ function makeSim(seedFn) {
       ctx.globalAlpha = alpha;
     }
 
-    // vignette and scale bar
-    if (vign) { ctx.fillStyle = vign; ctx.fillRect(0, 0, w, h); }
+    // scale bar
     ctx.globalAlpha = alpha * 0.75;
     var barNm = 10, bx = X(4), by = h - Math.max(14, 2.6 * sc);
     ctx.strokeStyle = C.rule;
@@ -2790,7 +2815,7 @@ function makeSim(seedFn) {
   var readTick = 0;
 
   function advance(n) {
-    for (var i = 0; i < n; i++) sim.step(DT, sim.phase() === 'grow');
+    for (var i = 0; i < n; i++) sim.step(DT, sim.phase() === 'aggregate');
   }
 
   function frame(ts) {
@@ -2859,7 +2884,8 @@ function makeSim(seedFn) {
        show the finished object instead of animating towards it. */
     playing = false;
     var guard = 0;
-    while (sim.phase() === 'grow' && guard++ < 6000) sim.step(DT, true);
+    while (sim.phase() === 'aggregate' && guard++ < 6000) sim.step(DT, true);
+    while (sim.phase() === 'order' && guard++ < 8000) sim.step(DT, false);
     while (sim.phase() === 'hold' && guard++ < 7000) sim.step(DT, false);
     sim.tally();
     readout(); render(1);

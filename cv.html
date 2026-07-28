@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Curriculum Vitae &middot; Zak Jibrin</title>
+<meta name="description" content="Curriculum vitae of Zakaria (Zak) Jibrin, PhD candidate in Earth and Planetary Sciences at Rutgers University.">
+<meta name="theme-color" content="#EDE7DA">
+
+<!--
+  cv.html — a live mirror of the CV Google Doc.
+
+  No Jekyll front matter, exactly like index.html, so Pages copies this through
+  verbatim as a static file.
+
+  How it works: on every page load the browser fetches the document's HTML
+  export straight from Google and re-renders it in this site's own typography.
+  Nothing is cached and nothing is committed, so the page always shows whatever
+  the doc says right now — edit the doc, reload this page, see the change.
+
+  This depends on two things outside the repo:
+    1. The doc staying link-shared ("anyone with the link" -> Viewer).
+    2. Google continuing to send an Access-Control-Allow-Origin header on the
+       export endpoint. It reflects any origin today, but it is undocumented
+       behaviour, not a supported API.
+  If either goes away the fetch fails and the page falls back to a plain link
+  to the document, so the page degrades to useful rather than to blank.
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Lora:ital,wght@0,400..600;1,400..600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #EDE7DA;
+  --bg-warm: #E4DCC9;
+  --ink: #16191A;
+  --muted: #555555;
+  --rule: #B8BFBD;
+  --accent: #007A74;
+
+  --serif: 'Newsreader', Georgia, serif;
+  --sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --mono: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
+
+  --max: 60rem;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 17px; scroll-behavior: smooth; background: #FFFFFF; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  margin-inline: 9vw;
+}
+
+::selection { background: var(--accent); color: var(--bg); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 2rem; }
+
+/* ---------- Nav ---------- */
+nav {
+  padding: 1.4rem 0;
+  border-bottom: 1px solid var(--rule);
+  position: sticky; top: 0; z-index: 20;
+  background: rgba(237, 231, 218, 0.9);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+nav .wrap { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; }
+.brand {
+  font-family: var(--serif);
+  font-variation-settings: "opsz" 36, "SOFT" 20, "wght" 500, "WONK" 0;
+  font-size: 1.05rem; font-weight: 500;
+  color: var(--ink); text-decoration: none;
+}
+.brand .j { font-family: 'Lora', Georgia, serif; font-size: 1.02em; }
+.brand em { font-style: italic; color: var(--accent); font-weight: 400; }
+.nav-links { display: flex; gap: 1.6rem; list-style: none; flex-wrap: wrap; }
+.nav-links a {
+  color: var(--muted); text-decoration: none;
+  font-size: 0.85rem; font-weight: 600;
+  transition: color 0.25s ease;
+}
+.nav-links a:hover, .nav-links a:focus-visible { color: var(--accent); outline: none; }
+
+/* ---------- Head ---------- */
+.cv-head { padding: 3.5rem 0 2rem; border-bottom: 1px solid var(--rule); }
+.cv-head h1 {
+  font-family: var(--serif);
+  font-variation-settings: "opsz" 144, "SOFT" 30, "wght" 400, "WONK" 0;
+  font-size: clamp(2.6rem, 6vw, 4.2rem);
+  font-weight: 400; line-height: 1.05; letter-spacing: -0.02em;
+}
+.cv-head h1 .j { font-family: 'Lora', Georgia, serif; font-size: 1.04em; }
+.cv-head .role {
+  font-family: var(--serif); font-style: italic;
+  font-size: clamp(1.15rem, 2.2vw, 1.45rem);
+  color: var(--muted); margin-top: 0.5rem;
+}
+.cv-contact {
+  display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem;
+  margin-top: 1.4rem;
+  font-family: var(--mono); font-size: 0.78rem;
+  letter-spacing: 0.06em; color: var(--muted);
+}
+.cv-contact a { color: var(--accent); text-decoration: none; }
+.cv-contact a:hover { text-decoration: underline; }
+
+/* ---------- Sync status ---------- */
+.cv-status {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 0.6rem 1rem;
+  margin-top: 1.6rem; padding: 0.75rem 1rem;
+  border: 1px solid var(--rule); background: var(--bg-warm);
+  font-family: var(--mono); font-size: 0.74rem;
+  letter-spacing: 0.05em; color: var(--muted);
+}
+.cv-status .dot {
+  width: 8px; height: 8px; border-radius: 50%; flex: none;
+  background: var(--accent);
+}
+.cv-status.is-error { border-color: #AE3A22; }
+.cv-status.is-error .dot { background: #AE3A22; }
+.cv-status a { color: var(--accent); }
+.cv-actions { margin-left: auto; display: flex; gap: 0.6rem; flex-wrap: wrap; }
+.cv-btn {
+  font-family: var(--mono); font-size: 0.72rem; font-weight: 500;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink); background: transparent;
+  border: 1px solid var(--ink); padding: 0.4rem 0.75rem;
+  cursor: pointer; text-decoration: none; display: inline-block;
+  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+.cv-btn:hover, .cv-btn:focus-visible {
+  color: var(--bg); background: var(--ink); border-color: var(--ink); outline: none;
+}
+
+/* ---------- CV body ---------- */
+#cvBody { padding: 2.5rem 0 4rem; }
+
+.cv-loading {
+  font-family: var(--mono); font-size: 0.82rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--muted); padding: 3rem 0;
+}
+
+/* section heading, e.g. EDUCATION */
+#cvBody h2 {
+  font-family: var(--serif);
+  font-variation-settings: "opsz" 60, "SOFT" 25, "wght" 600;
+  font-size: 1.5rem; font-weight: 600; letter-spacing: -0.01em;
+  text-transform: none;
+  margin: 2.9rem 0 1.1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--ink);
+}
+#cvBody h2:first-child { margin-top: 0; }
+
+#cvBody p { margin: 0.55rem 0; max-width: 74ch; }
+#cvBody strong { font-weight: 600; }
+
+/* a title line with a right-aligned date */
+.cv-row {
+  display: flex; justify-content: space-between; align-items: baseline;
+  gap: 1.5rem; margin: 1.4rem 0 0.2rem; max-width: none;
+}
+.cv-row .cv-what { font-weight: 600; }
+.cv-row .cv-when {
+  font-family: var(--mono); font-size: 0.76rem; font-weight: 500;
+  letter-spacing: 0.08em; color: var(--accent);
+  white-space: nowrap; flex: none;
+}
+
+/* bullets */
+#cvBody ul { list-style: none; margin: 0.5rem 0 0.9rem; }
+#cvBody li {
+  position: relative; padding-left: 1.15rem;
+  margin: 0.35rem 0; max-width: 74ch;
+}
+#cvBody li::before {
+  content: "\25C7";           /* the site's lozenge, same as the hero eyebrow */
+  position: absolute; left: 0; top: 0;
+  color: var(--accent); font-size: 0.72em; line-height: 1.9;
+}
+
+/* ---------- Footer ---------- */
+footer {
+  padding: 2.5rem 0 3rem; border-top: 1px solid var(--rule);
+  font-family: var(--mono); font-size: 0.72rem;
+  color: var(--muted); letter-spacing: 0.05em;
+}
+footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+
+@media (max-width: 900px) {
+  body { margin-inline: 4vw; }
+  .wrap { padding: 0 1.5rem; }
+  .cv-head { padding: 2.5rem 0 1.5rem; }
+}
+@media (max-width: 600px) {
+  html { font-size: 16px; }
+  body { margin-inline: 3vw; }
+  nav .wrap { flex-direction: column; align-items: flex-start; }
+  .cv-actions { margin-left: 0; }
+  .cv-row { flex-direction: column; gap: 0.15rem; }
+  .cv-row .cv-when { font-size: 0.72rem; }
+}
+
+/* ---------- Print: drop the furniture, keep the document ---------- */
+@media print {
+  @page { margin: 1.6cm; }
+  html { font-size: 11pt; background: #FFF; }
+  body { margin-inline: 0; background: #FFF; color: #000; }
+  nav, .cv-status, footer, .cv-actions { display: none !important; }
+  .wrap { max-width: none; padding: 0; }
+  .cv-head { padding: 0 0 0.8rem; }
+  #cvBody { padding: 1rem 0 0; }
+  #cvBody h2 { margin-top: 1.4rem; break-after: avoid; }
+  .cv-row, #cvBody li { break-inside: avoid; }
+  .cv-row .cv-when { color: #000; }
+  #cvBody li::before { color: #000; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="index.html" class="brand">Zakaria <em><span class="j">J</span>ibrin</em></a>
+    <ul class="nav-links">
+      <li><a href="index.html#about">About</a></li>
+      <li><a href="index.html#research">Research</a></li>
+      <li><a href="index.html#writing">Writing</a></li>
+      <li><a href="index.html#cpa">CPA</a></li>
+      <li><a href="index.html#elsewhere">Elsewhere</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="cv-head">
+  <div class="wrap">
+    <h1>Zak <span class="j">J</span>ibrin</h1>
+    <p class="role">Curriculum vitae</p>
+    <div class="cv-contact">
+      <span>PhD Candidate, Earth &amp; Planetary Sciences</span>
+      <span>Rutgers University, Piscataway, NJ</span>
+      <a href="mailto:zakjibrin@gmail.com">zakjibrin@gmail.com</a>
+      <a href="https://orcid.org/0000-0002-7922-0959">ORCID</a>
+    </div>
+
+    <div class="cv-status" id="cvStatus">
+      <span class="dot" aria-hidden="true"></span>
+      <span id="cvStatusText">Fetching the current version&hellip;</span>
+      <span class="cv-actions">
+        <button type="button" class="cv-btn" id="cvPrint">Print / PDF</button>
+      </span>
+    </div>
+  </div>
+</header>
+
+<main id="cvBody">
+  <div class="wrap">
+    <p class="cv-loading" id="cvLoading">Loading curriculum vitae&hellip;</p>
+    <noscript>
+      <p>This page renders the CV live from its source document, which needs
+      JavaScript. You can
+      <a href="https://docs.google.com/document/d/1I3z70OJlcmhBNJrxCd78T6bPl8lMFCMptObqb7TLs2o/view">open the document directly</a>
+      instead.</p>
+    </noscript>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Rutgers University &middot; Piscataway, NJ</span>
+    <span><a href="index.html" style="color:var(--accent);text-decoration:none;">&larr; Back to the site</a></span>
+  </div>
+</footer>
+
+<script>
+/* --------------------------------------------------------------------------
+   Live CV mirror.
+
+   Pulls the Google Doc's own HTML export on every load and rewrites it into
+   this site's markup. Two things make that possible:
+
+     - The export endpoint answers cross-origin requests. It reflects whatever
+       Origin it is given, so a plain fetch() from this page succeeds.
+     - The export is ordinary semantic HTML underneath Google's generated
+       class names, so the structure survives even though the classes are
+       meaningless and change on every export.
+
+   Nothing from the document is ever passed to innerHTML. Every node is built
+   with createElement and textContent, so no markup in the document can become
+   markup on this page.
+-------------------------------------------------------------------------- */
+(function () {
+  var DOC_ID = '1I3z70OJlcmhBNJrxCd78T6bPl8lMFCMptObqb7TLs2o';
+  var EXPORT = 'https://docs.google.com/document/d/' + DOC_ID + '/export?format=html';
+  var DOC_URL = 'https://docs.google.com/document/d/' + DOC_ID + '/view';
+
+  var mount     = document.querySelector('#cvBody .wrap');
+  var loading   = document.getElementById('cvLoading');
+  var statusBox = document.getElementById('cvStatus');
+  var statusTxt = document.getElementById('cvStatusText');
+  var printBtn  = document.getElementById('cvPrint');
+  if (!mount) return;
+
+  if (printBtn) printBtn.addEventListener('click', function () { window.print(); });
+
+  /* A line that is nothing but capitals is one of the CV's section headings
+     (EDUCATION, PUBLICATIONS, ...). Testing for "has no lowercase" rather than
+     matching a fixed list means a section added to the doc later is picked up
+     without touching this file. Digits and punctuation are allowed through so
+     "WORKSHOPS/PROFESSIONAL DEVELOPMENT/COURSES" still counts. */
+  function isHeading(text) {
+    if (text.length < 3 || text.length > 70) return false;
+    if (!/[A-Z]/.test(text)) return false;
+    if (/[a-z]/.test(text)) return false;
+    return /^[A-Z0-9 .,'&()\/–—-]+$/.test(text);
+  }
+
+  /* Google right-aligns dates by padding with non-breaking spaces, so a run of
+     whitespace followed by something date-shaped at the end of a line is a
+     title/date pair rather than a sentence. Anything that does not match is
+     left alone: a date sitting mid-line stays exactly where the author put it. */
+  var DATE_TAIL = new RegExp(
+    '^(.*?)[\\s\\u00a0]{3,}(' +
+      '(?:Expected\\s*[-\\u2013\\u2014]\\s*)?' +
+      '(?:Spring|Summer|Fall|Winter)?\\s*' +
+      '\\d{4}' +
+      '(?:\\s*[-\\u2013\\u2014]\\s*(?:Present|present|\\d{4}))?' +
+    ')$'
+  );
+
+  function tidy(s) {
+    return s.replace(/[\s ]+/g, ' ').trim();
+  }
+
+  /* Bold survives the export only as a generated class with font-weight:700 on
+     it, so the stylesheet has to be read to find out which classes those are. */
+  function boldClassesOf(gdoc) {
+    var set = Object.create(null);
+    var styles = gdoc.getElementsByTagName('style');
+    for (var i = 0; i < styles.length; i++) {
+      var css = styles[i].textContent || '';
+      var re = /\.([\w-]+)\s*\{([^}]*)\}/g, m;
+      while ((m = re.exec(css))) {
+        if (/font-weight\s*:\s*(?:700|800|900|bold)/i.test(m[2])) set[m[1]] = true;
+      }
+    }
+    return set;
+  }
+
+  function isBold(el, bolds) {
+    var cls = (el.getAttribute && el.getAttribute('class') || '').split(/\s+/);
+    for (var i = 0; i < cls.length; i++) if (cls[i] && bolds[cls[i]]) return true;
+    return false;
+  }
+
+  /* Rebuild one block's inline content: text, bold runs, and links. Built node
+     by node, never as a markup string. */
+  function inline(src, dest, bolds, boldCtx) {
+    for (var n = src.firstChild; n; n = n.nextSibling) {
+      if (n.nodeType === 3) {
+        var t = n.nodeValue.replace(/[\s ]+/g, ' ');
+        if (!t) continue;
+        if (boldCtx) {
+          var b = document.createElement('strong');
+          b.textContent = t;
+          dest.appendChild(b);
+        } else {
+          dest.appendChild(document.createTextNode(t));
+        }
+        continue;
+      }
+      if (n.nodeType !== 1) continue;
+
+      var tag = n.tagName.toLowerCase();
+      if (tag === 'br') { dest.appendChild(document.createElement('br')); continue; }
+      if (tag === 'img' || tag === 'style' || tag === 'script') continue;
+
+      if (tag === 'a') {
+        var href = n.getAttribute('href') || '';
+        /* Google wraps outbound links in a redirector; unwrap to the real target. */
+        var q = href.match(/[?&]q=([^&]+)/);
+        if (q) { try { href = decodeURIComponent(q[1]); } catch (e) {} }
+        if (/^(https?:|mailto:)/i.test(href)) {
+          var a = document.createElement('a');
+          a.href = href;
+          a.rel = 'noopener noreferrer';
+          inline(n, a, bolds, boldCtx || isBold(n, bolds));
+          if (a.textContent.trim()) { dest.appendChild(a); continue; }
+        }
+      }
+      inline(n, dest, bolds, boldCtx || isBold(n, bolds));
+    }
+  }
+
+  function blockText(el) { return tidy(el.textContent || ''); }
+
+  function renderParagraph(el, bolds, frag) {
+    var raw = (el.textContent || '').replace(/ /g, ' ');
+    var flat = blockText(el);
+    if (!flat) return;
+
+    if (isHeading(flat)) {
+      var h = document.createElement('h2');
+      h.textContent = flat;
+      frag.appendChild(h);
+      return;
+    }
+
+    /* A paragraph the author bulleted by hand, with a literal marker. */
+    var bullet = flat.match(/^[•●▪*·-]\s+(.*)$/);
+    if (bullet && bullet[1]) {
+      var ul = frag.lastChild;
+      if (!ul || ul.tagName !== 'UL') { ul = document.createElement('ul'); frag.appendChild(ul); }
+      var li = document.createElement('li');
+      li.textContent = bullet[1];
+      ul.appendChild(li);
+      return;
+    }
+
+    var m = raw.replace(/\s+$/, '').match(DATE_TAIL);
+    if (m && tidy(m[1])) {
+      var row = document.createElement('div');
+      row.className = 'cv-row';
+      var what = document.createElement('span');
+      what.className = 'cv-what';
+      what.textContent = tidy(m[1]);
+      var when = document.createElement('span');
+      when.className = 'cv-when';
+      when.textContent = tidy(m[2]);
+      row.appendChild(what);
+      row.appendChild(when);
+      frag.appendChild(row);
+      return;
+    }
+
+    var p = document.createElement('p');
+    inline(el, p, bolds, false);
+    if (p.textContent.trim()) frag.appendChild(p);
+  }
+
+  function build(gdoc) {
+    var bolds = boldClassesOf(gdoc);
+    var frag = document.createDocumentFragment();
+
+    (function walk(parent) {
+      for (var el = parent.firstElementChild; el; el = el.nextElementSibling) {
+        var tag = el.tagName.toLowerCase();
+
+        if (tag === 'ul' || tag === 'ol') {
+          var ul = document.createElement('ul');
+          var items = el.getElementsByTagName('li');
+          for (var i = 0; i < items.length; i++) {
+            var txt = blockText(items[i]);
+            if (!txt) continue;
+            var li = document.createElement('li');
+            inline(items[i], li, bolds, false);
+            if (li.textContent.trim()) ul.appendChild(li);
+          }
+          if (ul.childNodes.length) frag.appendChild(ul);
+          continue;
+        }
+
+        if (/^h[1-6]$/.test(tag)) {
+          var t = blockText(el);
+          if (!t) continue;
+          var h = document.createElement('h2');
+          h.textContent = t;
+          frag.appendChild(h);
+          continue;
+        }
+
+        if (tag === 'p') { renderParagraph(el, bolds, frag); continue; }
+        if (tag === 'div' || tag === 'section' || tag === 'body') { walk(el); continue; }
+      }
+    })(gdoc.body);
+
+    return frag;
+  }
+
+  function fail(msg) {
+    if (loading) loading.remove();
+    statusBox.classList.add('is-error');
+    statusTxt.textContent = msg + ' ';
+    var a = document.createElement('a');
+    a.href = DOC_URL;
+    a.textContent = 'Open the source document';
+    a.rel = 'noopener noreferrer';
+    statusTxt.appendChild(a);
+  }
+
+  /* cache: 'no-store' plus a changing query string, so a click really does go
+     back to Google rather than to whatever the browser kept from last time. */
+  fetch(EXPORT + '&_=' + Date.now(), { cache: 'no-store', credentials: 'omit' })
+    .then(function (r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.text();
+    })
+    .then(function (html) {
+      var gdoc = new DOMParser().parseFromString(html, 'text/html');
+      var frag = build(gdoc);
+      if (!frag.childNodes.length) throw new Error('empty');
+
+      if (loading) loading.remove();
+      mount.appendChild(frag);
+
+      var now = new Date();
+      statusTxt.textContent = 'Synced live from the source document · fetched ' +
+        now.toLocaleString(undefined, {
+          year: 'numeric', month: 'short', day: 'numeric',
+          hour: '2-digit', minute: '2-digit'
+        });
+    })
+    .catch(function () {
+      fail('Could not reach the source document right now.');
+    });
+})();
+</script>
+</body>
+</html>
