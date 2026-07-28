@@ -257,7 +257,8 @@ footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; g
     <div class="cv-contact">
       <span>PhD Candidate, Earth &amp; Planetary Sciences</span>
       <span>Rutgers University, Piscataway, NJ</span>
-      <a href="mailto:zakjibrin@gmail.com">zakjibrin@gmail.com</a>
+      <a href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=zakjibrin@gmail.com"
+         target="_blank" rel="noopener">zakjibrin@gmail.com</a>
       <a href="https://orcid.org/0000-0002-7922-0959">ORCID</a>
     </div>
 
@@ -293,27 +294,16 @@ footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; g
   </div>
 </footer>
 
+<script src="gdoc.js"></script>
 <script>
 /* --------------------------------------------------------------------------
-   Live CV mirror.
-
-   Pulls the Google Doc's own HTML export on every load and rewrites it into
-   this site's markup. Two things make that possible:
-
-     - The export endpoint answers cross-origin requests. It reflects whatever
-       Origin it is given, so a plain fetch() from this page succeeds.
-     - The export is ordinary semantic HTML underneath Google's generated
-       class names, so the structure survives even though the classes are
-       meaningless and change on every export.
-
-   Nothing from the document is ever passed to innerHTML. Every node is built
-   with createElement and textContent, so no markup in the document can become
-   markup on this page.
+   Live CV mirror. The parsing lives in gdoc.js, shared with piece.html, so
+   there is only one copy of the Google Doc reader to keep correct. What is
+   left here is the wiring: fetch this particular document, drop it in, and on
+   failure fall back to a link rather than to an empty page.
 -------------------------------------------------------------------------- */
 (function () {
   var DOC_ID = '1I3z70OJlcmhBNJrxCd78T6bPl8lMFCMptObqb7TLs2o';
-  var EXPORT = 'https://docs.google.com/document/d/' + DOC_ID + '/export?format=html';
-  var DOC_URL = 'https://docs.google.com/document/d/' + DOC_ID + '/view';
 
   var mount     = document.querySelector('#cvBody .wrap');
   var loading   = document.getElementById('cvLoading');
@@ -324,209 +314,21 @@ footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; g
 
   if (printBtn) printBtn.addEventListener('click', function () { window.print(); });
 
-  /* A line that is nothing but capitals is one of the CV's section headings
-     (EDUCATION, PUBLICATIONS, ...). Testing for "has no lowercase" rather than
-     matching a fixed list means a section added to the doc later is picked up
-     without touching this file. Digits and punctuation are allowed through so
-     "WORKSHOPS/PROFESSIONAL DEVELOPMENT/COURSES" still counts. */
-  function isHeading(text) {
-    if (text.length < 3 || text.length > 70) return false;
-    if (!/[A-Z]/.test(text)) return false;
-    if (/[a-z]/.test(text)) return false;
-    return /^[A-Z0-9 .,'&()\/–—-]+$/.test(text);
-  }
-
-  /* Google right-aligns dates by padding with non-breaking spaces, so a run of
-     whitespace followed by something date-shaped at the end of a line is a
-     title/date pair rather than a sentence. Anything that does not match is
-     left alone: a date sitting mid-line stays exactly where the author put it. */
-  var DATE_TAIL = new RegExp(
-    '^(.*?)[\\s\\u00a0]{3,}(' +
-      '(?:Expected\\s*[-\\u2013\\u2014]\\s*)?' +
-      '(?:Spring|Summer|Fall|Winter)?\\s*' +
-      '\\d{4}' +
-      '(?:\\s*[-\\u2013\\u2014]\\s*(?:Present|present|\\d{4}))?' +
-    ')$'
-  );
-
-  function tidy(s) {
-    return s.replace(/[\s ]+/g, ' ').trim();
-  }
-
-  /* Bold survives the export only as a generated class with font-weight:700 on
-     it, so the stylesheet has to be read to find out which classes those are. */
-  function boldClassesOf(gdoc) {
-    var set = Object.create(null);
-    var styles = gdoc.getElementsByTagName('style');
-    for (var i = 0; i < styles.length; i++) {
-      var css = styles[i].textContent || '';
-      var re = /\.([\w-]+)\s*\{([^}]*)\}/g, m;
-      while ((m = re.exec(css))) {
-        if (/font-weight\s*:\s*(?:700|800|900|bold)/i.test(m[2])) set[m[1]] = true;
-      }
-    }
-    return set;
-  }
-
-  function isBold(el, bolds) {
-    var cls = (el.getAttribute && el.getAttribute('class') || '').split(/\s+/);
-    for (var i = 0; i < cls.length; i++) if (cls[i] && bolds[cls[i]]) return true;
-    return false;
-  }
-
-  /* Rebuild one block's inline content: text, bold runs, and links. Built node
-     by node, never as a markup string. */
-  function inline(src, dest, bolds, boldCtx) {
-    for (var n = src.firstChild; n; n = n.nextSibling) {
-      if (n.nodeType === 3) {
-        var t = n.nodeValue.replace(/[\s ]+/g, ' ');
-        if (!t) continue;
-        if (boldCtx) {
-          var b = document.createElement('strong');
-          b.textContent = t;
-          dest.appendChild(b);
-        } else {
-          dest.appendChild(document.createTextNode(t));
-        }
-        continue;
-      }
-      if (n.nodeType !== 1) continue;
-
-      var tag = n.tagName.toLowerCase();
-      if (tag === 'br') { dest.appendChild(document.createElement('br')); continue; }
-      if (tag === 'img' || tag === 'style' || tag === 'script') continue;
-
-      if (tag === 'a') {
-        var href = n.getAttribute('href') || '';
-        /* Google wraps outbound links in a redirector; unwrap to the real target. */
-        var q = href.match(/[?&]q=([^&]+)/);
-        if (q) { try { href = decodeURIComponent(q[1]); } catch (e) {} }
-        if (/^(https?:|mailto:)/i.test(href)) {
-          var a = document.createElement('a');
-          a.href = href;
-          a.rel = 'noopener noreferrer';
-          inline(n, a, bolds, boldCtx || isBold(n, bolds));
-          if (a.textContent.trim()) { dest.appendChild(a); continue; }
-        }
-      }
-      inline(n, dest, bolds, boldCtx || isBold(n, bolds));
-    }
-  }
-
-  function blockText(el) { return tidy(el.textContent || ''); }
-
-  function renderParagraph(el, bolds, frag) {
-    var raw = (el.textContent || '').replace(/ /g, ' ');
-    var flat = blockText(el);
-    if (!flat) return;
-
-    if (isHeading(flat)) {
-      var h = document.createElement('h2');
-      h.textContent = flat;
-      frag.appendChild(h);
-      return;
-    }
-
-    /* A paragraph the author bulleted by hand, with a literal marker. */
-    var bullet = flat.match(/^[•●▪*·-]\s+(.*)$/);
-    if (bullet && bullet[1]) {
-      var ul = frag.lastChild;
-      if (!ul || ul.tagName !== 'UL') { ul = document.createElement('ul'); frag.appendChild(ul); }
-      var li = document.createElement('li');
-      li.textContent = bullet[1];
-      ul.appendChild(li);
-      return;
-    }
-
-    var m = raw.replace(/\s+$/, '').match(DATE_TAIL);
-    if (m && tidy(m[1])) {
-      var row = document.createElement('div');
-      row.className = 'cv-row';
-      var what = document.createElement('span');
-      what.className = 'cv-what';
-      what.textContent = tidy(m[1]);
-      var when = document.createElement('span');
-      when.className = 'cv-when';
-      when.textContent = tidy(m[2]);
-      row.appendChild(what);
-      row.appendChild(when);
-      frag.appendChild(row);
-      return;
-    }
-
-    var p = document.createElement('p');
-    inline(el, p, bolds, false);
-    if (p.textContent.trim()) frag.appendChild(p);
-  }
-
-  function build(gdoc) {
-    var bolds = boldClassesOf(gdoc);
-    var frag = document.createDocumentFragment();
-
-    (function walk(parent) {
-      for (var el = parent.firstElementChild; el; el = el.nextElementSibling) {
-        var tag = el.tagName.toLowerCase();
-
-        if (tag === 'ul' || tag === 'ol') {
-          var ul = document.createElement('ul');
-          var items = el.getElementsByTagName('li');
-          for (var i = 0; i < items.length; i++) {
-            var txt = blockText(items[i]);
-            if (!txt) continue;
-            var li = document.createElement('li');
-            inline(items[i], li, bolds, false);
-            if (li.textContent.trim()) ul.appendChild(li);
-          }
-          if (ul.childNodes.length) frag.appendChild(ul);
-          continue;
-        }
-
-        if (/^h[1-6]$/.test(tag)) {
-          var t = blockText(el);
-          if (!t) continue;
-          var h = document.createElement('h2');
-          h.textContent = t;
-          frag.appendChild(h);
-          continue;
-        }
-
-        if (tag === 'p') { renderParagraph(el, bolds, frag); continue; }
-        if (tag === 'div' || tag === 'section' || tag === 'body') { walk(el); continue; }
-      }
-    })(gdoc.body);
-
-    return frag;
-  }
-
-  function fail(msg) {
-    if (loading) loading.remove();
-    statusBox.hidden = false;
-    statusBox.classList.add('is-error');
-    statusTxt.textContent = msg + ' ';
-    var a = document.createElement('a');
-    a.href = DOC_URL;
-    a.textContent = 'Open the source document';
-    a.rel = 'noopener noreferrer';
-    statusTxt.appendChild(a);
-  }
-
-  /* cache: 'no-store' plus a changing query string, so a click really does go
-     back to Google rather than to whatever the browser kept from last time. */
-  fetch(EXPORT + '&_=' + Date.now(), { cache: 'no-store', credentials: 'omit' })
-    .then(function (r) {
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      return r.text();
-    })
-    .then(function (html) {
-      var gdoc = new DOMParser().parseFromString(html, 'text/html');
-      var frag = build(gdoc);
-      if (!frag.childNodes.length) throw new Error('empty');
-
+  window.GDoc.load(DOC_ID)
+    .then(function (frag) {
       if (loading) loading.remove();
       mount.appendChild(frag);
     })
     .catch(function () {
-      fail('Could not reach the source document right now.');
+      if (loading) loading.remove();
+      statusBox.hidden = false;
+      statusBox.classList.add('is-error');
+      statusTxt.textContent = 'Could not reach the source document right now. ';
+      var a = document.createElement('a');
+      a.href = window.GDoc.viewUrl(DOC_ID);
+      a.textContent = 'Open the source document';
+      a.rel = 'noopener noreferrer';
+      statusTxt.appendChild(a);
     });
 })();
 </script>

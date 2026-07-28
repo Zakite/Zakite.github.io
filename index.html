@@ -653,6 +653,24 @@ h2 {
   font-size: 1.25rem; font-weight: 600; line-height: 1.3;
   letter-spacing: -0.008em; display: block;
 }
+
+/* An entry only becomes a link when pieces.js actually has a document behind
+   it; the script at the foot of this file does that wiring. Anything still
+   being written stays plain text, so the list can never offer a dead link.
+   The rule is drawn as a background so it sweeps in from the left rather than
+   simply appearing, and so it never affects layout. */
+.writing-list .title a {
+  color: inherit; text-decoration: none;
+  background-image: linear-gradient(var(--accent), var(--accent));
+  background-size: 0% 1px; background-repeat: no-repeat;
+  background-position: 0 calc(100% - 2px);
+  transition: background-size 0.4s cubic-bezier(.2,.8,.2,1), color 0.25s ease;
+}
+.writing-list li.has-piece { cursor: pointer; }
+.writing-list li.has-piece:hover .title a,
+.writing-list .title a:focus-visible {
+  color: var(--accent); background-size: 100% 1px;
+}
 .writing-list .sub {
   font-family: var(--sans);
   font-size: 0.94rem; color: var(--muted);
@@ -777,6 +795,21 @@ footer .signoff em {
 }
 .cs-hint.gone { opacity: 0; pointer-events: none; }
 
+/* ---- stage labels, mirroring the CPA figure's own labels ---- */
+.cs-stages {
+  display: flex; flex-wrap: wrap; gap: 0.4rem 0;
+  list-style: none; margin: 1rem 0 0; padding: 0;
+  font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--cs-dim);
+}
+.cs-stages li {
+  padding: 0.3rem 0.85rem; border-right: 1px solid var(--cs-rule);
+  transition: color 0.3s ease;
+}
+.cs-stages li:last-child { border-right: none; }
+.cs-stages li:first-child { padding-left: 0; }
+.cs-stages li.active { color: var(--cs-cyan); }
+
 /* ---- readout ---- */
 .cs-panel {
   display: grid;
@@ -850,7 +883,10 @@ footer .signoff em {
   color: var(--cs-dim); margin-top: 0.2rem;
 }
 
-.cs-controls { display: flex; flex-direction: column; gap: 0.55rem; align-items: flex-start; }
+.cs-controls {
+  display: flex; flex-direction: row; flex-wrap: wrap; gap: 0.6rem; align-items: center;
+  margin-top: 0.9rem;
+}
 .cs-btn {
   font-family: var(--mono); font-size: 0.68rem; font-weight: 500;
   letter-spacing: 0.15em; text-transform: uppercase;
@@ -1286,7 +1322,7 @@ footer .signoff em {
     <h2>Manuscripts, proposals, and talks.</h2>
     <ul class="writing-list">
 
-      <li>
+      <li data-piece="helical-sense">
         <!-- Bisignate CD curves inverting between two cation radii -->
         <div class="fig">
           <svg viewBox="0 0 200 150" aria-label="Two circular dichroism curves that are mirror images of each other, one for potassium and one for caesium.">
@@ -1314,7 +1350,7 @@ footer .signoff em {
         </div>
       </li>
 
-      <li>
+      <li data-piece="mineral-succession">
         <!-- Calcite to struvite to guanine, in order -->
         <div class="fig">
           <svg viewBox="0 0 200 150" aria-label="Three mineral habits in succession: a calcite rhomb, a struvite prism, and a guanine platelet.">
@@ -1348,7 +1384,7 @@ footer .signoff em {
         </div>
       </li>
 
-      <li>
+      <li data-piece="micp-microplastic">
         <!-- Capture efficiency against particle size, across the 100 um limit -->
         <div class="fig">
           <svg viewBox="0 0 200 150" aria-label="Capture efficiency plotted against particle size. Biofouling collapses below 100 micrometres while carbonate precipitation does not.">
@@ -1375,7 +1411,7 @@ footer .signoff em {
         </div>
       </li>
 
-      <li>
+      <li data-piece="finesst-guanine">
         <!-- A G-wire growing by adding GMP at its end -->
         <div class="fig">
           <svg viewBox="0 0 200 150" aria-label="A G-wire seen from the side, with a GMP unit approaching its growing end.">
@@ -1413,7 +1449,7 @@ footer .signoff em {
         </div>
       </li>
 
-      <li>
+      <li data-piece="before-the-biomineral">
         <!-- One brine, three ions, three products -->
         <div class="fig">
           <svg viewBox="0 0 200 150" aria-label="A brine branching into three assembly products depending on which ion is present.">
@@ -1480,93 +1516,37 @@ footer .signoff em {
 <figure class="cpa-sim" id="cpaSim">
   <div class="cs-head">
     <span class="cs-title">Live simulation</span>
-    <span class="cs-sub">no script, no target structure</span>
+    <span class="cs-sub">ions to hexagonal mesocrystal</span>
   </div>
 
   <div class="cs-stage">
     <canvas class="cs-canvas" id="csCanvas" role="img"
-            aria-label="A simulated solution seen as a micrograph. Ions drift like tiny magnets and pack onto their nearest neighbours, building amorphous calcium carbonate blobs with no lattice in them yet. Each blob then ripens in place, a solid-state transformation with no spinning or rotation, into a small flat-faced euhedral crystallite: some templated by a crystalline neighbour they already touch, some picking a random orientation when they have no neighbour to copy. When two of these crystallites first touch, their fixed orientations are compared once, on the spot; if they already align they fuse into one shared lattice, and if they do not the join still holds but stays a visible grain boundary. The result is a masonry-like aggregate of euhedral bricks, a mesocrystal, whose lattice fringes run parallel within each co-oriented domain."></canvas>
+            aria-label="An animated sequence: ions drift in solution and pack into amorphous nanoparticles. Each nanoparticle then orders in place into a small faceted nanocrystal, with no rotation. The nanocrystals then drift together and turn to a shared orientation, oriented attachment, joining edge to edge into a single hexagonal mesocrystal with one continuous lattice running through it. The sequence then resets and repeats."></canvas>
     <div class="cs-hint" id="csHint">Scroll into view to start</div>
   </div>
 
-  <div class="cs-panel">
-    <div class="cs-block">
-      <div class="cs-label">How the mass reached the largest object</div>
-      <div class="cs-bar" role="img" aria-hidden="true">
-        <span class="cs-bar-part" id="csBarPart"></span>
-        <span class="cs-bar-mono"></span>
-      </div>
-      <div class="cs-key">
-        <span><i class="k-part"></i>arrived as a particle <b id="csPctPart">0%</b></span>
-        <span><i class="k-mono"></i>arrived as solute <b id="csPctMono">0%</b></span>
-      </div>
-    </div>
+  <ol class="cs-stages" id="csStages">
+    <li data-stage="ions">Ions</li>
+    <li data-stage="amorphous">Amorphous nanoparticles</li>
+    <li data-stage="nanocrystals">Nanocrystals</li>
+    <li data-stage="attach">Oriented attachment</li>
+    <li data-stage="mesocrystal">Hexagonal mesocrystal</li>
+  </ol>
 
-    <div class="cs-block">
-      <div class="cs-label">Field</div>
-      <dl class="cs-nums">
-        <div><dt>solute</dt><dd id="csSolute">0</dd></div>
-        <div><dt>amorphous</dt><dd id="csAmorph">0</dd></div>
-        <div><dt>crystalline</dt><dd id="csXtal">0</dd></div>
-        <div><dt>largest</dt><dd id="csBig">0</dd></div>
-        <div><dt>its span</dt><dd id="csSpan">0 nm</dd></div>
-        <div><dt>ACC kept</dt><dd id="csRetain">0</dd></div>
-      </dl>
-    </div>
-
-    <div class="cs-block">
-      <div class="cs-label">Orientation of the largest object</div>
-      <div class="cs-coh">
-        <span class="cs-coh-bar"><span id="csCohFill"></span></span>
-        <b id="csCohPct">0%</b> of joins in register
-      </div>
-      <dl class="cs-nums cs-nums-wide">
-        <div><dt>nucleation sites</dt><dd id="csNuc">0</dd></div>
-        <div><dt>spread</dt><dd id="csSpread">--</dd></div>
-      </dl>
-      <div class="cs-hist" aria-hidden="true">
-        <span><i id="csH0"></i><em>.25</em></span>
-        <span><i id="csH1"></i><em>.5</em></span>
-        <span><i id="csH2"></i><em>1</em></span>
-        <span><i id="csH3"></i><em>3</em></span>
-        <span><i id="csH4"></i><em>3+</em></span>
-      </div>
-      <div class="cs-hist-cap">misorientation across joins, degrees</div>
-      <div class="cs-verdict" id="csVerdict">--</div>
-    </div>
-
-    <div class="cs-block cs-controls">
-      <button type="button" class="cs-btn" id="csPlay" aria-pressed="false">Pause</button>
-      <button type="button" class="cs-btn" id="csAgain">New run</button>
-      <label class="cs-slider">
-        <span>Stabilisation of the amorphous phase</span>
-        <input type="range" id="csStab" min="5" max="95" value="68" step="1"
-               aria-label="Stabilisation of the amorphous phase, standing in for magnesium and occluded macromolecules. Higher values keep precursor particles small and make crystal nucleation rarer.">
-      </label>
-    </div>
+  <div class="cs-controls">
+    <button type="button" class="cs-btn" id="csPlay" aria-pressed="false">Pause</button>
+    <button type="button" class="cs-btn" id="csAgain">Restart</button>
   </div>
 
   <figcaption>
-    The same few rules run every frame on whatever is in the field. There is no stage list and no
-    lattice to aim at. What matters here is the order, and it is not the intuitive one. Ions behave
-    like tiny magnets, pulling in whichever neighbour is nearest, and amorphous calcium carbonate
-    nanoparticles attach to one another <em>while still amorphous</em>, packing however the
-    collisions fall into a blob with no lattice anywhere in it. Only then does each blob ripen: a
-    solid-state transformation, <em>in place</em>, with no spinning or tumbling, that reorders its
-    interior into a lattice and leaves it a small, flat-faced, euhedral crystallite. One already
-    touching a crystallite tends to order along that crystallite's lattice; an isolated blob with
-    nothing to copy just picks its own orientation at random, once, for good. What happens when two
-    of these crystallites meet is <em>oriented attachment</em>, and it is a decision, not a search:
-    the instant they first touch, their fixed orientations are compared, and if they already line up
-    the join fuses into a shared lattice; if they do not, the join still holds, but it is a genuine,
-    permanent grain boundary. Drag the stabilisation control to change the competition: strong
-    stabilisation keeps precursors small and spontaneous ripening rare, so ordering happens almost
-    entirely by templating off whatever crystallised first, crystallites arrive already aligned, and
-    the whole mass converges on one domain with its spread under a degree, close to what
-    nano-diffraction finds in a sea urchin spine. Weak stabilisation lets many blobs ripen
-    independently before they ever touch, most of those random pairings miss each other's alignment
-    on first contact, and the warm lines mark the real grain boundaries that result. This is a
-    cartoon in two dimensions with coarsened lattice planes, not a quantitative model.
+    Ions condensing out of solution pack together, nearest neighbour to nearest neighbour, into
+    amorphous nanoparticles. Each nanoparticle then orders in place, a solid-state transformation
+    with no spinning or tumbling, into a small faceted nanocrystal. What happens next is
+    <em>oriented attachment</em>: the nanocrystals come together and turn to a shared orientation as
+    they join, edge to edge, rather than fusing at whatever angle they happen to meet at. Enough of
+    that, repeated, is how a field of separate nanocrystals becomes a single hexagonal mesocrystal,
+    still visibly built of discrete units up close, reading as one crystal from a distance. This is a
+    cartoon of the pathway, staged to be legible, not a quantitative model.
   </figcaption>
 </figure>
   </div>
@@ -1576,11 +1556,16 @@ footer .signoff em {
   <div class="wrap">
     <h2>Reach out.</h2>
     <div class="elsewhere">
-      <a href="mailto:zakjibrin@gmail.com">
+      <!-- Gmail's compose window rather than a mailto:, so the draft opens
+           already addressed instead of handing off to whatever mail client
+           the machine happens to have registered. New tab, since this leaves
+           the site for a web app. -->
+      <a href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=zakjibrin@gmail.com"
+         target="_blank" rel="noopener">
         <span class="label">Email</span>
         <span class="link-text">zakjibrin@gmail.com <span class="arrow">&rarr;</span></span>
       </a>
-      <a href="https://scholar.google.com/citations?user=REPLACE_ME">
+      <a href="https://scholar.google.com/citations?user=oboDYtkAAAAJ&amp;hl=en">
         <span class="label">Publications</span>
         <span class="link-text">Google Scholar <span class="arrow">&rarr;</span></span>
       </a>
@@ -1993,629 +1978,197 @@ footer .signoff em {
 
 
 <script>
-/* Crystallization by particle attachment, the calcium carbonate route.
-   Physics core: ions pack into amorphous blobs, each blob ripens into a
-   euhedral crystallite in place with no rotation, and crystallites join by
-   oriented attachment, decided once, at first contact, into a mesocrystal. */
-/* --------------------------------------------------------------------------
-   Crystallization by particle attachment, CaCO3 pathway.
-
-   The order matters and it is not the obvious one. Ions condensing out of
-   solution behave like tiny magnets: they pull in whichever neighbour is
-   nearest, amorphous calcium carbonate nanoparticles that attach to each
-   other while still amorphous and pack together however the collisions fall,
-   with no regard for orientation, because an amorphous particle has none.
-   That packing is what builds a blob.
-
-   Only then does each blob ripen. This is a solid-state transformation, in
-   place: the blob does not spin or tumble to find some better arrangement,
-   it reorders internally into a lattice and comes out the other side a
-   small, flat-faced, euhedral crystallite. A blob already touching a
-   crystallite tends to order along that crystallite's lattice,
-   heteroepitaxial templating, so its new orientation is simply copied, once,
-   at the moment it transforms; an isolated blob still ripens eventually and,
-   with no neighbour's lattice to copy, picks an orientation at random. Either
-   way, once a particle is a crystallite its orientation is permanent. Nothing
-   in this simulation ever rotates a particle to make it fit.
-
-   What happens when two crystallites meet is oriented attachment, and here
-   that means a decision, not a search: the instant two crystallites first
-   touch, their fixed orientations are compared once. If they already happen
-   to align, the join fuses into a shared lattice, coherent, part of the same
-   mesocrystal domain; if they do not, the join still holds, the crystallites
-   are still one physical object, but it is a genuine, permanent grain
-   boundary. Bricks that keep meeting more bricks and keep landing in
-   register are how the aggregate reads as courses of a masonry wall rather
-   than a single fused crystal: a mesocrystal, made of many crystallites,
-   reading as one crystal in diffraction while staying visibly granular.
-
-   That is what the readout measures. Independently ripened crystallites
-   (nuclei) are one count; how many of them ended up fused into a shared
-   register by chance or by templating (domains) is another. A field can
-   throw down a dozen separate nuclei and still read as a single domain if
-   templating dominates, or freeze several domains in place as a true mosaic
-   if too many isolated blobs ripened before they ever touched one another.
-   The stabilisation control moves between the two: it holds ions in a
-   metastable amorphous state, so it suppresses spontaneous,
-   independently-oriented ripening far more than it suppresses templated
-   ripening off a crystallite already there.
-
-   No stages, no target lattice. The same rules run every frame.
--------------------------------------------------------------------------- */
-
-function makeSim(seedFn) {
-  var rnd = seedFn || Math.random;
-
-  var W = 94, H = 54;            // field of view, nm
-  var VP = 16;                   // volume carried by one solute parcel, nm^3
-  var SOL_CAP = 900;              // the entire ion budget for the episode: closed system, no refill
-  var PMAX = 76;
-  var DEP = 5.4;                 // nm, depletion halo around a growing particle
-
-  var QUAD = Math.PI / 2;        // 4-fold lattice symmetry in projection
-  var MAXMIS = QUAD / 2;         // 45 deg, largest distinguishable misfit
-  var COH = 1.0 * Math.PI / 180; // join counts as coherent below this misfit; also the tolerance
-                                  // for oriented attachment below, since neither rotates to find it
-
-  var RMIN = 3.0, RCAP = 7.4;    // ACC nanoparticle radius window, nm
-
-  // stab: how strongly the amorphous phase is stabilised (Mg, macromolecules).
-  // Low  -> ACC grows larger, blobs ripen readily and independently, many
-  //         randomly-oriented bricks that mostly miss each other's register.
-  // High -> ACC capped small, spontaneous ripening rare, ordering happens
-  //         mostly by templating off whatever crystallised first.
-  var S = { stab: 0.72, sat: 0.60 };
-
-  var sol = [], par = [], bonds = [], freeSlots = [];
-  var aggP = [], domP = [], aggAcc = {};
-  var nuclei = [];
-  var stats = null, t = 0, nucBank = 0, phase = 'aggregate', holdT = 0, orderT = 0, xtalOn = false;
-
-  function find(p, i) { while (p[i] !== i) { p[i] = p[p[i]]; i = p[i]; } return i; }
-  function rOf(V) { return Math.cbrt(3 * V / (4 * Math.PI)); }
-  function vOf(r) { return 4 / 3 * Math.PI * r * r * r; }
-  function misfit(a, b) { var d = Math.abs(a - b) % QUAD; return d > MAXMIS ? QUAD - d : d; }
-  function gauss() {
-    var u = 0, v = 0;
-    while (u === 0) u = rnd();
-    while (v === 0) v = rnd();
-    return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
-  }
-  function addSolute(x, y, vx, vy) { sol.push({ x: x, y: y, vx: vx, vy: vy }); }
-
-  // ACC size cap. Stabiliser keeps the amorphous particles small, which is the
-  // reported effect of Mg and of Zn: smaller, longer lived amorphous units.
-  function capR() { return RCAP - 2.6 * S.stab; }
-
-  function newParticle(x, y, V) {
-    var i;
-    if (freeSlots.length) i = freeSlots.pop();
-    else if (par.length < PMAX) { i = par.length; par.push(null); aggP.push(i); domP.push(i); }
-    else return null;
-    var p = par[i] || { wob: [] };
-    p.i = i; p.x = x; p.y = y; p.vx = 0; p.vy = 0;
-    p.V = V; p.r = rOf(V);
-    p.xtal = false; p.held = false;      // held = organic rich, resists conversion
-    p.th = 0; p.nuc = -1; p.hop = 0; p.mis = 0;
-    p.vMono = 0; p.alive = true; p.tX = -1;
-    p.bl = []; p.born = t;
-    // irregular outline. Biomineral nanoparticles stay non-euhedral even once
-    // crystalline, so this shape is kept when the particle converts.
-    for (var k = 0; k < 14; k++) p.wob[k] = 0.82 + 0.30 * rnd();
-    par[i] = p; aggP[i] = i; domP[i] = i;
-    aggAcc[i] = { byMono: V, byPart: 0 };
-    return p;
-  }
-
-  function killParticle(i) {
-    var p = par[i];
-    p.alive = false; p.bl.length = 0;
-    aggP[i] = i; domP[i] = i;
-    delete aggAcc[i];
-    freeSlots.push(i);
-  }
-
-  function reset() {
-    sol.length = 0; bonds.length = 0; freeSlots.length = 0; aggAcc = {};
-    par.length = 0; aggP.length = 0; domP.length = 0; nuclei.length = 0;
-    t = 0; nucBank = 0; phase = 'aggregate'; holdT = 0; orderT = 0; xtalOn = false;
-    for (var i = 0; i < Math.round(SOL_CAP * 0.78); i++)
-      addSolute(rnd() * W, rnd() * H, (rnd() - 0.5) * 0.4, (rnd() - 0.5) * 0.4);
-    stats = null;
-    tally();
-  }
-
-  /* ---- spatial hash ---- */
-  var CELL = 3.2, GW = Math.ceil(W / CELL) + 1, GH = Math.ceil(H / CELL) + 1;
-  var gridS = [], gridP = [], buf = [];
-  function cellOf(x, y) {
-    var gx = x / CELL | 0, gy = y / CELL | 0;
-    if (gx < 0) gx = 0; if (gx >= GW) gx = GW - 1;
-    if (gy < 0) gy = 0; if (gy >= GH) gy = GH - 1;
-    return gy * GW + gx;
-  }
-  function rebuild() {
-    var n = GW * GH, i;
-    for (i = 0; i < n; i++) {
-      gridS[i] = gridS[i] ? (gridS[i].length = 0, gridS[i]) : [];
-      gridP[i] = gridP[i] ? (gridP[i].length = 0, gridP[i]) : [];
-    }
-    for (i = 0; i < sol.length; i++) gridS[cellOf(sol[i].x, sol[i].y)].push(i);
-    for (i = 0; i < par.length; i++) if (par[i] && par[i].alive) gridP[cellOf(par[i].x, par[i].y)].push(i);
-  }
-  function near(grid, x, y, rad) {
-    buf.length = 0;
-    var span = Math.max(1, Math.ceil((rad || CELL) / CELL));
-    var gx = x / CELL | 0, gy = y / CELL | 0;
-    for (var dy = -span; dy <= span; dy++) for (var dx = -span; dx <= span; dx++) {
-      var cx = gx + dx, cy = gy + dy;
-      if (cx < 0 || cy < 0 || cx >= GW || cy >= GH) continue;
-      var c = grid[cy * GW + cx];
-      for (var k = 0; k < c.length; k++) buf.push(c[k]);
-    }
-    return buf;
-  }
-
-  function accOf(root) {
-    if (!aggAcc[root]) aggAcc[root] = { byMono: 0, byPart: 0 };
-    return aggAcc[root];
-  }
-
-  /* ---- attachment. Amorphous particles bond on contact, no orientation
-     check, because an amorphous particle has no lattice to match. ---- */
-  function bondUp(a, b) {
-    var pa = par[a], pb = par[b];
-    if (pa.bl.indexOf(b) >= 0) return;
-    pa.bl.push(b); pb.bl.push(a);
-    var bo = { a: a, b: b, mis: 0, coh: true, born: t };
-    bonds.push(bo);
-
-    // Two already-formed crystallites meeting for the first time: this is
-    // the oriented-attachment moment itself, decided once and never revised.
-    // Neither one turns to find a match. If their fixed orientations already
-    // happen to line up, the join fuses into a shared domain; if they do
-    // not, it locks together anyway as a real, permanent grain boundary.
-    if (pa.xtal && pb.xtal) {
-      bo.mis = misfit(pa.th, pb.th);
-      bo.coh = bo.mis <= COH;
-      if (bo.coh) {
-        var da = find(domP, a), db = find(domP, b);
-        if (da !== db) domP[db] = da;
-      }
-    }
-
-    var ra = find(aggP, a), rb = find(aggP, b);
-    if (ra !== rb) {
-      // the smaller aggregate's mass is recorded as having arrived by attachment
-      var accA = accOf(ra), accB = accOf(rb);
-      var mA = accA.byMono + accA.byPart, mB = accB.byMono + accB.byPart;
-      var keep = mA >= mB ? ra : rb, gone = mA >= mB ? rb : ra;
-      var kAcc = accOf(keep), gAcc = accOf(gone);
-      kAcc.byPart += gAcc.byMono + gAcc.byPart;
-      delete aggAcc[gone];
-      aggP[gone] = keep;
-    }
-  }
-
-  function bondOf(a, b) {
-    for (var k = 0; k < bonds.length; k++) {
-      var bo = bonds[k];
-      if ((bo.a === a && bo.b === b) || (bo.a === b && bo.b === a)) return bo;
-    }
-    return null;
-  }
-
-  /* ---- crystallinity spreads through contacts, inheriting orientation ---- */
-  // A blob ripens: it orders into a lattice and picks an orientation. If nuc
-  // is its own index this is a fresh, independent brick (an isolated blob
-  // ordering on its own); if nuc is inherited from a neighbour, the ripening
-  // was templated by a crystalline particle it was already touching. Either
-  // way orientation is fixed once and only ever changed afterward by the
-  // oriented-attachment rotation below, never by re-inheriting.
-  function ignite(i, th, nuc) {
-    var p = par[i];
-    p.xtal = true; p.th = th; p.nuc = nuc; p.tX = t;
-    xtalOn = true;
-    if (nuc === i) nuclei.push(i);
-    for (var k = 0; k < p.bl.length; k++) {
-      var q = par[p.bl[k]];
-      if (!q || !q.alive || !q.xtal) continue;
-      var bo = bondOf(i, q.i);
-      if (!bo) continue;
-      bo.mis = misfit(p.th, q.th);
-      bo.coh = bo.mis <= COH;
-      if (bo.coh) { var ra = find(domP, i), rb = find(domP, q.i); if (ra !== rb) domP[rb] = ra; }
-    }
-  }
-
-  function aggMassOf(root) { var a = aggAcc[root]; return a ? a.byMono + a.byPart : 0; }
-
-  function step(dt, nucleate) {
-    t += dt;
-    rebuild();
-    var i, j, k, p, q, d, dx, dy;
-
-    /* ---- solute: random walk, absorb onto amorphous surfaces, bounce off
-       crystalline ones. A crystalline particle inside the aggregate is
-       shielded anyway, so growth stays rim-only. ---- */
-    var stragglers = sol.length <= 40;
-    var absorbed = [];
-    for (i = sol.length - 1; i >= 0; i--) {
-      var s = sol[i];
-      s.vx += (rnd() - 0.5) * 0.55 * dt; s.vy += (rnd() - 0.5) * 0.55 * dt;
-      if (stragglers) {
-        // with so few ions left, a pure random walk can wander the empty
-        // field for a very long time before it happens to drift within
-        // reach of a particle. Real ions would eventually diffuse to a
-        // surface regardless; this just biases the walk toward the nearest
-        // one so the reservoir actually finishes draining on screen.
-        var near1 = -1, nd1 = Infinity;
-        for (k = 0; k < par.length; k++) {
-          var pp = par[k]; if (!pp || !pp.alive) continue;
-          var ddx = pp.x - s.x, ddy = pp.y - s.y, dd = Math.hypot(ddx, ddy);
-          if (dd < nd1) { nd1 = dd; near1 = k; }
-        }
-        if (near1 >= 0 && nd1 > 0) {
-          var hpx = par[near1], hdx = hpx.x - s.x, hdy = hpx.y - s.y, hd = Math.hypot(hdx, hdy) || 1;
-          s.vx += hdx / hd * 0.16 * dt; s.vy += hdy / hd * 0.16 * dt;
-        }
-      }
-      s.vx *= 0.90; s.vy *= 0.90;
-      s.x += s.vx * dt; s.y += s.vy * dt;
-      if (s.x < 0) { s.x = -s.x; s.vx = -s.vx; }
-      if (s.x > W) { s.x = 2 * W - s.x; s.vx = -s.vx; }
-      if (s.y < 0) { s.y = -s.y; s.vy = -s.vy; }
-      if (s.y > H) { s.y = 2 * H - s.y; s.vy = -s.vy; }
-
-      var hit = -1, cand = near(gridP, s.x, s.y, 9);
-      for (k = 0; k < cand.length; k++) {
-        p = par[cand[k]];
-        if (!p || !p.alive) continue;
-        dx = s.x - p.x; dy = s.y - p.y; d = Math.hypot(dx, dy);
-        if (d < p.r) { hit = p.i; break; }
-      }
-      if (hit >= 0) {
-        p = par[hit];
-        // amorphous surface takes it up; a crystalline face turns most away
-        var take = p.xtal ? 0.14 : 0.86;
-        if (p.r >= capR() * 1.04) take *= 0.10;      // stabiliser caps ACC size
-        // but the budget is closed and finite: as the last few ions run out
-        // of anywhere else to go, whatever they do touch takes them up, so
-        // aggregation actually finishes instead of leaving a few stragglers
-        // wandering forever against a near-zero absorption chance.
-        if (sol.length <= 40) take += (1 - take) * (40 - sol.length) / 40;
-        if (rnd() < take) {
-          p.V += VP; p.r = rOf(p.V); p.vMono += VP;
-          accOf(find(aggP, hit)).byMono += VP;
-          sol.splice(i, 1);
-          absorbed.push(hit);
-        } else {
-          dx = s.x - p.x; dy = s.y - p.y; d = Math.hypot(dx, dy) || 1;
-          s.x = p.x + dx / d * (p.r + 0.25); s.y = p.y + dy / d * (p.r + 0.25);
-          var vn = (s.vx * dx + s.vy * dy) / d;
-          s.vx -= 2 * vn * dx / d; s.vy -= 2 * vn * dy / d;
-        }
-      }
-    }
-
-    /* ---- nucleation of new ACC, suppressed inside depletion halos ---- */
-    if (nucleate) {
-      var want0 = Math.round(SOL_CAP * (0.30 + 0.62 * S.sat));
-      var avail = Math.min(1, sol.length / Math.max(1, want0));
-      var damp = xtalOn ? 0.06 : 1;
-      nucBank += (0.024 + 0.560 * S.sat * S.sat) * avail * avail * damp * dt;
-      var tries = 0;
-      while (nucBank >= 1 && tries++ < 6) {
-        nucBank -= 1;
-        if (sol.length < 8) break;
-        var idx = Math.min(sol.length - 1, (rnd() * sol.length) | 0);
-        var c = sol[idx];
-        var ok = true, cand2 = near(gridP, c.x, c.y, DEP + 8);
-        for (k = 0; k < cand2.length; k++) {
-          q = par[cand2[k]];
-          if (!q || !q.alive) continue;
-          if (Math.hypot(c.x - q.x, c.y - q.y) < q.r + DEP) { ok = false; break; }
-        }
-        if (!ok) continue;
-        var seed = vOf(RMIN * (0.92 + 0.26 * rnd()));
-        var np = newParticle(c.x, c.y, seed);
-        if (!np) break;
-        // organic rich units resist later conversion and survive as ACC pockets
-        np.held = rnd() < 0.05 + 0.20 * S.stab;
-        var need = Math.max(1, Math.round(seed / VP));
-        for (k = 0; k < need && sol.length; k++) {
-          var ri = Math.min(sol.length - 1, (rnd() * sol.length) | 0);
-          sol.splice(ri, 1);
-        }
-      }
-    }
-
-    /* ---- particle motion, attachment, densification ---- */
-    for (i = 0; i < par.length; i++) {
-      p = par[i]; if (!p || !p.alive) continue;
-      var mob = 7.4 / Math.pow(p.r, 1.5);     // small particles wander more
-      p.vx += (rnd() - 0.5) * mob * dt; p.vy += (rnd() - 0.5) * mob * dt;
-
-      var cand3 = near(gridP, p.x, p.y, p.r + 14);
-      for (k = 0; k < cand3.length; k++) {
-        j = cand3[k]; if (j <= i) continue;
-        q = par[j]; if (!q || !q.alive) continue;
-        dx = q.x - p.x; dy = q.y - p.y; d = Math.hypot(dx, dy) || 1e-6;
-        var touch = p.r + q.r;
-
-        if (d < touch) {
-          // soft overlap resolution, gives the space filling packing
-          var push = (touch - d) * 0.32;
-          var wp = q.V / (p.V + q.V), wq = p.V / (p.V + q.V);
-          p.x -= dx / d * push * wp; p.y -= dy / d * push * wp;
-          q.x += dx / d * push * wq; q.y += dy / d * push * wq;
-          if (p.bl.indexOf(j) < 0) bondUp(i, j);
-        } else if (d < touch + 1.5 && find(aggP, i) === find(aggP, j) && p.bl.indexOf(j) < 0) {
-          bondUp(i, j);
-        } else if (d < touch + 6.4) {
-          // short range attraction pulls neighbours into contact
-          var g = 0.055 * dt;
-          p.vx += dx / d * g; p.vy += dy / d * g;
-          q.vx -= dx / d * g; q.vy -= dy / d * g;
-        }
-      }
-    }
-
-    // bond springs hold the aggregate together and let it densify
-    for (k = 0; k < bonds.length; k++) {
-      var bo = bonds[k];
-      p = par[bo.a]; q = par[bo.b];
-      if (!p || !q || !p.alive || !q.alive) continue;
-      dx = q.x - p.x; dy = q.y - p.y; d = Math.hypot(dx, dy) || 1e-6;
-      var rest = (p.r + q.r) * 0.985;
-      var f = (d - rest) * 0.030 * dt;
-      p.vx += dx / d * f; p.vy += dy / d * f;
-      q.vx -= dx / d * f; q.vy -= dy / d * f;
-    }
-
-    for (i = 0; i < par.length; i++) {
-      p = par[i]; if (!p || !p.alive) continue;
-      p.vx *= 0.90; p.vy *= 0.90;
-      p.x += p.vx * dt; p.y += p.vy * dt;
-      var m = p.r + 0.5;
-      if (p.x < m) { p.x = m; p.vx = Math.abs(p.vx) * 0.5; }
-      if (p.x > W - m) { p.x = W - m; p.vx = -Math.abs(p.vx) * 0.5; }
-      if (p.y < m) { p.y = m; p.vy = Math.abs(p.vy) * 0.5; }
-      if (p.y > H - m) { p.y = H - m; p.vy = -Math.abs(p.vy) * 0.5; }
-    }
-
-    var big = 0, bigRoot = -1, counts = {};
-    for (i = 0; i < par.length; i++) {
-      p = par[i]; if (!p || !p.alive) continue;
-      var r = find(aggP, i);
-      counts[r] = (counts[r] || 0) + 1;
-      if (counts[r] > big) { big = counts[r]; bigRoot = r; }
-    }
-
-    /* ---- ripening: a solid-state transformation, in place, no spinning.
-       This does not start until the ions are gone. The ion supply is a
-       closed budget, not a tap: it drains as the field above absorbs and
-       nucleates, and only once every last one of them has found a particle
-       to join does the sequence continue into ordering. Every blob then
-       ripens on its own timetable; there is no single "the aggregate" that
-       has to finish assembling first. A blob already touching a crystalline
-       neighbour tends to order along that neighbour's lattice, heteroepitaxial
-       templating; an isolated blob still ripens eventually, on its own clock,
-       and then just has to pick an orientation with nothing to copy, so it
-       picks one at random. Either way what results is a small euhedral
-       brick, and its orientation is fixed for good right here: it is never
-       revised or rotated afterward. What happens when two of these bricks
-       meet is decided once, at the instant they first touch, in bondUp(). ---- */
-    if (phase === 'order') {
-      var u = 1 - S.stab;
-      // stabiliser holds ions in a metastable amorphous state, so it suppresses
-      // spontaneous ripening far more than templated ripening: a stabilised
-      // field ends up ordering almost entirely by templating off whatever
-      // crystallised first, while a poorly stabilised one throws down many
-      // independently-oriented bricks before they ever touch one another.
-      var rTempl = (0.0028 + 0.0026 * u) * dt;
-      var rSpont = (0.00003 + 0.0022 * u * u * u) * dt;
-      var errSigma = (0.13 + 0.34 * u) * Math.PI / 180;
-      for (i = 0; i < par.length; i++) {
-        p = par[i]; if (!p || !p.alive || p.xtal || p.held) continue;
-        if (p.r < RMIN || t - p.born < 40) continue;   // not ripe yet
-        var templ = -1;
-        for (k = 0; k < p.bl.length; k++) {
-          q = par[p.bl[k]];
-          if (q && q.alive && q.xtal) { templ = q.i; break; }
-        }
-        if (templ >= 0) {
-          if (rnd() < rTempl) ignite(p.i, par[templ].th + gauss() * errSigma, par[templ].nuc);
-        } else if (rnd() < rSpont) {
-          ignite(p.i, rnd() * Math.PI * 2, p.i);
-        }
-      }
-    }
-
-    /* ---- episode state ---- */
-    tally();
-    if (phase === 'aggregate') {
-      // the whole ion budget is seeded once, in reset(); nothing tops it up.
-      // Aggregation is over when it is genuinely over: no ions left in
-      // solution at all. The timeout is only a backstop against a pathological
-      // last straggler with nothing left to find.
-      if (sol.length === 0 || t > 3200) {
-        phase = 'order'; orderT = 0;
-        // ordering has to start somewhere: some blob is always first to
-        // ripen. Seeding that one deterministically, right as the sequence
-        // continues, means the field never just sits there fully amorphous
-        // waiting on a spontaneous roll that, at high stabilisation, can be
-        // rare enough not to happen within the episode at all.
-        var seedCand = [];
-        for (i = 0; i < par.length; i++) {
-          p = par[i];
-          if (p && p.alive && !p.xtal && !p.held && find(aggP, i) === bigRoot) seedCand.push(i);
-        }
-        if (seedCand.length) {
-          var seedI = seedCand[(rnd() * seedCand.length) | 0];
-          ignite(seedI, rnd() * Math.PI * 2, seedI);
-        }
-      }
-    } else if (phase === 'order') {
-      orderT += dt;
-      var done = stats.amorphInAgg <= stats.retained && stats.crystalline > 0 && big >= 20;
-      if (done || orderT > 3200) { phase = 'hold'; holdT = 0; }
-    } else if (phase === 'hold') {
-      holdT += dt;
-      if (holdT > 230) phase = 'done';
-    }
-  }
-
-  function tally() {
-    var i, k, p;
-    var st = {
-      solute: sol.length, particles: 0, crystalline: 0, amorphous: 0,
-      amorphInAgg: 0, retained: 0, free: 0, biggest: 0, bigRoot: -1,
-      byMono: 0, byPart: 0, nuclei: 0, domains: 0, coherent: 0, incoherent: 0,
-      misMax: 0, misMean: 0, coOriented: 0, spanNm: 0, hist: [0, 0, 0, 0, 0]
-    };
-    var counts = {}, big = 0, bigRoot = -1;
-    for (i = 0; i < par.length; i++) {
-      p = par[i]; if (!p || !p.alive) continue;
-      st.particles++;
-      var r = find(aggP, i);
-      counts[r] = (counts[r] || 0) + 1;
-      if (counts[r] > big) { big = counts[r]; bigRoot = r; }
-    }
-    st.biggest = big; st.bigRoot = bigRoot;
-
-    var minx = 1e9, maxx = -1e9, miny = 1e9, maxy = -1e9;
-    var misSum = 0, misN = 0, nucSet = {};
-    for (i = 0; i < par.length; i++) {
-      p = par[i]; if (!p || !p.alive) continue;
-      var inBig = find(aggP, i) === bigRoot;
-      if (p.xtal) st.crystalline++; else st.amorphous++;
-      if (inBig) {
-        if (!p.xtal) { st.amorphInAgg++; if (p.held) st.retained++; }
-        else {
-          nucSet[p.nuc] = 1;
-          var am = Math.abs(p.mis) * 180 / Math.PI;
-          misSum += am; misN++;
-          if (am > st.misMax) st.misMax = am;
-        }
-        if (p.x - p.r < minx) minx = p.x - p.r;
-        if (p.x + p.r > maxx) maxx = p.x + p.r;
-        if (p.y - p.r < miny) miny = p.y - p.r;
-        if (p.y + p.r > maxy) maxy = p.y + p.r;
-      }
-      if (p.bl.length === 0) st.free++;
-    }
-    st.misMean = misN ? misSum / misN : 0;
-    for (k in nucSet) st.nuclei++;
-    if (big > 0) st.spanNm = Math.max(maxx - minx, maxy - miny);
-
-    // Orientation spread of the whole object, measured against the dominant
-    // domain. This is the quantity a diffraction pattern reports: accumulated
-    // drift along the propagation path plus any real grain boundaries.
-    var domCount = {}, bestDom = -1, bestN = 0;
-    for (i = 0; i < par.length; i++) {
-      p = par[i];
-      if (!p || !p.alive || !p.xtal || find(aggP, i) !== bigRoot) continue;
-      var dr = find(domP, i);
-      domCount[dr] = (domCount[dr] || 0) + 1;
-      if (domCount[dr] > bestN) { bestN = domCount[dr]; bestDom = dr; }
-    }
-    // How many bricks actually rotated into register with one another, as
-    // opposed to how many ripened independently: two different counts. A
-    // field can throw down a dozen separate nuclei and still read as a
-    // single mesocrystal if they all swivelled into the same domain.
-    st.domains = 0;
-    for (k in domCount) st.domains++;
-    var ref = null;
-    for (i = 0; i < par.length; i++) {
-      p = par[i];
-      if (!p || !p.alive || !p.xtal || find(aggP, i) !== bigRoot) continue;
-      if (find(domP, i) === bestDom) { ref = p.th; break; }
-    }
-    if (ref !== null) {
-      var sSum = 0, sN = 0, sMax = 0;
-      for (i = 0; i < par.length; i++) {
-        p = par[i];
-        if (!p || !p.alive || !p.xtal || find(aggP, i) !== bigRoot) continue;
-        var sp = misfit(p.th, ref) * 180 / Math.PI;
-        sSum += sp; sN++;
-        if (sp > sMax) sMax = sp;
-      }
-      st.misMean = sN ? sSum / sN : 0;
-      st.misMax = sMax;
-      st.coOriented = sN ? Math.round(100 * (function () {
-        var c = 0;
-        for (var z = 0; z < par.length; z++) {
-          var pz = par[z];
-          if (!pz || !pz.alive || !pz.xtal || find(aggP, z) !== bigRoot) continue;
-          if (misfit(pz.th, ref) * 180 / Math.PI <= 1.0) c++;
-        }
-        return c / sN;
-      })()) : 0;
-    } else { st.coOriented = 0; }
-
-    for (k = 0; k < bonds.length; k++) {
-      var b = bonds[k], A = par[b.a], B = par[b.b];
-      if (!A || !B || !A.alive || !B.alive || !A.xtal || !B.xtal) continue;
-      if (find(aggP, b.a) !== bigRoot) continue;
-      var mm = misfit(A.th, B.th) * 180 / Math.PI;
-      if (mm <= 1.0) st.coherent++; else st.incoherent++;
-      var bin = mm <= 0.25 ? 0 : mm <= 0.5 ? 1 : mm <= 1 ? 2 : mm <= 3 ? 3 : 4;
-      st.hist[bin]++;
-    }
-
-    var acc = aggAcc[bigRoot];
-    if (acc) { st.byMono = acc.byMono; st.byPart = acc.byPart; }
-    stats = st;
-    return st;
-  }
-
-  reset();
-
-  return {
-    S: S, W: W, H: H,
-    time: function () { return t; },
-    step: step, reset: reset, tally: tally,
-    stats: function () { return stats; },
-    phase: function () { return phase; },
-    holdFrac: function () { return Math.min(1, holdT / 230); },
-    par: par, sol: sol, bonds: bonds,
-    aggOf: function (i) { return find(aggP, i); },
-    domainOf: function (i) { return find(domP, i); },
-    capR: capR
-  };
-}
-
-/* Canvas renderer and episode loop. */
-/* ---------- renderer and driver ---------- */
+/* Crystallization by particle attachment, staged to match the CPA pathway
+   figure directly: ions -> amorphous nanoparticles -> nanocrystals ->
+   oriented attachment -> hexagonal mesocrystal, then loop. This is a
+   choreographed animation, not an emergent physics model: each stage's
+   outcome (how many nanocrystals, where they end up) is decided up front,
+   and the stage just animates toward it. No tunable parameters, because
+   there is nothing here for a parameter to tune. */
 (function () {
   var fig = document.getElementById('cpaSim');
-  if (!fig || typeof makeSim !== 'function') return;
+  if (!fig) return;
   var cv = document.getElementById('csCanvas');
   var ctx = cv && cv.getContext ? cv.getContext('2d') : null;
   if (!ctx) return;
 
-  var sim = makeSim();
-  var W = sim.W, H = sim.H;
-
+  var W = 108, H = 60;           // field of view, matches the canvas's CSS aspect-ratio
   var TAU = Math.PI * 2;
-  function simT() { return sim.time(); }
-  var SP_NM = 0.62;             // drawn lattice plane spacing, coarsened for legibility
+  var rnd = Math.random;
+
+  var STAGES = ['ions', 'amorphous', 'nanocrystals', 'attach', 'mesocrystal'];
+  var DUR = { ions: 120, amorphous: 300, nanocrystals: 60, attach: 190, mesocrystal: 160, platelet: 170 };
+
+  var TILE_R = 3.3;                    // nanocrystal half-size
+  var SPACING = TILE_R * 0.86 * 2 * 1.06;  // tile-centre spacing once assembled: touching, a hair of a gap
+  var GRID_COLS = Math.max(1, Math.floor(W * 0.90 / SPACING));
+  var GRID_ROWS = Math.max(1, Math.floor(H * 0.90 / SPACING));
+  var IONS_PER_TILE = 26;              // dense enough that the finished crystal reads as full of ions
+  var N_ION = GRID_COLS * GRID_ROWS * IONS_PER_TILE;
+
+  function ease(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+
+  var particles, ions, phase, phaseT, t;
+
+  function reset() {
+    var cx0 = W / 2, cy0 = H / 2;
+    var mesoTh = rnd() * TAU;
+    var cs = Math.cos(mesoTh), sn = Math.sin(mesoTh);
+    particles = [];
+    var i;
+    var K = GRID_COLS * GRID_ROWS;
+    for (i = 0; i < K; i++) {
+      var col = i % GRID_COLS, row = (i / GRID_COLS) | 0;
+      // where this nanocrystal's amorphous precursor sits while it grows:
+      // scattered anywhere across the whole field, nothing to do yet with
+      // the tile it ends up filling
+      var hx = 6 + rnd() * (W - 12);
+      var hy = 6 + rnd() * (H - 12);
+      // a lumpy, irregular outline, but smoothed against its own neighbours
+      // so it reads as one ragged blob and not a spiky star
+      var wobN = 14, wobRaw = [];
+      for (var k = 0; k < wobN; k++) wobRaw.push(0.55 + 0.75 * rnd());
+      var wob = [];
+      for (k = 0; k < wobN; k++) {
+        var prevW = wobRaw[(k - 1 + wobN) % wobN], nextW = wobRaw[(k + 1) % wobN];
+        wob.push((prevW + wobRaw[k] * 2 + nextW) / 4);
+      }
+      // final slot: a plain grid, filling the field edge to edge, rotated by
+      // mesoTh -- this is what an array of identically-oriented nanocrystals
+      // packing edge to edge actually looks like, not a small rosette
+      var lx = (col - (GRID_COLS - 1) / 2) * SPACING;
+      var ly = (row - (GRID_ROWS - 1) / 2) * SPACING;
+      particles.push({
+        hx: hx, hy: hy, x: hx, y: hy, r: 0, th: rnd() * TAU, xtal: false,
+        tx: cx0 + lx * cs - ly * sn, ty: cy0 + lx * sn + ly * cs, tth: mesoTh,
+        wob: wob, popAt: rnd(), attachDelay: rnd() * 0.4, poppedAt: -1,
+        bowSign: rnd() < 0.5 ? 1 : -1,
+        cap: Math.round(IONS_PER_TILE * (0.88 + 0.24 * rnd())),   // every crystal fills up, none stay half-empty
+        grains: []   // ions that have joined this particle, kept visible inside it
+      });
+    }
+    ions = [];
+    for (i = 0; i < N_ION; i++)
+      ions.push({ x: rnd() * W, y: rnd() * H, vx: (rnd() - 0.5) * 0.5, vy: (rnd() - 0.5) * 0.5, home: -1 });
+    phase = 'ions'; phaseT = 0; t = 0;
+  }
+  reset();
+
+  function step(dt) {
+    t += dt; phaseT += dt;
+    var i, p;
+
+    if (phase === 'ions') {
+      for (i = 0; i < ions.length; i++) {
+        var s = ions[i];
+        s.vx += (rnd() - 0.5) * 0.5 * dt; s.vy += (rnd() - 0.5) * 0.5 * dt;
+        s.vx *= 0.92; s.vy *= 0.92;
+        s.x += s.vx * dt; s.y += s.vy * dt;
+        if (s.x < 1) { s.x = 1; s.vx *= -1; } if (s.x > W - 1) { s.x = W - 1; s.vx *= -1; }
+        if (s.y < 1) { s.y = 1; s.vy *= -1; } if (s.y > H - 1) { s.y = H - 1; s.vy *= -1; }
+      }
+      if (phaseT > DUR.ions) { phase = 'amorphous'; phaseT = 0; }
+
+    } else if (phase === 'amorphous') {
+      // ions are lazy: each one drifts toward whichever nanoparticle site is
+      // nearest to where it already happens to be. But "nearest" only
+      // counts sites that still have room, so every crystal actually fills
+      // up instead of the closest few hoarding the supply and leaving
+      // others almost empty -- an ion whose site just filled looks again
+      // and picks its new nearest option, the way a real depleted-zone
+      // diffusion field would redirect it anyway. Absorbed ions are not
+      // deleted: they become a fixed grain inside their new particle,
+      // stored in its own local frame so they stay put through ripening
+      // and travel with it during oriented attachment.
+      for (i = ions.length - 1; i >= 0; i--) {
+        var ion = ions[i];
+        if (ion.home < 0 || particles[ion.home].grains.length >= particles[ion.home].cap) {
+          var best = -1, bestD = Infinity;
+          for (var k = 0; k < particles.length; k++) {
+            if (particles[k].grains.length >= particles[k].cap) continue;
+            var dd = Math.hypot(particles[k].hx - ion.x, particles[k].hy - ion.y);
+            if (dd < bestD) { bestD = dd; best = k; }
+          }
+          ion.home = best;
+          if (best < 0) continue;   // every site is full; this one just keeps drifting
+        }
+        var home = particles[ion.home];
+        var dx = home.hx - ion.x, dy = home.hy - ion.y, d = Math.hypot(dx, dy) || 1e-6;
+        ion.vx += dx / d * 0.11 * dt; ion.vy += dy / d * 0.11 * dt;
+        ion.vx *= 0.90; ion.vy *= 0.90;
+        ion.x += ion.vx * dt; ion.y += ion.vy * dt;
+        if (d < home.r + 1.6) {
+          home.r = Math.min(TILE_R * 1.05, Math.sqrt(home.r * home.r + 1.0));
+          var ga = rnd() * TAU, gr = Math.sqrt(rnd()) * 0.92 * TILE_R;
+          var cs0 = Math.cos(home.th), sn0 = Math.sin(home.th);
+          var wx = Math.cos(ga) * gr, wy = Math.sin(ga) * gr;
+          // stored already rotated into home's local frame, so it is
+          // independent of whatever home.th does later
+          home.grains.push({ lx: wx * cs0 + wy * sn0, ly: -wx * sn0 + wy * cs0 });
+          ions.splice(i, 1);
+        }
+      }
+      if (ions.length === 0 || phaseT > DUR.amorphous) {
+        for (i = 0; i < particles.length; i++) particles[i].r = TILE_R;
+        phase = 'nanocrystals'; phaseT = 0;
+      }
+
+    } else if (phase === 'nanocrystals') {
+      // each nanoparticle orders into a nanocrystal in place, no motion, no
+      // rotation, staggered slightly so they visibly ripen one at a time
+      var frac = Math.min(1, phaseT / DUR.nanocrystals);
+      for (i = 0; i < particles.length; i++) {
+        p = particles[i];
+        if (!p.xtal && frac > p.popAt) { p.xtal = true; p.poppedAt = t; }
+      }
+      if (phaseT > DUR.nanocrystals) {
+        for (i = 0; i < particles.length; i++) { p = particles[i]; if (!p.xtal) { p.xtal = true; p.poppedAt = t; } }
+        phase = 'attach'; phaseT = 0;
+      }
+
+    } else if (phase === 'attach') {
+      // oriented attachment: every nanocrystal eases from its scattered spot
+      // and its own random orientation onto its slot in the hexagon and the
+      // one shared orientation, arriving already co-aligned with the rest.
+      // The path bows out slightly rather than cutting straight there, so
+      // the approach reads as drifting together rather than snapping on rails.
+      var af = Math.min(1, phaseT / DUR.attach);
+      for (i = 0; i < particles.length; i++) {
+        p = particles[i];
+        var pf = Math.max(0, Math.min(1, (af - p.attachDelay) / (1 - p.attachDelay + 1e-6)));
+        var e = ease(pf);
+        var lx = p.tx - p.hx, ly = p.ty - p.hy, ld = Math.hypot(lx, ly) || 1;
+        var bow = Math.sin(pf * Math.PI) * p.bowSign * ld * 0.12;
+        p.x = p.hx + lx * e - (ly / ld) * bow;
+        p.y = p.hy + ly * e + (lx / ld) * bow;
+        var dth = ((p.tth - p.th + Math.PI) % TAU + TAU) % TAU - Math.PI;
+        p.th += dth * e;
+      }
+      if (phaseT > DUR.attach) {
+        for (i = 0; i < particles.length; i++) { p = particles[i]; p.x = p.tx; p.y = p.ty; p.th = p.tth; }
+        phase = 'mesocrystal'; phaseT = 0;
+      }
+
+    } else if (phase === 'mesocrystal') {
+      if (phaseT > DUR.mesocrystal) { phase = 'platelet'; phaseT = 0; }
+
+    } else if (phase === 'platelet') {
+      // camera pulls back: this whole assembled cluster is only the visible
+      // core of a much larger, micron-scale hexagonal platelet
+      if (phaseT > DUR.platelet) { phase = 'done'; phaseT = 0; }
+    }
+  }
+
+  /* ---- renderer ---- */
   var C = {
-    field: '#080C15',
-    solute: 'rgba(127,217,239,0.55)',
-    amBody: '#2A5872',
-    amRim: 'rgba(150,210,232,0.55)',
-    amHeld: 'rgba(214,168,120,0.65)',
-    xtBody: '#173F58',
-    xtRim: 'rgba(127,217,239,0.55)',
-    fringe: 'rgba(196,238,250,0.55)',
-    warm: '#FF8A63',
+    field: '#080C15', solute: 'rgba(127,217,239,0.55)',
+    amBody: '#2A5872', amRim: 'rgba(150,210,232,0.55)',
+    xtBody: '#173F58', xtRim: 'rgba(127,217,239,0.55)', fringe: 'rgba(196,238,250,0.55)',
     rule: '#8FA5B8'
   };
 
-  /* ---- sizing ---- */
   var sc = 1, dpr = 1, spPx = 7;
+  var SP_NM = 0.62;
   function fit() {
     var rect = cv.getBoundingClientRect();
     var cssW = Math.max(240, rect.width || cv.clientWidth || 640);
@@ -2629,18 +2182,14 @@ function makeSim(seedFn) {
   function X(x) { return x * sc; }
   function Y(y) { return y * sc; }
 
-  /* ---- shapes ----
-     An amorphous blob keeps one irregular, wobbled outline for as long as it
-     stays amorphous. Ripening is a solid-state transformation, not a rebuild:
-     the particle does not tumble or rotate, but the outline itself does
-     change, from a formless blob to a small euhedral brick with flat faces
-     set by its now-fixed lattice orientation, because that is what actually
-     happens when a disordered solid orders into a lattice in place. */
   function amPath(p) {
-    var path = new Path2D(), n = 12;
+    // a genuinely lumpy, irregular outline: amorphous nanoparticles are not
+    // little spheres, they are the ragged shape whatever ions happened to
+    // stick where they stuck
+    var path = new Path2D(), n = p.wob.length;
     for (var k = 0; k < n; k++) {
       var ang = k / n * TAU;
-      var rr = p.r * (1 + (p.wob[k] - 1) * 0.32);   // barely-irregular circle, not a wobbly blob
+      var rr = p.r * p.wob[k];
       var px = X(p.x + rr * Math.cos(ang)), py = Y(p.y + rr * Math.sin(ang));
       if (k === 0) path.moveTo(px, py); else path.lineTo(px, py);
     }
@@ -2649,17 +2198,10 @@ function makeSim(seedFn) {
   }
   function xtalPath(p) {
     var cs = Math.cos(p.th), sn = Math.sin(p.th);
-    // a square tile, not a blob: many of these packing together, each one
-    // still visibly its own tile, is what reads as a mesocrystal superstructure.
-    // The positions underneath still come from circle packing, not a proper
-    // lattice, so the squares are kept smaller than their old circular
-    // footprint on purpose: sized to the old footprint they mostly overlap
-    // into an unreadable mess, and neighbours that are actually co-oriented
-    // are still bridged by the neck fill below regardless of this gap.
-    var hw = p.r * 0.56, hh = p.r * 0.56;
-    var path = new Path2D(), i;
+    var hw = p.r * 0.86, hh = p.r * 0.86;
+    var path = new Path2D();
     var uv = [[-hw, -hh], [hw, -hh], [hw, hh], [-hw, hh]];
-    for (i = 0; i < 4; i++) {
+    for (var i = 0; i < 4; i++) {
       var u = uv[i][0], v = uv[i][1];
       var px = X(p.x + u * cs - v * sn), py = Y(p.y + u * sn + v * cs);
       if (i === 0) path.moveTo(px, py); else path.lineTo(px, py);
@@ -2667,298 +2209,203 @@ function makeSim(seedFn) {
     path.closePath();
     return path;
   }
-  function neckPath(p, q) {
-    var dx = q.x - p.x, dy = q.y - p.y, d = Math.hypot(dx, dy) || 1e-6;
-    var nx = -dy / d, ny = dx / d;
-    var w = 0.60 * Math.min(p.r, q.r);
+  // one lattice, drawn in the mesocrystal's shared frame, clipped to the
+  // union of every tile: the whole point is that it reads as one continuous
+  // grid running through the assembled superstructure, not one per tile
+  function fringes(th, ax, ay, reach) {
+    var cs = Math.cos(th), sn = Math.sin(th);
     var path = new Path2D();
-    path.moveTo(X(p.x + nx * w), Y(p.y + ny * w));
-    path.lineTo(X(q.x + nx * w), Y(q.y + ny * w));
-    path.lineTo(X(q.x - nx * w), Y(q.y - ny * w));
-    path.lineTo(X(p.x - nx * w), Y(p.y - ny * w));
-    path.closePath();
-    return path;
-  }
-
-  /* Lattice drawn in the frame of the domain, not the particle, so every
-     crystallite that has locked into the same domain shares one lattice phase and
-     the planes run on unbroken through the joins. */
-  var FIELD_REACH = Math.hypot(W, H);   // big enough to cover the whole field from any anchor
-  function fringes(p, anchor, reach) {
-    var th = anchor.th, cs = Math.cos(th), sn = Math.sin(th);
-    var path = new Path2D();
-    var du = (p.x - anchor.x) * cs + (p.y - anchor.y) * sn;
-    var dv = -(p.x - anchor.x) * sn + (p.y - anchor.y) * cs;
     var sp = spPx / sc;
-    var k0 = Math.ceil((du - reach) / sp), k1 = Math.floor((du + reach) / sp);
-    var m0 = Math.ceil((dv - reach) / sp), m1 = Math.floor((dv + reach) / sp);
-    var i, u, v;
+    var k0 = Math.ceil(-reach / sp), k1 = Math.floor(reach / sp);
+    var i, u;
     for (i = k0; i <= k1; i++) {
       u = i * sp;
-      path.moveTo(X(anchor.x + u * cs - (dv - reach) * sn), Y(anchor.y + u * sn + (dv - reach) * cs));
-      path.lineTo(X(anchor.x + u * cs - (dv + reach) * sn), Y(anchor.y + u * sn + (dv + reach) * cs));
+      path.moveTo(X(ax + u * cs - reach * -sn), Y(ay + u * sn + reach * cs));
+      path.lineTo(X(ax + u * cs + reach * -sn), Y(ay + u * sn - reach * cs));
     }
-    for (i = m0; i <= m1; i++) {
-      v = i * sp;
-      path.moveTo(X(anchor.x + (du - reach) * cs - v * sn), Y(anchor.y + (du - reach) * sn + v * cs));
-      path.lineTo(X(anchor.x + (du + reach) * cs - v * sn), Y(anchor.y + (du + reach) * sn + v * cs));
+    for (i = k0; i <= k1; i++) {
+      u = i * sp;
+      path.moveTo(X(ax - reach * cs - u * sn), Y(ay - reach * sn + u * cs));
+      path.lineTo(X(ax + reach * cs - u * sn), Y(ay + reach * sn + u * cs));
     }
     return path;
   }
 
-  /* ---- draw ---- */
-  var shapeCache = [], neckCache = [], amNeckCache = [];
+  // ions that joined a particle stay visible inside it, as a fixed speckle
+  // of grains riding along in the particle's own rotating local frame
+  function drawGrains(p) {
+    if (!p.grains.length) return;
+    var cs = Math.cos(p.th), sn = Math.sin(p.th);
+    var rs = Math.max(0.7, 0.20 * sc);
+    ctx.beginPath();
+    for (var g = 0; g < p.grains.length; g++) {
+      var gr = p.grains[g];
+      var gx = p.x + gr.lx * cs - gr.ly * sn, gy = p.y + gr.lx * sn + gr.ly * cs;
+      ctx.moveTo(X(gx) + rs, Y(gy));
+      ctx.arc(X(gx), Y(gy), rs, 0, TAU);
+    }
+    ctx.fill();
+  }
+
   function render(alpha) {
-    var w = cv.width, h = cv.height, i, k, p, q, B;
+    var w = cv.width, h = cv.height, i, p;
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, w, h);
-    ctx.globalAlpha = 1;
     ctx.fillStyle = C.field;
     ctx.fillRect(0, 0, w, h);
-
     ctx.globalAlpha = alpha;
 
-    // solute
+    // camera pulls back in the platelet stage: the assembled cluster is
+    // scaled down around the field centre, revealing it as only the visible
+    // core of something much larger. The scale bar is allowed to keep
+    // zooming out past the point where the cluster itself would shrink to
+    // an illegible speck, since the point is naming what scale the platelet
+    // this is a corner of actually sits at, not literally rendering it.
+    var camScale = 1, labelScale = 1;
+    if (phase === 'platelet') {
+      var pz = ease(Math.min(1, phaseT / DUR.platelet));
+      camScale = 1 - 0.955 * pz;
+      labelScale = 1 - 0.9988 * pz;
+    } else if (phase === 'done') { camScale = 0.045; labelScale = 0.0012; }
+    var camCx = X(W / 2), camCy = Y(H / 2);
+    ctx.save();
+    ctx.translate(camCx, camCy);
+    ctx.scale(camScale, camScale);
+    ctx.translate(-camCx, -camCy);
+
     ctx.fillStyle = C.solute;
     ctx.beginPath();
     var rs = Math.max(1, 0.30 * sc);
-    for (i = 0; i < sim.sol.length; i++) {
-      var s = sim.sol[i];
-      ctx.moveTo(X(s.x) + rs, Y(s.y));
-      ctx.arc(X(s.x), Y(s.y), rs, 0, TAU);
+    for (i = 0; i < ions.length; i++) {
+      ctx.moveTo(X(ions[i].x) + rs, Y(ions[i].y));
+      ctx.arc(X(ions[i].x), Y(ions[i].y), rs, 0, TAU);
     }
     ctx.fill();
 
-    shapeCache.length = 0;
-    for (i = 0; i < sim.par.length; i++) {
-      p = sim.par[i];
-      if (!p || !p.alive) { shapeCache.push(null); continue; }
-      shapeCache.push(p.xtal ? xtalPath(p) : amPath(p));
-    }
-    // a join that has locked into register fills in, so the two crystallites read
-    // as one body with the lattice running straight through. Bonds persist
-    // even after two particles drift apart, so every neck also needs a
-    // sanity check that the pair is still actually touching, or a handful of
-    // stale early contacts draw as long connective smears across the field.
-    neckCache.length = 0;
-    for (k = 0; k < sim.bonds.length; k++) {
-      B = sim.bonds[k];
-      if (B.dead || !B.coh) continue;
-      p = sim.par[B.a]; q = sim.par[B.b];
-      if (!p || !q || !p.alive || !q.alive || !p.xtal || !q.xtal) continue;
-      if (Math.hypot(q.x - p.x, q.y - p.y) > (p.r + q.r) * 1.35) continue;
-      neckCache.push({ path: neckPath(p, q), a: B.a });
-    }
-    // every other bond that touches at least one amorphous particle gets the
-    // same treatment, for the same reason: packed nanoparticles are not
-    // separately outlined marbles stacked next to each other, they are a
-    // single continuous mass wherever they are actually in contact. Only
-    // once a particle ripens into a discrete euhedral brick should its edges
-    // read as a separate object.
-    amNeckCache.length = 0;
-    for (k = 0; k < sim.bonds.length; k++) {
-      B = sim.bonds[k];
-      if (B.dead) continue;
-      p = sim.par[B.a]; q = sim.par[B.b];
-      if (!p || !q || !p.alive || !q.alive || (p.xtal && q.xtal)) continue;
-      if (Math.hypot(q.x - p.x, q.y - p.y) > (p.r + q.r) * 1.35) continue;
-      amNeckCache.push(neckPath(p, q));
-    }
+    var anyXtal = false;
+    for (i = 0; i < particles.length; i++) if (particles[i].xtal) { anyXtal = true; break; }
 
-    // amorphous precursors: flat fill, the gap between any two touching
-    // grains filled in first so nothing shows the dark field through a seam,
-    // but every grain still gets its own edge on top. A packed aggregate
-    // reads as a cluster of distinct grains, the way it actually is, not as
-    // one smooth shape with no internal structure.
-    ctx.fillStyle = C.amBody;
-    for (k = 0; k < amNeckCache.length; k++) ctx.fill(amNeckCache[k]);
-    for (i = 0; i < sim.par.length; i++) {
-      p = sim.par[i];
-      if (!p || !p.alive || p.xtal || !shapeCache[i]) continue;
+    if (!anyXtal) {
       ctx.fillStyle = C.amBody;
-      ctx.fill(shapeCache[i]);
-    }
-    ctx.lineWidth = Math.max(1, 0.09 * sc);
-    for (i = 0; i < sim.par.length; i++) {
-      p = sim.par[i];
-      if (!p || !p.alive || p.xtal || !shapeCache[i]) continue;
-      ctx.strokeStyle = p.held ? C.amHeld : C.amRim;
-      ctx.stroke(shapeCache[i]);
-    }
-
-    // crystallites: fill each tile (and its coherent necks), then, once per
-    // co-oriented domain rather than once per tile, clip to the union of
-    // that whole domain and stroke ONE continuous lattice fringe pattern
-    // across it. Stroking the fringe per tile instead redraws the same grid
-    // lines again and again wherever tiles or necks overlap, which is what
-    // turns a genuinely co-oriented mesocrystal into an unreadable scribble.
-    var domains = {};
-    function domainOf(root) {
-      if (!domains[root]) domains[root] = new Path2D();
-      return domains[root];
-    }
-    for (i = 0; i < sim.par.length; i++) {
-      p = sim.par[i];
-      if (!p || !p.alive || !p.xtal || !shapeCache[i]) continue;
+      for (i = 0; i < particles.length; i++) { p = particles[i]; if (p.r > 0) ctx.fill(amPath(p)); }
+      ctx.fillStyle = C.solute;
+      for (i = 0; i < particles.length; i++) {
+        p = particles[i]; if (p.r <= 0) continue;
+        ctx.save(); ctx.clip(amPath(p)); drawGrains(p); ctx.restore();
+      }
+      ctx.strokeStyle = C.amRim;
+      ctx.lineWidth = Math.max(1, 0.09 * sc);
+      for (i = 0; i < particles.length; i++) { p = particles[i]; if (p.r > 0) ctx.stroke(amPath(p)); }
+    } else {
+      var union = new Path2D();
       ctx.fillStyle = C.xtBody;
-      ctx.fill(shapeCache[i]);
-      domainOf(sim.domainOf(i)).addPath(shapeCache[i]);
-      // a particle that just ripened glows briefly, so each individual
-      // solid-state transformation is legible as it happens
-      var age = simT() - p.tX;
-      if (p.tX >= 0 && age < 26) {
-        var fl = 1 - age / 26;
+      for (i = 0; i < particles.length; i++) {
+        p = particles[i];
+        if (!p.xtal) { if (p.r > 0) { ctx.fillStyle = C.amBody; ctx.fill(amPath(p)); ctx.fillStyle = C.xtBody; } continue; }
+        var sh = xtalPath(p);
+        ctx.fill(sh);
+        union.addPath(sh);
+        var age = t - p.poppedAt;
+        if (p.poppedAt >= 0 && age < 22) {
+          ctx.save();
+          ctx.globalAlpha = alpha * (1 - age / 22) * 0.85;
+          ctx.lineWidth = Math.max(1, 0.22 * sc);
+          ctx.strokeStyle = 'rgba(196,248,255,0.95)';
+          ctx.stroke(sh);
+          ctx.restore();
+        }
+      }
+      ctx.fillStyle = C.solute;
+      for (i = 0; i < particles.length; i++) {
+        p = particles[i];
+        ctx.save(); ctx.clip(p.xtal ? xtalPath(p) : amPath(p)); drawGrains(p); ctx.restore();
+      }
+      // only draw the continuous lattice once every tile has locked into its
+      // final, shared orientation, i.e. once oriented attachment is done
+      if (phase === 'mesocrystal' || phase === 'platelet' || phase === 'done') {
         ctx.save();
-        ctx.globalAlpha = alpha * fl * 0.85;
-        ctx.lineWidth = Math.max(1, (0.10 + 0.16 * fl) * sc);
-        ctx.strokeStyle = 'rgba(196,248,255,0.95)';
-        ctx.stroke(shapeCache[i]);
+        ctx.clip(union);
+        ctx.strokeStyle = C.fringe;
+        ctx.lineWidth = Math.max(1, 0.06 * sc);
+        var th0 = particles[0].th, reach = Math.hypot(W, H);
+        ctx.stroke(fringes(th0, W / 2, H / 2, reach));
         ctx.restore();
       }
+      ctx.strokeStyle = C.xtRim;
+      ctx.lineWidth = Math.max(1, 0.075 * sc);
+      for (i = 0; i < particles.length; i++) { p = particles[i]; if (p.xtal) ctx.stroke(xtalPath(p)); }
+      ctx.strokeStyle = C.amRim;
+      ctx.lineWidth = Math.max(1, 0.09 * sc);
+      for (i = 0; i < particles.length; i++) { p = particles[i]; if (!p.xtal && p.r > 0) ctx.stroke(amPath(p)); }
     }
-    for (k = 0; k < neckCache.length; k++) {
-      var nk = neckCache[k];
-      ctx.fillStyle = C.xtBody;
-      ctx.fill(nk.path);
-      domainOf(sim.domainOf(nk.a)).addPath(nk.path);
-    }
-    ctx.strokeStyle = C.fringe;
-    ctx.lineWidth = Math.max(1, 0.055 * sc);
-    for (var root in domains) {
-      var anchor = sim.par[root];
-      if (!anchor || !anchor.alive) continue;
+
+    ctx.restore();   // end camera scale
+
+    // the platelet itself: a large hexagonal facet, fixed in screen space,
+    // fading in as the camera pulls back to reveal it around the shrinking
+    // nanocrystal cluster -- this is what the cluster turns out to be part of
+    if (camScale < 0.97) {
+      var plOpacity = Math.min(1, (1 - camScale) * 1.15);
+      var plR = Math.min(w, h) * 0.46;
       ctx.save();
-      ctx.clip(domains[root]);
-      ctx.stroke(fringes(anchor, anchor, FIELD_REACH));
+      ctx.globalAlpha = alpha * plOpacity;
+      ctx.beginPath();
+      for (i = 0; i < 6; i++) {
+        var pa = i / 6 * TAU - Math.PI / 6;
+        var px = camCx + Math.cos(pa) * plR, py = camCy + Math.sin(pa) * plR;
+        if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(23,63,88,0.30)';
+      ctx.fill();
+      ctx.strokeStyle = C.xtRim;
+      ctx.lineWidth = Math.max(1, 0.12 * sc);
+      ctx.stroke();
       ctx.restore();
     }
-    ctx.lineWidth = Math.max(1, 0.07 * sc);
-    ctx.strokeStyle = C.xtRim;
-    for (i = 0; i < sim.par.length; i++) {
-      p = sim.par[i];
-      if (!p || !p.alive || !p.xtal || !shapeCache[i]) continue;
-      ctx.stroke(shapeCache[i]);
-    }
 
-    // real grain boundaries: joins that were never going to line up. Bonds
-    // are never deleted even if the two particles later drift apart, so a
-    // bond record alone does not mean the pair is still actually touching;
-    // without that distance check a few stale contacts from early, denser
-    // packing draw as long lines slashing across the whole aggregate. And
-    // where several particles from the same two domains all touch along one
-    // stretch, that is one boundary, not one mark per particle pair, so only
-    // the first contact found between any given pair of domains gets drawn.
-    var boundaryDrawn = {};
-    for (k = 0; k < sim.bonds.length; k++) {
-      B = sim.bonds[k];
-      if (B.dead || B.coh) continue;
-      if (B.mis < 1.0 * Math.PI / 180) continue;
-      p = sim.par[B.a]; q = sim.par[B.b];
-      if (!p || !q || !p.alive || !q.alive || !p.xtal || !q.xtal) continue;
-      var dx = q.x - p.x, dy = q.y - p.y, d = Math.hypot(dx, dy) || 1e-6;
-      if (d > (p.r + q.r) * 1.35) continue;
-      var dra = sim.domainOf(B.a), drb = sim.domainOf(B.b);
-      var bkey = Math.min(dra, drb) + '-' + Math.max(dra, drb);
-      if (boundaryDrawn[bkey]) continue;
-      boundaryDrawn[bkey] = true;
-      var t = p.r / (p.r + q.r);
-      var mx = p.x + dx * t, my = p.y + dy * t;
-      var nx = -dy / d, ny = dx / d;
-      var len = 0.6 * Math.min(p.r, q.r);
-      var f = Math.min(1, B.mis / (Math.PI / 4));
-      ctx.globalAlpha = alpha * (0.35 + 0.65 * f);
-      ctx.lineWidth = Math.max(1, (0.10 + 0.10 * f) * sc);
-      ctx.strokeStyle = C.warm;
-      ctx.beginPath();
-      ctx.moveTo(X(mx + nx * len), Y(my + ny * len));
-      ctx.lineTo(X(mx - nx * len), Y(my - ny * len));
-      ctx.stroke();
-      ctx.globalAlpha = alpha;
-    }
-
-    // scale bar
+    // scale bar: relabelled as the camera pulls back, since the same drawn
+    // length now stands for a much larger true distance
     ctx.globalAlpha = alpha * 0.75;
-    var barNm = 10, bx = X(4), by = h - Math.max(14, 2.6 * sc);
+    var trueBarNm = 10 / labelScale;
+    var barLabel = trueBarNm >= 1000 ? (trueBarNm / 1000).toFixed(trueBarNm >= 10000 ? 0 : 1) + ' µm' : Math.round(trueBarNm) + ' nm';
+    var bx = X(4), by = h - Math.max(14, 2.6 * sc);
     ctx.strokeStyle = C.rule;
     ctx.lineWidth = Math.max(1, 0.9 * dpr);
     ctx.beginPath();
-    ctx.moveTo(bx, by); ctx.lineTo(bx + X(barNm), by);
+    ctx.moveTo(bx, by); ctx.lineTo(bx + X(10), by);
     ctx.moveTo(bx, by - 3 * dpr); ctx.lineTo(bx, by + 3 * dpr);
-    ctx.moveTo(bx + X(barNm), by - 3 * dpr); ctx.lineTo(bx + X(barNm), by + 3 * dpr);
+    ctx.moveTo(bx + X(10), by - 3 * dpr); ctx.lineTo(bx + X(10), by + 3 * dpr);
     ctx.stroke();
     ctx.fillStyle = C.rule;
     ctx.font = (7.5 * dpr) + 'px ui-monospace, monospace';
     ctx.textBaseline = 'alphabetic';
-    ctx.fillText(barNm + ' nm', bx, by - 5 * dpr);
+    ctx.fillText(barLabel, bx, by - 5 * dpr);
     ctx.globalAlpha = 1;
   }
 
-  /* ---- readout ---- */
-  var el = {};
-  ['csBarPart', 'csPctPart', 'csPctMono', 'csSolute', 'csAmorph', 'csXtal', 'csBig', 'csSpan',
-   'csNuc', 'csSpread', 'csRetain', 'csVerdict',
-   'csCohFill', 'csCohPct', 'csH0', 'csH1', 'csH2', 'csH3', 'csH4'].forEach(function (id) {
-    el[id] = document.getElementById(id);
+  /* ---- stage labels ---- */
+  var stageEls = {};
+  Array.prototype.forEach.call(fig.querySelectorAll('#csStages [data-stage]'), function (el) {
+    stageEls[el.getAttribute('data-stage')] = el;
   });
-  function pct(a, b) { return b > 0 ? Math.round(100 * a / b) : 0; }
   function readout() {
-    var s = sim.stats();
-    if (!s) return;
-    var tot = s.byMono + s.byPart;
-    var pp = pct(s.byPart, tot);
-    if (el.csBarPart) el.csBarPart.style.width = pp + '%';
-    if (el.csPctPart) el.csPctPart.textContent = pp + '%';
-    if (el.csPctMono) el.csPctMono.textContent = (tot > 0 ? 100 - pp : 0) + '%';
-    if (el.csSolute) el.csSolute.textContent = s.solute;
-    if (el.csAmorph) el.csAmorph.textContent = s.amorphous;
-    if (el.csXtal) el.csXtal.textContent = s.crystalline;
-    if (el.csBig) el.csBig.textContent = s.biggest;
-    if (el.csSpan) el.csSpan.textContent = Math.round(s.spanNm) + ' nm';
-    if (el.csNuc) el.csNuc.textContent = s.nuclei;
-    if (el.csSpread) el.csSpread.textContent = s.crystalline ? s.misMax.toFixed(2) + '\u00B0' : '--';
-    if (el.csRetain) el.csRetain.textContent = s.retained;
-    if (el.csVerdict) {
-      var v = '--';
-      if (s.crystalline > 2) {
-        if (s.domains <= 1) {
-          /* One domain means every brick rotated into the same register,
-             however many separate nuclei it took to get there. If the spread
-             is still wide, small residual errors from the last rotations
-             have bent the lattice rather than broken it into grains. */
-          v = s.misMax <= 1.5
-            ? 'mesocrystal, diffracts as one'
-            : 'one domain, lattice bent ' + s.misMax.toFixed(1) + '\u00B0';
-        } else {
-          v = 'mosaic, ' + s.domains + ' domains';
-        }
-      } else if (s.biggest > 6) v = 'amorphous aggregate';
-      el.csVerdict.textContent = v;
-    }
-    var joins = s.coherent + s.incoherent, cp = pct(s.coherent, joins);
-    if (el.csCohFill) el.csCohFill.style.width = cp + '%';
-    if (el.csCohPct) el.csCohPct.textContent = joins > 0 ? cp + '%' : '--';
-    var hmax = 1;
-    for (var i = 0; i < 5; i++) hmax = Math.max(hmax, s.hist[i]);
-    for (i = 0; i < 5; i++) {
-      var b = el['csH' + i];
-      if (b) b.style.height = Math.max(2, Math.round(26 * s.hist[i] / hmax)) + 'px';
+    var shown = (phase === 'done' || phase === 'platelet') ? 'mesocrystal' : phase;
+    for (var k in stageEls) {
+      if (stageEls[k]) stageEls[k].classList.toggle('active', k === shown);
     }
   }
 
   /* ---- driver ---- */
-  var STEP = 1000 / 60, DT = 0.70;
+  var STEP = 1000 / 60, DT = 0.65;
   var acc = 0, last = 0, raf = null;
   var visible = false, playing = true, fade = 1, mode = 'run';
   var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var hint = document.getElementById('csHint');
   var btnPlay = document.getElementById('csPlay');
   var btnAgain = document.getElementById('csAgain');
-  var slider = document.getElementById('csStab');
-  var readTick = 0;
 
-  function advance(n) {
-    for (var i = 0; i < n; i++) sim.step(DT, sim.phase() === 'aggregate');
-  }
+  function advance(n) { for (var i = 0; i < n; i++) step(DT); }
 
   function frame(ts) {
     raf = null;
@@ -2971,17 +2418,17 @@ function makeSim(seedFn) {
       while (acc >= STEP && budget-- > 0) { advance(1); acc -= STEP; }
       if (acc > STEP * 4) acc = 0;
 
-      if (mode === 'run' && sim.phase() === 'done') { mode = 'out'; }
+      if (mode === 'run' && phase === 'done') mode = 'out';
       if (mode === 'out') {
         fade -= d / 700;
-        if (fade <= 0) { fade = 0; sim.reset(); mode = 'in'; }
+        if (fade <= 0) { fade = 0; reset(); mode = 'in'; }
       } else if (mode === 'in') {
         fade += d / 700;
         if (fade >= 1) { fade = 1; mode = 'run'; }
       }
     }
     render(fade);
-    if (++readTick % 8 === 0) readout();
+    readout();
     if (visible && playing) raf = requestAnimationFrame(frame);
   }
 
@@ -2990,9 +2437,7 @@ function makeSim(seedFn) {
     last = 0; acc = 0;
     raf = requestAnimationFrame(frame);
   }
-  function stop() {
-    if (raf) { cancelAnimationFrame(raf); raf = null; }
-  }
+  function stop() { if (raf) { cancelAnimationFrame(raf); raf = null; } }
 
   function setPlaying(on) {
     playing = on;
@@ -3005,12 +2450,9 @@ function makeSim(seedFn) {
 
   if (btnPlay) btnPlay.addEventListener('click', function () { setPlaying(!playing); });
   if (btnAgain) btnAgain.addEventListener('click', function () {
-    sim.reset(); mode = 'run'; fade = 1;
+    reset(); mode = 'run'; fade = 1;
     readout(); render(1);
     if (!playing) setPlaying(true);
-  });
-  if (slider) slider.addEventListener('input', function () {
-    sim.S.stab = Math.max(0.05, Math.min(0.95, slider.value / 100));
   });
 
   window.addEventListener('resize', function () { fit(); render(fade); }, { passive: true });
@@ -3019,20 +2461,14 @@ function makeSim(seedFn) {
   });
 
   fit();
-  if (slider) sim.S.stab = slider.value / 100;
 
   if (still) {
-    /* Motion is reduced, so run the whole thing forward with nothing drawn and
-       show the finished object instead of animating towards it. */
     playing = false;
     var guard = 0;
-    while (sim.phase() === 'aggregate' && guard++ < 6000) sim.step(DT, true);
-    while (sim.phase() === 'order' && guard++ < 8000) sim.step(DT, false);
-    while (sim.phase() === 'hold' && guard++ < 7000) sim.step(DT, false);
-    sim.tally();
+    while (phase !== 'done' && guard++ < 4000) step(DT);
     readout(); render(1);
     if (btnPlay) { btnPlay.textContent = 'Play'; btnPlay.setAttribute('aria-pressed', 'true'); }
-    if (hint) hint.textContent = 'Finished run shown. Press play to watch it assemble.';
+    if (hint) hint.textContent = 'Finished sequence shown. Press play to watch it assemble.';
   } else {
     readout(); render(1);
   }
@@ -3044,10 +2480,7 @@ function makeSim(seedFn) {
     new IntersectionObserver(function (es) {
       es.forEach(function (e) {
         visible = e.isIntersecting;
-        if (visible) {
-          if (hint) hint.classList.add('gone');
-          start();
-        } else stop();
+        if (visible) { if (hint) hint.classList.add('gone'); start(); } else stop();
       });
     }, { threshold: 0.15 }).observe(fig);
   } else {
@@ -3055,6 +2488,53 @@ function makeSim(seedFn) {
     if (hint) hint.classList.add('gone');
     start();
   }
+})();
+</script>
+
+<script src="pieces.js"></script>
+<script>
+/* --------------------------------------------------------------------------
+   Writing list -> piece pages.
+
+   pieces.js decides which entries are readable. An entry whose `doc` is still
+   null is left exactly as it is, plain text, so a manuscript in prep can never
+   turn into a link that goes nowhere. Nothing here needs touching when a piece
+   is published: only pieces.js does.
+-------------------------------------------------------------------------- */
+(function () {
+  var pieces = window.PIECES || {};
+  var items  = document.querySelectorAll('.writing-list li[data-piece]');
+
+  Array.prototype.forEach.call(items, function (li) {
+    var key   = li.getAttribute('data-piece');
+    var piece = pieces[key];
+    if (!piece || !piece.doc) return;
+
+    var href  = 'piece.html?id=' + encodeURIComponent(key);
+    var title = li.querySelector('.title');
+
+    /* A real anchor around the title, so the entry is reachable by keyboard
+       and reads as a link to a screen reader, rather than being a div that
+       happens to respond to clicks. */
+    if (title) {
+      var a = document.createElement('a');
+      a.href = href;
+      while (title.firstChild) a.appendChild(title.firstChild);
+      title.appendChild(a);
+    }
+    li.classList.add('has-piece');
+
+    /* The whole row is the target, not just the title, since the row is what
+       looks clickable. Two things are deliberately not navigations: a click
+       that finishes selecting text, and a click on some other link inside the
+       row, which is that link's to handle. */
+    li.addEventListener('click', function (e) {
+      if (e.target.closest && e.target.closest('a')) return;
+      var sel = window.getSelection();
+      if (sel && String(sel).length) return;
+      location.href = href;
+    });
+  });
 })();
 </script>
 
