@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Curriculum Vitae &middot; Zak Jibrin</title>
 <meta name="description" content="Curriculum vitae of Zakaria (Zak) Jibrin, PhD candidate in Earth and Planetary Sciences at Rutgers University.">
-<meta name="theme-color" content="#EDE7DA">
+<meta name="theme-color" content="#10161E">
 
 <!--
   cv.html — a live mirror of the CV Google Doc.
@@ -33,12 +33,13 @@
 
 <style>
 :root {
-  --bg: #EDE7DA;
-  --bg-warm: #E4DCC9;
-  --ink: #16191A;
-  --muted: #555555;
-  --rule: #B8BFBD;
-  --accent: #007A74;
+  /* Same dark instrument palette as the main page. */
+  --bg: #10161E;
+  --bg-warm: #1A2330;
+  --ink: #DCE8F0;
+  --muted: #9EB2C4;
+  --rule: #26323F;
+  --accent: #3FD9CB;
 
   --serif: 'Newsreader', Georgia, serif;
   --sans: 'Inter', system-ui, -apple-system, sans-serif;
@@ -48,7 +49,7 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html { font-size: 17px; scroll-behavior: smooth; background: #FFFFFF; }
+html { font-size: 17px; scroll-behavior: smooth; background: #070B11; }
 
 body {
   background: var(--bg);
@@ -71,7 +72,7 @@ nav {
   padding: 1.4rem 0;
   border-bottom: 1px solid var(--rule);
   position: sticky; top: 0; z-index: 20;
-  background: rgba(237, 231, 218, 0.9);
+  background: rgba(16, 22, 30, 0.9);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
@@ -133,16 +134,19 @@ nav .wrap { display: flex; justify-content: space-between; align-items: baseline
 /* display:flex above would otherwise beat the hidden attribute */
 .cv-status[hidden] { display: none; }
 .cv-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 1.6rem; }
+/* Deliberately quiet: a small hairline chip in the muted tone rather than a
+   full-contrast call to action. Printing is a thing you might do, not the
+   point of the page. */
 .cv-btn {
-  font-family: var(--mono); font-size: 0.72rem; font-weight: 500;
-  letter-spacing: 0.1em; text-transform: uppercase;
-  color: var(--ink); background: transparent;
-  border: 1px solid var(--ink); padding: 0.4rem 0.75rem;
+  font-family: var(--mono); font-size: 0.6rem; font-weight: 500;
+  letter-spacing: 0.13em; text-transform: uppercase;
+  color: var(--muted); background: transparent;
+  border: 1px solid var(--rule); padding: 0.28rem 0.6rem;
   cursor: pointer; text-decoration: none; display: inline-block;
   transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
 }
 .cv-btn:hover, .cv-btn:focus-visible {
-  color: var(--bg); background: var(--ink); border-color: var(--ink); outline: none;
+  color: var(--bg); background: var(--accent); border-color: var(--accent); outline: none;
 }
 
 /* ---------- CV body ---------- */
@@ -258,7 +262,7 @@ footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; g
     </div>
 
     <div class="cv-actions">
-      <button type="button" class="cv-btn" id="cvPrint">Print / PDF</button>
+      <button type="button" class="cv-btn" id="cvPrint">Print</button>
     </div>
 
     <!-- Failure only. A successful fetch says nothing at all: the CV being

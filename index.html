@@ -17,7 +17,7 @@
 <meta property="og:description" content="PhD candidate at Rutgers. Reading biology in the deviations of mineral lattices.">
 <meta property="og:image" content="zak.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#EDE7DA">
+<meta name="theme-color" content="#10161E">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,17 +25,24 @@
 
 <style>
 :root {
-  /* Cool paper white rather than limestone beige. The neutrals carry a faint
-     green-grey cast so they sit under the verdigris accent instead of fighting
-     it, and the ink is cooled to match. */
-  --bg: #EDE7DA;
-  --bg-warm: #E4DCC9;   /* the recessed tone: hover fills, alternating bands */
-  --ink: #16191A;
-  --muted: #555555;
-  --rule: #B8BFBD;
-  --accent: #007A74;   /* #00FFF1 hue at the intensity the verdigris carried;
-                          the literal neon is 1.17:1 here and vanishes */
-  --oxy: #AE3A22;   /* oxygen, CPK red pulled toward hematite for the palette */
+  /* Dark, and specifically the dark this page already contained. The CPA
+     figures were always instrument panels: near-black field, hairline rule,
+     cyan data. Those numbers are promoted here to the whole site, so the
+     figures stop reading as two lit windows cut into a beige wall and the
+     page becomes one continuous instrument.
+
+     Everything is blue-black rather than neutral grey, which keeps the
+     verdigris accent and the CPK oxygen red from turning muddy against it. */
+  --bg: #10161E;        /* the column the page sits in */
+  --bg-warm: #1A2330;   /* the lifted tone: hover fills, alternating bands */
+  --ink: #DCE8F0;
+  --ink-soft: #BDCCD9;  /* secondary body copy, still comfortably over 9:1 */
+  --muted: #9EB2C4;     /* labels and captions, ~7.5:1 on --bg */
+  --rule: #26323F;
+  --accent: #3FD9CB;    /* the verdigris, opened up to carry on a dark field.
+                           #007A74 was tuned for paper and reads near-black here */
+  --oxy: #F0724A;   /* oxygen, CPK red lifted off hematite so it survives the
+                       dark panels the .fig diagrams now sit on */
 
   /* Newsreader, not Fraunces. Fraunces draws a descending, hooked lowercase f
      that reads as a question mark at display size, and hooks its J hard left
@@ -53,7 +60,7 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html { font-size: 23px; scroll-behavior: smooth; background: #FFFFFF; }
+html { font-size: 23px; scroll-behavior: smooth; background: #070B11; }
 
 body {
   background: var(--bg);
@@ -83,7 +90,7 @@ nav {
   padding: 1.4rem 0;
   border-bottom: 1px solid var(--rule);
   position: sticky; top: 0; z-index: 20;
-  background: rgba(237, 231, 218, 0.82);
+  background: rgba(16, 22, 30, 0.86);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
@@ -164,6 +171,22 @@ nav .wrap { display: flex; justify-content: space-between; align-items: baseline
   opacity: 1; transform: scale(1) rotate(0deg);
   transition-delay: 0.6s, 0.6s;     /* the organism forms last */
 }
+
+/* The CV is the one thing most visitors actually came for, so it leaves the
+   Elsewhere list at the bottom of the page and sits at the end of the nav
+   instead: display face, accent colour, and a good deal larger than the
+   section links it sits beside. The nav aligns on the baseline, so the size
+   difference does not knock the row out of line. */
+.nav-links .nav-cv {
+  font-family: var(--serif);
+  font-variation-settings: "opsz" 36, "wght" 600;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.01em;
+  line-height: 1;
+}
+.nav-links .nav-cv:hover, .nav-links .nav-cv:focus-visible { color: var(--ink); }
 
 /* ---------- Hero ---------- */
 .hero {
@@ -449,7 +472,7 @@ nav .wrap { display: flex; justify-content: space-between; align-items: baseline
   line-height: 1.3; margin: 0 auto 1rem; max-width: 24ch;
 }
 .subtitle {
-  font-size: 0.97rem; color: #555;
+  font-size: 0.97rem; color: var(--ink-soft);
   max-width: 54ch; margin: 0 auto; line-height: 1.65;
 }
 
@@ -511,7 +534,7 @@ h2 {
 .portrait figcaption {
   font-family: var(--mono); font-size: 0.66rem; font-weight: 600;
   letter-spacing: 0.14em; text-transform: uppercase;
-  color: #555; line-height: 1.7;
+  color: var(--muted); line-height: 1.7;
   margin-top: 1.5rem; padding-top: 0.85rem;
   border-top: 1px solid var(--rule);
 }
@@ -548,7 +571,7 @@ h2 {
   font-size: 1.4rem; font-weight: 600; line-height: 1.2;
   margin-bottom: 0.75rem; letter-spacing: -0.01em;
 }
-.pillar p { font-size: 0.95rem; color: #444; line-height: 1.7; margin-bottom: 1rem; }
+.pillar p { font-size: 0.95rem; color: var(--ink-soft); line-height: 1.7; margin-bottom: 1rem; }
 .pillar .scale {
   font-family: var(--mono); font-size: 0.68rem;
   letter-spacing: 0.15em; text-transform: uppercase;
@@ -572,9 +595,10 @@ h2 {
 .fig {
   aspect-ratio: 4 / 3;
   border: 1px solid var(--rule);
-  /* Pure white, not translucent white. Against the old beige a 32% white wash
-     read as a lifted panel; against a near-white page it disappeared. */
-  background: #FFFFFF;
+  /* A recessed panel, a shade under the page, the same move the CPA figures
+     make. This used to be pure white to lift off the beige; on a dark page
+     the same separation comes from going darker, not lighter. */
+  background: #0A0F16;
   color: var(--ink);
   transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.3s ease;
   position: relative;
@@ -583,7 +607,7 @@ h2 {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 50%, rgba(0, 122, 116, 0.08) 0%, transparent 70%);
+  background: radial-gradient(circle at 50% 50%, rgba(63, 217, 203, 0.10) 0%, transparent 70%);
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
@@ -594,8 +618,8 @@ h2 {
 }
 .writing-list li:hover .fig {
   border-color: var(--accent);
-  background: #FFFFFF;
-  box-shadow: 0 0 12px rgba(0, 122, 116, 0.15);
+  background: #0C131B;
+  box-shadow: 0 0 14px rgba(63, 217, 203, 0.18);
 }
 .fig svg { display: block; width: 100%; height: 100%; }
 .fig text {
@@ -644,7 +668,7 @@ h2 {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 15% 50%, rgba(0, 122, 116, 0.1) 0%, transparent 40%);
+  background: radial-gradient(circle at 15% 50%, rgba(63, 217, 203, 0.12) 0%, transparent 40%);
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
@@ -1050,7 +1074,7 @@ footer .signoff em {
 
     <!-- Cyclic Hoogsteen pairing: N1-H donates to the next base's O6,
          N2-H donates to that same base's N7. Repeats four times. -->
-    <g id="hbond" stroke="#007A74" stroke-width="0.9"
+    <g id="hbond" stroke="#3FD9CB" stroke-width="0.9"
        stroke-dasharray="2 2.4" stroke-linecap="round" fill="none"
        style="opacity:var(--dim,1)">
       <line x1="90.617" y1="128.340" x2="82.861" y2="109.581"/>
@@ -1070,7 +1094,7 @@ footer .signoff em {
     </g>
 
     <!-- Na+ to O6 coordination, drawn on the front tetrad only -->
-    <g id="coord" stroke="#007A74" stroke-width="0.95"
+    <g id="coord" stroke="#3FD9CB" stroke-width="0.95"
        stroke-dasharray="1.8 2" stroke-linecap="round" fill="none">
     </g>
     <g id="coordset">
@@ -1097,6 +1121,7 @@ footer .signoff em {
       <li><a href="#writing">Writing<i class="xtal"></i><i class="bio"><svg viewBox="0 0 40 40"><path d="M20 20 a1.8 1.8 0 1 1 1.8 -2 a4.4 4.4 0 1 1 -1.4 6.6 a8 8 0 1 1 -2 -12 a12.5 12.5 0 1 1 -3.4 20.5 L20 30 Z" fill="url(#nautF)" stroke="#0A3F3B" stroke-width="1.6" stroke-linejoin="round"/><g stroke="#0A3F3B" stroke-width="0.9" opacity="0.5" fill="none"><path d="M20 20 L19 8.5 M20 20 L30 12 M20 20 L31.5 22 M20 20 L28 30 M20 20 L9 14 M20 20 L8.5 24"/></g></svg></i></a></li>
       <li><a href="#cpa">CPA<i class="xtal"></i><i class="bio"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="9.5" fill="url(#urchF)" stroke="#0A3F3B" stroke-width="1.4"/><g stroke="#0A3F3B" stroke-width="1.4" stroke-linecap="round"><path d="M20 10.5 L20 3 M20 29.5 L20 37 M10.5 20 L3 20 M29.5 20 L37 20 M13.3 13.3 L8 8 M26.7 13.3 L32 8 M13.3 26.7 L8 32 M26.7 26.7 L32 32 M16.4 11.2 L14.5 4.5 M23.6 11.2 L25.5 4.5 M11.2 16.4 L4.5 14.5 M11.2 23.6 L4.5 25.5 M28.8 16.4 L35.5 14.5 M28.8 23.6 L35.5 25.5 M16.4 28.8 L14.5 35.5 M23.6 28.8 L25.5 35.5"/></g><circle cx="17" cy="17" r="2.2" fill="#8FF3EC" opacity="0.6"/></svg></i></a></li>
       <li><a href="#elsewhere">Elsewhere<i class="xtal"></i><i class="bio"><svg viewBox="0 0 40 40"><g fill="url(#foramF)" stroke="#0A3F3B" stroke-width="1.3"><circle cx="20" cy="27" r="9"/><circle cx="17" cy="16" r="6.5"/><circle cx="22.5" cy="9.5" r="4.6"/><circle cx="26" cy="5" r="3"/></g><g fill="#8FF3EC" opacity="0.5" stroke="none"><circle cx="17" cy="24" r="2"/><circle cx="15" cy="14.5" r="1.4"/></g></svg></i></a></li>
+      <li><a href="cv.html" class="nav-cv">CV</a></li>
     </ul>
   </div>
 </nav>
@@ -1559,10 +1584,6 @@ footer .signoff em {
         <span class="label">Code</span>
         <span class="link-text">GitHub <span class="arrow">&rarr;</span></span>
       </a>
-      <a href="cv.html">
-        <span class="label">Long form</span>
-        <span class="link-text">Curriculum vitae <span class="arrow">&rarr;</span></span>
-      </a>
     </div>
   </div>
 </section>
@@ -1636,7 +1657,8 @@ footer .signoff em {
   var T_SETTLE = 950;    // camera swing onto the c-axis
 
   var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var fine  = window.matchMedia('(any-pointer: fine)').matches;
+  var fine   = window.matchMedia('(any-pointer: fine)').matches;
+  var coarse = window.matchMedia('(any-pointer: coarse)').matches;
 
   // ---- build the stack, deepest first in the DOM -------------------------
   var deep = [], ions = [], balls = [];
@@ -1727,13 +1749,11 @@ footer .signoff em {
   }
 
   // ---- the resting pose --------------------------------------------------
-  function rest() {
-    if (fine) { aim(0, 0); reveal(0); }
-    else {
-      // No pointer to follow, so hold a fixed three-quarter view.
-      aim(-16, 13); reveal(0.8); setSpin(0.8);
-    }
-  }
+  /* Flat and face-on, whatever the input. Touch devices used to be parked at a
+     fixed three-quarter view because there was no pointer to follow; a finger
+     can drive the tilt directly now, so they rest square-on like everything
+     else and the tilt is something you do rather than something you are given. */
+  function rest() { aim(0, 0); reveal(0); }
 
   // ---- entrance ----------------------------------------------------------
   function intro() {
@@ -1799,12 +1819,74 @@ footer .signoff em {
   layout();
   window.addEventListener('resize', layout);
 
+  /* ---- touch tilt --------------------------------------------------------
+     The same gesture the mouse gets, driven by a finger held on the figure:
+     press, keep holding, move around, and the fibril tilts and opens up the
+     stack behind it. Lift off and it settles back square-on.
+
+     touch-action is only cleared once this is actually wired up, so the patch
+     of page that stops scrolling is exactly the patch that does something
+     instead, and it is never taken away on a device that cannot use it. */
+  function touchTilt() {
+    tilt.style.touchAction = 'none';
+    var raf2 = null, want2 = null, live = false;
+
+    function apply2() {
+      raf2 = null;
+      if (want2) { aim(want2[0], want2[1]); reveal(want2[2]); }
+    }
+    function queue(v) { want2 = v; if (!raf2) raf2 = requestAnimationFrame(apply2); }
+
+    function track(e) {
+      var b = tilt.getBoundingClientRect();
+      var half = b.width / 2;
+      var x = Math.max(-1, Math.min(1, (e.clientX - (b.left + half)) / half / REACH));
+      var y = Math.max(-1, Math.min(1, (e.clientY - (b.top + b.height / 2)) / half / REACH));
+      var mag = Math.min(1, Math.sqrt(x * x + y * y));
+      queue([-y * MAX_TILT, x * MAX_TILT, 0.2 + 0.8 * Math.sqrt(mag)]);
+    }
+
+    tilt.addEventListener('pointerdown', function (e) {
+      if (e.pointerType === 'mouse') return;   // the mouse has its own path below
+      live = true;
+      /* Capture so the tilt keeps tracking even when the finger wanders off
+         the figure, which on a small screen it immediately does. */
+      try { tilt.setPointerCapture(e.pointerId); } catch (err) {}
+      track(e);
+    });
+    tilt.addEventListener('pointermove', function (e) {
+      if (!live) return;
+      e.preventDefault();
+      track(e);
+    });
+    function release() {
+      if (!live) return;
+      live = false;
+      queue([0, 0, 0]);
+    }
+    tilt.addEventListener('pointerup', release);
+    tilt.addEventListener('pointercancel', release);
+  }
+
   if (still) { badge.style.opacity = '1'; rest(); return; }
+
+  /* No fine pointer anywhere on the device, so this is a phone or a tablet.
+     The entrance animation and the never-ending spin were the two things
+     stuttering there, and neither survives contact with a small screen well,
+     so neither runs: the figure is a still G-tetrad until a finger lands on
+     it. */
+  if (!fine) {
+    spin.style.animation = 'none';
+    badge.style.opacity = '1';
+    rest();
+    touchTilt();
+    return;
+  }
+
   intro();
+  if (coarse) touchTilt();   // a touchscreen laptop gets both
 
   // ---- pointer tilt ------------------------------------------------------
-  if (!fine) return;
-
   var raf = null, want = null;
   function apply() {
     raf = null;
@@ -1813,6 +1895,7 @@ footer .signoff em {
 
   hero.addEventListener('pointermove', function (e) {
     if (intro.running) return;
+    if (e.pointerType === 'touch') return;   // touchTilt owns the finger
 
     // measure from the figure's center, in units of its half-width
     var b = tilt.getBoundingClientRect();
@@ -2510,6 +2593,7 @@ function makeSim(seedFn) {
     field: '#080C15',
     solute: 'rgba(127,217,239,0.55)',
     amBody: '#2A5872',
+    amRim: 'rgba(150,210,232,0.55)',
     amHeld: 'rgba(214,168,120,0.65)',
     xtBody: '#173F58',
     xtRim: 'rgba(127,217,239,0.55)',
@@ -2553,7 +2637,9 @@ function makeSim(seedFn) {
   }
   function xtalPath(p) {
     var cs = Math.cos(p.th), sn = Math.sin(p.th);
-    var hw = p.r * 1.05, hh = p.r * 0.80;   // a brick, not a blob: elongated along its own lattice axis
+    // a square tile, not a blob: many of these packing together, each one
+    // still visibly its own tile, is what reads as a mesocrystal superstructure
+    var hw = p.r * 0.92, hh = p.r * 0.92;
     var path = new Path2D(), i;
     var uv = [[-hw, -hh], [hw, -hh], [hw, hh], [-hw, hh]];
     for (i = 0; i < 4; i++) {
@@ -2657,8 +2743,11 @@ function makeSim(seedFn) {
       amNeckCache.push(neckPath(p, q));
     }
 
-    // amorphous precursors: flat fill, no per-particle outline, so a packed
-    // cluster reads as one blob rather than a pile of separate balls.
+    // amorphous precursors: flat fill, the gap between any two touching
+    // grains filled in first so nothing shows the dark field through a seam,
+    // but every grain still gets its own edge on top. A packed aggregate
+    // reads as a cluster of distinct grains, the way it actually is, not as
+    // one smooth shape with no internal structure.
     ctx.fillStyle = C.amBody;
     for (k = 0; k < amNeckCache.length; k++) ctx.fill(amNeckCache[k]);
     for (i = 0; i < sim.par.length; i++) {
@@ -2666,13 +2755,13 @@ function makeSim(seedFn) {
       if (!p || !p.alive || p.xtal || !shapeCache[i]) continue;
       ctx.fillStyle = C.amBody;
       ctx.fill(shapeCache[i]);
-      if (p.held) {
-        // organic-rich ACC pockets are the one amorphous particle worth
-        // calling out: they never ripen, so they stay visually distinct
-        ctx.lineWidth = Math.max(1, 0.11 * sc);
-        ctx.strokeStyle = C.amHeld;
-        ctx.stroke(shapeCache[i]);
-      }
+    }
+    ctx.lineWidth = Math.max(1, 0.09 * sc);
+    for (i = 0; i < sim.par.length; i++) {
+      p = sim.par[i];
+      if (!p || !p.alive || p.xtal || !shapeCache[i]) continue;
+      ctx.strokeStyle = p.held ? C.amHeld : C.amRim;
+      ctx.stroke(shapeCache[i]);
     }
 
     // crystallites: body, then the lattice, then a whisper of an outline so the
