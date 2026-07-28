@@ -492,11 +492,19 @@ h2 {
 /* A pull-quote heading. Italic, a little wider than a normal h2 so the quote
    breaks over fewer lines, with the attribution dropped out of the display
    face so the joke reads as an aside rather than as part of the quote. */
-.h2-quote { font-style: italic; max-width: 26ch; }
+.h2-quote {
+  font-style: italic;
+  /* Well under the section-heading size. It is an epigraph, not a headline,
+     and it earns its weight from being a quote rather than from being large. */
+  font-size: clamp(1.3rem, 2.8vw, 1.95rem);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  max-width: 34ch;
+}
 .h2-quote .attrib {
-  display: block; margin-top: 0.9rem;
+  display: block; margin-top: 0.85rem;
   font-family: var(--sans); font-style: normal;
-  font-size: 0.92rem; font-weight: 500;
+  font-size: 0.82rem; font-weight: 500;
   letter-spacing: 0.02em; color: var(--muted);
 }
 
@@ -913,17 +921,15 @@ footer .signoff em {
 @media (max-width: 900px) {
   html { font-size: 20px; }
   body { margin-inline: 4vw; }
-  .stage { grid-template-columns: 1fr; justify-items: center; gap: 0.75rem; }
-  .name-l, .name-r { text-align: center; }
-  .name-l { order: 1; } .motif-col { order: 2; } .name-r { order: 3; }
-  /* Stacked layout puts name-r directly after motif-col in its own grid row,
-     but the caption below the tetrad is absolutely positioned and doesn't
-     count toward that row's height, so name-r would otherwise land on top of
-     it. Same fix as hero-foot below: push it past the caption's real height. */
-  .name-r { margin-top: 6.5rem; }
-  .name { font-size: clamp(2.9rem, 14vw, 4.6rem); line-height: 1.05; }
-  .tilt { width: min(46.2vw, 210px); }
-  .motif-caption { --cap-x: 0rem; }   /* stacked layout, so centre it */
+  /* Zak | molecule | Jibrin stays one line all the way down to a phone. The
+     three columns are kept and the type and the figure are sized off the
+     viewport instead, so the wordmark shrinks rather than breaking into a
+     stack. 9.8vw for the names against 24vw for the figure is what keeps all
+     three inside the gutters right down to a 320px phone. */
+  .stage { gap: clamp(0.35rem, 1.2vw, 1rem); }
+  .name { font-size: clamp(1.15rem, 9.8vw, 3.4rem); line-height: 1.05; }
+  .tilt { width: clamp(72px, 24vw, 210px); }
+  .motif-caption { --cap-x: 0rem; }
   .hero-foot { margin-top: 6.25rem; }   /* clears the out-of-flow caption */
   .about-grid { grid-template-columns: 1fr; gap: 2.75rem; }
   .portrait { max-width: 380px; }
@@ -944,7 +950,6 @@ footer .signoff em {
   .brand { font-size: 1.05rem; }
   .nav-links { flex-wrap: wrap; justify-content: center; gap: 0.55rem 1.05rem; }
   .nav-links a { font-size: 0.82rem; }
-  .name { font-size: clamp(2rem, 12vw, 3.2rem); }
   section { padding: 3rem 0; }
   .hero { padding: 2rem 0 3rem; }
   .portrait { max-width: 320px; }
@@ -959,7 +964,6 @@ footer .signoff em {
 @media (max-width: 400px) {
   html { font-size: 16px; }
   body { margin-inline: 2vw; }
-  .name { font-size: clamp(1.7rem, 11.5vw, 2.6rem); }
   .nav-links { gap: 0.5rem 0.85rem; }
   .nav-links a { font-size: 0.78rem; }
 }
@@ -1222,7 +1226,7 @@ footer .signoff em {
 
 <section id="about">
   <div class="wrap">
-    <h2 class="h2-quote">&ldquo;Life leaves a fingerprint in stone. We just have to learn how to read it&rdquo;<span class="attrib">&ndash; Someone, probably</span></h2>
+    <h2 class="h2-quote">&ldquo;Life leaves its fingerprint in stone we just have to learn how to read it&rdquo;<span class="attrib">&ndash; Someone Probably</span></h2>
 
     <div class="about-grid">
       <div class="prose">
@@ -2638,8 +2642,11 @@ function makeSim(seedFn) {
   function xtalPath(p) {
     var cs = Math.cos(p.th), sn = Math.sin(p.th);
     // a square tile, not a blob: many of these packing together, each one
-    // still visibly its own tile, is what reads as a mesocrystal superstructure
-    var hw = p.r * 0.92, hh = p.r * 0.92;
+    // still visibly its own tile, is what reads as a mesocrystal superstructure.
+    // Sized so a square's corners land close to its old circular footprint,
+    // not past it, or neighbouring tiles at unrelated angles chew into each
+    // other's corners instead of sitting side by side.
+    var hw = p.r * 0.72, hh = p.r * 0.72;
     var path = new Path2D(), i;
     var uv = [[-hw, -hh], [hw, -hh], [hw, hh], [-hw, hh]];
     for (i = 0; i < 4; i++) {
@@ -2719,13 +2726,17 @@ function makeSim(seedFn) {
       shapeCache.push(p.xtal ? xtalPath(p) : amPath(p));
     }
     // a join that has locked into register fills in, so the two crystallites read
-    // as one body with the lattice running straight through
+    // as one body with the lattice running straight through. Bonds persist
+    // even after two particles drift apart, so every neck also needs a
+    // sanity check that the pair is still actually touching, or a handful of
+    // stale early contacts draw as long connective smears across the field.
     neckCache.length = 0;
     for (k = 0; k < sim.bonds.length; k++) {
       B = sim.bonds[k];
       if (B.dead || !B.coh) continue;
       p = sim.par[B.a]; q = sim.par[B.b];
       if (!p || !q || !p.alive || !q.alive || !p.xtal || !q.xtal) continue;
+      if (Math.hypot(q.x - p.x, q.y - p.y) > (p.r + q.r) * 1.35) continue;
       neckCache.push({ path: neckPath(p, q), a: B.a });
     }
     // every other bond that touches at least one amorphous particle gets the
@@ -2740,6 +2751,7 @@ function makeSim(seedFn) {
       if (B.dead) continue;
       p = sim.par[B.a]; q = sim.par[B.b];
       if (!p || !q || !p.alive || !q.alive || (p.xtal && q.xtal)) continue;
+      if (Math.hypot(q.x - p.x, q.y - p.y) > (p.r + q.r) * 1.35) continue;
       amNeckCache.push(neckPath(p, q));
     }
 
@@ -2812,7 +2824,11 @@ function makeSim(seedFn) {
       ctx.stroke(shapeCache[i]);
     }
 
-    // real grain boundaries: joins that were never going to line up
+    // real grain boundaries: joins that were never going to line up. Bonds
+    // are never deleted even if the two particles later drift apart, so a
+    // bond record alone does not mean the pair is still actually touching;
+    // without that distance check a few stale contacts from early, denser
+    // packing draw as long lines slashing across the whole aggregate.
     for (k = 0; k < sim.bonds.length; k++) {
       B = sim.bonds[k];
       if (B.dead || B.coh) continue;
@@ -2820,10 +2836,11 @@ function makeSim(seedFn) {
       p = sim.par[B.a]; q = sim.par[B.b];
       if (!p || !q || !p.alive || !q.alive || !p.xtal || !q.xtal) continue;
       var dx = q.x - p.x, dy = q.y - p.y, d = Math.hypot(dx, dy) || 1e-6;
+      if (d > (p.r + q.r) * 1.35) continue;
       var t = p.r / (p.r + q.r);
       var mx = p.x + dx * t, my = p.y + dy * t;
       var nx = -dy / d, ny = dx / d;
-      var len = 1.05 * Math.min(p.r, q.r);
+      var len = 0.6 * Math.min(p.r, q.r);
       var f = Math.min(1, B.mis / (Math.PI / 4));
       ctx.globalAlpha = alpha * (0.35 + 0.65 * f);
       ctx.lineWidth = Math.max(1, (0.10 + 0.10 * f) * sc);
