@@ -219,10 +219,29 @@ footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; g
 @media (max-width: 600px) {
   html { font-size: 17.5px; }
   body { margin-inline: 3vw; }
-  nav .wrap { flex-direction: column; align-items: flex-start; }
-  .cv-actions { margin-left: 0; }
+  /* This nav was 184px tall on a phone -- taller than the title, the role and
+     the contact line put together -- and it is sticky, so it sat on a fifth of
+     the screen for the whole page. Same compact treatment the home page uses:
+     less padding, tighter gaps, links centred under the brand. */
+  nav { padding: 0.8rem 0; }
+  /* less side padding here than the text sections get, so the five links fit
+     on one row instead of wrapping onto a second */
+  nav .wrap { flex-direction: column; align-items: center; gap: 0.4rem; padding: 0 0.6rem; }
+  .nav-links { justify-content: center; gap: 0.45rem 1rem; }
+  .nav-links a { font-size: 0.8rem; }
+  .cv-actions { margin-left: 0; margin-top: 1rem; }
   .cv-row { flex-direction: column; gap: 0.15rem; }
   .cv-row .cv-when { font-size: 0.72rem; }
+  /* The masthead was sized for a wide screen and never shrank: the clamp on
+     the name floors at 2.6rem, which 6vw never beats on a phone, so the head
+     alone ate the first two thirds of the screen before a line of the CV
+     appeared. Floor it lower and let vw actually do the work. */
+  .cv-head { padding: 1.9rem 0 1.1rem; }
+  .cv-head h1 { font-size: clamp(1.75rem, 8.5vw, 2.6rem); }
+  .cv-head .role { font-size: 1.02rem; margin-top: 0.3rem; }
+  .cv-contact { margin-top: 0.9rem; gap: 0.35rem 1rem; }
+  #cvBody { padding: 1.5rem 0 3rem; }
+  #cvBody h2 { font-size: 1.22rem; margin: 1.9rem 0 0.8rem; }
 }
 
 /* ---------- Print: drop the furniture, keep the document ---------- */
