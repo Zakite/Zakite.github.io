@@ -1572,7 +1572,7 @@ footer .signoff em {
 
   <div class="cs-stage">
     <canvas class="cs-canvas" id="csCanvas" role="img"
-            aria-label="An animated sequence: ions drift in solution and aggregate into amorphous nanoparticles, which keep feeding, merge when they collide, and trade ions with solution while the smallest dissolve away. Once the solution is spent, crystallinity nucleates at a spot on each particle's surface and sweeps through it as a front, in place, with no rotation. The crystallites then diffuse toward a growing array and snap into contact, oriented attachment, building a hexagonal mesocrystal that keeps its flaws: trapped pores and slightly misregistered blocks. The camera pulls back to show the micron-scale platelet, then the sequence resets and repeats."></canvas>
+            aria-label="An animated sequence: ions drift in solution and aggregate into dense amorphous nanoparticles, which keep feeding, merge when they collide, and trade ions with solution while the smallest dissolve away, until the solution is consumed. Crystallinity then nucleates at a spot on each particle's surface and sweeps through it as a front, in place, with no rotation. The crystallites diffuse toward a growing array and snap into contact, oriented attachment, building a hexagonal mesocrystal that keeps its flaws: trapped pores and slightly misregistered blocks. The camera pulls back to show the micron-scale platelet, then keeps pulling back until the flaws are no longer resolvable and the platelet is one clean hexagonal tablet among many, stacked in layers the way nacre is. The sequence then resets and repeats."></canvas>
     <div class="cs-hint" id="csHint">Scroll into view to start</div>
   </div>
 
@@ -1582,6 +1582,8 @@ footer .signoff em {
     <li data-stage="nanocrystals">Nanocrystals</li>
     <li data-stage="attach">Oriented attachment</li>
     <li data-stage="mesocrystal">Hexagonal mesocrystal</li>
+    <li data-stage="nacre">Nacre</li>
+    <li data-stage="pearl">Structural colour</li>
   </ol>
 
   <div class="cs-controls">
@@ -1598,10 +1600,14 @@ footer .signoff em {
     <em>oriented attachment</em>: each crystallite diffuses until it closes with the growing array and
     jumps to contact, still accelerating as it lands. The product keeps the flaws of its assembly,
     trapped pores and slightly misregistered blocks, and reads as one crystal only from a distance.
+    Keep pulling back and the flaws stop being resolvable, exactly as they would in an image taken
+    at lower magnification: the platelet resolves into one clean hexagonal tablet among many, stacked
+    in sheets. That is the architecture of <em>nacre</em>.
     A cartoon of the pathway after De&nbsp;Yoreo and colleagues, staged to be legible, not a
     quantitative model; ions are drawn far oversized, and here every particle shares one lattice
     orientation from the start, standing in for the rotation-to-registry that real attachment
-    involves.
+    involves. The blocks are near-monodisperse because a periodic, long-range-ordered array is a
+    type&nbsp;I mesocrystal, which is defined as being built from uniform units.
   </figcaption>
 </figure>
   </div>
@@ -2078,9 +2084,32 @@ footer .signoff em {
   function ease(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
 
   var VIEW_W = 108, VIEW_H = 60;        // the camera's starting window, world units
-  var TILE_R = 3.3;                     // reference nanocrystal half-size (sizes now vary per particle)
-  var SPACING = 3.46;                   // tile-centre spacing: average-size tiles just touch (sqrt(3)*SPACING ~ mean tile width)
-  var HEX_R = 16;                       // rings in the full mesocrystal: 3R(R+1)+1 cells
+  // One ion diameter sets every other length. Amorphous packing and the
+  // crystalline lattice use the same spacing, so ordering rearranges a
+  // particle without shrinking it -- the transformation is pseudomorphic.
+  var MICRO_SPACING = 1.05;             // ion spacing in the finished crystal
+  // The amorphous packing is looser than the crystal, so ordering visibly
+  // draws the ions closer together instead of only rearranging them. Real
+  // ACC is hydrated and markedly less dense than the calcite it becomes.
+  var ION_D = MICRO_SPACING * 1.14;     // contact diameter for random close packing
+  // Blocks are square and sit on a square lattice: squares packing into a much
+  // larger hexagon. Their size follows the ion count as sqrt(n), since area
+  // scales with the number of ions. The spread is deliberately modest. A
+  // periodic, long-range-ordered array is a type I mesocrystal, which is
+  // defined as being built from near-monodisperse blocks (Sturm & Colfen 2016,
+  // Chem. Soc. Rev. 45, 5821); a broad spread would only be consistent with a
+  // disordered type II aggregate. The residual ~1.25x range in block width
+  // sits between the synthetic superlattice standard and the +/-1 sigma core
+  // measured in sea urchin spine (Seto et al. 2012, PNAS 109, 3699).
+  // clamped at SIZE_CAP so a block can never outgrow its cell and overlap its
+  // neighbours, whichever route the extra ions arrived by
+  function blockHalf(n) { return MICRO_SPACING * (Math.sqrt(Math.min(n, SIZE_CAP)) / 2 + 0.55); }
+  var SIZE_CAP = 24;                    // local depletion halo: one block's worth of lattice sites
+  var MIN_XTAL = 14;                    // sub-critical clusters never crystallize -- they redissolve (Gibbs-Thomson)
+  var LAT_CAP = 44;                     // sites always outnumber ions, so no two ever share one
+  var TILE_HW = blockHalf(SIZE_CAP);    // the largest a block can get
+  var SPACING = TILE_HW * 2 + 0.22;     // cell pitch: the biggest blocks meet edge to edge
+  var HEX_RINGS = 15;                   // hexagon half-width in cells -> ~780 blocks
   var IONS_PER_TILE = 22;
   var SEED_TILES = 14;
   var N_ION = SEED_TILES * IONS_PER_TILE * 2;
@@ -2090,40 +2119,79 @@ footer .signoff em {
   // that never reach a usable size instead of a handful that do
   var JOIN_R = 4.5, NUCLEATE_R = 1.3;
   var GROW_TARGET = IONS_PER_TILE;
-  var SIZE_CAP = 40;                    // local depletion halo: very large particles stop out-competing everyone
-  var MIN_XTAL = 8;                     // sub-critical clusters never crystallize -- they redissolve (Gibbs-Thomson)
   var CLUSTER_TIMEOUT = 320;            // backstop for the depletion latch
-  var NM_PER_UNIT = 15;                 // one world unit ~15 nm: tiles ~90 nm, platelet a few microns
+  var NM_PER_UNIT = 15;                 // one world unit ~15 nm: blocks ~79 nm, platelet ~2.9 um
   var FILL_RATE = 3.4;                  // new off-screen tiles claimed per unit time, once seeding is under way
-  var PORE_P = 0.03;                    // fraction of interior cells left as trapped pores (a CPA signature)
+  var PORE_P = 0.012;                   // fraction of interior cells left as trapped pores (a CPA signature)
+  // amorphous stage: ions cohere into a dense, randomly packed droplet --
+  // mutual repulsion at contact, surface tension holding the whole together
+  // Two cohesive terms. The surface term keeps the droplet from spreading;
+  // the weaker volumetric term pulls the interior in as well, without which
+  // the ions collect in a hollow ring at the confinement radius instead of
+  // filling a solid, densely packed particle.
+  var COH_K = 0.55, COH_V = 0.075, REP_K = 2.0;
+  var PACK_R = 0.5;                     // droplet radius coefficient: R = PACK_R * ION_D * sqrt(n)
   // amorphous-to-crystalline transformation: stochastic nucleation + front sweep
   var P_NUC = 0.02, P_NUC_CONTACT = 0.5, FRONT_V = 0.14;
   // dissolution: Gibbs-Thomson ripening plus a slow background ion exchange
   var K_DISS = 0.35, BG_DETACH = 0.006, RUNT_DETACH = 0.12;
+  // once supersaturation is spent the last of the solute migrates down the
+  // concentration gradient into the nearest particle, so the solution is
+  // visibly consumed rather than leaving strays adrift forever
+  var SWEEP_A = 0.5, SWEEP_MAX = 2.2, EAT_R = 1.1;
   // oriented attachment: diffusive search, then jump-to-contact (Li et al. 2012)
-  var SNAP_R = TILE_R * 2.5, A_BIAS = 0.075, A_SNAP = 3.0;
+  var SNAP_R = TILE_HW * 3.0, A_BIAS = 0.075, A_SNAP = 3.0;
   var VS_SEARCH = 1.6, VS_SNAP = 4.0, CONTACT_R = 0.9, ATTACH_TIMEOUT = 240;
 
-  function hexCells(r) {
-    var cells = [];
-    for (var q = -r; q <= r; q++)
-      for (var rr = Math.max(-r, -q - r); rr <= Math.min(r, -q + r); rr++) cells.push([q, rr]);
-    return cells;
+  // The blocks are squares, so they sit on a square lattice and meet edge to
+  // edge with no forced overlap. The hexagon is cut out of that lattice --
+  // three slabs at 0, 60 and 120 degrees -- rather than being built from a
+  // triangular grid, which is what used to leave every square slightly
+  // misfitted against its neighbours.
+  var HEX_A = HEX_RINGS * SPACING;      // apothem, centre to flat side
+  function insideHex(x, y) {
+    for (var k = 0; k < 3; k++) {
+      var th = k * Math.PI / 3;
+      if (Math.abs(x * Math.cos(th) + y * Math.sin(th)) > HEX_A) return false;
+    }
+    return true;
   }
-  function cellPos(q, r) {
-    return { x: SPACING * (Math.sqrt(3) * q + Math.sqrt(3) / 2 * r), y: SPACING * (1.5 * r) };
+  // fill order is roughly centre-out but slightly jittered: a real
+  // aggregation front is a little ragged rather than a perfect disc
+  var HEX_CELLS = [];
+  for (var gq = -HEX_RINGS - 1; gq <= HEX_RINGS + 1; gq++) {
+    for (var gr = -HEX_RINGS - 1; gr <= HEX_RINGS + 1; gr++) {
+      var px = gq * SPACING, py = gr * SPACING;
+      if (!insideHex(px, py)) continue;
+      HEX_CELLS.push({ x: px, y: py, key: Math.hypot(px, py) + (rnd() - 0.5) * SPACING * 0.9 });
+    }
   }
-  // fill order is roughly centre-out but deliberately jittered: a real
-  // aggregation front is ragged, with protrusions and re-entrant notches,
-  // not a perfect expanding disc
-  var HEX_CELLS = hexCells(HEX_R).map(function (c) {
-    var p = cellPos(c[0], c[1]);
-    p.key = Math.hypot(p.x, p.y) + (rnd() - 0.5) * SPACING * 2.2;
-    return p;
-  });
   HEX_CELLS.sort(function (a, b) { return a.key - b.key; });
   var HEX_EXTENT = 0;
   HEX_CELLS.forEach(function (c) { HEX_EXTENT = Math.max(HEX_EXTENT, Math.abs(c.x), Math.abs(c.y) * 1.8); });
+
+  // The two zoom stops: Z1 frames the single platelet we just built, Z2 pulls
+  // back far enough that it is one tablet among many. At Z2 a block is a
+  // fraction of a pixel, so the defects genuinely stop being resolvable and
+  // every platelet reads as a clean hexagon -- which is exactly what happens
+  // in an SEM of nacre as you drop the magnification.
+  var PLATE_A = HEX_A + TILE_HW;        // apothem of one finished platelet
+  var Z1 = HEX_EXTENT * 2.3;
+  var Z2 = Z1 * 6;
+  var NACRE_DUR = 300, NACRE_LAYERS = 6;
+  var NACRE_DX = PLATE_A * 0.13, NACRE_DY = PLATE_A * 0.17;
+  // Keep pulling back and even the tablets stop being resolvable. What is
+  // left is what nacre actually shows the naked eye: the stacked layers are
+  // a few hundred nanometres thick, on the order of a wavelength of light,
+  // so they diffract it and the surface plays colour. That is structural
+  // colour -- no pigment involved.
+  var Z3 = Z2 * 22, PEARL_DUR = 320, TABLET_MIN_PX = 4.5;
+  // deterministic per-tablet shade, so the mosaic does not shimmer frame to
+  // frame the way stored randomness would once the lattice is generated live
+  function tabTone(i, j) {
+    var v = Math.sin(i * 12.9898 + j * 78.233) * 43758.5453;
+    return v - Math.floor(v);
+  }
 
   // Below is where the pathway switches registers. Everything up through
   // ordering is meant to read like an actual particle trajectory: continuous
@@ -2133,7 +2201,6 @@ footer .signoff em {
   // register, a schematic illustration of what the pathway does next, since
   // it is what the field simulated by hundreds of individual ions would take
   // far too long to watch.
-  var MICRO_SPACING = 1.05;             // spacing between ions once seated in the growing lattice
   function spiralSquareCells(n) {
     var cells = [[0, 0]], seen = { '0,0': 1 }, side = 1;
     while (cells.length < n) {
@@ -2148,7 +2215,7 @@ footer .signoff em {
     return cells.slice(0, n);
   }
   function microCellsFor(n) {
-    return spiralSquareCells(n).map(function (c) { return { lx: c[0] * MICRO_SPACING, ly: c[1] * MICRO_SPACING * 1.3 }; });
+    return spiralSquareCells(n).map(function (c) { return { lx: c[0] * MICRO_SPACING, ly: c[1] * MICRO_SPACING }; });
   }
   var ORDER_K = 0.05, ORDER_REF = MICRO_SPACING * 2.6, ORDER_DONE = 0.86;
 
@@ -2159,9 +2226,13 @@ footer .signoff em {
     mesoTh = rnd() * TAU;              // every crystallite in the episode shares this one orientation
     clusters = [];
     ions = [];
+    // spread evenly over the whole solution volume, edge to edge -- a bath of
+    // dissolved ions, not a cloud already gathered in the middle
     for (var i = 0; i < N_ION; i++) {
-      var ang = rnd() * TAU, rad = rnd() * 30;
-      ions.push({ x: Math.cos(ang) * rad, y: Math.sin(ang) * rad, vx: (rnd() - 0.5) * 0.5, vy: (rnd() - 0.5) * 0.5 });
+      ions.push({
+        x: (rnd() - 0.5) * (VIEW_W + 12), y: (rnd() - 0.5) * (VIEW_H + 12),
+        vx: (rnd() - 0.5) * 0.5, vy: (rnd() - 0.5) * 0.5
+      });
     }
     nextCellIdx = 0; fillBank = 0; depletionT = -1; seedSizes = [];
     phase = 'ions'; phaseT = 0; t = 0;
@@ -2197,8 +2268,12 @@ footer .signoff em {
     // heterogeneous nucleation: crystallinity starts at one spot on the
     // particle surface and spreads from there, it does not appear everywhere
     // at once (Ihli et al. 2014; Liu et al. 2020)
+    // The lattice always has a site for every ion the particle can ever hold.
+    // Sizing it any smaller used to make late arrivals share the last site,
+    // and a permanent pile of ions on one point dragged the whole frame off
+    // centre so the particle could never finish ordering.
     var n = c.pts.length, q;
-    c.latCells = microCellsFor(n + 14);   // always at least one site per ion, plus room to keep growing
+    c.latCells = microCellsFor(Math.max(LAT_CAP, n));
     c.latIdx = n;
     for (q = 0; q < n; q++) { c.pts[q].lx = c.latCells[q].lx; c.pts[q].ly = c.latCells[q].ly; }
     var far = 0, fr = -1;
@@ -2216,8 +2291,8 @@ footer .signoff em {
     // a minority of blocks land with a small translational misregistry --
     // attachment writes defects into the product (Penn & Banfield 1998);
     // expressed as translation only, never rotation
-    if (rnd() < 0.75) return { phx: 0, phy: 0, off: false };
-    return { phx: (rnd() - 0.5) * MICRO_SPACING * 0.9, phy: (rnd() - 0.5) * MICRO_SPACING * 0.9, off: true };
+    if (rnd() < 0.93) return { phx: 0, phy: 0, off: false };
+    return { phx: (rnd() - 0.5) * MICRO_SPACING * 0.4, phy: (rnd() - 0.5) * MICRO_SPACING * 0.4, off: true };
   }
 
   function nextSlot() {
@@ -2242,9 +2317,43 @@ footer .signoff em {
     // just as often carry two ions apart forever as bring them together,
     // and clustering could stall out for good.
     var BOUND_X = VIEW_W / 2 + 8, BOUND_Y = VIEW_H / 2 + 8;
-    for (i = 0; i < ions.length; i++) {
+    for (i = ions.length - 1; i >= 0; i--) {
       var s = ions[i];
       s.vx += (rnd() - 0.5) * 0.5 * dt; s.vy += (rnd() - 0.5) * 0.5 * dt;
+      // once supersaturation is spent there is no longer a uniform bath: what
+      // solute is left sits in a concentration gradient and migrates down it
+      // into the nearest particle, so the solution really does get consumed
+      if (depletionT >= 0 && clusters.length) {
+        var nb = null, nbD = Infinity;
+        for (j = 0; j < clusters.length; j++) {
+          var cc = clusters[j];
+          var cd = Math.hypot(cc.cx - s.x, cc.cy - s.y);
+          if (cd < nbD) { nbD = cd; nb = cc; }
+        }
+        if (nb) {
+          var sux = (nb.cx - s.x) / (nbD || 1), suy = (nb.cy - s.y) / (nbD || 1);
+          s.vx += sux * SWEEP_A * dt; s.vy += suy * SWEEP_A * dt;
+          // absorbed on contact: monomer addition onto the particle surface
+          var reach = (nb.pts ? Math.sqrt(nb.pts.length) * 0.6 : Math.max(nb.hw, nb.hh)) + EAT_R;
+          if (nbD < reach) {
+            if (nb.pts && nb.state === 'blob' && nb.pts.length < SIZE_CAP) {
+              nb.pts.push(ionPt(s.x, s.y));
+            } else if (nb.pts && nb.state === 'order' && nb.pts.length < SIZE_CAP && nb.latIdx < nb.latCells.length) {
+              var lc = nb.latCells[nb.latIdx++];
+              var ap = ionPt(s.x, s.y);
+              ap.lx = lc.lx; ap.ly = lc.ly;
+              ap.fd = Math.hypot(ap.lx - nb.nucLx, ap.ly - nb.nucLy);
+              nb.pts.push(ap);
+            }
+            // anything landing on a finished crystallite simply joins its
+            // surface; the grain pattern is already full, so it is consumed
+            ions.splice(i, 1);
+            continue;
+          }
+        }
+        var ssp = Math.hypot(s.vx, s.vy);
+        if (ssp > SWEEP_MAX) { s.vx *= SWEEP_MAX / ssp; s.vy *= SWEEP_MAX / ssp; }
+      }
       s.vx *= 0.92; s.vy *= 0.92;
       s.x += s.vx * dt; s.y += s.vy * dt;
       if (s.x < -BOUND_X) { s.x = -BOUND_X; s.vx = Math.abs(s.vx); }
@@ -2268,6 +2377,9 @@ footer .signoff em {
           c = clusters[j];
           if (c.state !== 'blob' && c.state !== 'order') continue;
           if (c.pts.length >= SIZE_CAP) continue;
+          // a crystallite that has handed out every lattice site is full, even
+          // if dissolution has since shrunk it -- sites are never reissued
+          if (c.state === 'order' && c.latIdx >= c.latCells.length) continue;
           var surfD = Infinity;
           for (var m = 0; m < c.pts.length; m++) {
             var dd = Math.hypot(c.pts[m].x - ia.x, c.pts[m].y - ia.y);
@@ -2279,8 +2391,8 @@ footer .signoff em {
           c = clusters[bestC];
           var np = ionPt(ia.x, ia.y);
           if (c.state === 'order') {
-            // lands on the crystal: takes the next open lattice site
-            var mc = c.latCells[Math.min(c.latIdx++, c.latCells.length - 1)];
+            // lands on the crystal: takes the next free lattice site
+            var mc = c.latCells[c.latIdx++];
             np.lx = mc.lx; np.ly = mc.ly;
             np.fd = Math.hypot(np.lx - c.nucLx, np.ly - c.nucLy);
           }
@@ -2311,7 +2423,7 @@ footer .signoff em {
           var cj = clusters[j]; if (cj.state !== 'blob') continue;
           // coalescence dominates while droplets are small; two already-large
           // particles bump and part instead of fusing
-          if (ci.pts.length + cj.pts.length > SIZE_CAP * 1.5) continue;
+          if (ci.pts.length + cj.pts.length > SIZE_CAP) continue;
           var ri = Math.sqrt(ci.pts.length) * 0.7, rj = Math.sqrt(cj.pts.length) * 0.7;
           if (Math.hypot(ci.cx - cj.cx, ci.cy - cj.cy) < (ri + rj) * 0.8) {
             var ni = ci.pts.length, nj = cj.pts.length;
@@ -2353,8 +2465,13 @@ footer .signoff em {
             if (d2 > fdd) { fdd = d2; far2 = pd; }
           }
           var rp = c.pts.splice(far2, 1)[0];
-          var oa = Math.atan2(rp.y - c.cy, rp.x - c.cx);
-          ions.push({ x: rp.x, y: rp.y, vx: Math.cos(oa) * 0.6, vy: Math.sin(oa) * 0.6 });
+          // once the crystallites are aggregating, anything shed is taken up
+          // by the growing structure immediately rather than going back into
+          // solution -- no strays are left drifting over the finished array
+          if (phase !== 'fill') {
+            var oa = Math.atan2(rp.y - c.cy, rp.x - c.cx);
+            ions.push({ x: rp.x, y: rp.y, vx: Math.cos(oa) * 0.6, vy: Math.sin(oa) * 0.6 });
+          }
           if (c.pts.length === 0) clusters.splice(j, 1);
         }
       }
@@ -2380,16 +2497,52 @@ footer .signoff em {
         var pI, mxT, myT;
         var jAmp = 0.35 * (0.6 + 1.4 * mob);   // internal wobble is quieter in bigger particles
         if (c.state === 'blob') {
-          // amorphous: pure thermal jitter on top of the shared drift
-          for (pI = 0; pI < c.pts.length; pI++) {
+          // A dense amorphous droplet, not a loose swarm: every ion is held
+          // in by the particle's own cohesion and kept off its neighbours by
+          // contact repulsion, so the ions settle into a randomly packed ball
+          // at roughly the same density the crystal will have. Nothing here
+          // is ordered -- the packing is random, only the density is set.
+          var np2 = c.pts.length;
+          for (pI = 0; pI < np2; pI++) {
             var p0 = c.pts[pI];
-            p0.vx += (rnd() - 0.5) * jAmp * dt; p0.vy += (rnd() - 0.5) * jAmp * dt;
-            p0.vx *= 0.82; p0.vy *= 0.82;
-            p0.x += (p0.vx + c.vx) * dt; p0.y += (p0.vy + c.vy) * dt;
+            for (var pJ = pI + 1; pJ < np2; pJ++) {
+              var p2 = c.pts[pJ];
+              var rdx = p2.x - p0.x, rdy = p2.y - p0.y;
+              var rd = Math.hypot(rdx, rdy);
+              if (rd < ION_D && rd > 1e-4) {
+                var push = (ION_D - rd) / ION_D * REP_K * dt;
+                var nx2 = rdx / rd, ny2 = rdy / rd;
+                p0.vx -= nx2 * push; p0.vy -= ny2 * push;
+                p2.vx += nx2 * push; p2.vy += ny2 * push;
+              } else if (rd <= 1e-4) {
+                // exactly coincident: nudge apart in a random direction
+                var sa = rnd() * TAU;
+                p0.vx -= Math.cos(sa) * REP_K * dt; p0.vy -= Math.sin(sa) * REP_K * dt;
+                p2.vx += Math.cos(sa) * REP_K * dt; p2.vy += Math.sin(sa) * REP_K * dt;
+              }
+            }
+          }
+          // Surface tension acts at the boundary, not throughout the volume:
+          // only ions that have strayed past the droplet's own radius get
+          // pulled back. Applying it to every ion instead squeezes the
+          // interior and drives the packing inside contact distance.
+          var Rt = ION_D * PACK_R * Math.sqrt(np2);
+          for (pI = 0; pI < np2; pI++) {
+            var p1b = c.pts[pI];
+            var dxr = p1b.x - c.cx, dyr = p1b.y - c.cy;
+            var rr = Math.hypot(dxr, dyr);
+            if (rr > 1e-6) {
+              var pull = COH_V * rr * dt;                       // gentle, everywhere
+              if (rr > Rt) pull += (rr - Rt) * COH_K * dt;      // firm at the surface
+              p1b.vx -= dxr / rr * pull; p1b.vy -= dyr / rr * pull;
+            }
+            p1b.vx += (rnd() - 0.5) * jAmp * dt; p1b.vy += (rnd() - 0.5) * jAmp * dt;
+            p1b.vx *= 0.82; p1b.vy *= 0.82;
+            p1b.x += (p1b.vx + c.vx) * dt; p1b.y += (p1b.vy + c.vy) * dt;
           }
           mxT = 0; myT = 0;
-          for (pI = 0; pI < c.pts.length; pI++) { mxT += c.pts[pI].x; myT += c.pts[pI].y; }
-          c.cx = mxT / c.pts.length; c.cy = myT / c.pts.length;
+          for (pI = 0; pI < np2; pI++) { mxT += c.pts[pI].x; myT += c.pts[pI].y; }
+          c.cx = mxT / np2; c.cy = myT / np2;
 
           // crystallization onset: enabled by loss of supersaturation (the
           // depletion latch), but the trigger itself is a stochastic
@@ -2413,8 +2566,29 @@ footer .signoff em {
           // force, the rest stay amorphous until it reaches them. Per-ion
           // jitter in the recruitment radius keeps the boundary ragged.
           c.frontR += FRONT_V * dt;
+          var np4 = c.pts.length;
+          // The ions keep touching all the way through. What changes is how
+          // close they can get: behind the front they sit on the tighter
+          // crystalline spacing, ahead of it they are still at the looser
+          // amorphous contact distance. So the particle draws itself in and
+          // squares up into a brick rather than loosening into a cloud.
+          for (pI = 0; pI < np4; pI++) {
+            var pa = c.pts[pI];
+            for (var pB = pI + 1; pB < np4; pB++) {
+              var pb = c.pts[pB];
+              var cd2 = (pa.rec && pb.rec) ? MICRO_SPACING : ION_D;
+              var ddx = pb.x - pa.x, ddy = pb.y - pa.y;
+              var ddr = Math.hypot(ddx, ddy);
+              if (ddr < cd2 && ddr > 1e-4) {
+                var pf = (cd2 - ddr) / cd2 * REP_K * dt;
+                var ux2 = ddx / ddr, uy2 = ddy / ddr;
+                pa.vx -= ux2 * pf; pa.vy -= uy2 * pf;
+                pb.vx += ux2 * pf; pb.vy += uy2 * pf;
+              }
+            }
+          }
           var cs0 = Math.cos(c.th), sn0 = Math.sin(c.th), sumD = 0;
-          for (pI = 0; pI < c.pts.length; pI++) {
+          for (pI = 0; pI < np4; pI++) {
             var p1 = c.pts[pI];
             if (!p1.rec && p1.fd <= c.frontR * (0.75 + 0.5 * p1.jit)) p1.rec = true;
             var tgx = c.cx + p1.lx * cs0 - p1.ly * sn0, tgy = c.cy + p1.lx * sn0 + p1.ly * cs0;
@@ -2424,8 +2598,19 @@ footer .signoff em {
               p1.ok = Math.max(0, 1 - dtg / ORDER_REF);
             } else {
               p1.ok = 0;
+              // not yet reached by the front: still a liquid-like interior,
+              // held in by the same surface tension as before
+              var edx = p1.x - c.cx, edy = p1.y - c.cy, edr = Math.hypot(edx, edy);
+              var Rt2 = ION_D * PACK_R * Math.sqrt(np4);
+              if (edr > 1e-6) {
+                var pl2 = COH_V * edr * dt;
+                if (edr > Rt2) pl2 += (edr - Rt2) * COH_K * dt;
+                p1.vx -= edx / edr * pl2; p1.vy -= edy / edr * pl2;
+              }
             }
-            p1.vx += (rnd() - 0.5) * jAmp * dt; p1.vy += (rnd() - 0.5) * jAmp * dt;
+            // an ion that has found its site stops rattling around
+            var jl = jAmp * (1 - 0.75 * p1.ok);
+            p1.vx += (rnd() - 0.5) * jl * dt; p1.vy += (rnd() - 0.5) * jl * dt;
             p1.vx *= 0.80; p1.vy *= 0.80;
             p1.x += (p1.vx + c.vx) * dt; p1.y += (p1.vy + c.vy) * dt;
             sumD += dtg;
@@ -2455,13 +2640,8 @@ footer .signoff em {
         if (c.state !== 'ready') continue;
         c.lpts = c.pts.map(function (pp) { return { lx: pp.lx, ly: pp.ly }; });
         c.pts = null;
-        var emx = 0, emy = 0;
-        for (var gi = 0; gi < c.lpts.length; gi++) {
-          emx = Math.max(emx, Math.abs(c.lpts[gi].lx));
-          emy = Math.max(emy, Math.abs(c.lpts[gi].ly));
-        }
-        c.hw = emx + MICRO_SPACING * 0.5;
-        c.hh = emy + MICRO_SPACING * 0.6;
+        c.hw = blockHalf(c.lpts.length);   // square, and sized by how many ions it actually gathered
+        c.hh = c.hw;
         if (c.seedborn) seedSizes.push(c.lpts.length);
         var slot = nextSlot();
         if (!slot) {
@@ -2516,6 +2696,9 @@ footer .signoff em {
       // from the same distribution the real seeds produced, so the far array
       // is just as polydisperse as the part that assembled on screen
       if (nextCellIdx < HEX_CELLS.length && (phase === 'fill' || clusters.filter(function (c2) { return c2.state === 'attached'; }).length > 5)) {
+        // aggregation proper begins here: the solution is spent, so the last
+        // of it is taken up rather than left hanging around the array
+        if (phase !== 'fill') ions.length = 0;
         phase = 'fill';
         fillBank += FILL_RATE * dt;
         while (fillBank >= 1 && nextCellIdx < HEX_CELLS.length) {
@@ -2527,13 +2710,8 @@ footer .signoff em {
           var nc2 = newCluster(slot2.x + slot2.x / d0 * SPACING * 3.5, slot2.y + slot2.y / d0 * SPACING * 3.5);
           nc2.pts = null;
           nc2.lpts = microCellsFor(nIons);
-          var fmx = 0, fmy = 0;
-          for (var fi = 0; fi < nc2.lpts.length; fi++) {
-            fmx = Math.max(fmx, Math.abs(nc2.lpts[fi].lx));
-            fmy = Math.max(fmy, Math.abs(nc2.lpts[fi].ly));
-          }
-          nc2.hw = fmx + MICRO_SPACING * 0.5;
-          nc2.hh = fmy + MICRO_SPACING * 0.6;
+          nc2.hw = blockHalf(nIons);
+          nc2.hh = nc2.hw;
           nc2.th = mesoTh;
           var toff2 = tileOffset();
           nc2.phx = toff2.phx; nc2.phy = toff2.phy; nc2.offTile = toff2.off;
@@ -2545,11 +2723,20 @@ footer .signoff em {
       if (nextCellIdx >= HEX_CELLS.length) {
         var allIn = true;
         for (j = 0; j < clusters.length; j++) if (clusters[j].state === 'attach') { allIn = false; break; }
-        if (allIn) { phase = 'zoomout'; phaseT = 0; }
+        if (allIn) {
+          // the platelet is finished, so the solution is finished with too:
+          // any last stray has been taken up by the structure by now
+          ions.length = 0;
+          phase = 'zoomout'; phaseT = 0;
+        }
       }
 
     } else if (phase === 'zoomout') {
-      if (phaseT > 260) { phase = 'hold'; phaseT = 0; }
+      if (phaseT > 260) { phase = 'nacre'; phaseT = 0; }
+    } else if (phase === 'nacre') {
+      if (phaseT > NACRE_DUR) { phase = 'pearl'; phaseT = 0; }
+    } else if (phase === 'pearl') {
+      if (phaseT > PEARL_DUR) { phase = 'hold'; phaseT = 0; }
     } else if (phase === 'hold') {
       if (phaseT > 170) { phase = 'done'; phaseT = 0; }
     }
@@ -2563,6 +2750,7 @@ footer .signoff em {
   };
   var COL_AMORPH = [127, 217, 239], COL_ORDERED = [196, 248, 255];
 
+  var fringeCv = null, fringeCtx = null, fringeKey = '';
   var sc = 1, dpr = 1, spPx = 7;
   var SP_NM = 0.62;
   var camW = VIEW_W, camH = VIEW_H;
@@ -2642,110 +2830,164 @@ footer .signoff em {
     }
     return path;
   }
-  function drawGrains(c) {
+  // grains go into a shared path so the whole array is one fill rather than
+  // one fill (and one clip) per block; they sit inside the block by
+  // construction, so no clipping is needed to keep them there
+  function addGrains(path, c, rs) {
     if (!c.lpts || !c.lpts.length) return;
     var cs = Math.cos(c.th), sn = Math.sin(c.th);
-    var rs = Math.max(0.6, 0.20 * sc);
-    ctx.beginPath();
     for (var g = 0; g < c.lpts.length; g++) {
       var gp = c.lpts[g];
       var gx = c.cx + gp.lx * cs - gp.ly * sn, gy = c.cy + gp.lx * sn + gp.ly * cs;
-      ctx.moveTo(X(gx) + rs, Y(gy));
-      ctx.arc(X(gx), Y(gy), rs, 0, TAU);
+      path.moveTo(X(gx) + rs, Y(gy));
+      path.arc(X(gx), Y(gy), rs, 0, TAU);
     }
-    ctx.fill();
   }
   function inView(c, margin) {
     return Math.abs(c.cx) < camW / 2 + margin && Math.abs(c.cy) < camH / 2 + margin;
   }
-
-  function render(alpha) {
-    var w = cv.width, h = cv.height, i, c;
-
-    if (phase === 'zoomout') camW = VIEW_W + (HEX_EXTENT * 2.3 - VIEW_W) * ease(Math.min(1, phaseT / 260));
-    else if (phase === 'hold' || phase === 'done') camW = HEX_EXTENT * 2.3;
-    else camW = VIEW_W;
-    camH = camW * VIEW_H / VIEW_W;
-    sc = cv.width / camW;
-    spPx = Math.max(1, SP_NM * sc);
-
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.clearRect(0, 0, w, h);
-    ctx.fillStyle = C.field;
-    ctx.fillRect(0, 0, w, h);
-    ctx.globalAlpha = alpha;
-
-    var margin = TILE_R * 2;
-    ctx.fillStyle = C.solute;
-    ctx.beginPath();
-    var rs = Math.max(1, 0.28 * sc);
-    for (i = 0; i < ions.length; i++) {
-      var s = ions[i];
-      if (Math.abs(s.x) > camW / 2 + margin || Math.abs(s.y) > camH / 2 + margin) continue;
-      ctx.moveTo(X(s.x) + rs, Y(s.y));
-      ctx.arc(X(s.x), Y(s.y), rs, 0, TAU);
+  // a platelet outline: regular hexagon of apothem a, flat sides facing the
+  // same three directions the assembled array was cut along
+  function plateletPath(pcx, pcy, a) {
+    var R = a / Math.cos(Math.PI / 6), p = new Path2D();
+    for (var k = 0; k < 6; k++) {
+      var th = Math.PI / 6 + k * Math.PI / 3;
+      var px = X(pcx + R * Math.cos(th)), py = Y(pcy + R * Math.sin(th));
+      if (k === 0) p.moveTo(px, py); else p.lineTo(px, py);
     }
-    ctx.fill();
-
-    var showGrains = camW < 260;
-    var union = new Path2D(); var anyXtal = false;
-
-    for (i = 0; i < clusters.length; i++) {
-      c = clusters[i];
-      if (!inView(c, margin)) continue;
-      if (c.state === 'blob' || c.state === 'order' || c.state === 'ready') {
-        drawClusterIons(c);
-      } else {
-        anyXtal = true;
-        var sh = xtalPath(c);
-        ctx.fillStyle = C.xtBody;
-        ctx.fill(sh);
-        // blocks with a translational misregistry are excluded from the
-        // coherent-fringe union: they read as darker mosaic domains, the way
-        // slightly misregistered grains lose contrast in TEM
-        if (c.state === 'attached' && !c.offTile) union.addPath(sh);
-        if (showGrains) { ctx.fillStyle = C.solute; ctx.save(); ctx.clip(sh); drawGrains(c); ctx.restore(); }
-        var age = t - c.poppedAt;
-        if (c.poppedAt >= 0 && age >= 0 && age < 20) {
-          ctx.save();
-          ctx.globalAlpha = alpha * (1 - age / 20) * 0.85;
-          ctx.lineWidth = Math.max(1, 0.22 * sc);
-          ctx.strokeStyle = 'rgba(196,248,255,0.95)';
-          ctx.stroke(sh);
-          ctx.restore();
+    p.closePath();
+    return p;
+  }
+  // Stacked tablets, drawn deepest first. Each layer is the same tiling shifted
+  // a little, so you look down onto a pile of plates and see their edges step
+  // away from you, the way nacre does in section.
+  function drawNacre(a0, warm) {
+    // Only the tablets actually on screen are generated, so this stays cheap
+    // at any magnification -- and once they fall below a few pixels there is
+    // nothing left to resolve and it draws nothing at all.
+    if (2 * PLATE_A * sc < TABLET_MIN_PX) return false;
+    var mx2 = camW / 2 + PLATE_A * 2, my2 = camH / 2 + PLATE_A * 2;
+    var wf = warm || 0;   // as the camera pulls back the tablets take on the shell's own colour
+    for (var L = NACRE_LAYERS - 1; L >= 0; L--) {
+      var depth = L / (NACRE_LAYERS - 1);
+      var ox = NACRE_DX * L, oy = NACRE_DY * L;
+      var lum = 0.30 + 0.70 * (1 - depth);
+      var br = 13 + 26 * lum, bg = 30 + 63 * lum, bb = 44 + 88 * lum;
+      ctx.fillStyle = 'rgb(' + Math.round(br + (26 + 44 * lum - br) * wf) + ',' +
+        Math.round(bg + (74 + 96 * lum - bg) * wf) + ',' +
+        Math.round(bb + (72 + 74 * lum - bb) * wf) + ')';
+      ctx.strokeStyle = 'rgba(' + Math.round(150 + 70 * wf) + ',' + Math.round(214 + 30 * wf) + ',' +
+        Math.round(236 - 40 * wf) + ',' + (0.10 + 0.34 * (1 - depth)) + ')';
+      ctx.lineWidth = Math.max(0.7, 0.5 * dpr);
+      ctx.globalAlpha = a0 * (L === 0 ? 1 : 0.96);
+      var jLo = Math.floor((-my2 - oy) / (PLATE_A * Math.sqrt(3))) - 1;
+      var jHi = Math.ceil((my2 - oy) / (PLATE_A * Math.sqrt(3))) + 1;
+      for (var nj = jLo; nj <= jHi; nj++) {
+        var ry = PLATE_A * Math.sqrt(3) * nj + oy;
+        var iLo = Math.floor((-mx2 - ox - PLATE_A * nj) / (2 * PLATE_A)) - 1;
+        var iHi = Math.ceil((mx2 - ox - PLATE_A * nj) / (2 * PLATE_A)) + 1;
+        for (var ni = iLo; ni <= iHi; ni++) {
+          var rx = 2 * PLATE_A * ni + PLATE_A * nj + ox;
+          var path = plateletPath(rx, ry, PLATE_A * (0.97 + tabTone(ni, nj) * 0.05));
+          ctx.fill(path);
+          ctx.stroke(path);
         }
       }
     }
-    // lattice fringes only where the magnification could actually resolve
-    // them -- once the camera pulls far enough back they go sub-pixel and
-    // are dropped, as they would be in a real low-mag image
-    if (anyXtal && spPx > 2.2 && (phase === 'zoomout' || phase === 'hold' || phase === 'done' || phase === 'fill')) {
-      ctx.save();
-      ctx.clip(union);
-      ctx.strokeStyle = C.fringe;
-      ctx.lineWidth = Math.max(1, 0.05 * sc);
-      ctx.stroke(fringes(mesoTh, 0, 0, Math.hypot(camW, camH)));
-      ctx.restore();
-    }
-    ctx.strokeStyle = C.xtRim;
-    ctx.lineWidth = Math.max(1, 0.07 * sc);
-    for (i = 0; i < clusters.length; i++) {
-      c = clusters[i];
-      if (!inView(c, margin) || c.state === 'blob' || c.state === 'order' || c.state === 'ready') continue;
-      ctx.stroke(xtalPath(c));
-    }
+    ctx.globalAlpha = a0;
+    return true;
+  }
+  // Structural colour. The stacks behave as a lamellar reflector with a
+  // spacing close to the wavelength of visible light, so different colours
+  // come back at different angles and the surface plays them across itself.
+  function drawPearl(a0, w, h) {
+    // Abalone, not the cool blue of the nanoscale panels: the interior of a
+    // Haliotis shell runs deep blue-green through teal into magenta, violet
+    // and gold, all of it structural rather than pigment.
+    var g0 = ctx.createLinearGradient(0, h * 0.1, w, h * 0.95);
+    g0.addColorStop(0, '#0C4A50');
+    g0.addColorStop(0.28, '#136353');
+    g0.addColorStop(0.52, '#2B4C7A');
+    g0.addColorStop(0.76, '#57346A');
+    g0.addColorStop(1, '#6B394E');
+    ctx.globalAlpha = a0;
+    ctx.fillStyle = g0;
+    ctx.fillRect(0, 0, w, h);
 
-    // scale bar always reads the camera's true current width honestly,
-    // rounded to a 1-2-5 value; NM_PER_UNIT maps world units to nanometres
+    // warm blooms: the rose and gold patches that make abalone read as shell
+    // rather than as a cold interference pattern
+    var blooms = [
+      [0.24, 0.30, 0.46, '255,120,150'], [0.72, 0.24, 0.38, '255,196,96'],
+      [0.55, 0.78, 0.44, '236,124,214'], [0.88, 0.66, 0.34, '255,158,110']
+    ];
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    for (var q = 0; q < blooms.length; q++) {
+      var bl = blooms[q];
+      var rg = ctx.createRadialGradient(w * bl[0], h * bl[1], 0, w * bl[0], h * bl[1], Math.hypot(w, h) * bl[2]);
+      rg.addColorStop(0, 'rgba(' + bl[3] + ',0.26)');
+      rg.addColorStop(1, 'rgba(' + bl[3] + ',0)');
+      ctx.globalAlpha = a0;
+      ctx.fillStyle = rg;
+      ctx.fillRect(0, 0, w, h);
+    }
+    ctx.restore();
+
+    // broad sweeps of colour, each a different hue travelling at its own
+    // angle -- the overlap is what gives abalone its shifting rainbow
+    var bands = [
+      [46, 255, 176], [64, 232, 255], [128, 150, 255],
+      [255, 96, 168], [255, 176, 74], [214, 96, 255],
+      [120, 255, 120], [255, 232, 150]
+    ];
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    for (var b = 0; b < bands.length; b++) {
+      var ph = ((t * 0.0018 + b * 0.13) % 1.7) - 0.35;
+      var ang = 0.35 + b * 0.21;
+      var ex = Math.cos(ang), ey = Math.sin(ang);
+      var span = Math.abs(ex) * w + Math.abs(ey) * h;
+      var x0 = w / 2 + ex * span * (ph - 0.5), y0 = h / 2 + ey * span * (ph - 0.5);
+      var wid = 0.17 + 0.10 * ((b * 7) % 3);
+      var g = ctx.createLinearGradient(x0 - ex * span * wid, y0 - ey * span * wid,
+                                       x0 + ex * span * wid, y0 + ey * span * wid);
+      var col = bands[b][0] + ',' + bands[b][1] + ',' + bands[b][2];
+      g.addColorStop(0, 'rgba(' + col + ',0)');
+      g.addColorStop(0.5, 'rgba(' + col + ',0.20)');
+      g.addColorStop(1, 'rgba(' + col + ',0)');
+      ctx.globalAlpha = a0 * 0.8;
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, w, h);
+    }
+    ctx.restore();
+
+    // growth banding: nacre is laid down in sheets, and the layer edges show
+    // as broad concentric contours across the surface
+    ctx.save();
+    ctx.globalAlpha = a0 * 0.20;
+    ctx.strokeStyle = 'rgba(255,246,226,0.9)';
+    ctx.lineWidth = Math.max(1, 1.3 * dpr);
+    for (var k = 0; k < 11; k++) {
+      var rr3 = (0.14 + k * 0.115) * Math.hypot(w, h);
+      ctx.beginPath();
+      ctx.arc(w * 0.24, h * 1.1, rr3, Math.PI * 1.1, Math.PI * 1.9);
+      ctx.stroke();
+    }
+    ctx.restore();
+    ctx.globalAlpha = a0;
+  }
+
+  // scale bar always reads the camera's true current width honestly,
+  // rounded to a 1-2-5 value; NM_PER_UNIT maps world units to nanometres
+  function drawScaleBar(alpha, w, h) {
     ctx.globalAlpha = alpha * 0.75;
-    var fovNm = camW * NM_PER_UNIT;
-    var targetNm = fovNm * 0.2;
+    var targetNm = camW * NM_PER_UNIT * 0.2;
     var pow10 = Math.pow(10, Math.floor(Math.log(targetNm) / Math.LN10));
     var mant = targetNm / pow10;
     var barNm = (mant >= 5 ? 5 : mant >= 2 ? 2 : 1) * pow10;
     var barLabel = barNm >= 1000 ? (barNm / 1000) + ' µm' : barNm + ' nm';
     var barW = (barNm / NM_PER_UNIT) * sc;
-    var bx = X(-camW / 2 + 4), by = h - Math.max(14, 2.6 * sc);
+    var bx = X(-camW / 2 + camW * 0.037), by = h - Math.max(14, 2.6 * dpr * 5);
     ctx.strokeStyle = C.rule;
     ctx.lineWidth = Math.max(1, 0.9 * dpr);
     ctx.beginPath();
@@ -2757,6 +2999,149 @@ footer .signoff em {
     ctx.font = (7.5 * dpr) + 'px ui-monospace, monospace';
     ctx.textBaseline = 'alphabetic';
     ctx.fillText(barLabel, bx, by - 5 * dpr);
+  }
+
+  function render(alpha) {
+    var w = cv.width, h = cv.height, i, c;
+
+    var nacreA = 0, pearlA = 0;
+    if (phase === 'zoomout') camW = VIEW_W + (Z1 - VIEW_W) * ease(Math.min(1, phaseT / 260));
+    else if (phase === 'nacre') {
+      var nf = Math.min(1, phaseT / NACRE_DUR);
+      camW = Z1 + (Z2 - Z1) * ease(nf);
+      nacreA = Math.min(1, nf / 0.4);   // the neighbours fade up as they come into frame
+    } else if (phase === 'pearl') {
+      var pf = Math.min(1, phaseT / PEARL_DUR);
+      camW = Z2 + (Z3 - Z2) * ease(pf);
+      nacreA = 1;
+      pearlA = Math.min(1, Math.max(0, (pf - 0.2) / 0.5));
+    } else if (phase === 'hold' || phase === 'done') { camW = Z3; nacreA = 1; pearlA = 1; }
+    else camW = VIEW_W;
+    camH = camW * VIEW_H / VIEW_W;
+    sc = cv.width / camW;
+    spPx = Math.max(1, SP_NM * sc);
+
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = C.field;
+    ctx.fillRect(0, 0, w, h);
+    ctx.globalAlpha = alpha;
+
+    // the sheen comes up underneath while the tablets are still resolvable,
+    // and is all that is left once they are not
+    if (pearlA > 0) drawPearl(alpha * pearlA, w, h);
+    if (nacreA > 0) { ctx.globalAlpha = alpha * nacreA; drawNacre(alpha * nacreA, pearlA); ctx.globalAlpha = alpha; }
+    if (pearlA > 0) {
+      drawScaleBar(alpha, w, h);
+      ctx.globalAlpha = 1;
+      return;
+    }
+
+    // once a block is smaller than a pixel or so there is nothing left to
+    // resolve: the assembled platelet is drawn as the clean hexagon a real
+    // low-magnification image would show, defects and all having vanished
+    var blockPx = 2 * TILE_HW * sc;
+    if (blockPx < 2.2) {
+      var pp = plateletPath(0, 0, PLATE_A);
+      ctx.fillStyle = '#2C6C90';
+      ctx.fill(pp);
+      ctx.strokeStyle = 'rgba(180,232,250,0.55)';
+      ctx.lineWidth = Math.max(0.8, 0.6 * dpr);
+      ctx.stroke(pp);
+      drawScaleBar(alpha, w, h);
+      ctx.globalAlpha = 1;
+      return;
+    }
+
+    var margin = TILE_HW * 3;
+    ctx.fillStyle = C.solute;
+    ctx.beginPath();
+    var rs = Math.max(1, 0.28 * sc);
+    for (i = 0; i < ions.length; i++) {
+      var s = ions[i];
+      if (Math.abs(s.x) > camW / 2 + margin || Math.abs(s.y) > camH / 2 + margin) continue;
+      ctx.moveTo(X(s.x) + rs, Y(s.y));
+      ctx.arc(X(s.x), Y(s.y), rs, 0, TAU);
+    }
+    ctx.fill();
+
+    // Everything that can share a colour is accumulated into one path and
+    // drawn in a single call. Filling and stroking several hundred blocks
+    // individually -- and clipping for each one -- was what made the array
+    // stage stutter once the field filled up.
+    var grainPx = 2 * TILE_HW * sc;
+    var showGrains = grainPx > 13;
+    var bodies = new Path2D(), union = new Path2D(), grains = new Path2D();
+    var pops = null, anyXtal = false;
+    var grainR = Math.max(0.6, 0.20 * sc);
+
+    for (i = 0; i < clusters.length; i++) {
+      c = clusters[i];
+      if (!inView(c, margin)) continue;
+      if (c.state === 'blob' || c.state === 'order' || c.state === 'ready') {
+        drawClusterIons(c);
+      } else {
+        anyXtal = true;
+        var sh = xtalPath(c);
+        bodies.addPath(sh);
+        // blocks with a translational misregistry are excluded from the
+        // coherent-fringe union: they read as darker mosaic domains, the way
+        // slightly misregistered grains lose contrast in TEM
+        if (c.state === 'attached' && !c.offTile) union.addPath(sh);
+        if (showGrains) addGrains(grains, c, grainR);
+        var age = t - c.poppedAt;
+        if (c.poppedAt >= 0 && age >= 0 && age < 20) {
+          if (!pops) pops = [];
+          pops.push([sh, age]);
+        }
+      }
+    }
+    if (anyXtal) {
+      ctx.fillStyle = C.xtBody;
+      ctx.fill(bodies);
+      if (showGrains) { ctx.fillStyle = C.solute; ctx.fill(grains); }
+    }
+    if (pops) {
+      ctx.save();
+      ctx.lineWidth = Math.max(1, 0.22 * sc);
+      ctx.strokeStyle = 'rgba(196,248,255,0.95)';
+      for (i = 0; i < pops.length; i++) {
+        ctx.globalAlpha = alpha * (1 - pops[i][1] / 20) * 0.85;
+        ctx.stroke(pops[i][0]);
+      }
+      ctx.restore();
+    }
+    // lattice fringes only where the magnification could actually resolve
+    // them -- once the camera pulls far enough back they go sub-pixel and
+    // are dropped, as they would be in a real low-mag image
+    if (anyXtal && spPx > 2.2 && (phase === 'zoomout' || phase === 'hold' || phase === 'done' || phase === 'fill')) {
+      // The fringe field is hundreds of line segments and does not change
+      // while the camera is still, which is the whole of the array stage.
+      // Rasterise it once and blit it through the clip instead of restroking
+      // it every frame.
+      var fk = w + 'x' + h + ':' + camW.toFixed(3);
+      if (fringeKey !== fk) {
+        if (!fringeCv) { fringeCv = document.createElement('canvas'); fringeCtx = fringeCv.getContext('2d'); }
+        if (fringeCv.width !== w || fringeCv.height !== h) { fringeCv.width = w; fringeCv.height = h; }
+        fringeCtx.setTransform(1, 0, 0, 1, 0, 0);
+        fringeCtx.clearRect(0, 0, w, h);
+        fringeCtx.strokeStyle = C.fringe;
+        fringeCtx.lineWidth = Math.max(1, 0.05 * sc);
+        fringeCtx.stroke(fringes(mesoTh, 0, 0, Math.hypot(camW, camH)));
+        fringeKey = fk;
+      }
+      ctx.save();
+      ctx.clip(union);
+      ctx.drawImage(fringeCv, 0, 0);
+      ctx.restore();
+    }
+    if (anyXtal) {
+      ctx.strokeStyle = C.xtRim;
+      ctx.lineWidth = Math.max(1, 0.07 * sc);
+      ctx.stroke(bodies);
+    }
+
+    drawScaleBar(alpha, w, h);
     ctx.globalAlpha = 1;
   }
 
@@ -2767,7 +3152,7 @@ footer .signoff em {
   });
   var PHASE_LABEL = {
     ions: 'ions', cluster: 'amorphous', fill: 'attach',
-    zoomout: 'mesocrystal', hold: 'mesocrystal', done: 'mesocrystal'
+    zoomout: 'mesocrystal', nacre: 'nacre', pearl: 'pearl', hold: 'pearl', done: 'pearl'
   };
   function readout() {
     var shown = PHASE_LABEL[phase] || 'ions';
@@ -2806,10 +3191,43 @@ footer .signoff em {
         if (isNaN(c.cx) || isNaN(c.cy)) bad = true;
         if (c.pts) for (var p = 0; p < c.pts.length; p++) if (isNaN(c.pts[p].x)) bad = true;
       }
+      var pending = [], hws = [], offs = 0;
+      for (i = 0; i < clusters.length; i++) {
+        c = clusters[i];
+        if (c.state === 'blob' || c.state === 'order') {
+          var rec = 0;
+          for (var q = 0; q < c.pts.length; q++) if (c.pts[q].rec) rec++;
+          var nnSum = 0, rgSum = 0, np3 = c.pts.length;
+          for (var u = 0; u < np3; u++) {
+            var best = Infinity;
+            for (var v = 0; v < np3; v++) {
+              if (u === v) continue;
+              var dd2 = Math.hypot(c.pts[u].x - c.pts[v].x, c.pts[u].y - c.pts[v].y);
+              if (dd2 < best) best = dd2;
+            }
+            if (best < Infinity) nnSum += best;
+            rgSum += Math.pow(c.pts[u].x - c.cx, 2) + Math.pow(c.pts[u].y - c.cy, 2);
+          }
+          pending.push({
+            st: c.state, n: np3, rec: rec,
+            of: Math.round(c.orderFrac * 100) / 100, fr: Math.round(c.frontR * 10) / 10,
+            nnd: np3 > 1 ? Math.round(nnSum / np3 * 100) / 100 : null,
+            rg: np3 > 1 ? Math.round(Math.sqrt(rgSum / np3) * 100) / 100 : null
+          });
+        } else {
+          hws.push(Math.round(c.hw * 100) / 100);
+          if (c.offTile) offs++;
+        }
+      }
       return {
         phase: phase, t: Math.round(t), ions: ions.length, clusters: clusters.length,
         counts: counts, nextCellIdx: nextCellIdx, cells: HEX_CELLS.length,
-        nan: bad, seedSizes: seedSizes.slice()
+        nan: bad, seedSizes: seedSizes.slice(),
+        pending: pending, offTiles: offs,
+        hwMin: hws.length ? Math.min.apply(null, hws) : null,
+        hwMax: hws.length ? Math.max.apply(null, hws) : null,
+        hwMean: hws.length ? Math.round(hws.reduce(function (a, b) { return a + b; }, 0) / hws.length * 100) / 100 : null,
+        spacing: SPACING, nnDist: Math.round(SPACING * Math.sqrt(3) * 100) / 100
       };
     }
   };
