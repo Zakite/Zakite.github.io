@@ -2125,7 +2125,8 @@ footer .signoff em {
   var CLUSTER_TIMEOUT = 320;            // backstop for the depletion latch
   var NM_PER_UNIT = 15;                 // one world unit ~15 nm: blocks ~79 nm, platelet ~2.9 um
   var FILL_RATE = 3.4;                  // new off-screen tiles claimed per unit time, once seeding is under way
-  var PORE_P = 0.012;                   // fraction of interior cells left as trapped pores (a CPA signature)
+  // No deliberate voids. Growth fills the space it already has before it
+  // closes over anything, so nothing gets encapsulated behind the front.
   // amorphous stage: ions cohere into a dense, randomly packed droplet --
   // mutual repulsion at contact, surface tension holding the whole together
   // Two cohesive terms. The surface term keeps the droplet from spreading;
@@ -2193,10 +2194,15 @@ footer .signoff em {
   var PLATE_A = HEX_A + TILE_HW;        // apothem of one finished platelet
   var Z1 = HEX_EXTENT * 2.3;
   var Z2 = Z1 * 6;
+  var Z_SIDE = Z1 * 2.1;                // where the edge-on view is most legible
   // The tablets are stacked, not tiled: the view tips over so the sheets are
   // seen at a low angle, each plate carrying a visible edge, piled in courses
   // that are offset from one another the way brickwork is.
-  var NACRE_DUR = 250, NACRE_LAYERS = 7;
+  var NACRE_DUR = 360, NACRE_LAYERS = 7;
+  // The camera drops to edge-on first, so the sheets are seen in section and
+  // the spacing between them is there to be measured, before rising into the
+  // three-quarter view that shows the tiling.
+  var EDGE_SQUASH = 0.11;
   // Only a slight foreshortening. Squashing hard turned the tablets into
   // wide smears; at this angle they still read as hexagons and the stacking
   // is carried by the plate edges and the offset between courses instead.
@@ -2205,6 +2211,7 @@ footer .signoff em {
   var NACRE_STAGGER = 0.31;             // lateral offset between courses
   var TIP_FRAC = 0.16;                  // how much of the nacre beat the tip-over takes
   var plateSquash = PLATE_SQUASH;       // animated: 1 is flat on, PLATE_SQUASH is in line with the stack
+  var lastCourseGap = 0;                // spacing between courses on screen, in pixels
   // Then everything goes: pull back far enough and you are looking at the
   // shell itself, the whole structure resolved into the one thing it was
   // building all along.
@@ -2327,9 +2334,9 @@ footer .signoff em {
   // Sites at a tip -- with only one occupied neighbour -- are easier to
   // reach than ones tucked into a notch, so protrusions run ahead of the
   // rest and the thing grows outward in branches rather than as a disc.
-  function occupyCell(cell, blocked) {
+  function occupyCell(cell) {
     var key = cell.i + ',' + cell.j;
-    occupied[key] = blocked ? 2 : 1;
+    occupied[key] = 1;
     if (frontierAt[key]) {
       delete frontierAt[key];
       var at = frontier.indexOf(cell);
@@ -2367,28 +2374,22 @@ footer .signoff em {
         seedX = pick.x; seedY = pick.y;
         seeded = true;
       } else {
-        // Everything builds outward off the seed: the site taken next is the
-        // one closest to it, so the crystal grows by adding to its own
-        // outside rather than racing away and backfilling the middle later.
-        // A site with more occupied neighbours is a notch and gets taken
-        // first, which keeps the body solid and the edge merely rough.
-        var bestS = Infinity;
+        // Everything builds outward off the seed. Within that, a site that is
+        // already boxed in on several sides is always taken before one out on
+        // the open front: growth fills the space it has before it closes over
+        // anything, so a gap is never sealed in behind the front.
+        var bestN = -1, bestS = Infinity;
         for (var f = 0; f < frontier.length; f++) {
           var fc = frontier[f];
-          var sco = Math.hypot(fc.x - seedX, fc.y - seedY)
-            - 0.5 * SPACING * occNeighbours(fc)
-            + rnd() * SPACING * 1.15;
-          if (sco < bestS) { bestS = sco; pick = fc; }
+          var nb = occNeighbours(fc);
+          if (nb < bestN) continue;
+          var sco = Math.hypot(fc.x - seedX, fc.y - seedY) + rnd() * SPACING * 1.15;
+          if (nb > bestN || sco < bestS) { bestN = nb; bestS = sco; pick = fc; }
         }
       }
       if (!pick) return null;
-      // occasionally a site is passed over and sealed in as a void
       if (occupied[pick.i + ',' + pick.j]) continue;
-      if (seeded && frontier.length && rnd() < PORE_P && Math.hypot(pick.x, pick.y) > SPACING * 3) {
-        occupyCell(pick, true);
-        continue;
-      }
-      occupyCell(pick, false);
+      occupyCell(pick);
       return pick;
     }
     return null;
@@ -2997,11 +2998,18 @@ footer .signoff em {
     if (tabPx < TABLET_MIN_PX) return false;
     var mx2 = camW / 2 + PLATE_A * 1.15, my2 = camH / 2 + PLATE_A * 1.15;
     var wf = warm || 0;
-    // while the sheet is still tipping over, the plates have no visible edge
-    // and no stack yet -- both come in as it comes into line
-    var tipped = (1 - plateSquash) / (1 - PLATE_SQUASH);
-    var thick = PLATE_A * PLATE_THICK * plateSquash * sc * tipped;
+    // How far the view has tipped, from the three-quarter shot to edge on.
+    // Near edge on the courses have to stand a whole plate-height apart or
+    // they smear into one another; in the three-quarter shot they only need
+    // to step a little, which is what makes the tiling read.
+    var tipAmt = Math.max(0, Math.min(1,
+      (PLATE_SQUASH - plateSquash) / (PLATE_SQUASH - EDGE_SQUASH)));
+    var plateH = 2 * (PLATE_A / Math.cos(Math.PI / 6)) * plateSquash * sc;
+    var smallStep = PLATE_A * PLATE_THICK * 0.36 * sc * 2.05;
+    var courseStep = smallStep + (plateH * 1.30 - smallStep) * tipAmt;
+    var thick = courseStep * 0.34;
     var rowH = PLATE_A * Math.sqrt(3) * plateSquash;
+    lastCourseGap = courseStep;          // what the d-spacing marker measures
     // the wider the shot the more tablets are on screen, so drop courses as
     // they shrink -- the stack still reads, and the frame stays cheap
     var nL = Math.max(3, Math.min(NACRE_LAYERS, Math.round(tabPx / 17)));
@@ -3009,7 +3017,7 @@ footer .signoff em {
       var up = nL > 1 ? L / (nL - 1) : 1;
       var ox = NACRE_STAGGER * PLATE_A * (L % 2 ? 1 : -1) * (0.4 + 0.6 * up);
       var oy = PLATE_A * 0.16 * L;
-      var dy = -thick * L * 2.05;        // each course sits on the one beneath
+      var dy = -courseStep * L;          // each course sits on the one beneath
       // upper courses catch the light; the ones below fall away into shadow
       var lum = 0.26 + 0.74 * up;
       ctx.lineWidth = Math.max(0.7, 0.5 * dpr);
@@ -3018,6 +3026,12 @@ footer .signoff em {
       var walls = new Path2D(), tops = new Path2D();
       var jLo = Math.floor((-my2 - oy) / rowH) - 1;
       var jHi = Math.ceil((my2 - oy) / rowH) + 1;
+      // Edge on, a section shows one line of plates per layer. Drawing the
+      // rows receding behind it as well just fills the gaps between courses
+      // and the layering disappears.
+      if (tipAmt > 0.55) {
+        jLo = jHi = Math.round(-oy / (PLATE_A * Math.sqrt(3)));
+      }
       for (var nj = jLo; nj <= jHi; nj++) {
         var ry = PLATE_A * Math.sqrt(3) * nj + oy;
         var iLo = Math.floor((-mx2 - ox - PLATE_A * nj) / (2 * PLATE_A)) - 1;
@@ -3039,9 +3053,10 @@ footer .signoff em {
         Math.round(38 + 76 * lum + 30 * wf) + ',' +
         Math.round(54 + 96 * lum - 14 * wf) + ')';
       ctx.fill(tops);
-      // only the upper courses get an outline; the ones below are in shadow
-      // and stroking every plate in the pile is not worth the frame time
-      if (L >= nL - 3) {
+      // Outlines are dropped near edge on: at that angle every plate is a
+      // sliver and its outline is just another line across the band, which
+      // is what stops the layers reading as layers.
+      if (L >= nL - 3 && tipAmt < 0.45) {
         ctx.strokeStyle = 'rgba(' + Math.round(150 + 70 * wf) + ',' + Math.round(214 + 26 * wf) + ',' +
           Math.round(236 - 40 * wf) + ',' + (0.12 + 0.4 * up) + ')';
         ctx.stroke(tops);
@@ -3050,6 +3065,45 @@ footer .signoff em {
     ctx.globalAlpha = a0;
     return true;
   }
+  // Seen edge on, the courses are a measurable distance apart, and that
+  // distance is the whole reason the shell has colour: it lands in the same
+  // few hundred nanometres as a wavelength of visible light.
+  function drawDSpacing(a0, w, h) {
+    var gap = lastCourseGap;
+    if (gap < 5) return;
+    var bx = w * 0.14, byTop = h * 0.50;
+    ctx.save();
+    ctx.globalAlpha = a0;
+    ctx.strokeStyle = 'rgba(236,250,255,0.92)';
+    ctx.lineWidth = Math.max(1, 1.0 * dpr);
+    ctx.beginPath();
+    ctx.moveTo(bx, byTop); ctx.lineTo(bx, byTop + gap);
+    ctx.moveTo(bx - 5 * dpr, byTop); ctx.lineTo(bx + 5 * dpr, byTop);
+    ctx.moveTo(bx - 5 * dpr, byTop + gap); ctx.lineTo(bx + 5 * dpr, byTop + gap);
+    ctx.stroke();
+    // a wave of the same length alongside, so the comparison is immediate
+    var wx = bx + 26 * dpr;
+    ctx.strokeStyle = 'rgba(150,235,255,0.85)';
+    ctx.beginPath();
+    for (var i = 0; i <= 40; i++) {
+      var f = i / 40;
+      var yy = byTop + gap * f * 2;
+      var xx = wx + Math.sin(f * TAU * 2 - t * 0.05) * 7 * dpr;
+      if (i === 0) ctx.moveTo(xx, yy); else ctx.lineTo(xx, yy);
+    }
+    ctx.stroke();
+    ctx.fillStyle = 'rgba(236,250,255,0.95)';
+    ctx.font = (8.6 * dpr) + 'px ui-monospace, monospace';
+    ctx.textBaseline = 'middle';
+    ctx.textAlign = 'right';
+    ctx.fillText('d ~ 0.5 um', bx - 9 * dpr, byTop + gap / 2);
+    ctx.textAlign = 'left';
+    ctx.fillText('~ one wavelength', wx + 14 * dpr, byTop + gap);
+    ctx.fillText('of visible light', wx + 14 * dpr, byTop + gap + 12 * dpr);
+    ctx.restore();
+    ctx.globalAlpha = a0;
+  }
+
   // Why the shell has colour at all. A tablet is a few hundred nanometres
   // thick, which is the same order as a wavelength of visible light, so the
   // reflections off successive layer boundaries come back a path difference
@@ -3385,16 +3439,27 @@ footer .signoff em {
   function render(alpha) {
     var w = cv.width, h = cv.height, i, c;
 
-    var nacreA = 0, shellA = 0, shellZoom = 1, opticsA = 0;
+    var nacreA = 0, shellA = 0, shellZoom = 1, opticsA = 0, dSpacingA = 0;
     plateSquash = PLATE_SQUASH;
     if (phase === 'zoomout') camW = VIEW_W + (Z1 - VIEW_W) * ease(Math.min(1, phaseT / 260));
     else if (phase === 'nacre') {
       var nf = Math.min(1, phaseT / NACRE_DUR);
-      camW = Z1 + (Z2 - Z1) * ease(nf);
-      nacreA = Math.min(1, nf / 0.22);   // the neighbours fade up as they come into frame
-      // the sheet tips out of plan view and into line with the stack, and it
-      // does it quickly -- there is nothing to look at while it is halfway
-      plateSquash = 1 - (1 - PLATE_SQUASH) * ease(Math.min(1, nf / TIP_FRAC));
+      nacreA = Math.min(1, nf / 0.14);   // the neighbours fade up as they come into frame
+      // Tip past the three-quarter view all the way to edge on, hold there
+      // long enough to read the spacing off the stack, then come back up.
+      // The camera stops while it is edge on -- carrying on zooming would
+      // shrink the courses into a smear just as they became measurable.
+      if (nf < 0.16) {
+        camW = Z1 + (Z_SIDE - Z1) * ease(nf / 0.16);
+        plateSquash = 1 - (1 - EDGE_SQUASH) * ease(nf / 0.16);
+      } else if (nf < 0.46) {
+        camW = Z_SIDE;
+        plateSquash = EDGE_SQUASH;
+      } else {
+        camW = Z_SIDE + (Z2 - Z_SIDE) * ease((nf - 0.46) / 0.54);
+        plateSquash = EDGE_SQUASH + (PLATE_SQUASH - EDGE_SQUASH) * ease(Math.min(1, (nf - 0.46) / 0.20));
+      }
+      dSpacingA = Math.min(1, Math.max(0, (nf - 0.19) / 0.05)) * Math.min(1, Math.max(0, (0.45 - nf) / 0.05));
     } else if (phase === 'optics') {
       // hold the wide shot of the stack; the explanation is drawn over it
       camW = Z2;
@@ -3424,6 +3489,7 @@ footer .signoff em {
     ctx.globalAlpha = alpha;
 
     if (nacreA > 0) { ctx.globalAlpha = alpha * nacreA; drawNacre(alpha * nacreA, shellA); ctx.globalAlpha = alpha; }
+    if (dSpacingA > 0) drawDSpacing(alpha * dSpacingA, w, h);
     if (opticsA > 0) {
       drawOptics(alpha * opticsA, w, h);
       ctx.globalAlpha = 1;
