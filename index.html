@@ -1559,7 +1559,7 @@ footer .signoff em {
         <span class="label">Code</span>
         <span class="link-text">GitHub <span class="arrow">&rarr;</span></span>
       </a>
-      <a href="cv.html">
+      <a href="cv.html" target="_blank" rel="noopener">
         <span class="label">Long form</span>
         <span class="link-text">Curriculum vitae <span class="arrow">&rarr;</span></span>
       </a>
@@ -2510,7 +2510,6 @@ function makeSim(seedFn) {
     field: '#080C15',
     solute: 'rgba(127,217,239,0.55)',
     amBody: '#2A5872',
-    amRim: 'rgba(150,210,232,0.55)',
     amHeld: 'rgba(214,168,120,0.65)',
     xtBody: '#173F58',
     xtRim: 'rgba(127,217,239,0.55)',
@@ -2605,7 +2604,7 @@ function makeSim(seedFn) {
   }
 
   /* ---- draw ---- */
-  var shapeCache = [], neckCache = [];
+  var shapeCache = [], neckCache = [], amNeckCache = [];
   function render(alpha) {
     var w = cv.width, h = cv.height, i, k, p, q, B;
     ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -2643,24 +2642,37 @@ function makeSim(seedFn) {
       if (!p || !q || !p.alive || !q.alive || !p.xtal || !q.xtal) continue;
       neckCache.push({ path: neckPath(p, q), a: B.a });
     }
+    // every other bond that touches at least one amorphous particle gets the
+    // same treatment, for the same reason: packed nanoparticles are not
+    // separately outlined marbles stacked next to each other, they are a
+    // single continuous mass wherever they are actually in contact. Only
+    // once a particle ripens into a discrete euhedral brick should its edges
+    // read as a separate object.
+    amNeckCache.length = 0;
+    for (k = 0; k < sim.bonds.length; k++) {
+      B = sim.bonds[k];
+      if (B.dead) continue;
+      p = sim.par[B.a]; q = sim.par[B.b];
+      if (!p || !q || !p.alive || !q.alive || (p.xtal && q.xtal)) continue;
+      amNeckCache.push(neckPath(p, q));
+    }
 
-    // amorphous precursors: flat fill, crisp rim, one small highlight for
-    // roundness. No gradient, no mottling, nothing to read as texture.
+    // amorphous precursors: flat fill, no per-particle outline, so a packed
+    // cluster reads as one blob rather than a pile of separate balls.
+    ctx.fillStyle = C.amBody;
+    for (k = 0; k < amNeckCache.length; k++) ctx.fill(amNeckCache[k]);
     for (i = 0; i < sim.par.length; i++) {
       p = sim.par[i];
       if (!p || !p.alive || p.xtal || !shapeCache[i]) continue;
       ctx.fillStyle = C.amBody;
       ctx.fill(shapeCache[i]);
-      ctx.lineWidth = Math.max(1, 0.11 * sc);
-      ctx.strokeStyle = p.held ? C.amHeld : C.amRim;
-      ctx.stroke(shapeCache[i]);
-      ctx.save();
-      ctx.clip(shapeCache[i]);
-      ctx.fillStyle = 'rgba(255,255,255,0.10)';
-      ctx.beginPath();
-      ctx.arc(X(p.x - p.r * 0.32), Y(p.y - p.r * 0.32), p.r * sc * 0.45, 0, TAU);
-      ctx.fill();
-      ctx.restore();
+      if (p.held) {
+        // organic-rich ACC pockets are the one amorphous particle worth
+        // calling out: they never ripen, so they stay visually distinct
+        ctx.lineWidth = Math.max(1, 0.11 * sc);
+        ctx.strokeStyle = C.amHeld;
+        ctx.stroke(shapeCache[i]);
+      }
     }
 
     // crystallites: body, then the lattice, then a whisper of an outline so the

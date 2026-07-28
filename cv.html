@@ -130,7 +130,9 @@ nav .wrap { display: flex; justify-content: space-between; align-items: baseline
 .cv-status.is-error { border-color: #AE3A22; }
 .cv-status.is-error .dot { background: #AE3A22; }
 .cv-status a { color: var(--accent); }
-.cv-actions { margin-left: auto; display: flex; gap: 0.6rem; flex-wrap: wrap; }
+/* display:flex above would otherwise beat the hidden attribute */
+.cv-status[hidden] { display: none; }
+.cv-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 1.6rem; }
 .cv-btn {
   font-family: var(--mono); font-size: 0.72rem; font-weight: 500;
   letter-spacing: 0.1em; text-transform: uppercase;
@@ -255,12 +257,15 @@ footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; g
       <a href="https://orcid.org/0000-0002-7922-0959">ORCID</a>
     </div>
 
-    <div class="cv-status" id="cvStatus">
+    <div class="cv-actions">
+      <button type="button" class="cv-btn" id="cvPrint">Print / PDF</button>
+    </div>
+
+    <!-- Failure only. A successful fetch says nothing at all: the CV being
+         there is the message, and a "synced at 02:02" line is just noise. -->
+    <div class="cv-status" id="cvStatus" hidden>
       <span class="dot" aria-hidden="true"></span>
-      <span id="cvStatusText">Fetching the current version&hellip;</span>
-      <span class="cv-actions">
-        <button type="button" class="cv-btn" id="cvPrint">Print / PDF</button>
-      </span>
+      <span id="cvStatusText"></span>
     </div>
   </div>
 </header>
@@ -491,6 +496,7 @@ footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; g
 
   function fail(msg) {
     if (loading) loading.remove();
+    statusBox.hidden = false;
     statusBox.classList.add('is-error');
     statusTxt.textContent = msg + ' ';
     var a = document.createElement('a');
@@ -514,13 +520,6 @@ footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; g
 
       if (loading) loading.remove();
       mount.appendChild(frag);
-
-      var now = new Date();
-      statusTxt.textContent = 'Synced live from the source document · fetched ' +
-        now.toLocaleString(undefined, {
-          year: 'numeric', month: 'short', day: 'numeric',
-          hour: '2-digit', minute: '2-digit'
-        });
     })
     .catch(function () {
       fail('Could not reach the source document right now.');
