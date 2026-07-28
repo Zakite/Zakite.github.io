@@ -2167,17 +2167,21 @@ footer .signoff em {
     }
     return true;
   }
-  // fill order is roughly centre-out but slightly jittered: a real
-  // aggregation front is a little ragged rather than a perfect disc
-  var HEX_CELLS = [];
+  // Every site the array could ever occupy, indexed by lattice position so
+  // neighbours can be looked up. Nothing is ordered in advance -- which
+  // sites get used, and when, is decided by where the aggregate has already
+  // grown to.
+  var CELLS = {}, HEX_CELLS = [];
   for (var gq = -HEX_RINGS - 1; gq <= HEX_RINGS + 1; gq++) {
     for (var gr = -HEX_RINGS - 1; gr <= HEX_RINGS + 1; gr++) {
       var px = gq * SPACING, py = gr * SPACING;
       if (!insideHex(px, py)) continue;
-      HEX_CELLS.push({ x: px, y: py, key: Math.hypot(px, py) + (rnd() - 0.5) * SPACING * 0.9 });
+      var cell = { x: px, y: py, i: gq, j: gr };
+      CELLS[gq + ',' + gr] = cell;
+      HEX_CELLS.push(cell);
     }
   }
-  HEX_CELLS.sort(function (a, b) { return a.key - b.key; });
+  var NB4 = [[1, 0], [-1, 0], [0, 1], [0, -1]];
   var HEX_EXTENT = 0;
   HEX_CELLS.forEach(function (c) { HEX_EXTENT = Math.max(HEX_EXTENT, Math.abs(c.x), Math.abs(c.y) * 1.8); });
 
@@ -2235,7 +2239,8 @@ footer .signoff em {
   var ORDER_K = 0.05, ORDER_REF = MICRO_SPACING * 2.6, ORDER_DONE = 0.86;
 
   var clusters, ions, phase, phaseT, t;
-  var mesoTh, nextCellIdx, fillBank, depletionT, seedSizes;
+  var mesoTh, fillBank, depletionT, seedSizes;
+  var occupied, frontier, frontierAt, seeded;
 
   function reset() {
     mesoTh = rnd() * TAU;              // every crystallite in the episode shares this one orientation
@@ -2249,7 +2254,8 @@ footer .signoff em {
         vx: (rnd() - 0.5) * 0.5, vy: (rnd() - 0.5) * 0.5
       });
     }
-    nextCellIdx = 0; fillBank = 0; depletionT = -1; seedSizes = [];
+    occupied = {}; frontier = []; frontierAt = {}; seeded = false;
+    fillBank = 0; depletionT = -1; seedSizes = [];
     phase = 'ions'; phaseT = 0; t = 0;
   }
   reset();
@@ -2310,16 +2316,74 @@ footer .signoff em {
     return { phx: (rnd() - 0.5) * MICRO_SPACING * 0.4, phy: (rnd() - 0.5) * MICRO_SPACING * 0.4, off: true };
   }
 
-  function nextSlot() {
-    // draws the next array cell; a few interior cells are silently skipped
-    // and stay empty forever -- trapped pores are a documented CPA signature
-    while (nextCellIdx < HEX_CELLS.length) {
-      var s = HEX_CELLS[nextCellIdx++];
-      if (rnd() < PORE_P && Math.hypot(s.x, s.y) > SPACING * 3) continue;
-      return s;
+  // The array is not filled from a list. One crystallite lands first and
+  // becomes the seed; everything after it attaches to the aggregate that
+  // already exists, at whichever free site on its perimeter is nearest.
+  // Sites at a tip -- with only one occupied neighbour -- are easier to
+  // reach than ones tucked into a notch, so protrusions run ahead of the
+  // rest and the thing grows outward in branches rather than as a disc.
+  function occupyCell(cell, blocked) {
+    var key = cell.i + ',' + cell.j;
+    occupied[key] = blocked ? 2 : 1;
+    if (frontierAt[key]) {
+      delete frontierAt[key];
+      var at = frontier.indexOf(cell);
+      if (at >= 0) { frontier[at] = frontier[frontier.length - 1]; frontier.pop(); }
+    }
+    for (var n = 0; n < 4; n++) {
+      var nk = (cell.i + NB4[n][0]) + ',' + (cell.j + NB4[n][1]);
+      var nc = CELLS[nk];
+      if (!nc || occupied[nk] || frontierAt[nk]) continue;
+      frontierAt[nk] = 1;
+      frontier.push(nc);
+    }
+  }
+  function occNeighbours(cell) {
+    var c2 = 0;
+    for (var n = 0; n < 4; n++) {
+      if (occupied[(cell.i + NB4[n][0]) + ',' + (cell.j + NB4[n][1])]) c2++;
+    }
+    return c2;
+  }
+  function claimCell(px, py) {
+    for (var guard = 0; guard < 40; guard++) {
+      var pick = null;
+      if (!frontier.length) {
+        if (seeded) return null;
+        // the seed: near the middle so the growth is watchable, but not
+        // pinned exactly to it
+        var best = null, bd = Infinity;
+        for (var s2 = 0; s2 < HEX_CELLS.length; s2++) {
+          var hc = HEX_CELLS[s2];
+          var dd = Math.hypot(hc.x, hc.y) + rnd() * SPACING * 2.2;
+          if (dd < bd) { bd = dd; best = hc; }
+        }
+        pick = best;
+        seeded = true;
+      } else {
+        var bestS = Infinity;
+        for (var f = 0; f < frontier.length; f++) {
+          var fc = frontier[f];
+          var d2 = Math.hypot(fc.x - px, fc.y - py);
+          // a notch costs more to reach than a tip, which is what makes the
+          // front break up into branches instead of staying smooth
+          var sco = d2 * (1 + 0.55 * (occNeighbours(fc) - 1)) + rnd() * SPACING * 0.5;
+          if (sco < bestS) { bestS = sco; pick = fc; }
+        }
+      }
+      if (!pick) return null;
+      // occasionally a site is passed over and sealed in as a void
+      if (occupied[pick.i + ',' + pick.j]) continue;
+      if (seeded && frontier.length && rnd() < PORE_P && Math.hypot(pick.x, pick.y) > SPACING * 3) {
+        occupyCell(pick, true);
+        continue;
+      }
+      occupyCell(pick, false);
+      return pick;
     }
     return null;
   }
+  function arrayComplete() { return seeded && frontier.length === 0; }
 
   function step(dt) {
     t += dt; phaseT += dt;
@@ -2678,7 +2742,8 @@ footer .signoff em {
         c.hw = blockHalf(c.lpts.length);   // square, and sized by how many ions it actually gathered
         c.hh = c.hw;
         if (c.seedborn) seedSizes.push(c.lpts.length);
-        var slot = nextSlot();
+        // attaches to whatever part of the aggregate is nearest to it
+        var slot = claimCell(c.cx, c.cy);
         if (!slot) {
           // array already complete: a late crystal attaches where it is, an
           // off-lattice grain on the platelet rim
@@ -2730,15 +2795,19 @@ footer .signoff em {
       // the array keeps extending itself outward -- with block sizes drawn
       // from the same distribution the real seeds produced, so the far array
       // is just as polydisperse as the part that assembled on screen
-      if (nextCellIdx < HEX_CELLS.length && (phase === 'fill' || clusters.filter(function (c2) { return c2.state === 'attached'; }).length > 5)) {
+      if (!arrayComplete() && (phase === 'fill' || clusters.filter(function (c2) { return c2.state === 'attached'; }).length > 5)) {
         // aggregation proper begins here: the solution is spent, so the last
         // of it is taken up rather than left hanging around the array
         if (phase !== 'fill') ions.length = 0;
         phase = 'fill';
         fillBank += FILL_RATE * dt;
-        while (fillBank >= 1 && nextCellIdx < HEX_CELLS.length) {
+        while (fillBank >= 1 && !arrayComplete()) {
           fillBank -= 1;
-          var slot2 = nextSlot();
+          // a crystallite drifts in from somewhere outside and joins the
+          // aggregate at the nearest point of its perimeter
+          var appAng = rnd() * TAU;
+          var farX = Math.cos(appAng) * HEX_A * 2.2, farY = Math.sin(appAng) * HEX_A * 2.2;
+          var slot2 = claimCell(farX, farY);
           if (!slot2) break;
           var d0 = Math.hypot(slot2.x, slot2.y) || 1;
           var nIons = seedSizes.length ? seedSizes[Math.floor(rnd() * seedSizes.length)] : GROW_TARGET;
@@ -2755,7 +2824,7 @@ footer .signoff em {
           nc2.state = 'attach'; nc2.attachT = 0; nc2.kicked = true;
         }
       }
-      if (nextCellIdx >= HEX_CELLS.length) {
+      if (arrayComplete()) {
         var allIn = true;
         for (j = 0; j < clusters.length; j++) if (clusters[j].state === 'attach') { allIn = false; break; }
         if (allIn) {
@@ -3538,7 +3607,19 @@ footer .signoff em {
       }
       return {
         phase: phase, t: Math.round(t), ions: ions.length, clusters: clusters.length,
-        counts: counts, nextCellIdx: nextCellIdx, cells: HEX_CELLS.length,
+        counts: counts, placed: Object.keys(occupied).length, cells: HEX_CELLS.length,
+        frontier: frontier.length, seeded: seeded, complete: arrayComplete(),
+        aggRg: (function () {
+          var ks = Object.keys(occupied), m = ks.length;
+          if (!m) return null;
+          var sx = 0, sy = 0, k, cc;
+          for (k = 0; k < m; k++) { cc = CELLS[ks[k]]; sx += cc.i; sy += cc.j; }
+          sx /= m; sy /= m;
+          var v = 0;
+          for (k = 0; k < m; k++) { cc = CELLS[ks[k]]; v += (cc.i - sx) * (cc.i - sx) + (cc.j - sy) * (cc.j - sy); }
+          // compact disc of the same cell count would give sqrt(m/PI)/sqrt(2)
+          return { rg: Math.sqrt(v / m), discRg: Math.sqrt(m / Math.PI) / Math.SQRT2 };
+        })(),
         nan: bad, seedSizes: seedSizes.slice(),
         pending: pending, offTiles: offs,
         hwMin: hws.length ? Math.min.apply(null, hws) : null,
