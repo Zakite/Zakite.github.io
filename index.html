@@ -966,11 +966,13 @@ footer .signoff em {
   /* The three-part wordmark shares one line, so the names and the molecule are
      competing for the same width and every point given to one is taken from
      the other. The molecule is the thing worth looking at, so it takes the
-     larger share: 38vw against 8.6vw a side. At 390px that is a 148px figure
-     instead of a 101px one, with the names still at a comfortable 33px. */
-  .stage { gap: clamp(0.25rem, 0.8vw, 1rem); }
-  .name { font-size: clamp(1.05rem, 8.6vw, 3.4rem); line-height: 1.05; }
-  .tilt { width: clamp(96px, 38vw, 210px); }
+     larger share: 49vw against 7.6vw a side, a further 30% on the figure. At
+     390px that is a 191px molecule where it started at 101px, and the names
+     come down to 30px to pay for it. Anything more and the row stops fitting
+     on one line at 360px, which is the constraint this is pressed against. */
+  .stage { gap: clamp(0.2rem, 0.6vw, 1rem); }
+  .name { font-size: clamp(1rem, 7.6vw, 3.4rem); line-height: 1.05; }
+  .tilt { width: clamp(120px, 49vw, 240px); }
   .motif-caption { --cap-x: 0rem; }
   .hero-foot { margin-top: 6.25rem; }   /* clears the out-of-flow caption */
   .about-grid { grid-template-columns: 1fr; gap: 2.75rem; }
@@ -1653,6 +1655,12 @@ footer .signoff em {
   var N        = 14;     // tetrads in the visible fibril. At 30 degrees each,
                          // 12 make one full helical turn, so 14 shows a
                          // complete repeat plus the start of the next
+  var N_INTRO  = 24;     // tetrads built for the entrance only. The assembly is
+                         // the whole point of the opening and at 14 it was over
+                         // before you could look at it, so the wire arrives
+                         // longer than it ends up: everything past N is dropped
+                         // once the camera settles, leaving the resting and
+                         // tilted stack exactly as it was
   var TWIST    = -30;    // degrees of twist per tetrad
   var RISE     = 0.115;  // stacking rise, as a fraction of figure width.
                          // Rescaled by 200/148 when the viewBox was cropped, so
@@ -1673,9 +1681,10 @@ footer .signoff em {
 
   // intro timing, milliseconds
   var T_START = 260;     // pause before the first tetrad lands
-  var T_STEP  = 46;      // gap between tetrads. Tightened for the longer wire so
-                         // the build still reads as one rattling burst
-  var T_LAND  = 380;     // how long one tetrad takes to snap into place
+  var T_STEP  = 55;      // gap between tetrads, 20% slower than it was. With the
+                         // longer intro wire the build now runs about 2s rather
+                         // than 1.2s, which is long enough to actually watch
+  var T_LAND  = 456;     // how long one tetrad takes to snap into place (also 20%)
   var T_HOLD  = 340;     // beat after the last one lands
   var T_SETTLE = 950;    // camera swing onto the c-axis
 
@@ -1685,7 +1694,7 @@ footer .signoff em {
 
   // ---- build the stack, deepest first in the DOM -------------------------
   var deep = [], ions = [], balls = [];
-  for (var k = 1; k < N; k++) {
+  for (var k = 1; k < N_INTRO; k++) {
     var o = Math.pow(FALLOFF, k).toFixed(3);
 
     var p = document.createElement('div');
@@ -1779,6 +1788,20 @@ footer .signoff em {
   function rest() { aim(0, 0); reveal(0); }
 
   // ---- entrance ----------------------------------------------------------
+  /* The surplus tetrads exist only for the entrance. Once the camera has
+     settled they come out of the DOM entirely, so the resting figure, the
+     tilt reveal, the depth falloff and the layout maths all go back to seeing
+     exactly the N-deep fibril they always did. */
+  function trimToRestingStack() {
+    for (var i = N - 1; i < deep.length; i++) {
+      if (deep[i] && deep[i].parentNode) deep[i].parentNode.removeChild(deep[i]);
+      if (ions[i] && ions[i].parentNode) ions[i].parentNode.removeChild(ions[i]);
+    }
+    deep.length  = Math.min(deep.length,  N - 1);
+    ions.length  = Math.min(ions.length,  N - 1);
+    balls.length = Math.min(balls.length, N - 1);
+  }
+
   function intro() {
     intro.running = true;
     // pair each tetrad with its ion, then run the far end of the wire forward
@@ -1834,6 +1857,7 @@ footer .signoff em {
       setTimeout(function () {
         sync(null);
         intro.running = false;
+        trimToRestingStack();
         layout();
       }, T_SETTLE + 60);
     }, landed + T_HOLD);
@@ -1874,6 +1898,7 @@ footer .signoff em {
 
     tilt.addEventListener('pointerdown', function (e) {
       if (e.pointerType === 'mouse') return;   // the mouse has its own path below
+      if (intro.running) return;               // let the entrance finish landing
       live = true;
       /* Capture so the tilt keeps tracking even when the finger wanders off
          the figure, which on a small screen it immediately does. */
@@ -1894,18 +1919,17 @@ footer .signoff em {
     tilt.addEventListener('pointercancel', release);
   }
 
-  if (still) { badge.style.opacity = '1'; rest(); return; }
+  if (still) { badge.style.opacity = '1'; trimToRestingStack(); rest(); return; }
 
-  /* No fine pointer anywhere on the device, so this is a phone or a tablet.
-     The entrance is the expensive part -- fourteen plates and their ions all
-     transitioning transform and opacity at once, during first paint -- so it
-     is skipped and the wire simply starts assembled. The spin is one
-     composited rotation and costs nothing, so it stays: the figure turns on
-     its axis exactly as it does on a desktop, and a finger tilts it. */
+  /* No fine pointer anywhere on the device, so this is a phone or a tablet,
+     and it gets the same entrance as everything else. It was skipped here for
+     a while on the theory that the assembly was what stuttered on a small
+     screen; the spin was the other suspect and it turned out to cost nothing,
+     so the assembly is back and simply runs slower, which is easier to render
+     as well as easier to watch. A finger tilts it once it has landed. */
   if (!fine) {
     spin.style.setProperty('--spin-t', SPIN_REST + 's');
-    badge.style.opacity = '1';
-    rest();
+    intro();
     touchTilt();
     return;
   }
@@ -2061,53 +2085,33 @@ footer .signoff em {
   var HEX_EXTENT = 0;
   HEX_CELLS.forEach(function (c) { HEX_EXTENT = Math.max(HEX_EXTENT, Math.abs(c.x), Math.abs(c.y) * 1.8); });
 
-  function cross(o, a, b) { return (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x); }
-  function convexHull(pts) {
-    var p = pts.slice().sort(function (a, b) { return a.x - b.x || a.y - b.y; });
-    var n = p.length;
-    if (n < 3) return p.slice();
-    var hull = [], i;
-    for (i = 0; i < n; i++) {
-      while (hull.length >= 2 && cross(hull[hull.length - 2], hull[hull.length - 1], p[i]) <= 0) hull.pop();
-      hull.push(p[i]);
+  // Below is where the pathway switches registers. Everything up through
+  // ordering is meant to read like an actual particle trajectory: continuous
+  // thermal jitter every frame, a real restoring force pulling ions onto
+  // lattice sites as ordering happens, nothing eased or blended between two
+  // drawn shapes. Oriented attachment onward is deliberately the other
+  // register, a schematic illustration of what the pathway does next, since
+  // it is what the field simulated by hundreds of individual ions would take
+  // far too long to watch.
+  var MICRO_SPACING = 1.05;             // spacing between ions once seated in the growing lattice
+  function spiralSquareCells(n) {
+    var cells = [[0, 0]], seen = { '0,0': 1 }, side = 1;
+    while (cells.length < n) {
+      side += 2;
+      var half = (side - 1) / 2;
+      for (var gx = -half; gx <= half; gx++) for (var gy = -half; gy <= half; gy++) {
+        var key = gx + ',' + gy;
+        if (!seen[key]) { seen[key] = 1; cells.push([gx, gy]); }
+      }
     }
-    var lower = hull.length + 1;
-    for (i = n - 2; i >= 0; i--) {
-      while (hull.length >= lower && cross(hull[hull.length - 2], hull[hull.length - 1], p[i]) <= 0) hull.pop();
-      hull.push(p[i]);
-    }
-    hull.pop();
-    return hull;
+    cells.sort(function (a, b) { return (a[0] * a[0] + a[1] * a[1]) - (b[0] * b[0] + b[1] * b[1]); });
+    return cells.slice(0, n);
   }
-  // boundary radius of a convex polygon, from an interior point, along one ray
-  function hullRadiusAt(poly, cx, cy, ang) {
-    var n = poly.length;
-    if (n === 0) return 0.6;
-    if (n < 3) {
-      var m = 0;
-      for (var j = 0; j < n; j++) m = Math.max(m, Math.hypot(poly[j].x - cx, poly[j].y - cy));
-      return Math.max(0.6, m);
-    }
-    var dx = Math.cos(ang), dy = Math.sin(ang);
-    for (var i = 0; i < n; i++) {
-      var a = poly[i], b = poly[(i + 1) % n];
-      var ax = a.x - cx, ay = a.y - cy, ex = b.x - a.x, ey = b.y - a.y;
-      var det = ex * dy - dx * ey;
-      if (Math.abs(det) < 1e-9) continue;
-      var t = (ex * ay - ax * ey) / det, u = (dx * ay - dy * ax) / det;
-      if (t > 1e-6 && u >= -1e-6 && u <= 1 + 1e-6) return t;
-    }
-    var s = 0; for (i = 0; i < n; i++) s += Math.hypot(poly[i].x - cx, poly[i].y - cy);
-    return s / n;
-  }
-  // boundary radius of a dipyramid (an elongated rhombus) at an angle in its own frame
-  function dipRadiusAt(hw, hh, ang) {
-    var c = Math.abs(Math.cos(ang)), s = Math.abs(Math.sin(ang));
-    var denom = c / hw + s / hh;
-    return denom > 1e-9 ? 1 / denom : Math.max(hw, hh);
-  }
+  var MICRO_CELLS = spiralSquareCells(GROW_TARGET + 8).map(function (c) {
+    return { lx: c[0] * MICRO_SPACING, ly: c[1] * MICRO_SPACING * 1.3 };
+  });
+  var ORDER_K = 0.05, ORDER_REF = MICRO_SPACING * 2.6, ORDER_DONE = 0.86;
 
-  var MORPH_SAMPLES = 22;
   var clusters, ions, phase, phaseT, t;
   var mesoTh, nextCellIdx, fillBank;
 
@@ -2126,12 +2130,11 @@ footer .signoff em {
 
   function newCluster(x, y) {
     var c = {
-      pts: [{ x: x, y: y }],           // 'blob' state: absolute world points
+      pts: [{ x: x, y: y, vx: 0, vy: 0, lx: 0, ly: 0 }],   // real member ions: position and velocity, not a shape
       cx: x, cy: y, vx: 0, vy: 0,
-      born: t, state: 'blob',
-      morphT: 0, th: mesoTh,
-      hw: 0.6, hh: 0.6,                // current half-size, grows through 'grow'
-      lpts: null,                      // local-frame points, fixed once morph begins
+      born: t, state: 'blob', microIdx: 0, th: mesoTh, orderFrac: 0,
+      hw: 0.6, hh: 0.6,
+      lpts: null,                      // handed off once ordering has actually settled
       tx: 0, ty: 0, attaching: false, attachT: 0, fromX: 0, fromY: 0, bowSign: rnd() < 0.5 ? 1 : -1,
       poppedAt: -1
     };
@@ -2166,7 +2169,7 @@ footer .signoff em {
 
     } else if (phase === 'cluster' || phase === 'fill') {
       // clustering: a free ion that drifts within capture range of another
-      // free ion, or of any point already belonging to a cluster, sticks
+      // free ion, or of any ion already belonging to a cluster, sticks
       // there. Nothing is placed in advance; a cluster's location is just
       // wherever its first two ions happened to meet.
       var free = [];
@@ -2175,28 +2178,25 @@ footer .signoff em {
         var ia = ions[free[i]]; if (ia.cluster >= 0) continue;
         var bestC = -1, bestD = JOIN_R;
         for (j = 0; j < clusters.length; j++) {
-          c = clusters[j]; if (c.state === 'attached') continue;
-          // measured from the surface, not the centre: a blob or a still-
-          // morphing cluster has actual member points to check against, but
-          // a crystallite that has already grown a real footprint should
-          // still catch an ion that touches its edge, not just its centre
-          var surfD;
-          if (c.state === 'blob' || c.state === 'morph') {
-            surfD = Infinity;
-            for (var m = 0; m < c.pts.length; m++) {
-              var dd = Math.hypot(c.pts[m].x - ia.x, c.pts[m].y - ia.y);
-              if (dd < surfD) surfD = dd;
-            }
-          } else {
-            surfD = Math.hypot(c.cx - ia.x, c.cy - ia.y) - Math.max(c.hw, c.hh) * 0.8;
+          c = clusters[j];
+          if (c.state !== 'blob' && c.state !== 'order') continue;
+          if (c.pts.length >= GROW_TARGET) continue;   // already at the shared target size: stop absorbing, just keep ordering
+          var surfD = Infinity;
+          for (var m = 0; m < c.pts.length; m++) {
+            var dd = Math.hypot(c.pts[m].x - ia.x, c.pts[m].y - ia.y);
+            if (dd < surfD) surfD = dd;
           }
           if (surfD < bestD) { bestD = surfD; bestC = j; }
         }
         if (bestC >= 0) {
           ia.cluster = bestC;
           var cl = clusters[bestC];
-          if (cl.state === 'blob' || cl.state === 'morph') cl.pts.push({ x: ia.x, y: ia.y });
-          else absorbGrain(cl, ia.x, ia.y);
+          var newPt = { x: ia.x, y: ia.y, vx: 0, vy: 0, lx: 0, ly: 0 };
+          if (cl.state === 'order') {
+            var mc = MICRO_CELLS[Math.min(cl.microIdx++, MICRO_CELLS.length - 1)];
+            newPt.lx = mc.lx; newPt.ly = mc.ly;
+          }
+          cl.pts.push(newPt);
           continue;
         }
         // no cluster nearby: does it happen to be right next to another free ion?
@@ -2204,7 +2204,10 @@ footer .signoff em {
           var ib = ions[free[k]]; if (ib.cluster >= 0) continue;
           if (Math.hypot(ib.x - ia.x, ib.y - ia.y) < NUCLEATE_R) {
             var nc = newCluster((ia.x + ib.x) / 2, (ia.y + ib.y) / 2);
-            nc.pts = [{ x: ia.x, y: ia.y }, { x: ib.x, y: ib.y }];
+            nc.pts = [
+              { x: ia.x, y: ia.y, vx: 0, vy: 0, lx: 0, ly: 0 },
+              { x: ib.x, y: ib.y, vx: 0, vy: 0, lx: 0, ly: 0 }
+            ];
             ia.cluster = clusters.length - 1; ib.cluster = clusters.length - 1;
             break;
           }
@@ -2215,66 +2218,73 @@ footer .signoff em {
 
       for (j = 0; j < clusters.length; j++) {
         c = clusters[j];
+        if (c.state !== 'blob' && c.state !== 'order') continue;
+
+        // free floating, for as long as the cluster exists, jostled
+        // continuously: ordering internally is not what stops it drifting
+        c.vx += (rnd() - 0.5) * 0.4 * dt; c.vy += (rnd() - 0.5) * 0.4 * dt;
+        c.vx *= 0.90; c.vy *= 0.90;
+        if (c.cx < -BOUND_X) c.vx = Math.abs(c.vx); if (c.cx > BOUND_X) c.vx = -Math.abs(c.vx);
+        if (c.cy < -BOUND_Y) c.vy = Math.abs(c.vy); if (c.cy > BOUND_Y) c.vy = -Math.abs(c.vy);
+
+        var pI, mxT, myT;
         if (c.state === 'blob') {
-          // free floating: the whole loose cluster drifts as one, jostled gently,
-          // while still just a lasso around its own scattered ions
-          c.vx += (rnd() - 0.5) * 0.4 * dt; c.vy += (rnd() - 0.5) * 0.4 * dt;
-          c.vx *= 0.90; c.vy *= 0.90;
-          // same solution volume as the free ions, so a blob cannot drift
-          // out past where anything could still reach it
-          if (c.cx < -BOUND_X) c.vx = Math.abs(c.vx); if (c.cx > BOUND_X) c.vx = -Math.abs(c.vx);
-          if (c.cy < -BOUND_Y) c.vy = Math.abs(c.vy); if (c.cy > BOUND_Y) c.vy = -Math.abs(c.vy);
-          var mx = 0, my = 0;
-          for (var pI = 0; pI < c.pts.length; pI++) { mx += c.pts[pI].x; my += c.pts[pI].y; }
-          mx /= c.pts.length; my /= c.pts.length;
-          c.cx = mx; c.cy = my;
-          for (pI = 0; pI < c.pts.length; pI++) { c.pts[pI].x += c.vx * dt; c.pts[pI].y += c.vy * dt; }
-          c.cx += c.vx * dt; c.cy += c.vy * dt;
+          // no ordering force yet, just thermal jitter on top of the shared drift
+          for (pI = 0; pI < c.pts.length; pI++) {
+            var p0 = c.pts[pI];
+            p0.vx += (rnd() - 0.5) * 0.35 * dt; p0.vy += (rnd() - 0.5) * 0.35 * dt;
+            p0.vx *= 0.82; p0.vy *= 0.82;
+            p0.x += (p0.vx + c.vx) * dt; p0.y += (p0.vy + c.vy) * dt;
+          }
+          mxT = 0; myT = 0;
+          for (pI = 0; pI < c.pts.length; pI++) { mxT += c.pts[pI].x; myT += c.pts[pI].y; }
+          c.cx = mxT / c.pts.length; c.cy = myT / c.pts.length;
+
           if (c.pts.length >= MIN_MORPH_PTS && t - c.born > MIN_MORPH_AGE) {
-            // bend into a dipyramid now, no matter what size the blob happens to be:
-            // sample the current ragged hull and the target crystal shape at the
-            // same angles and blend from one to the other
-            var hull = convexHull(c.pts);
-            var avgR = 0;
-            for (var aI = 0; aI < MORPH_SAMPLES; aI++) avgR += hullRadiusAt(hull, c.cx, c.cy, aI / MORPH_SAMPLES * TAU);
-            avgR /= MORPH_SAMPLES;
-            c.morphHull = hull; c.morphCx = c.cx; c.morphCy = c.cy;
-            c.hw = Math.max(0.7, avgR * 0.85); c.hh = Math.max(0.9, avgR * 1.15);
-            c.state = 'morph'; c.morphT = 0;
+            // ordering starts now, on whatever the blob happens to be at this
+            // moment: every ion it already has gets a site in the growing
+            // lattice, and from here a real restoring force, not a timer,
+            // pulls each one there
+            for (var qI = 0; qI < c.pts.length; qI++) {
+              var mc0 = MICRO_CELLS[Math.min(c.microIdx++, MICRO_CELLS.length - 1)];
+              c.pts[qI].lx = mc0.lx; c.pts[qI].ly = mc0.ly;
+            }
+            c.state = 'order';
           }
-        } else if (c.state === 'morph') {
-          c.morphT += dt;
-          if (c.morphT > MORPH_DUR) {
-            // fixed for good: convert every current point into the crystal's own
-            // local frame, which never rotates again from here on
-            var cs0 = Math.cos(c.th), sn0 = Math.sin(c.th);
-            c.lpts = c.pts.map(function (pp) {
-              var wx = pp.x - c.cx, wy = pp.y - c.cy;
-              return { lx: wx * cs0 + wy * sn0, ly: -wx * sn0 + wy * cs0 };
-            });
+        } else {
+          // continuous relaxation toward each ion's assigned lattice site: a
+          // real restoring force plus the same thermal jitter every frame.
+          // How ordered the crystallite has become is read directly off how
+          // close its ions actually are to their sites, not off a clock.
+          var cs0 = Math.cos(c.th), sn0 = Math.sin(c.th), sumD = 0;
+          for (pI = 0; pI < c.pts.length; pI++) {
+            var p1 = c.pts[pI];
+            var tgx = c.cx + p1.lx * cs0 - p1.ly * sn0, tgy = c.cy + p1.lx * sn0 + p1.ly * cs0;
+            p1.vx += (tgx - p1.x) * ORDER_K * dt; p1.vy += (tgy - p1.y) * ORDER_K * dt;
+            p1.vx += (rnd() - 0.5) * 0.30 * dt; p1.vy += (rnd() - 0.5) * 0.30 * dt;
+            p1.vx *= 0.80; p1.vy *= 0.80;
+            p1.x += (p1.vx + c.vx) * dt; p1.y += (p1.vy + c.vy) * dt;
+            sumD += Math.hypot(p1.x - tgx, p1.y - tgy);
+          }
+          c.orderFrac = Math.max(0, Math.min(1, 1 - (sumD / c.pts.length) / ORDER_REF));
+          mxT = 0; myT = 0;
+          for (pI = 0; pI < c.pts.length; pI++) { mxT += c.pts[pI].x; myT += c.pts[pI].y; }
+          c.cx = mxT / c.pts.length; c.cy = myT / c.pts.length;
+
+          if (c.pts.length >= GROW_TARGET && c.orderFrac >= ORDER_DONE) {
+            // settled: hand off to the same fixed, faceted representation
+            // every crystallite ends up in, for oriented attachment onward
+            c.lpts = c.pts.map(function (pp) { return { lx: pp.lx, ly: pp.ly }; });
             c.pts = null;
-            c.state = 'grow';
-          }
-        } else if (c.state === 'grow') {
-          if (c.lpts.length >= GROW_TARGET) {
             c.hw = TILE_R * 0.62; c.hh = TILE_R * 0.62 * 1.3;
             c.state = 'ready';
           }
-          // size while still growing is set below, once per frame, for every
-          // 'grow'-state crystallite at once
         }
       }
-      // grow each 'grow'-state crystallite's drawn size toward the shared target
-      // as it keeps absorbing ions, so every one ends up the same size
-      for (j = 0; j < clusters.length; j++) {
-        c = clusters[j];
-        if (c.state !== 'grow') continue;
-        var gf2 = Math.min(1, c.lpts.length / GROW_TARGET);
-        c.hw = TILE_R * 0.62 * (0.5 + 0.5 * gf2);
-        c.hh = c.hw * 1.3;
-      }
+
       // ready crystallites: claim the nearest still-unclaimed slot in the
-      // periodic array and travel to it (oriented attachment)
+      // periodic array and travel to it (oriented attachment) -- from here
+      // on is the schematic half of the pathway
       for (j = 0; j < clusters.length; j++) {
         c = clusters[j];
         if (c.state === 'ready' && nextCellIdx < HEX_CELLS.length) {
@@ -2290,10 +2300,10 @@ footer .signoff em {
         if (c.state !== 'attach') continue;
         c.attachT += dt;
         var af = Math.min(1, c.attachT / ATTACH_DUR), e = ease(af);
-        var lx = c.tx - c.fromX, ly = c.ty - c.fromY, ld = Math.hypot(lx, ly) || 1;
+        var lx2 = c.tx - c.fromX, ly2 = c.ty - c.fromY, ld = Math.hypot(lx2, ly2) || 1;
         var bow = Math.sin(af * Math.PI) * c.bowSign * ld * 0.10;
-        c.cx = c.fromX + lx * e - (ly / ld) * bow;
-        c.cy = c.fromY + ly * e + (lx / ld) * bow;
+        c.cx = c.fromX + lx2 * e - (ly2 / ld) * bow;
+        c.cy = c.fromY + ly2 * e + (lx2 / ld) * bow;
         if (af >= 1) { c.cx = c.tx; c.cy = c.ty; c.state = 'attached'; c.poppedAt = t; }
       }
       // beyond the crystallites that actually grew from real ion clustering,
@@ -2309,8 +2319,7 @@ footer .signoff em {
           var nc2 = newCluster(tgt.x + tgt.x / d0 * SPACING * 2.2, tgt.y + tgt.y / d0 * SPACING * 2.2);
           nc2.state = 'attach'; nc2.hw = TILE_R * 0.62; nc2.hh = nc2.hw * 1.3; nc2.th = mesoTh;
           nc2.pts = null;
-          nc2.lpts = [];
-          for (var gI = 0; gI < GROW_TARGET; gI++) absorbGrain(nc2);   // arrives already full of ions, like its neighbours
+          nc2.lpts = MICRO_CELLS.slice(0, GROW_TARGET).map(function (m2) { return { lx: m2.lx, ly: m2.ly }; });
           nc2.tx = tgt.x; nc2.ty = tgt.y; nc2.tth = mesoTh;
           nc2.fromX = nc2.cx; nc2.fromY = nc2.cy;
           nc2.attaching = true; nc2.attachT = 0;
@@ -2329,18 +2338,13 @@ footer .signoff em {
     }
   }
 
-  function absorbGrain(c, wx, wy) {
-    var ga = rnd() * TAU, gr = Math.sqrt(rnd()) * 0.85 * Math.min(c.hw, c.hh);
-    c.lpts.push({ lx: Math.cos(ga) * gr, ly: Math.sin(ga) * gr });
-  }
-
   /* ---- renderer ---- */
   var C = {
     field: '#080C15', solute: 'rgba(127,217,239,0.55)',
-    amBody: '#2A5872', amRim: 'rgba(150,210,232,0.55)',
     xtBody: '#173F58', xtRim: 'rgba(127,217,239,0.55)', fringe: 'rgba(196,238,250,0.55)',
     rule: '#8FA5B8'
   };
+  var COL_AMORPH = [127, 217, 239], COL_ORDERED = [196, 248, 255];
 
   var sc = 1, dpr = 1, spPx = 7;
   var SP_NM = 0.62;
@@ -2356,37 +2360,28 @@ footer .signoff em {
   function X(x) { return (x + camW / 2) * sc; }
   function Y(y) { return (y + camH / 2) * sc; }
 
-  function hullPath(hull, cx, cy, pad) {
-    var path = new Path2D();
-    var n = hull.length;
-    if (n === 0) return path;
-    if (n < 3) {
-      var r = pad + 0.8;
-      path.moveTo(X(cx + r), Y(cy));
-      path.arc(X(cx), Y(cy), r * sc, 0, TAU);
-      return path;
-    }
-    for (var i = 0; i < n; i++) {
-      var vx = hull[i].x - cx, vy = hull[i].y - cy, d = Math.hypot(vx, vy) || 1e-6;
-      var px = X(hull[i].x + vx / d * pad), py = Y(hull[i].y + vy / d * pad);
-      if (i === 0) path.moveTo(px, py); else path.lineTo(px, py);
-    }
-    path.closePath();
-    return path;
+  function ionColor(f) {
+    var k = Math.max(0, Math.min(1, f));
+    return 'rgb(' + Math.round(COL_AMORPH[0] + (COL_ORDERED[0] - COL_AMORPH[0]) * k) + ',' +
+      Math.round(COL_AMORPH[1] + (COL_ORDERED[1] - COL_AMORPH[1]) * k) + ',' +
+      Math.round(COL_AMORPH[2] + (COL_ORDERED[2] - COL_AMORPH[2]) * k) + ')';
   }
-  function morphPath(c) {
-    var path = new Path2D();
-    var frac = ease(Math.min(1, c.morphT / MORPH_DUR));
-    for (var i = 0; i <= MORPH_SAMPLES; i++) {
-      var ang = (i % MORPH_SAMPLES) / MORPH_SAMPLES * TAU;
-      var rh = hullRadiusAt(c.morphHull, c.morphCx, c.morphCy, ang) + 0.6;
-      var rd = dipRadiusAt(c.hw, c.hh, ang - c.th);
-      var r = rh + (rd - rh) * frac;
-      var px = X(c.cx + Math.cos(ang) * r), py = Y(c.cy + Math.sin(ang) * r);
-      if (i === 0) path.moveTo(px, py); else path.lineTo(px, py);
+  // pre-attachment clusters are drawn as literally what they are: their own
+  // member ions, each still its own distinct dot, tinted by how close the
+  // whole group currently sits to its lattice sites -- never a drawn
+  // boundary or a blended shape standing in for the real positions
+  function drawClusterIons(c) {
+    var r = Math.max(0.9, 0.30 * sc);
+    ctx.fillStyle = ionColor(c.orderFrac);
+    ctx.strokeStyle = 'rgba(8,12,21,0.55)';
+    ctx.lineWidth = Math.max(0.6, 0.06 * sc);
+    for (var pI = 0; pI < c.pts.length; pI++) {
+      var px = X(c.pts[pI].x), py = Y(c.pts[pI].y);
+      ctx.beginPath();
+      ctx.arc(px, py, r, 0, TAU);
+      ctx.fill();
+      ctx.stroke();
     }
-    path.closePath();
-    return path;
   }
   function xtalPath(c) {
     var cs = Math.cos(c.th), sn = Math.sin(c.th);
@@ -2470,12 +2465,8 @@ footer .signoff em {
     for (i = 0; i < clusters.length; i++) {
       c = clusters[i];
       if (!inView(c, margin)) continue;
-      if (c.state === 'blob') {
-        ctx.fillStyle = C.amBody;
-        ctx.fill(hullPath(c.pts.length >= 3 ? convexHull(c.pts) : c.pts, c.cx, c.cy, 0.7));
-      } else if (c.state === 'morph') {
-        ctx.fillStyle = C.amBody;
-        ctx.fill(morphPath(c));
+      if (c.state === 'blob' || c.state === 'order') {
+        drawClusterIons(c);
       } else {
         anyXtal = true;
         var sh = xtalPath(c);
@@ -2494,21 +2485,6 @@ footer .signoff em {
         }
       }
     }
-    // amorphous ions-in-progress also show their speckle, while still a blob
-    if (showGrains) {
-      ctx.fillStyle = C.solute;
-      for (i = 0; i < clusters.length; i++) {
-        c = clusters[i];
-        if (!inView(c, margin) || c.state !== 'blob' || !c.pts) continue;
-        ctx.beginPath();
-        for (var pI = 0; pI < c.pts.length; pI++) {
-          var pr = Math.max(0.6, 0.20 * sc);
-          ctx.moveTo(X(c.pts[pI].x) + pr, Y(c.pts[pI].y));
-          ctx.arc(X(c.pts[pI].x), Y(c.pts[pI].y), pr, 0, TAU);
-        }
-        ctx.fill();
-      }
-    }
     if (anyXtal && (phase === 'zoomout' || phase === 'hold' || phase === 'done' || phase === 'fill')) {
       ctx.save();
       ctx.clip(union);
@@ -2521,16 +2497,8 @@ footer .signoff em {
     ctx.lineWidth = Math.max(1, 0.07 * sc);
     for (i = 0; i < clusters.length; i++) {
       c = clusters[i];
-      if (!inView(c, margin) || c.state === 'blob' || c.state === 'morph') continue;
+      if (!inView(c, margin) || c.state === 'blob' || c.state === 'order') continue;
       ctx.stroke(xtalPath(c));
-    }
-    ctx.strokeStyle = C.amRim;
-    ctx.lineWidth = Math.max(1, 0.09 * sc);
-    for (i = 0; i < clusters.length; i++) {
-      c = clusters[i];
-      if (!inView(c, margin)) continue;
-      if (c.state === 'blob') ctx.stroke(hullPath(c.pts.length >= 3 ? convexHull(c.pts) : c.pts, c.cx, c.cy, 0.7));
-      else if (c.state === 'morph') ctx.stroke(morphPath(c));
     }
 
     // scale bar always reads the camera's true current width honestly
@@ -2558,11 +2526,17 @@ footer .signoff em {
     stageEls[el.getAttribute('data-stage')] = el;
   });
   var PHASE_LABEL = {
-    ions: 'ions', cluster: 'amorphous', morph: 'nanocrystals', fill: 'attach',
+    ions: 'ions', cluster: 'amorphous', fill: 'attach',
     zoomout: 'mesocrystal', hold: 'mesocrystal', done: 'mesocrystal'
   };
   function readout() {
     var shown = PHASE_LABEL[phase] || 'ions';
+    if (phase === 'cluster') {
+      for (var j = 0; j < clusters.length; j++) {
+        var st = clusters[j].state;
+        if (st === 'ready' || st === 'attach' || st === 'attached') { shown = 'nanocrystals'; break; }
+      }
+    }
     for (var k in stageEls) {
       if (stageEls[k]) stageEls[k].classList.toggle('active', k === shown);
     }
