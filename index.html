@@ -963,9 +963,14 @@ footer .signoff em {
      stack. 12.5vw for the names against 26vw for the figure fills the width
      it is actually given: measured, the row lands inside the gutters with
      room to spare all the way down to a 320px phone. */
-  .stage { gap: clamp(0.3rem, 1vw, 1rem); }
-  .name { font-size: clamp(1.15rem, 12.5vw, 3.4rem); line-height: 1.05; }
-  .tilt { width: clamp(72px, 26vw, 210px); }
+  /* The three-part wordmark shares one line, so the names and the molecule are
+     competing for the same width and every point given to one is taken from
+     the other. The molecule is the thing worth looking at, so it takes the
+     larger share: 38vw against 8.6vw a side. At 390px that is a 148px figure
+     instead of a 101px one, with the names still at a comfortable 33px. */
+  .stage { gap: clamp(0.25rem, 0.8vw, 1rem); }
+  .name { font-size: clamp(1.05rem, 8.6vw, 3.4rem); line-height: 1.05; }
+  .tilt { width: clamp(96px, 38vw, 210px); }
   .motif-caption { --cap-x: 0rem; }
   .hero-foot { margin-top: 6.25rem; }   /* clears the out-of-flow caption */
   .about-grid { grid-template-columns: 1fr; gap: 2.75rem; }
@@ -1002,7 +1007,19 @@ footer .signoff em {
   .entry-meta, .elsewhere .label { font-size: 0.76rem; }
   /* The hero gutter is worth more to the wordmark than to the whitespace at
      this size, so the hero keeps less of it than the text sections do. */
-  .wrap-hero { padding: 0 0.75rem; }
+  .wrap-hero { padding: 0 0.5rem; }
+  /* The ghost tag is parked to the left of the Z, and the Z is the leftmost
+     thing on the page, so on a phone it lands past the edge and the hero's
+     overflow:hidden clips it. Put it above the letter instead, where there is
+     room, and let it drift down into place rather than in from the side. */
+  .secret-z::after {
+    right: auto; left: 50%;
+    top: auto; bottom: 106%;
+    transform: translate(-50%, 6px) rotate(-8deg) scale(0.96);
+  }
+  .secret-z:hover::after, .secret-z:focus-visible::after {
+    transform: translate(-50%, 0) rotate(-8deg) scale(1);
+  }
   section { padding: 3rem 0; }
   .hero { padding: 2rem 0 3rem; }
   .portrait { max-width: 320px; }
