@@ -1572,7 +1572,7 @@ footer .signoff em {
 
   <div class="cs-stage">
     <canvas class="cs-canvas" id="csCanvas" role="img"
-            aria-label="An animated sequence: ions drift in solution and aggregate into dense amorphous nanoparticles, which keep feeding, merge when they collide, and trade ions with solution while the smallest dissolve away, until the solution is consumed. Crystallinity then nucleates at a spot on each particle's surface and sweeps through it as a front, in place, with no rotation. The crystallites diffuse toward a growing array and snap into contact, oriented attachment, building a hexagonal mesocrystal that keeps its flaws: trapped pores and slightly misregistered blocks. The camera pulls back to show the micron-scale platelet, then keeps pulling back until the flaws are no longer resolvable and the platelet is one clean hexagonal tablet among many, stacked in layers the way nacre is. The sequence then resets and repeats."></canvas>
+            aria-label="An animated sequence: ions drift in solution and aggregate into dense amorphous nanoparticles, which keep feeding, merge when they collide, and trade ions with solution while the smallest dissolve away, until the solution is consumed. Crystallinity then nucleates at a spot on each particle's surface and sweeps through it as a front, in place, with no rotation. The crystallites diffuse toward a growing array and snap into contact, oriented attachment, building a hexagonal mesocrystal that keeps its flaws: trapped pores and slightly misregistered blocks. The camera pulls back to show the micron-scale platelet, then further still, until the platelet is one tablet among many piled in offset courses the way nacre is. Pulling back once more, the stack gives way to the shell it was building: an abalone, its interior playing the rainbow that those stacked layers produce. The sequence then resets and repeats."></canvas>
     <div class="cs-hint" id="csHint">Scroll into view to start</div>
   </div>
 
@@ -1582,8 +1582,9 @@ footer .signoff em {
     <li data-stage="nanocrystals">Nanocrystals</li>
     <li data-stage="attach">Oriented attachment</li>
     <li data-stage="mesocrystal">Hexagonal mesocrystal</li>
-    <li data-stage="nacre">Nacre</li>
-    <li data-stage="pearl">Structural colour</li>
+    <li data-stage="nacre">Stacked nacre</li>
+    <li data-stage="optics">Interference</li>
+    <li data-stage="shell">Shell</li>
   </ol>
 
   <div class="cs-controls">
@@ -2117,7 +2118,9 @@ footer .signoff em {
   // otherwise stray ions keep nucleating fresh, tiny clusters faster than the
   // existing ones can grow, and the supply fragments into dozens of clusters
   // that never reach a usable size instead of a handful that do
-  var JOIN_R = 4.5, NUCLEATE_R = 1.3;
+  // Reaching much further than this makes ions stick where they first touch
+  // and the droplets grow fronds instead of staying compact.
+  var JOIN_R = 4.7, NUCLEATE_R = 1.3;
   var GROW_TARGET = IONS_PER_TILE;
   var CLUSTER_TIMEOUT = 320;            // backstop for the depletion latch
   var NM_PER_UNIT = 15;                 // one world unit ~15 nm: blocks ~79 nm, platelet ~2.9 um
@@ -2129,8 +2132,16 @@ footer .signoff em {
   // the weaker volumetric term pulls the interior in as well, without which
   // the ions collect in a hollow ring at the confinement radius instead of
   // filling a solid, densely packed particle.
+  // Raising the surface term does not compact a droplet -- it pins the ions
+  // at the confinement radius and leaves the middle hollow. This pair is
+  // what actually gives a solid, densely packed particle.
   var COH_K = 0.55, COH_V = 0.075, REP_K = 2.0;
   var PACK_R = 0.5;                     // droplet radius coefficient: R = PACK_R * ION_D * sqrt(n)
+  // Amorphous particles carry a lot of surface energy, so they do not merely
+  // drift until they happen to collide -- they draw each other in and fuse.
+  // Only droplets that could actually coalesce pull on one another; two
+  // already-full ones just pass by.
+  var ATTRACT_K = 0.9, ATTRACT_R = 26;
   // amorphous-to-crystalline transformation: stochastic nucleation + front sweep
   var P_NUC = 0.02, P_NUC_CONTACT = 0.5, FRONT_V = 0.14;
   // dissolution: Gibbs-Thomson ripening plus a slow background ion exchange
@@ -2178,17 +2189,18 @@ footer .signoff em {
   var PLATE_A = HEX_A + TILE_HW;        // apothem of one finished platelet
   var Z1 = HEX_EXTENT * 2.3;
   var Z2 = Z1 * 6;
-  var NACRE_DUR = 300, NACRE_LAYERS = 6;
-  var NACRE_DX = PLATE_A * 0.13, NACRE_DY = PLATE_A * 0.17;
-  // Keep pulling back and even the tablets stop being resolvable. What is
-  // left is what nacre actually shows the naked eye: the stacked layers are
-  // a few hundred nanometres thick, on the order of a wavelength of light,
-  // so they diffract it and the surface plays colour. That is structural
-  // colour -- no pigment involved.
-  // Far enough back that the sheen reads across many tablets, but not so far
-  // that the tablets disappear -- the structure has to stay visible, or the
-  // panel stops being a figure and becomes a screensaver.
-  var Z3 = Z2 * 4.5, PEARL_DUR = 320, TABLET_MIN_PX = 4.5;
+  // The tablets are stacked, not tiled: the view tips over so the sheets are
+  // seen at a low angle, each plate carrying a visible edge, piled in courses
+  // that are offset from one another the way brickwork is.
+  var NACRE_DUR = 300, NACRE_LAYERS = 7;
+  var PLATE_SQUASH = 0.44;              // vertical foreshortening of the sheets
+  var PLATE_THICK = 0.20;               // plate edge depth, as a fraction of the apothem
+  var NACRE_STAGGER = 0.31;             // lateral offset between courses
+  // Then everything goes: pull back far enough and you are looking at the
+  // shell itself, the whole structure resolved into the one thing it was
+  // building all along.
+  var Z3 = Z2 * 3, SHELL_DUR = 340, TABLET_MIN_PX = 4.5;
+  var OPTICS_DUR = 300;                 // the interference beat, between stack and shell
   // deterministic per-tablet shade, so the mosaic does not shimmer frame to
   // frame the way stored randomness would once the lattice is generated live
   function tabTone(i, j) {
@@ -2436,6 +2448,26 @@ footer .signoff em {
             clusters.splice(i, 1);
             break;
           }
+        }
+      }
+
+      // surface energy at work between particles, not just within them: two
+      // droplets that could still fuse pull on each other and close the gap
+      // themselves rather than waiting on a chance collision
+      for (i = 0; i < clusters.length; i++) {
+        var ca = clusters[i];
+        if (ca.state !== 'blob') continue;
+        for (j = i + 1; j < clusters.length; j++) {
+          var cb = clusters[j];
+          if (cb.state !== 'blob') continue;
+          if (ca.pts.length + cb.pts.length > SIZE_CAP) continue;
+          var ax = cb.cx - ca.cx, ay = cb.cy - ca.cy;
+          var ad = Math.hypot(ax, ay);
+          if (ad > ATTRACT_R || ad < 1e-4) continue;
+          var af2 = ATTRACT_K * (1 - ad / ATTRACT_R) / ad * dt;
+          var ma = 1 / Math.sqrt(ca.pts.length), mb = 1 / Math.sqrt(cb.pts.length);
+          ca.vx += ax * af2 * ma; ca.vy += ay * af2 * ma;
+          cb.vx -= ax * af2 * mb; cb.vy -= ay * af2 * mb;
         }
       }
 
@@ -2737,9 +2769,11 @@ footer .signoff em {
     } else if (phase === 'zoomout') {
       if (phaseT > 260) { phase = 'nacre'; phaseT = 0; }
     } else if (phase === 'nacre') {
-      if (phaseT > NACRE_DUR) { phase = 'pearl'; phaseT = 0; }
-    } else if (phase === 'pearl') {
-      if (phaseT > PEARL_DUR) { phase = 'hold'; phaseT = 0; }
+      if (phaseT > NACRE_DUR) { phase = 'optics'; phaseT = 0; }
+    } else if (phase === 'optics') {
+      if (phaseT > OPTICS_DUR) { phase = 'shell'; phaseT = 0; }
+    } else if (phase === 'shell') {
+      if (phaseT > SHELL_DUR) { phase = 'hold'; phaseT = 0; }
     } else if (phase === 'hold') {
       if (phaseT > 170) { phase = 'done'; phaseT = 0; }
     }
@@ -2861,115 +2895,386 @@ footer .signoff em {
     p.closePath();
     return p;
   }
-  // Stacked tablets, drawn deepest first. Each layer is the same tiling shifted
-  // a little, so you look down onto a pile of plates and see their edges step
-  // away from you, the way nacre does in section.
+  // A squashed hexagon: the same platelet, seen at a low angle so the sheet
+  // it belongs to reads as a surface receding rather than a flat pattern.
+  function tabletPath(pcx, pcy, a, dy) {
+    var R = a / Math.cos(Math.PI / 6), p = new Path2D();
+    for (var k = 0; k < 6; k++) {
+      var th = Math.PI / 6 + k * Math.PI / 3;
+      var px = X(pcx + R * Math.cos(th));
+      var py = Y(pcy + R * Math.sin(th) * PLATE_SQUASH) + dy;
+      if (k === 0) p.moveTo(px, py); else p.lineTo(px, py);
+    }
+    p.closePath();
+    return p;
+  }
+  // Nacre in section: courses of tablets piled on top of one another, each
+  // course offset from the one below, every plate showing the depth of its
+  // own edge. Bottom course first so the ones above overlap it.
   function drawNacre(a0, warm) {
     // Only the tablets actually on screen are generated, so this stays cheap
     // at any magnification -- and once they fall below a few pixels there is
     // nothing left to resolve and it draws nothing at all.
-    if (2 * PLATE_A * sc < TABLET_MIN_PX) return false;
-    var mx2 = camW / 2 + PLATE_A * 2, my2 = camH / 2 + PLATE_A * 2;
-    var wf = warm || 0;   // as the camera pulls back the tablets take on the shell's own colour
-    for (var L = NACRE_LAYERS - 1; L >= 0; L--) {
-      var depth = L / (NACRE_LAYERS - 1);
-      var ox = NACRE_DX * L, oy = NACRE_DY * L;
-      var lum = 0.30 + 0.70 * (1 - depth);
-      var br = 13 + 26 * lum, bg = 30 + 63 * lum, bb = 44 + 88 * lum;
-      ctx.fillStyle = 'rgb(' + Math.round(br + (26 + 44 * lum - br) * wf) + ',' +
-        Math.round(bg + (74 + 96 * lum - bg) * wf) + ',' +
-        Math.round(bb + (72 + 74 * lum - bb) * wf) + ')';
-      ctx.strokeStyle = 'rgba(' + Math.round(150 + 70 * wf) + ',' + Math.round(214 + 30 * wf) + ',' +
-        Math.round(236 - 40 * wf) + ',' + (0.10 + 0.34 * (1 - depth)) + ')';
+    var tabPx = 2 * PLATE_A * sc;
+    if (tabPx < TABLET_MIN_PX) return false;
+    var mx2 = camW / 2 + PLATE_A * 1.15, my2 = camH / 2 + PLATE_A * 1.15;
+    var wf = warm || 0;
+    var thick = PLATE_A * PLATE_THICK * PLATE_SQUASH * sc;   // edge depth, in pixels
+    var rowH = PLATE_A * Math.sqrt(3) * PLATE_SQUASH;
+    // the wider the shot the more tablets are on screen, so drop courses as
+    // they shrink -- the stack still reads, and the frame stays cheap
+    var nL = Math.max(3, Math.min(NACRE_LAYERS, Math.round(tabPx / 17)));
+    for (var L = 0; L < nL; L++) {
+      var up = nL > 1 ? L / (nL - 1) : 1;
+      var ox = NACRE_STAGGER * PLATE_A * (L % 2 ? 1 : -1) * (0.4 + 0.6 * up);
+      var oy = PLATE_A * 0.16 * L;
+      var dy = -thick * L * 2.05;        // each course sits on the one beneath
+      // upper courses catch the light; the ones below fall away into shadow
+      var lum = 0.26 + 0.74 * up;
       ctx.lineWidth = Math.max(0.7, 0.5 * dpr);
-      ctx.globalAlpha = a0 * (L === 0 ? 1 : 0.96);
-      var jLo = Math.floor((-my2 - oy) / (PLATE_A * Math.sqrt(3))) - 1;
-      var jHi = Math.ceil((my2 - oy) / (PLATE_A * Math.sqrt(3))) + 1;
+      ctx.globalAlpha = a0;
+
+      var walls = new Path2D(), tops = new Path2D();
+      var jLo = Math.floor((-my2 - oy) / rowH) - 1;
+      var jHi = Math.ceil((my2 - oy) / rowH) + 1;
       for (var nj = jLo; nj <= jHi; nj++) {
         var ry = PLATE_A * Math.sqrt(3) * nj + oy;
         var iLo = Math.floor((-mx2 - ox - PLATE_A * nj) / (2 * PLATE_A)) - 1;
         var iHi = Math.ceil((mx2 - ox - PLATE_A * nj) / (2 * PLATE_A)) + 1;
         for (var ni = iLo; ni <= iHi; ni++) {
           var rx = 2 * PLATE_A * ni + PLATE_A * nj + ox;
-          var path = plateletPath(rx, ry, PLATE_A * (0.97 + tabTone(ni, nj) * 0.05));
-          ctx.fill(path);
-          ctx.stroke(path);
+          var aa = PLATE_A * (0.96 + tabTone(ni, nj + L * 31) * 0.07);
+          walls.addPath(tabletPath(rx, ry, aa, dy + thick));
+          tops.addPath(tabletPath(rx, ry, aa, dy));
         }
+      }
+      // the exposed sliver of the wall path below each top face is the plate
+      // edge, which is what makes the pile read as stacked rather than tiled
+      ctx.fillStyle = 'rgb(' + Math.round((7 + 14 * lum) * (1 + 0.5 * wf)) + ',' +
+        Math.round((17 + 30 * lum) * (1 + 0.35 * wf)) + ',' +
+        Math.round((26 + 40 * lum) * (1 - 0.1 * wf)) + ')';
+      ctx.fill(walls);
+      ctx.fillStyle = 'rgb(' + Math.round(16 + 34 * lum + 26 * wf) + ',' +
+        Math.round(38 + 76 * lum + 30 * wf) + ',' +
+        Math.round(54 + 96 * lum - 14 * wf) + ')';
+      ctx.fill(tops);
+      // only the upper courses get an outline; the ones below are in shadow
+      // and stroking every plate in the pile is not worth the frame time
+      if (L >= nL - 3) {
+        ctx.strokeStyle = 'rgba(' + Math.round(150 + 70 * wf) + ',' + Math.round(214 + 26 * wf) + ',' +
+          Math.round(236 - 40 * wf) + ',' + (0.12 + 0.4 * up) + ')';
+        ctx.stroke(tops);
       }
     }
     ctx.globalAlpha = a0;
     return true;
   }
-  // Structural colour. The stacks behave as a lamellar reflector with a
-  // spacing close to the wavelength of visible light, so different colours
-  // come back at different angles and the surface plays them across itself.
-  function drawPearl(a0, w, h) {
-    // Abalone, not the cool blue of the nanoscale panels: the interior of a
-    // Haliotis shell runs deep blue-green through teal into magenta, violet
-    // and gold, all of it structural rather than pigment.
-    // A wash, not a repaint: the field stays the dark blue the rest of the
-    // panel uses, and the colour rides over the tablets rather than replacing
-    // them. Abalone hues, kept well down so the structure still reads.
-    var g0 = ctx.createLinearGradient(0, h * 0.1, w, h * 0.95);
-    g0.addColorStop(0, '#0A2A31');
-    g0.addColorStop(0.34, '#0D3A38');
-    g0.addColorStop(0.68, '#152A45');
-    g0.addColorStop(1, '#2A1E3A');
+  // Why the shell has colour at all. A tablet is a few hundred nanometres
+  // thick, which is the same order as a wavelength of visible light, so the
+  // reflections off successive layer boundaries come back a path difference
+  // of 2d apart. Where that difference is a whole number of wavelengths the
+  // reflections arrive in step and reinforce -- and since 2d equals a whole
+  // wavelength for one colour and not another, the surface returns colour.
+  function drawOptics(a0, w, h) {
+    var d = Math.min(h * 0.085, 46);          // one layer spacing, in pixels
+    var topY = h * 0.30, leftX = w * 0.07, rightX = w * 0.62;
+    var nL = 5;
+    ctx.save();
     ctx.globalAlpha = a0;
-    ctx.fillStyle = g0;
-    ctx.fillRect(0, 0, w, h);
 
-    var bands = [
-      [60, 226, 178], [78, 200, 236], [150, 150, 226],
-      [226, 116, 168], [230, 176, 104], [176, 120, 214]
-    ];
+    // the stack, in section
+    for (var L = 0; L < nL; L++) {
+      var y = topY + L * d;
+      var lg = ctx.createLinearGradient(leftX, y, rightX, y + d);
+      lg.addColorStop(0, '#1B4F63');
+      lg.addColorStop(1, '#12384B');
+      ctx.fillStyle = lg;
+      ctx.fillRect(leftX, y, rightX - leftX, d * 0.86);
+      ctx.strokeStyle = 'rgba(168,224,244,0.5)';
+      ctx.lineWidth = Math.max(1, 0.9 * dpr);
+      ctx.strokeRect(leftX, y, rightX - leftX, d * 0.86);
+    }
+
+    // spacing marker
+    ctx.strokeStyle = 'rgba(226,244,252,0.75)';
+    ctx.lineWidth = Math.max(1, 0.9 * dpr);
+    var mx = leftX - 12 * dpr;
+    ctx.beginPath();
+    ctx.moveTo(mx, topY); ctx.lineTo(mx, topY + d);
+    ctx.moveTo(mx - 4 * dpr, topY); ctx.lineTo(mx + 4 * dpr, topY);
+    ctx.moveTo(mx - 4 * dpr, topY + d); ctx.lineTo(mx + 4 * dpr, topY + d);
+    ctx.stroke();
+    ctx.fillStyle = 'rgba(232,246,252,0.92)';
+    ctx.font = (8.4 * dpr) + 'px ui-monospace, monospace';
+    ctx.textBaseline = 'middle';
+    ctx.save();
+    ctx.translate(mx - 8 * dpr, topY + d / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.textAlign = 'center';
+    ctx.fillText('d ~ 0.5 um', 0, 0);
+    ctx.restore();
+
+    // incoming beam, with its wave drawn along it
+    var inAng = -0.62, hitX = leftX + (rightX - leftX) * 0.36;
+    var ux = Math.cos(inAng), uy = Math.sin(inAng);
+    var inLen = Math.min(w, h) * 0.34;
+    ctx.strokeStyle = 'rgba(255,252,236,0.92)';
+    ctx.lineWidth = Math.max(1.2, 1.3 * dpr);
+    ctx.beginPath();
+    for (var q = 0; q <= 60; q++) {
+      var f = q / 60, px2 = hitX - ux * inLen * (1 - f), py2 = topY - uy * inLen * (1 - f) * -1;
+      py2 = topY - (inLen * (1 - f)) * Math.sin(-inAng);
+      px2 = hitX - (inLen * (1 - f)) * Math.cos(-inAng);
+      var wob = Math.sin(f * 34 - t * 0.06) * 3.2 * dpr;
+      ctx.lineTo(px2 - Math.sin(-inAng) * wob, py2 - Math.cos(-inAng) * wob);
+    }
+    ctx.stroke();
+    // arrowhead
+    ctx.beginPath();
+    ctx.moveTo(hitX, topY);
+    ctx.lineTo(hitX - 8 * dpr * Math.cos(-inAng) + 4 * dpr * Math.sin(-inAng),
+               topY + 8 * dpr * Math.sin(-inAng) + 4 * dpr * Math.cos(-inAng));
+    ctx.lineTo(hitX - 8 * dpr * Math.cos(-inAng) - 4 * dpr * Math.sin(-inAng),
+               topY + 8 * dpr * Math.sin(-inAng) - 4 * dpr * Math.cos(-inAng));
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(255,252,236,0.92)';
+    ctx.fill();
+
+    // one reflection per interface, all climbing away parallel
+    var outAng = 0.62, oux = Math.cos(outAng), ouy = Math.sin(outAng);
+    var outLen = Math.min(w, h) * 0.42;
+    var spectrum = ['#7CFFC4', '#7FE4FF', '#B7A6FF', '#FF8FC0', '#FFCE7A'];
+    for (var L2 = 0; L2 < nL; L2++) {
+      var sy = topY + L2 * d;
+      var sx = hitX + L2 * d * 0.30;
+      ctx.strokeStyle = spectrum[L2 % spectrum.length];
+      ctx.globalAlpha = a0 * (0.92 - L2 * 0.11);
+      ctx.lineWidth = Math.max(1, 1.1 * dpr);
+      ctx.beginPath();
+      ctx.moveTo(sx, sy);
+      ctx.lineTo(sx + oux * outLen, sy - ouy * outLen);
+      ctx.stroke();
+      // the dotted leg down to the interface it came off
+      if (L2 > 0) {
+        ctx.setLineDash([3 * dpr, 3 * dpr]);
+        ctx.globalAlpha = a0 * 0.4;
+        ctx.beginPath();
+        ctx.moveTo(hitX, topY); ctx.lineTo(sx, sy);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+    }
+    ctx.globalAlpha = a0;
+
+    // wavefronts drawn across the outgoing rays: they line up, which is the
+    // whole point -- the reflections are in step
+    ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+    ctx.lineWidth = Math.max(1, 0.8 * dpr);
+    for (var k2 = 1; k2 <= 5; k2++) {
+      var fr = k2 / 6 * outLen;
+      var wx = hitX + oux * fr, wy = topY - ouy * fr;
+      ctx.beginPath();
+      ctx.moveTo(wx - ouy * d * 0.4, wy - oux * d * 0.4);
+      ctx.lineTo(wx + ouy * d * 1.9, wy + oux * d * 1.9);
+      ctx.stroke();
+    }
+
+    // what comes back out: the reinforced colours
+    var bandX = w * 0.72, bandY = h * 0.2, bandW = w * 0.2, bandH = h * 0.42;
+    var rg2 = ctx.createLinearGradient(bandX, bandY, bandX, bandY + bandH);
+    rg2.addColorStop(0.00, '#66FFC2');
+    rg2.addColorStop(0.22, '#6FE0FF');
+    rg2.addColorStop(0.44, '#A99CFF');
+    rg2.addColorStop(0.66, '#FF87BE');
+    rg2.addColorStop(0.85, '#FFC978');
+    rg2.addColorStop(1.00, '#FFF0B0');
+    ctx.fillStyle = rg2;
+    ctx.fillRect(bandX, bandY, bandW, bandH);
+    ctx.strokeStyle = 'rgba(226,244,252,0.55)';
+    ctx.lineWidth = Math.max(1, 0.9 * dpr);
+    ctx.strokeRect(bandX, bandY, bandW, bandH);
+
+    ctx.fillStyle = 'rgba(232,246,252,0.92)';
+    ctx.font = (8.4 * dpr) + 'px ui-monospace, monospace';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText('2d = mλ  ->  in step', leftX, topY + nL * d + 22 * dpr);
+    ctx.fillText('colour reinforced', leftX, topY + nL * d + 36 * dpr);
+    ctx.textAlign = 'center';
+    ctx.fillText('structural colour', bandX + bandW / 2, bandY - 8 * dpr);
+    ctx.textAlign = 'left';
+    ctx.restore();
+    ctx.globalAlpha = a0;
+  }
+
+  // The shell itself. An abalone is a broad, flattened ear: an oval drawn in
+  // toward a low spiral at one end, with a row of open pores along one
+  // margin. Everything here is in screen space -- by this point the camera
+  // has left the nanoscale behind entirely.
+  function shellOutline(cx, cy, R, inset) {
+    var p = new Path2D(), N = 108, rot = -0.20;
+    var cr = Math.cos(rot), sr = Math.sin(rot);
+    for (var i = 0; i <= N; i++) {
+      var th = i / N * TAU, ct = Math.cos(th), st = Math.sin(th);
+      var ex = ct * (1 + 0.11 * ct) * inset;
+      var ey = 0.63 * st * (1 + 0.20 * ct) * inset;
+      var px = cx + R * (ex * cr - ey * sr);
+      var py = cy + R * (ex * sr + ey * cr);
+      if (i === 0) p.moveTo(px, py); else p.lineTo(px, py);
+    }
+    p.closePath();
+    return p;
+  }
+  function drawShell(a0, w, h, zoom) {
+    var R = Math.min(w * 0.40, h * 0.66) * (zoom || 1);
+    var cx = w * 0.5, cy = h * 0.5;
+    var body = shellOutline(cx, cy, R, 1);
+
+    ctx.save();
+    ctx.globalAlpha = a0;
+    // drop shadow so the shell sits on the field rather than floating in it
+    ctx.save();
+    ctx.globalAlpha = a0 * 0.5;
+    ctx.fillStyle = 'rgba(2,5,10,0.85)';
+    ctx.translate(R * 0.035, R * 0.06);
+    ctx.fill(body);
+    ctx.restore();
+
+    ctx.clip(body);
+    // nacre ground: the deep blue-greens an abalone interior actually runs
+    var g0 = ctx.createLinearGradient(cx - R, cy - R * 0.7, cx + R, cy + R * 0.7);
+    g0.addColorStop(0, '#0E5E63');
+    g0.addColorStop(0.26, '#15827A');
+    g0.addColorStop(0.5, '#2E6FA8');
+    g0.addColorStop(0.72, '#6A47A0');
+    g0.addColorStop(1, '#A05A78');
+    ctx.fillStyle = g0;
+    ctx.fillRect(cx - R * 1.3, cy - R * 1.3, R * 2.6, R * 2.6);
+
+    // the rainbow: broad sweeps of hue at different angles, plus warm blooms.
+    // Inside the shell outline this can be full strength -- it is the point.
     ctx.save();
     ctx.globalCompositeOperation = 'lighter';
+    var bands = [
+      [40, 255, 180], [70, 226, 255], [140, 150, 255], [255, 105, 175],
+      [255, 190, 90], [205, 110, 255], [120, 255, 140], [255, 235, 160]
+    ];
     for (var b = 0; b < bands.length; b++) {
-      var ph = ((t * 0.0016 + b * 0.17) % 1.7) - 0.35;
-      var ang = 0.4 + b * 0.2;
+      var ph = ((t * 0.0017 + b * 0.128) % 1.75) - 0.38;
+      var ang = 0.30 + b * 0.23;
       var ex = Math.cos(ang), ey = Math.sin(ang);
-      var span = Math.abs(ex) * w + Math.abs(ey) * h;
-      var x0 = w / 2 + ex * span * (ph - 0.5), y0 = h / 2 + ey * span * (ph - 0.5);
-      var wid = 0.2 + 0.09 * ((b * 7) % 3);
+      var span = R * 2.6;
+      var x0 = cx + ex * span * (ph - 0.5), y0 = cy + ey * span * (ph - 0.5);
+      var wid = 0.16 + 0.08 * ((b * 5) % 3);
       var g = ctx.createLinearGradient(x0 - ex * span * wid, y0 - ey * span * wid,
                                        x0 + ex * span * wid, y0 + ey * span * wid);
       var col = bands[b][0] + ',' + bands[b][1] + ',' + bands[b][2];
       g.addColorStop(0, 'rgba(' + col + ',0)');
-      g.addColorStop(0.5, 'rgba(' + col + ',0.115)');
+      g.addColorStop(0.5, 'rgba(' + col + ',0.30)');
       g.addColorStop(1, 'rgba(' + col + ',0)');
-      ctx.globalAlpha = a0;
       ctx.fillStyle = g;
-      ctx.fillRect(0, 0, w, h);
+      ctx.fillRect(cx - R * 1.3, cy - R * 1.3, R * 2.6, R * 2.6);
     }
+    var blooms = [
+      [-0.42, -0.20, 0.62, '255,120,160'], [0.34, -0.34, 0.54, '255,205,110'],
+      [0.12, 0.40, 0.60, '150,120,255'], [0.62, 0.16, 0.46, '90,255,210']
+    ];
+    for (var q = 0; q < blooms.length; q++) {
+      var bl = blooms[q];
+      var bx = cx + R * bl[0], by = cy + R * bl[1];
+      var rg = ctx.createRadialGradient(bx, by, 0, bx, by, R * bl[2]);
+      rg.addColorStop(0, 'rgba(' + bl[3] + ',0.30)');
+      rg.addColorStop(1, 'rgba(' + bl[3] + ',0)');
+      ctx.fillStyle = rg;
+      ctx.fillRect(cx - R * 1.3, cy - R * 1.3, R * 2.6, R * 2.6);
+    }
+    ctx.restore();
+
+    // growth lines, sweeping round from the spiral -- these are the courses
+    // of nacre the whole simulation has been laying down
+    var apx = cx - R * 0.62, apy = cy - R * 0.30;
+    ctx.save();
+    ctx.globalAlpha = a0 * 0.20;
+    ctx.strokeStyle = 'rgba(240,252,255,0.9)';
+    ctx.lineWidth = Math.max(1, 1.1 * dpr);
+    for (var k = 1; k <= 16; k++) {
+      ctx.beginPath();
+      ctx.ellipse(apx, apy, R * 0.16 * k, R * 0.115 * k, -0.2, -1.15, 2.05);
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    // the spiral apex
+    ctx.save();
+    ctx.globalAlpha = a0 * 0.5;
+    ctx.strokeStyle = 'rgba(255,250,238,0.85)';
+    ctx.lineWidth = Math.max(1, 1.3 * dpr);
+    ctx.beginPath();
+    for (var sI = 0; sI <= 90; sI++) {
+      var sa = sI / 90 * (TAU * 1.55), srr = R * 0.115 * Math.exp(-sa * 0.30);
+      var sx = apx + Math.cos(sa - 0.6) * srr, sy = apy + Math.sin(sa - 0.6) * srr * 0.82;
+      if (sI === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
+    }
+    ctx.stroke();
+    ctx.restore();
+    ctx.restore();   // release the clip
+
+    // the row of open pores along the dorsal margin, the giveaway that this
+    // is Haliotis and not just any shell
+    ctx.save();
+    ctx.globalAlpha = a0;
+    for (var pI = 0; pI < 7; pI++) {
+      var f = pI / 6;
+      var pa = -2.30 + f * 1.62;
+      var pr = 1 - 0.145 - 0.02 * Math.sin(f * Math.PI);
+      var ct2 = Math.cos(pa), st2 = Math.sin(pa);
+      var ex2 = ct2 * (1 + 0.11 * ct2) * pr, ey2 = 0.63 * st2 * (1 + 0.20 * ct2) * pr;
+      var rot2 = -0.20, cr2 = Math.cos(rot2), sr2 = Math.sin(rot2);
+      var hx = cx + R * (ex2 * cr2 - ey2 * sr2), hy = cy + R * (ex2 * sr2 + ey2 * cr2);
+      var hr = R * (0.050 - 0.020 * f);
+      ctx.beginPath();
+      ctx.ellipse(hx, hy, hr, hr * 0.72, -0.2, 0, TAU);
+      ctx.fillStyle = C.field;
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(226,244,252,0.42)';
+      ctx.lineWidth = Math.max(1, 0.9 * dpr);
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    // rim
+    ctx.save();
+    ctx.globalAlpha = a0 * 0.8;
+    ctx.strokeStyle = 'rgba(224,244,252,0.6)';
+    ctx.lineWidth = Math.max(1.2, 1.5 * dpr);
+    ctx.stroke(body);
     ctx.restore();
     ctx.globalAlpha = a0;
   }
-  // the same sheen laid back over the tablets once they are drawn, so the
-  // colour looks like it is coming off the structure instead of sitting
-  // behind it
-  function pearlOverlay(a0, w, h) {
-    ctx.save();
-    ctx.globalCompositeOperation = 'lighter';
-    var tint = [[70, 220, 190], [210, 130, 180], [220, 180, 110]];
-    for (var b = 0; b < tint.length; b++) {
-      var ph = ((t * 0.0016 + b * 0.31) % 1.7) - 0.35;
-      var ang = 0.5 + b * 0.5;
-      var ex = Math.cos(ang), ey = Math.sin(ang);
-      var span = Math.abs(ex) * w + Math.abs(ey) * h;
-      var x0 = w / 2 + ex * span * (ph - 0.5), y0 = h / 2 + ey * span * (ph - 0.5);
-      var g = ctx.createLinearGradient(x0 - ex * span * 0.26, y0 - ey * span * 0.26,
-                                       x0 + ex * span * 0.26, y0 + ey * span * 0.26);
-      var col = tint[b][0] + ',' + tint[b][1] + ',' + tint[b][2];
-      g.addColorStop(0, 'rgba(' + col + ',0)');
-      g.addColorStop(0.5, 'rgba(' + col + ',0.10)');
-      g.addColorStop(1, 'rgba(' + col + ',0)');
-      ctx.globalAlpha = a0;
-      ctx.fillStyle = g;
-      ctx.fillRect(0, 0, w, h);
-    }
-    ctx.restore();
-    ctx.globalAlpha = a0;
+  // by this point the subject is a shell you could hold, so the bar reads in
+  // millimetres off the drawn size rather than off the camera
+  function drawShellScaleBar(alpha, w, h) {
+    var R = Math.min(w * 0.40, h * 0.66);
+    var mmPerPx = 90 / (R * 2.2);          // a mature Haliotis is roughly 90 mm across
+    var targetMm = w * 0.2 * mmPerPx;
+    var pow10 = Math.pow(10, Math.floor(Math.log(targetMm) / Math.LN10));
+    var mant = targetMm / pow10;
+    var barMm = (mant >= 5 ? 5 : mant >= 2 ? 2 : 1) * pow10;
+    var barW = barMm / mmPerPx;
+    var label = barMm >= 10 ? (barMm / 10) + ' cm' : barMm + ' mm';
+    ctx.globalAlpha = alpha * 0.75;
+    var bx = w * 0.037, by = h - Math.max(14, 2.6 * dpr * 5);
+    ctx.strokeStyle = C.rule;
+    ctx.lineWidth = Math.max(1, 0.9 * dpr);
+    ctx.beginPath();
+    ctx.moveTo(bx, by); ctx.lineTo(bx + barW, by);
+    ctx.moveTo(bx, by - 3 * dpr); ctx.lineTo(bx, by + 3 * dpr);
+    ctx.moveTo(bx + barW, by - 3 * dpr); ctx.lineTo(bx + barW, by + 3 * dpr);
+    ctx.stroke();
+    ctx.fillStyle = C.rule;
+    ctx.font = (7.5 * dpr) + 'px ui-monospace, monospace';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText(label, bx, by - 5 * dpr);
   }
 
   // scale bar always reads the camera's true current width honestly,
@@ -2999,18 +3304,29 @@ footer .signoff em {
   function render(alpha) {
     var w = cv.width, h = cv.height, i, c;
 
-    var nacreA = 0, pearlA = 0;
+    var nacreA = 0, shellA = 0, shellZoom = 1, opticsA = 0;
     if (phase === 'zoomout') camW = VIEW_W + (Z1 - VIEW_W) * ease(Math.min(1, phaseT / 260));
     else if (phase === 'nacre') {
       var nf = Math.min(1, phaseT / NACRE_DUR);
       camW = Z1 + (Z2 - Z1) * ease(nf);
       nacreA = Math.min(1, nf / 0.4);   // the neighbours fade up as they come into frame
-    } else if (phase === 'pearl') {
-      var pf = Math.min(1, phaseT / PEARL_DUR);
-      camW = Z2 + (Z3 - Z2) * ease(pf);
-      nacreA = 1;
-      pearlA = Math.min(1, Math.max(0, (pf - 0.2) / 0.5));
-    } else if (phase === 'hold' || phase === 'done') { camW = Z3; nacreA = 1; pearlA = 1; }
+    } else if (phase === 'optics') {
+      // hold the wide shot of the stack; the explanation is drawn over it
+      camW = Z2;
+      var of2 = Math.min(1, phaseT / OPTICS_DUR);
+      nacreA = 1 - 0.55 * Math.min(1, of2 / 0.25);   // dim the stack behind the diagram
+      opticsA = Math.min(1, of2 / 0.18) * Math.min(1, Math.max(0, (1 - of2) / 0.14));
+    } else if (phase === 'shell') {
+      // One continuous pull-back rather than a dissolve: the stack keeps
+      // receding, and the shell arrives already far too big for the frame
+      // and shrinks into it, so the handover reads as more of the same
+      // zoom rather than a cut to a different picture.
+      var sf = Math.min(1, phaseT / SHELL_DUR);
+      camW = Z2 + (Z3 - Z2) * ease(sf);
+      nacreA = Math.max(0, 1 - sf / 0.40);
+      shellA = Math.min(1, Math.max(0, (sf - 0.16) / 0.30));
+      shellZoom = 3.4 - 2.4 * ease(Math.min(1, Math.max(0, (sf - 0.16) / 0.66)));
+    } else if (phase === 'hold' || phase === 'done') { camW = Z3; shellA = 1; }
     else camW = VIEW_W;
     camH = camW * VIEW_H / VIEW_W;
     sc = cv.width / camW;
@@ -3022,16 +3338,20 @@ footer .signoff em {
     ctx.fillRect(0, 0, w, h);
     ctx.globalAlpha = alpha;
 
-    // the sheen comes up underneath while the tablets are still resolvable,
-    // and is all that is left once they are not
-    if (pearlA > 0) drawPearl(alpha * pearlA, w, h);
-    if (nacreA > 0) { ctx.globalAlpha = alpha * nacreA; drawNacre(alpha * nacreA, pearlA * 0.45); ctx.globalAlpha = alpha; }
-    if (pearlA > 0) {
-      pearlOverlay(alpha * pearlA, w, h);
-      drawScaleBar(alpha, w, h);
+    if (nacreA > 0) { ctx.globalAlpha = alpha * nacreA; drawNacre(alpha * nacreA, shellA); ctx.globalAlpha = alpha; }
+    if (opticsA > 0) {
+      drawOptics(alpha * opticsA, w, h);
       ctx.globalAlpha = 1;
       return;
     }
+    if (shellA > 0) {
+      // everything else is gone by now: no ions, no blocks, no lattice
+      drawShell(alpha * shellA, w, h, shellZoom);
+      if (shellZoom < 1.12) drawShellScaleBar(alpha * shellA, w, h);
+      ctx.globalAlpha = 1;
+      return;
+    }
+    if (nacreA > 0 && phase === 'shell') { ctx.globalAlpha = 1; return; }
 
     // once a block is smaller than a pixel or so there is nothing left to
     // resolve: the assembled platelet is drawn as the clean hexagon a real
@@ -3148,7 +3468,8 @@ footer .signoff em {
   });
   var PHASE_LABEL = {
     ions: 'ions', cluster: 'amorphous', fill: 'attach',
-    zoomout: 'mesocrystal', nacre: 'nacre', pearl: 'pearl', hold: 'pearl', done: 'pearl'
+    zoomout: 'mesocrystal', nacre: 'nacre', optics: 'optics',
+    shell: 'shell', hold: 'shell', done: 'shell'
   };
   function readout() {
     var shown = PHASE_LABEL[phase] || 'ions';
