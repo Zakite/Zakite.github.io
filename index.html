@@ -2643,10 +2643,12 @@ function makeSim(seedFn) {
     var cs = Math.cos(p.th), sn = Math.sin(p.th);
     // a square tile, not a blob: many of these packing together, each one
     // still visibly its own tile, is what reads as a mesocrystal superstructure.
-    // Sized so a square's corners land close to its old circular footprint,
-    // not past it, or neighbouring tiles at unrelated angles chew into each
-    // other's corners instead of sitting side by side.
-    var hw = p.r * 0.72, hh = p.r * 0.72;
+    // The positions underneath still come from circle packing, not a proper
+    // lattice, so the squares are kept smaller than their old circular
+    // footprint on purpose: sized to the old footprint they mostly overlap
+    // into an unreadable mess, and neighbours that are actually co-oriented
+    // are still bridged by the neck fill below regardless of this gap.
+    var hw = p.r * 0.56, hh = p.r * 0.56;
     var path = new Path2D(), i;
     var uv = [[-hw, -hh], [hw, -hh], [hw, hh], [-hw, hh]];
     for (i = 0; i < 4; i++) {
