@@ -924,11 +924,12 @@ footer .signoff em {
   /* Zak | molecule | Jibrin stays one line all the way down to a phone. The
      three columns are kept and the type and the figure are sized off the
      viewport instead, so the wordmark shrinks rather than breaking into a
-     stack. 9.8vw for the names against 24vw for the figure is what keeps all
-     three inside the gutters right down to a 320px phone. */
-  .stage { gap: clamp(0.35rem, 1.2vw, 1rem); }
-  .name { font-size: clamp(1.15rem, 9.8vw, 3.4rem); line-height: 1.05; }
-  .tilt { width: clamp(72px, 24vw, 210px); }
+     stack. 12.5vw for the names against 26vw for the figure fills the width
+     it is actually given: measured, the row lands inside the gutters with
+     room to spare all the way down to a 320px phone. */
+  .stage { gap: clamp(0.3rem, 1vw, 1rem); }
+  .name { font-size: clamp(1.15rem, 12.5vw, 3.4rem); line-height: 1.05; }
+  .tilt { width: clamp(72px, 26vw, 210px); }
   .motif-caption { --cap-x: 0rem; }
   .hero-foot { margin-top: 6.25rem; }   /* clears the out-of-flow caption */
   .about-grid { grid-template-columns: 1fr; gap: 2.75rem; }
@@ -950,6 +951,9 @@ footer .signoff em {
   .brand { font-size: 1.05rem; }
   .nav-links { flex-wrap: wrap; justify-content: center; gap: 0.55rem 1.05rem; }
   .nav-links a { font-size: 0.82rem; }
+  /* The hero gutter is worth more to the wordmark than to the whitespace at
+     this size, so the hero keeps less of it than the text sections do. */
+  .wrap-hero { padding: 0 0.75rem; }
   section { padding: 3rem 0; }
   .hero { padding: 2rem 0 3rem; }
   .portrait { max-width: 320px; }
@@ -1837,7 +1841,10 @@ footer .signoff em {
 
     function apply2() {
       raf2 = null;
-      if (want2) { aim(want2[0], want2[1]); reveal(want2[2]); }
+      /* setSpin as well as the tilt, so the wire eases off its rotation as a
+         finger draws it edge-on, the same way it does under a cursor. Without
+         it the stack keeps turning while you are trying to read it. */
+      if (want2) { aim(want2[0], want2[1]); reveal(want2[2]); setSpin(want2[2]); }
     }
     function queue(v) { want2 = v; if (!raf2) raf2 = requestAnimationFrame(apply2); }
 
@@ -1875,12 +1882,13 @@ footer .signoff em {
   if (still) { badge.style.opacity = '1'; rest(); return; }
 
   /* No fine pointer anywhere on the device, so this is a phone or a tablet.
-     The entrance animation and the never-ending spin were the two things
-     stuttering there, and neither survives contact with a small screen well,
-     so neither runs: the figure is a still G-tetrad until a finger lands on
-     it. */
+     The entrance is the expensive part -- fourteen plates and their ions all
+     transitioning transform and opacity at once, during first paint -- so it
+     is skipped and the wire simply starts assembled. The spin is one
+     composited rotation and costs nothing, so it stays: the figure turns on
+     its axis exactly as it does on a desktop, and a finger tilts it. */
   if (!fine) {
-    spin.style.animation = 'none';
+    spin.style.setProperty('--spin-t', SPIN_REST + 's');
     badge.style.opacity = '1';
     rest();
     touchTilt();
@@ -2675,10 +2683,10 @@ function makeSim(seedFn) {
   /* Lattice drawn in the frame of the domain, not the particle, so every
      crystallite that has locked into the same domain shares one lattice phase and
      the planes run on unbroken through the joins. */
-  function fringes(p, anchor) {
+  var FIELD_REACH = Math.hypot(W, H);   // big enough to cover the whole field from any anchor
+  function fringes(p, anchor, reach) {
     var th = anchor.th, cs = Math.cos(th), sn = Math.sin(th);
     var path = new Path2D();
-    var reach = p.r * 1.45;
     var du = (p.x - anchor.x) * cs + (p.y - anchor.y) * sn;
     var dv = -(p.x - anchor.x) * sn + (p.y - anchor.y) * cs;
     var sp = spPx / sc;
@@ -2778,21 +2786,23 @@ function makeSim(seedFn) {
       ctx.stroke(shapeCache[i]);
     }
 
-    // crystallites: body, then the lattice, then a whisper of an outline so the
-    // particle texture inside a mesocrystal stays visible
-    ctx.lineWidth = Math.max(1, 0.055 * sc);
+    // crystallites: fill each tile (and its coherent necks), then, once per
+    // co-oriented domain rather than once per tile, clip to the union of
+    // that whole domain and stroke ONE continuous lattice fringe pattern
+    // across it. Stroking the fringe per tile instead redraws the same grid
+    // lines again and again wherever tiles or necks overlap, which is what
+    // turns a genuinely co-oriented mesocrystal into an unreadable scribble.
+    var domains = {};
+    function domainOf(root) {
+      if (!domains[root]) domains[root] = new Path2D();
+      return domains[root];
+    }
     for (i = 0; i < sim.par.length; i++) {
       p = sim.par[i];
       if (!p || !p.alive || !p.xtal || !shapeCache[i]) continue;
       ctx.fillStyle = C.xtBody;
       ctx.fill(shapeCache[i]);
-      var anchor = sim.par[sim.domainOf(i)];
-      if (!anchor || !anchor.alive) anchor = p;
-      ctx.save();
-      ctx.clip(shapeCache[i]);
-      ctx.strokeStyle = C.fringe;
-      ctx.stroke(fringes(p, anchor));
-      ctx.restore();
+      domainOf(sim.domainOf(i)).addPath(shapeCache[i]);
       // a particle that just ripened glows briefly, so each individual
       // solid-state transformation is legible as it happens
       var age = simT() - p.tX;
@@ -2807,15 +2817,19 @@ function makeSim(seedFn) {
       }
     }
     for (k = 0; k < neckCache.length; k++) {
-      var nk = neckCache[k], na = sim.par[sim.domainOf(nk.a)];
-      if (!na || !na.alive) na = sim.par[nk.a];
+      var nk = neckCache[k];
       ctx.fillStyle = C.xtBody;
       ctx.fill(nk.path);
+      domainOf(sim.domainOf(nk.a)).addPath(nk.path);
+    }
+    ctx.strokeStyle = C.fringe;
+    ctx.lineWidth = Math.max(1, 0.055 * sc);
+    for (var root in domains) {
+      var anchor = sim.par[root];
+      if (!anchor || !anchor.alive) continue;
       ctx.save();
-      ctx.clip(nk.path);
-      ctx.strokeStyle = C.fringe;
-      ctx.lineWidth = Math.max(1, 0.055 * sc);
-      ctx.stroke(fringes(sim.par[nk.a], na));
+      ctx.clip(domains[root]);
+      ctx.stroke(fringes(anchor, anchor, FIELD_REACH));
       ctx.restore();
     }
     ctx.lineWidth = Math.max(1, 0.07 * sc);
@@ -2830,7 +2844,11 @@ function makeSim(seedFn) {
     // are never deleted even if the two particles later drift apart, so a
     // bond record alone does not mean the pair is still actually touching;
     // without that distance check a few stale contacts from early, denser
-    // packing draw as long lines slashing across the whole aggregate.
+    // packing draw as long lines slashing across the whole aggregate. And
+    // where several particles from the same two domains all touch along one
+    // stretch, that is one boundary, not one mark per particle pair, so only
+    // the first contact found between any given pair of domains gets drawn.
+    var boundaryDrawn = {};
     for (k = 0; k < sim.bonds.length; k++) {
       B = sim.bonds[k];
       if (B.dead || B.coh) continue;
@@ -2839,6 +2857,10 @@ function makeSim(seedFn) {
       if (!p || !q || !p.alive || !q.alive || !p.xtal || !q.xtal) continue;
       var dx = q.x - p.x, dy = q.y - p.y, d = Math.hypot(dx, dy) || 1e-6;
       if (d > (p.r + q.r) * 1.35) continue;
+      var dra = sim.domainOf(B.a), drb = sim.domainOf(B.b);
+      var bkey = Math.min(dra, drb) + '-' + Math.max(dra, drb);
+      if (boundaryDrawn[bkey]) continue;
+      boundaryDrawn[bkey] = true;
       var t = p.r / (p.r + q.r);
       var mx = p.x + dx * t, my = p.y + dy * t;
       var nx = -dy / d, ny = dx / d;
