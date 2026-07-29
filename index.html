@@ -2127,6 +2127,9 @@ footer .signoff em {
   // draws the ions closer together instead of only rearranging them. Real
   // ACC is hydrated and markedly less dense than the calcite it becomes.
   var ION_D = MICRO_SPACING * 1.14;     // contact diameter for random close packing
+  PAIR_CUT = ION_D * 2.3;
+  STICK_R = ION_D * 1.18;
+  NUC_R = ION_D * 1.06;
   // Blocks are square and sit on a square lattice: squares packing into a much
   // larger hexagon. Their size follows the ion count as sqrt(n), since area
   // scales with the number of ions. The spread is deliberately modest. A
@@ -2152,31 +2155,39 @@ footer .signoff em {
   // otherwise stray ions keep nucleating fresh, tiny clusters faster than the
   // existing ones can grow, and the supply fragments into dozens of clusters
   // that never reach a usable size instead of a handful that do
-  // Reaching much further than this makes ions stick where they first touch
-  // and the droplets grow fronds instead of staying compact.
-  var JOIN_R = 4.7, NUCLEATE_R = 1.3;
+  // Every ion, free or bound, obeys one pair interaction: it is pushed off
+  // anything closer than a contact diameter and pulled toward anything within
+  // range beyond that. Cohesion between neighbours rather than toward a
+  // centroid is what makes a droplet compact instead of stringy -- a surface
+  // ion is pulled back by the ions it is actually touching, so the droplet
+  // minimises its own surface. Solvated ions cohere only weakly, which is why
+  // nucleation is rare while growth onto an existing particle is quick.
+  // Sized against the timestep, not by eye: a step may only move an ion a
+  // small fraction of a diameter, or the pair force overshoots, the overshoot
+  // is bounced back harder, and the droplet shakes itself apart instead of
+  // settling. Speeds are capped for the same reason.
+  var PAIR_CUT, K_REP2 = 3.0, K_ATT_BOUND = 0.16, K_ATT_FREE = 0.028;
+  // Touching is not the same as nucleating. Two solvated ions in contact have
+  // to shed their hydration to stick, so most encounters come to nothing --
+  // without that barrier the whole bath nucleates at once into a hundred
+  // dimers and nothing ever grows to a usable size.
+  var NUC_P = 0.013;
+  var KT_FREE = 0.34, KT_BOUND = 0.10;
+  var DAMP_FREE = 0.92, DAMP_BOUND = 0.84;
+  var VMAX_FREE = 2.0, VMAX_BOUND = 0.85;
+  var STICK_R, NUC_R;                   // contact distances for joining and nucleating
   var GROW_TARGET = IONS_PER_TILE;
   var CLUSTER_TIMEOUT = 320;            // backstop for the depletion latch
   var NM_PER_UNIT = 15;                 // one world unit ~15 nm: blocks ~79 nm, platelet ~2.9 um
   var FILL_RATE = 11;                   // new off-screen tiles claimed per unit time, once seeding is under way
   // No deliberate voids. Growth fills the space it already has before it
   // closes over anything, so nothing gets encapsulated behind the front.
-  // amorphous stage: ions cohere into a dense, randomly packed droplet --
-  // mutual repulsion at contact, surface tension holding the whole together
-  // Two cohesive terms. The surface term keeps the droplet from spreading;
-  // the weaker volumetric term pulls the interior in as well, without which
-  // the ions collect in a hollow ring at the confinement radius instead of
-  // filling a solid, densely packed particle.
-  // Raising the surface term does not compact a droplet -- it pins the ions
-  // at the confinement radius and leaves the middle hollow. This pair is
-  // what actually gives a solid, densely packed particle.
-  var COH_K = 0.55, COH_V = 0.075, REP_K = 2.0;
-  var PACK_R = 0.5;                     // droplet radius coefficient: R = PACK_R * ION_D * sqrt(n)
-  // Amorphous particles carry a lot of surface energy, so they do not merely
-  // drift until they happen to collide -- they draw each other in and fuse.
-  // Only droplets that could actually coalesce pull on one another; two
-  // already-full ones just pass by.
+  // Amorphous particles carry a lot of surface energy, so droplets that could
+  // still fuse draw each other in rather than waiting on a chance collision.
+  // Between individual ions this is handled by the pair force; this is the
+  // longer-range pull between whole particles.
   var ATTRACT_K = 0.9, ATTRACT_R = 26;
+  var REP_K = 2.0;                      // contact repulsion inside an ordering crystallite
   // amorphous-to-crystalline transformation: stochastic nucleation + front sweep
   var P_NUC = 0.02, P_NUC_CONTACT = 0.5, FRONT_V = 0.14;
   // dissolution: Gibbs-Thomson ripening plus a slow background ion exchange
@@ -2443,73 +2454,146 @@ footer .signoff em {
     return n;
   }
 
+  // Reused across steps so the per-frame allocation stays flat.
+  var aX = [], aY = [], aVX = [], aVY = [], aObj = [], aCl = [], aStatic = [], aN = 0;
+  var aCell = {};
+
+  /* One interaction, applied to everything at once.
+
+     Free ions and the ions inside amorphous droplets are the same objects
+     under the same forces: contact repulsion below a diameter, cohesion out
+     to a short cutoff, a thermal kick, and drag. Nothing is pulled toward a
+     centroid and nothing teleports -- a droplet holds together because its
+     ions hold each other, and a free ion joins one by being drawn in until
+     it touches.
+
+     Ions already ordering inside a crystallite take part as force sources
+     only: they still attract passing ions, but their own motion is governed
+     by the lattice, further down. */
+  function amorphousPass(dt) {
+    aN = 0;
+    var k, c2, p, np2;
+    for (k = 0; k < ions.length; k++) {
+      p = ions[k];
+      aX[aN] = p.x; aY[aN] = p.y; aVX[aN] = p.vx; aVY[aN] = p.vy;
+      aObj[aN] = p; aCl[aN] = -1; aStatic[aN] = 0; aN++;
+    }
+    for (k = 0; k < clusters.length; k++) {
+      c2 = clusters[k];
+      if (c2.state !== 'blob' && c2.state !== 'order') continue;
+      var isStatic = c2.state === 'order' ? 1 : 0;
+      for (np2 = 0; np2 < c2.pts.length; np2++) {
+        p = c2.pts[np2];
+        aX[aN] = p.x; aY[aN] = p.y; aVX[aN] = p.vx; aVY[aN] = p.vy;
+        aObj[aN] = p; aCl[aN] = k; aStatic[aN] = isStatic; aN++;
+      }
+    }
+    if (!aN) return;
+
+    // bucket by cell so each ion only tests its own neighbourhood
+    for (var key in aCell) delete aCell[key];
+    var inv = 1 / PAIR_CUT;
+    for (k = 0; k < aN; k++) {
+      var ck = Math.floor(aX[k] * inv) + ',' + Math.floor(aY[k] * inv);
+      if (aCell[ck]) aCell[ck].push(k); else aCell[ck] = [k];
+    }
+
+    for (k = 0; k < aN; k++) {
+      var gx0 = Math.floor(aX[k] * inv), gy0 = Math.floor(aY[k] * inv);
+      for (var ox2 = -1; ox2 <= 1; ox2++) {
+        for (var oy2 = -1; oy2 <= 1; oy2++) {
+          var bucket = aCell[(gx0 + ox2) + ',' + (gy0 + oy2)];
+          if (!bucket) continue;
+          for (var bi = 0; bi < bucket.length; bi++) {
+            var m2 = bucket[bi];
+            if (m2 <= k) continue;                       // each pair once
+            if (aStatic[k] && aStatic[m2]) continue;     // both lattice-governed
+            var rdx = aX[m2] - aX[k], rdy = aY[m2] - aY[k];
+            var rr2 = rdx * rdx + rdy * rdy;
+            if (rr2 > PAIR_CUT * PAIR_CUT || rr2 < 1e-9) continue;
+            var rr = Math.sqrt(rr2);
+            var ux2 = rdx / rr, uy2 = rdy / rr, f;
+            if (rr < ION_D) {
+              f = -K_REP2 * (ION_D - rr) / ION_D;        // negative: apart
+            } else {
+              // strong between ions that have already condensed, weak between
+              // two still in solution
+              var kA = (aCl[k] >= 0 || aCl[m2] >= 0) ? K_ATT_BOUND : K_ATT_FREE;
+              f = kA * (1 - (rr - ION_D) / (PAIR_CUT - ION_D));
+            }
+            var fx = ux2 * f * dt, fy = uy2 * f * dt;
+            if (!aStatic[k]) { aVX[k] += fx; aVY[k] += fy; }
+            if (!aStatic[m2]) { aVX[m2] -= fx; aVY[m2] -= fy; }
+          }
+        }
+      }
+    }
+
+    // thermostat and drag, then move. Free ions are hotter and slipperier
+    // than ones locked into a droplet, which is the whole difference between
+    // being in solution and being part of a particle.
+    var BX = VIEW_W / 2 + 8, BY = VIEW_H / 2 + 8;
+    for (k = 0; k < aN; k++) {
+      if (aStatic[k]) continue;
+      var free = aCl[k] < 0;
+      var kt = free ? KT_FREE : KT_BOUND, dmp = free ? DAMP_FREE : DAMP_BOUND;
+      aVX[k] += (rnd() - 0.5) * kt * dt;
+      aVY[k] += (rnd() - 0.5) * kt * dt;
+      aVX[k] *= dmp; aVY[k] *= dmp;
+      var vcap = free ? VMAX_FREE : VMAX_BOUND;
+      var vsp = Math.hypot(aVX[k], aVY[k]);
+      if (vsp > vcap) { aVX[k] *= vcap / vsp; aVY[k] *= vcap / vsp; }
+      var nx2 = aX[k] + aVX[k] * dt, ny2 = aY[k] + aVY[k] * dt;
+      if (nx2 < -BX) { nx2 = -BX; aVX[k] = Math.abs(aVX[k]); }
+      if (nx2 > BX) { nx2 = BX; aVX[k] = -Math.abs(aVX[k]); }
+      if (ny2 < -BY) { ny2 = -BY; aVY[k] = Math.abs(aVY[k]); }
+      if (ny2 > BY) { ny2 = BY; aVY[k] = -Math.abs(aVY[k]); }
+      p = aObj[k];
+      p.x = nx2; p.y = ny2; p.vx = aVX[k]; p.vy = aVY[k];
+    }
+  }
+
   function step(dt) {
     t += dt; phaseT += dt;
     var i, j, c;
 
-    // ions always drift, whether or not they have joined anything yet --
-    // there is no "home" waiting for them, only whatever they happen to meet.
-    // They are still confined to a solution volume, though: without some
-    // wall to bounce off, an unbounded random walk in open 2D space would
-    // just as often carry two ions apart forever as bring them together,
-    // and clustering could stall out for good.
     var BOUND_X = VIEW_W / 2 + 8, BOUND_Y = VIEW_H / 2 + 8;
-    for (i = ions.length - 1; i >= 0; i--) {
-      var s = ions[i];
-      s.vx += (rnd() - 0.5) * 0.5 * dt; s.vy += (rnd() - 0.5) * 0.5 * dt;
-      // once supersaturation is spent there is no longer a uniform bath: what
-      // solute is left sits in a concentration gradient and migrates down it
-      // into the nearest particle, so the solution really does get consumed
-      if (depletionT >= 0 && clusters.length) {
+    // Once supersaturation is spent the bath is no longer uniform: what solute
+    // is left sits in a concentration gradient and drifts down it toward the
+    // nearest particle. This is a bias on top of the pair forces, not a
+    // substitute for them -- nothing gets captured at range any more.
+    if (depletionT >= 0 && clusters.length) {
+      for (i = 0; i < ions.length; i++) {
+        var s = ions[i];
         var nb = null, nbD = Infinity;
         for (j = 0; j < clusters.length; j++) {
           var cc = clusters[j];
           var cd = Math.hypot(cc.cx - s.x, cc.cy - s.y);
           if (cd < nbD) { nbD = cd; nb = cc; }
         }
-        if (nb) {
-          var sux = (nb.cx - s.x) / (nbD || 1), suy = (nb.cy - s.y) / (nbD || 1);
-          s.vx += sux * SWEEP_A * dt; s.vy += suy * SWEEP_A * dt;
-          // absorbed on contact: monomer addition onto the particle surface
-          var reach = (nb.pts ? Math.sqrt(nb.pts.length) * 0.6 : Math.max(nb.hw, nb.hh)) + EAT_R;
-          if (nbD < reach) {
-            if (nb.pts && nb.state === 'blob' && nb.pts.length < SIZE_CAP) {
-              nb.pts.push(ionPt(s.x, s.y));
-            } else if (nb.pts && nb.state === 'order' && nb.pts.length < SIZE_CAP && nb.latIdx < nb.latCells.length) {
-              var lc = nb.latCells[nb.latIdx++];
-              var ap = ionPt(s.x, s.y);
-              ap.lx = lc.lx; ap.ly = lc.ly;
-              ap.fd = Math.hypot(ap.lx - nb.nucLx, ap.ly - nb.nucLy);
-              nb.pts.push(ap);
-            }
-            // anything landing on a finished crystallite simply joins its
-            // surface; the grain pattern is already full, so it is consumed
-            ions.splice(i, 1);
-            continue;
-          }
+        if (nb && nbD > 1e-6) {
+          s.vx += ((nb.cx - s.x) / nbD) * SWEEP_A * dt;
+          s.vy += ((nb.cy - s.y) / nbD) * SWEEP_A * dt;
+          var ssp = Math.hypot(s.vx, s.vy);
+          if (ssp > SWEEP_MAX) { s.vx *= SWEEP_MAX / ssp; s.vy *= SWEEP_MAX / ssp; }
         }
-        var ssp = Math.hypot(s.vx, s.vy);
-        if (ssp > SWEEP_MAX) { s.vx *= SWEEP_MAX / ssp; s.vy *= SWEEP_MAX / ssp; }
       }
-      s.vx *= 0.92; s.vy *= 0.92;
-      s.x += s.vx * dt; s.y += s.vy * dt;
-      if (s.x < -BOUND_X) { s.x = -BOUND_X; s.vx = Math.abs(s.vx); }
-      if (s.x > BOUND_X) { s.x = BOUND_X; s.vx = -Math.abs(s.vx); }
-      if (s.y < -BOUND_Y) { s.y = -BOUND_Y; s.vy = Math.abs(s.vy); }
-      if (s.y > BOUND_Y) { s.y = BOUND_Y; s.vy = -Math.abs(s.vy); }
     }
+    // every ion moves here, under the same law
+    amorphousPass(dt);
 
     if (phase === 'ions') {
       if (phaseT > 60) { phase = 'cluster'; phaseT = 0; }
 
     } else if (phase === 'cluster' || phase === 'fill') {
-      // monomer capture: a free ion that drifts within reach of a particle
-      // sticks to it. Amorphous blobs AND already-crystallizing particles
-      // both keep eating -- classical ion-by-ion addition runs concurrently
-      // with particle attachment, it never switches off (De Yoreo et al. 2015)
+      // Joining is bookkeeping, not movement. The pair forces have already
+      // drawn the ion in; it becomes a member only once it is genuinely
+      // touching, and it keeps the position it arrived at. Nothing is grabbed
+      // from four diameters away, which is what used to make growth look like
+      // ions being teleported into place.
       for (i = ions.length - 1; i >= 0; i--) {
         var ia = ions[i];
-        var bestC = -1, bestD = JOIN_R;
+        var bestC = -1, bestD = STICK_R;
         for (j = 0; j < clusters.length; j++) {
           c = clusters[j];
           if (c.state !== 'blob' && c.state !== 'order') continue;
@@ -2517,16 +2601,16 @@ footer .signoff em {
           // a crystallite that has handed out every lattice site is full, even
           // if dissolution has since shrunk it -- sites are never reissued
           if (c.state === 'order' && c.latIdx >= c.latCells.length) continue;
-          var surfD = Infinity;
+          if (Math.abs(c.cx - ia.x) > 14 || Math.abs(c.cy - ia.y) > 14) continue;
           for (var m = 0; m < c.pts.length; m++) {
             var dd = Math.hypot(c.pts[m].x - ia.x, c.pts[m].y - ia.y);
-            if (dd < surfD) surfD = dd;
+            if (dd < bestD) { bestD = dd; bestC = j; }
           }
-          if (surfD < bestD) { bestD = surfD; bestC = j; }
         }
         if (bestC >= 0) {
           c = clusters[bestC];
           var np = ionPt(ia.x, ia.y);
+          np.vx = ia.vx; np.vy = ia.vy;   // it keeps the momentum it came in with
           if (c.state === 'order') {
             // lands on the crystal: takes the next free lattice site
             var mc = c.latCells[c.latIdx++];
@@ -2537,12 +2621,14 @@ footer .signoff em {
           ions.splice(i, 1);
           continue;
         }
-        // no particle nearby: does it happen to be right next to another free ion?
+        // two solvated ions in contact: a new particle, where they met
         for (var k = i - 1; k >= 0; k--) {
           var ib = ions[k];
-          if (Math.hypot(ib.x - ia.x, ib.y - ia.y) < NUCLEATE_R) {
+          if (Math.hypot(ib.x - ia.x, ib.y - ia.y) < NUC_R && rnd() < NUC_P) {
             var nc = newCluster((ia.x + ib.x) / 2, (ia.y + ib.y) / 2);
-            nc.pts = [ionPt(ia.x, ia.y), ionPt(ib.x, ib.y)];
+            var q1 = ionPt(ia.x, ia.y), q2 = ionPt(ib.x, ib.y);
+            q1.vx = ia.vx; q1.vy = ia.vy; q2.vx = ib.vx; q2.vy = ib.vy;
+            nc.pts = [q1, q2];
             ions.splice(i, 1); ions.splice(k, 1); i--;
             break;
           }
@@ -2642,64 +2728,23 @@ footer .signoff em {
         c = clusters[j];
         if (c.state !== 'blob' && c.state !== 'order') continue;
 
-        // free floating, jostled continuously -- and Stokes-Einstein says
-        // mobility falls with size, so fresh dimers dart while mature
-        // particles creep (1/sqrt(n) is the radius proxy for a 2D view)
-        var mob = 1 / Math.sqrt(Math.max(2, c.pts.length));
-        c.vx += (rnd() - 0.5) * 1.7 * mob * dt; c.vy += (rnd() - 0.5) * 1.7 * mob * dt;
-        c.vx *= 0.90; c.vy *= 0.90;
-        if (c.cx < -BOUND_X) c.vx = Math.abs(c.vx); if (c.cx > BOUND_X) c.vx = -Math.abs(c.vx);
-        if (c.cy < -BOUND_Y) c.vy = Math.abs(c.vy); if (c.cy > BOUND_Y) c.vy = -Math.abs(c.vy);
-
-        var pI, mxT, myT;
+        var pI, mxT, myT, np2 = c.pts.length;
+        var mob = 1 / Math.sqrt(Math.max(2, np2));
         var jAmp = 0.35 * (0.6 + 1.4 * mob);   // internal wobble is quieter in bigger particles
         if (c.state === 'blob') {
-          // A dense amorphous droplet, not a loose swarm: every ion is held
-          // in by the particle's own cohesion and kept off its neighbours by
-          // contact repulsion, so the ions settle into a randomly packed ball
-          // at roughly the same density the crystal will have. Nothing here
-          // is ordered -- the packing is random, only the density is set.
-          var np2 = c.pts.length;
-          for (pI = 0; pI < np2; pI++) {
-            var p0 = c.pts[pI];
-            for (var pJ = pI + 1; pJ < np2; pJ++) {
-              var p2 = c.pts[pJ];
-              var rdx = p2.x - p0.x, rdy = p2.y - p0.y;
-              var rd = Math.hypot(rdx, rdy);
-              if (rd < ION_D && rd > 1e-4) {
-                var push = (ION_D - rd) / ION_D * REP_K * dt;
-                var nx2 = rdx / rd, ny2 = rdy / rd;
-                p0.vx -= nx2 * push; p0.vy -= ny2 * push;
-                p2.vx += nx2 * push; p2.vy += ny2 * push;
-              } else if (rd <= 1e-4) {
-                // exactly coincident: nudge apart in a random direction
-                var sa = rnd() * TAU;
-                p0.vx -= Math.cos(sa) * REP_K * dt; p0.vy -= Math.sin(sa) * REP_K * dt;
-                p2.vx += Math.cos(sa) * REP_K * dt; p2.vy += Math.sin(sa) * REP_K * dt;
-              }
-            }
-          }
-          // Surface tension acts at the boundary, not throughout the volume:
-          // only ions that have strayed past the droplet's own radius get
-          // pulled back. Applying it to every ion instead squeezes the
-          // interior and drives the packing inside contact distance.
-          var Rt = ION_D * PACK_R * Math.sqrt(np2);
-          for (pI = 0; pI < np2; pI++) {
-            var p1b = c.pts[pI];
-            var dxr = p1b.x - c.cx, dyr = p1b.y - c.cy;
-            var rr = Math.hypot(dxr, dyr);
-            if (rr > 1e-6) {
-              var pull = COH_V * rr * dt;                       // gentle, everywhere
-              if (rr > Rt) pull += (rr - Rt) * COH_K * dt;      // firm at the surface
-              p1b.vx -= dxr / rr * pull; p1b.vy -= dyr / rr * pull;
-            }
-            p1b.vx += (rnd() - 0.5) * jAmp * dt; p1b.vy += (rnd() - 0.5) * jAmp * dt;
-            p1b.vx *= 0.82; p1b.vy *= 0.82;
-            p1b.x += (p1b.vx + c.vx) * dt; p1b.y += (p1b.vy + c.vy) * dt;
-          }
+          // Nothing to integrate here: the droplet's ions were moved by the
+          // pair pass, along with every other ion in the scene. All this needs
+          // is where the particle now is. Its drift is the average of what its
+          // own ions are doing, so a large droplet creeps and a fresh dimer
+          // darts without that having to be imposed.
           mxT = 0; myT = 0;
-          for (pI = 0; pI < np2; pI++) { mxT += c.pts[pI].x; myT += c.pts[pI].y; }
+          var svx = 0, svy = 0;
+          for (pI = 0; pI < np2; pI++) {
+            mxT += c.pts[pI].x; myT += c.pts[pI].y;
+            svx += c.pts[pI].vx; svy += c.pts[pI].vy;
+          }
           c.cx = mxT / np2; c.cy = myT / np2;
+          c.vx = svx / np2; c.vy = svy / np2;
 
           // crystallization onset: enabled by loss of supersaturation (the
           // depletion latch), but the trigger itself is a stochastic
@@ -2754,28 +2799,36 @@ footer .signoff em {
               p1.vx += (tgx - p1.x) * ORDER_K * dt; p1.vy += (tgy - p1.y) * ORDER_K * dt;
               p1.ok = Math.max(0, 1 - dtg / ORDER_REF);
             } else {
+              // not yet reached by the front: still liquid, and still held
+              // together by its neighbours rather than by anything central
               p1.ok = 0;
-              // not yet reached by the front: still a liquid-like interior,
-              // held in by the same surface tension as before
-              var edx = p1.x - c.cx, edy = p1.y - c.cy, edr = Math.hypot(edx, edy);
-              var Rt2 = ION_D * PACK_R * Math.sqrt(np4);
-              if (edr > 1e-6) {
-                var pl2 = COH_V * edr * dt;
-                if (edr > Rt2) pl2 += (edr - Rt2) * COH_K * dt;
-                p1.vx -= edx / edr * pl2; p1.vy -= edy / edr * pl2;
+              for (var pC = 0; pC < np4; pC++) {
+                if (pC === pI) continue;
+                var pz = c.pts[pC];
+                var zdx = pz.x - p1.x, zdy = pz.y - p1.y;
+                var zr = Math.hypot(zdx, zdy);
+                if (zr > ION_D && zr < PAIR_CUT) {
+                  var zf = K_ATT_BOUND * (1 - (zr - ION_D) / (PAIR_CUT - ION_D)) * dt;
+                  p1.vx += zdx / zr * zf; p1.vy += zdy / zr * zf;
+                }
               }
             }
             // an ion that has found its site stops rattling around
             var jl = jAmp * (1 - 0.75 * p1.ok);
             p1.vx += (rnd() - 0.5) * jl * dt; p1.vy += (rnd() - 0.5) * jl * dt;
             p1.vx *= 0.80; p1.vy *= 0.80;
-            p1.x += (p1.vx + c.vx) * dt; p1.y += (p1.vy + c.vy) * dt;
+            p1.x += p1.vx * dt; p1.y += p1.vy * dt;
             sumD += dtg;
           }
           c.orderFrac = Math.max(0, Math.min(1, 1 - (sumD / c.pts.length) / ORDER_REF));
           mxT = 0; myT = 0;
-          for (pI = 0; pI < c.pts.length; pI++) { mxT += c.pts[pI].x; myT += c.pts[pI].y; }
+          var ovx = 0, ovy = 0;
+          for (pI = 0; pI < c.pts.length; pI++) {
+            mxT += c.pts[pI].x; myT += c.pts[pI].y;
+            ovx += c.pts[pI].vx; ovy += c.pts[pI].vy;
+          }
           c.cx = mxT / c.pts.length; c.cy = myT / c.pts.length;
+          c.vx = ovx / c.pts.length; c.vy = ovy / c.pts.length;
 
           // fully transformed once the front has passed everything and the
           // whole cloud has actually settled onto its sites; the particle
