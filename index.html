@@ -2151,8 +2151,9 @@ footer .signoff em {
   // visibly consumed rather than leaving strays adrift forever
   var SWEEP_A = 0.5, SWEEP_MAX = 2.2, EAT_R = 1.1;
   // oriented attachment: diffusive search, then jump-to-contact (Li et al. 2012)
-  var SNAP_R = TILE_HW * 3.0, A_BIAS = 0.075, A_SNAP = 3.0;
-  var VS_SEARCH = 1.6, VS_SNAP = 4.0, CONTACT_R = 0.9, ATTACH_TIMEOUT = 240;
+  var SNAP_R = TILE_HW * 3.0, A_BIAS = 0.34, A_SNAP = 3.0;
+  var VS_SEARCH = 2.8, VS_SNAP = 5.0, CONTACT_R = 0.9, ATTACH_TIMEOUT = 150;
+  var MAX_INFLIGHT = 7;                 // crystallites on their way to the cluster at once
 
   // The blocks are squares, so they sit on a square lattice and meet edge to
   // edge with no forced overlap. The hexagon is cut out of that lattice --
@@ -2251,7 +2252,7 @@ footer .signoff em {
 
   var clusters, ions, phase, phaseT, t;
   var mesoTh, fillBank, depletionT, seedSizes;
-  var occupied, frontier, frontierAt, seeded, seedX, seedY;
+  var occupied, frontier, frontierAt, seeded, seedX, seedY, latOX, latOY;
 
   function reset() {
     mesoTh = rnd() * TAU;              // every crystallite in the episode shares this one orientation
@@ -2265,7 +2266,8 @@ footer .signoff em {
         vx: (rnd() - 0.5) * 0.5, vy: (rnd() - 0.5) * 0.5
       });
     }
-    occupied = {}; frontier = []; frontierAt = {}; seeded = false; seedX = 0; seedY = 0;
+    occupied = {}; frontier = []; frontierAt = {}; seeded = false;
+    seedX = 0; seedY = 0; latOX = 0; latOY = 0;
     fillBank = 0; depletionT = -1; seedSizes = [];
     phase = 'ions'; phaseT = 0; t = 0;
   }
@@ -2356,33 +2358,36 @@ footer .signoff em {
     }
     return c2;
   }
-  function claimCell() {
+  // world position of a lattice site: the whole array hangs off wherever the
+  // first crystallite happened to be, not off some fixed point in space
+  function cellX(cell) { return cell.x + latOX; }
+  function cellY(cell) { return cell.y + latOY; }
+  function claimCell(px, py) {
     for (var guard = 0; guard < 40; guard++) {
       var pick = null;
       if (!frontier.length) {
         if (seeded) return null;
-        // the seed: near the middle so the growth is watchable, but not
-        // pinned exactly to it
-        var best = null, bd = Infinity;
-        for (var s2 = 0; s2 < HEX_CELLS.length; s2++) {
-          var hc = HEX_CELLS[s2];
-          var dd = Math.hypot(hc.x, hc.y) + rnd() * SPACING * 2.2;
-          if (dd < bd) { bd = dd; best = hc; }
-        }
-        pick = best;
-        seedX = pick.x; seedY = pick.y;
+        // Nucleation. The first crystallite to finish does not go anywhere --
+        // the array is anchored on it, so the crystal starts where a real
+        // particle already is. Held loosely near the middle only so the
+        // growth stays in frame.
+        latOX = Math.max(-22, Math.min(22, px || 0));
+        latOY = Math.max(-14, Math.min(14, py || 0));
+        pick = CELLS['0,0'];
+        seedX = cellX(pick); seedY = cellY(pick);
         seeded = true;
       } else {
-        // Everything builds outward off the seed. Within that, a site that is
-        // already boxed in on several sides is always taken before one out on
-        // the open front: growth fills the space it has before it closes over
-        // anything, so a gap is never sealed in behind the front.
+        // A site boxed in on several sides is always taken before one out on
+        // the open front, so growth fills the space it has before closing
+        // over anything. Between equals, the site nearest the arriving
+        // crystallite wins: it joins the cluster where it meets it rather
+        // than flying around to some far side of it.
         var bestN = -1, bestS = Infinity;
         for (var f = 0; f < frontier.length; f++) {
           var fc = frontier[f];
           var nb = occNeighbours(fc);
           if (nb < bestN) continue;
-          var sco = Math.hypot(fc.x - seedX, fc.y - seedY) + rnd() * SPACING * 1.15;
+          var sco = Math.hypot(cellX(fc) - px, cellY(fc) - py) + rnd() * SPACING * 0.8;
           if (nb > bestN || sco < bestS) { bestN = nb; bestS = sco; pick = fc; }
         }
       }
@@ -2752,7 +2757,7 @@ footer .signoff em {
         c.hw = blockHalf(c.lpts.length);   // square, and sized by how many ions it actually gathered
         c.hh = c.hw;
         if (c.seedborn) seedSizes.push(c.lpts.length);
-        var slot = claimCell();
+        var slot = claimCell(c.cx, c.cy);
         if (!slot) {
           // array already complete: a late crystal attaches where it is, an
           // off-lattice grain on the platelet rim
@@ -2762,7 +2767,7 @@ footer .signoff em {
         }
         var toff = tileOffset();
         c.phx = toff.phx; c.phy = toff.phy; c.offTile = toff.off;
-        c.tx = slot.x + c.phx; c.ty = slot.y + c.phy;
+        c.tx = cellX(slot) + c.phx; c.ty = cellY(slot) + c.phy;
         c.fromX = c.cx; c.fromY = c.cy;
         c.attachT = 0; c.kicked = false;
         c.state = 'attach';
@@ -2813,14 +2818,26 @@ footer .signoff em {
         // of it is taken up rather than left hanging around the array
         if (phase !== 'fill') ions.length = 0;
         phase = 'fill';
+        // Only a few are ever on their way at once. Dispatching one per site
+        // the moment the site is claimed put a hundred crystallites in the
+        // air at a time, which reads as a swarm drifting about rather than a
+        // cluster that is growing.
+        var inFlight = 0;
+        for (j = 0; j < clusters.length; j++) if (clusters[j].state === 'attach') inFlight++;
         fillBank += FILL_RATE * dt;
-        while (fillBank >= 1 && !arrayComplete()) {
+        while (fillBank >= 1 && inFlight < MAX_INFLIGHT && !arrayComplete()) {
           fillBank -= 1;
-          var slot2 = claimCell();
+          inFlight++;
+          // a crystallite drifts in from some direction and joins the cluster
+          // at the nearest point of its edge, not at a predetermined site
+          var apA = rnd() * TAU;
+          var slot2 = claimCell(latOX + Math.cos(apA) * HEX_A * 2.4, latOY + Math.sin(apA) * HEX_A * 2.4);
           if (!slot2) break;
-          var d0 = Math.hypot(slot2.x, slot2.y) || 1;
+          var sx2 = cellX(slot2), sy2 = cellY(slot2);
+          var d0 = Math.hypot(sx2 - latOX, sy2 - latOY) || 1;
           var nIons = seedSizes.length ? seedSizes[Math.floor(rnd() * seedSizes.length)] : GROW_TARGET;
-          var nc2 = newCluster(slot2.x + slot2.x / d0 * SPACING * 3.5, slot2.y + slot2.y / d0 * SPACING * 3.5);
+          var nc2 = newCluster(sx2 + (sx2 - latOX) / d0 * SPACING * 2.1,
+                               sy2 + (sy2 - latOY) / d0 * SPACING * 2.1);
           nc2.pts = null;
           nc2.lpts = microCellsFor(nIons);
           nc2.hw = blockHalf(nIons);
@@ -2828,7 +2845,7 @@ footer .signoff em {
           nc2.th = mesoTh;
           var toff2 = tileOffset();
           nc2.phx = toff2.phx; nc2.phy = toff2.phy; nc2.offTile = toff2.off;
-          nc2.tx = slot2.x + nc2.phx; nc2.ty = slot2.y + nc2.phy;
+          nc2.tx = sx2 + nc2.phx; nc2.ty = sy2 + nc2.phy;
           nc2.fromX = nc2.cx; nc2.fromY = nc2.cy;
           nc2.state = 'attach'; nc2.attachT = 0; nc2.kicked = true;
         }
