@@ -246,17 +246,73 @@ footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; g
 
 /* ---------- Print: drop the furniture, keep the document ---------- */
 @media print {
-  @page { margin: 1.6cm; }
-  html { font-size: 11pt; background: #FFF; }
-  body { margin-inline: 0; background: #FFF; color: #000; }
+  @page { margin: 2.54cm; }
+  * { background: transparent !important; color: #000 !important; }
+  html { font-size: 12pt; background: #FFF; }
+  body { margin-inline: 0; margin: 0; padding: 0; background: #FFF; color: #000; font-family: Arial, sans-serif; }
   nav, .cv-status, footer, .cv-actions { display: none !important; }
-  .wrap { max-width: none; padding: 0; }
-  .cv-head { padding: 0 0 0.8rem; }
-  #cvBody { padding: 1rem 0 0; }
-  #cvBody h2 { margin-top: 1.4rem; break-after: avoid; }
-  .cv-row, #cvBody li { break-inside: avoid; }
-  .cv-row .cv-when { color: #000; }
-  #cvBody li::before { color: #000; }
+  .wrap { max-width: none; margin: 0; padding: 0; }
+
+  /* Head */
+  .cv-head { margin: 0 0 1rem 0; padding: 0; border: none; }
+  .cv-head h1 { font-size: 18pt; margin: 0 0 0.3rem 0; padding: 0; font-weight: bold; line-height: 1.2; }
+  .cv-head .role { font-size: 11pt; margin: 0.1rem 0 0.4rem 0; color: #000; }
+  .cv-contact { font-size: 9pt; margin: 0; gap: 1em; flex-wrap: wrap; }
+  .cv-contact a { color: #000; text-decoration: underline; }
+
+  /* Body */
+  #cvBody { margin: 0; padding: 0; }
+  #cvBody h2 {
+    font-size: 13pt;
+    font-weight: bold;
+    margin: 0.6rem 0 0.3rem 0;
+    padding: 0.2rem 0 0.2rem 0;
+    border-bottom: 1px solid #000;
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  .cv-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 0.4rem 0 0.1rem 0;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .cv-row .cv-what { font-weight: bold; }
+  .cv-row .cv-when { color: #000; font-weight: normal; white-space: nowrap; }
+
+  #cvBody p {
+    margin: 0.3rem 0;
+    font-size: 11pt;
+    line-height: 1.4;
+  }
+
+  #cvBody ul {
+    margin: 0.2rem 0 0.4rem 0;
+    list-style: none;
+    padding: 0;
+  }
+
+  #cvBody li {
+    margin: 0.2rem 0;
+    padding-left: 1rem;
+    font-size: 11pt;
+    line-height: 1.4;
+    page-break-inside: avoid;
+    break-inside: avoid;
+    position: relative;
+  }
+
+  #cvBody li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #000;
+    font-size: 11pt;
+  }
+
+  a { color: #000; text-decoration: none; }
 }
 </style>
 </head>
