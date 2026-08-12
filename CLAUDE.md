@@ -15,21 +15,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is almost always where changes belong. Structure, top to bottom:
 
-- Inline `<style>` block: CSS custom properties (`--bg`, `--ink`, `--accent`, `--oxy`, font stacks) drive the whole palette/typography. The page is authored at a base font size and then globally scaled via `zoom: 0.7` on `:root` (a deliberate choice — see the comment at the top of the style block — don't replace with `transform: scale`).
+- Inline `<style>` block: CSS custom properties (`--bg`, `--ink`, `--accent`, `--oxy`, font stacks) drive the whole palette/typography. The page is authored large and scaled down via CSS `zoom` (a deliberate choice — see the comment at the top of the style block — don't replace with `transform: scale`, which would desync layout rects from what's on screen). The zoom is desktop-only (`@media (min-width: 901px)`): `0.5` on `html`, with a further `0.66` on the two `#cpa` panels (`.cpa-fig`, `.cpa-sim`), values calibrated by eye against browser zoom. The phone breakpoints (≤900/600/400px) re-tune the root font size as final rendered sizes and must never have zoom stacked on them.
 - `<nav>` → `<header class="hero" id="hero">` → `<section id="about">` → `<section id="research">` → `<section id="writing">` → `<section id="cpa">` → `<section id="elsewhere">` → `<footer>`.
 - Several independent inline `<script>` blocks at the bottom, each IIFE-wrapped and null-guarded (`if (!el) return;`) so they no-op safely if their DOM isn't present:
   - The G-tetrad/fibril hero animation (pointer-tilt 3D CSS, builds a helical stack of "plates" as DOM siblings).
   - The `#cpa` figure's SVG `<animateMotion>` particle paths, gated by `IntersectionObserver` (frozen via `pauseAnimations()` until scrolled into view).
   - A "secret" click-to-swap Easter egg on the "Z" in the logo.
-  - A canvas-based (`#csCanvas`) crystallization-by-particle-attachment simulation (amorphous-nanoparticle aggregation → crystalline front propagation), with a live stats panel and a "stabilisation" slider.
+  - A canvas-based (`#csCanvas`) crystallization-by-particle-attachment simulation staged after three papers (Avaro 2023 J Phys Chem Lett; Smeets 2015 Nat Mater; Zhang & Xu 2013 J Struct Biol): ions → transient prenucleation clusters → organic-matrix binding → dense-liquid globules densifying to ACC → amorphous nanogranular packing of the tablet → in-place crystallization with grain-to-grain spread and rotation-into-registry fusion → the fixed cinematic tail (platelet → stacked nacre → abalone shell). Verify changes headlessly via the `window.__cs` hook (advance/reset/render/state); there is no stats panel or slider, only Pause/Restart buttons and the stage list.
 - All scripts respect `prefers-reduced-motion: reduce` and gate pointer-driven effects on `pointer: fine`. Preserve this when editing.
 
 ## Known stale/missing references (don't "fix" without asking — may be intentional placeholders)
 
-- `og:image` meta tag points to `zak.jpg`, but the only image at repo root is [zak_rover.jpg.jpg](zak_rover.jpg.jpg).
-- The `#cpa` section references `cpa.jpg`, which does not currently exist at repo root.
-- `cv.pdf` (linked from `#elsewhere`) does not exist at repo root.
-- Two links are still literal placeholders: Google Scholar (`?user=REPLACE_ME`) and GitHub (`github.com/REPLACE_ME`).
+- `og:image` meta tag points to `zak.jpg`, but the only image at repo root is `zak_rover.jpg`.
+- (Resolved 2026-08: the `#cpa` pathway figure no longer references `cpa.jpg` — it is drawn as inline SVG. The CV link in the nav points to `cv.html`, which exists. Scholar/ORCID/GitHub links in `#elsewhere` are real, no `REPLACE_ME` placeholders remain.)
 
 ## Local preview
 

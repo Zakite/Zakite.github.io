@@ -65,6 +65,21 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 23px; scroll-behavior: smooth; background: #070B11; }
+/* The page is authored large and scaled down as one piece. It sat right at
+   50% browser zoom, so that ratio is baked in here as the default. CSS zoom,
+   not transform: scale, on purpose: zoom reflows layout, so sticky-nav
+   offsets, IntersectionObserver rects and canvas bounding boxes all agree
+   with what is on screen, where a transform would leave them at full size.
+
+   Desktop only. The 50% calibration was made against a desktop window; the
+   phone breakpoints below re-tune the root to 21/19/18px as final rendered
+   sizes, and media queries evaluate against the real viewport, so letting
+   the zoom stack onto them would halve every size they were chosen to set:
+   9px body copy and 7px tap targets. Above 900px the breakpoints never
+   fire, so the gate and the tuning cannot overlap. */
+@media (min-width: 901px) {
+  html { zoom: 0.5; }
+}
 
 body {
   background: var(--bg);
@@ -435,12 +450,6 @@ nav .wrap { display: grid; grid-template-columns: 1fr auto 1fr; align-items: bas
   display: block;
   margin-right: -0.14em;
 }
-.motif-caption em {
-  display: block; margin-top: 0.4rem;
-  font-family: var(--serif); font-style: italic;
-  font-size: 0.92rem; letter-spacing: 0;
-  text-transform: none; color: var(--muted);
-}
 
 /* ---- secret Z: flip the tetrad into a Cheez-It, toggled by the Z button ---- */
 /* The Cheez-It is the fibril itself: every plate carries both a tetrad and a
@@ -467,20 +476,15 @@ nav .wrap { display: grid; grid-template-columns: 1fr auto 1fr; align-items: bas
   transition: opacity 0.42s ease;
 }
 .cheez-cap .line { display: block; margin-right: -0.14em; }
-.cheez-cap em {
-  display: block; margin-top: 0.4rem;
-  font-family: var(--serif); font-style: italic;
-  font-size: 0.92rem; letter-spacing: 0; text-transform: none;
-  color: var(--accent);
-}
 .cheezit-on .motif-caption { opacity: 0 !important; }
 .cheezit-on .cheez-cap { opacity: 1; }
 
 .hero-foot {
   /* The caption is out of flow, so this margin is the only thing keeping the
-     tagline off it. Measured against the caption's real stack height (~83px
-     now the hint line is gone), not guessed. */
-  text-align: center; margin-top: 6.75rem;
+     tagline off it. Sized to the taller of the two captions that can occupy
+     that space: the real one is now a single line (~56px including its own
+     top margin), the Cheez-It one is two (~83px), so this clears both. */
+  text-align: center; margin-top: 4rem;
   opacity: 0; animation: rise 1s ease forwards 0.9s;
 }
 .tagline {
@@ -508,19 +512,29 @@ h2 {
   letter-spacing: -0.02em; margin-bottom: 2rem; max-width: 20ch;
 }
 
-/* A pull-quote heading. Italic, a little wider than a normal h2 so the quote
-   breaks over fewer lines, with the attribution dropped out of the display
-   face so the joke reads as an aside rather than as part of the quote. */
-.h2-quote {
+/* ---------- Coda ----------
+   The closing epigraph. Italic display face, centred, well under the
+   section-heading size: it is an epigraph, not a headline, and it earns its
+   weight from being a quote rather than from being large. The attribution
+   drops out of the display face so the joke reads as an aside rather than as
+   part of the quote. */
+.coda {
+  padding: 4.5rem 0 3.75rem;
+  border-top: 1px solid var(--rule);
+  text-align: center;
+}
+.coda-quote {
+  font-family: var(--serif);
+  font-variation-settings: "opsz" 96, "SOFT" 30, "wght" 500;
   font-style: italic;
-  /* Well under the section-heading size. It is an epigraph, not a headline,
-     and it earns its weight from being a quote rather than from being large. */
   font-size: clamp(1.3rem, 2.8vw, 1.95rem);
+  font-weight: 600;
   line-height: 1.25;
   letter-spacing: -0.01em;
   max-width: 34ch;
+  margin: 0 auto;
 }
-.h2-quote .attrib {
+.coda-quote .attrib {
   display: block; margin-top: 0.85rem;
   font-family: var(--sans); font-style: normal;
   font-size: 0.82rem; font-weight: 500;
@@ -549,14 +563,39 @@ h2 {
    caption that wraps to five lines on a phone turned it into a tall box
    around the text. */
 .portrait .shot { position: relative; display: block; }
-.portrait .shot::before {
+/* The frame is concentric with the photograph rather than shoved off one
+   corner. Two pieces, both hung on .shot and both breathing inward together
+   on hover: a continuous hairline just outside the image, and four corner
+   brackets drawn heavier over it. The brackets are what make it read as a
+   frame; the hairline alone was just a rectangle. */
+.portrait .shot::before,
+.portrait .shot::after {
   content: ""; position: absolute;
-  inset: 0.9rem -0.9rem -0.9rem 0.9rem;
-  border: 1px solid var(--accent); opacity: 0.4;
+  inset: -0.75rem;
   pointer-events: none;
   transition: inset 0.35s cubic-bezier(.2,.8,.2,1), opacity 0.35s ease;
 }
-.portrait:hover .shot::before { inset: 0.5rem -0.5rem -0.5rem 0.5rem; opacity: 0.8; }
+.portrait .shot::before {
+  border: 1px solid var(--accent);
+  opacity: 0.3;
+}
+/* Eight gradients, two per corner: one horizontal arm, one vertical. Sized in
+   em off .shot so the arms stay proportional to the frame, not the viewport. */
+.portrait .shot::after {
+  --arm: 1.35rem;
+  opacity: 0.75;
+  background:
+    linear-gradient(var(--accent), var(--accent)) left  top    / var(--arm) 2px no-repeat,
+    linear-gradient(var(--accent), var(--accent)) left  top    / 2px var(--arm) no-repeat,
+    linear-gradient(var(--accent), var(--accent)) right top    / var(--arm) 2px no-repeat,
+    linear-gradient(var(--accent), var(--accent)) right top    / 2px var(--arm) no-repeat,
+    linear-gradient(var(--accent), var(--accent)) left  bottom / var(--arm) 2px no-repeat,
+    linear-gradient(var(--accent), var(--accent)) left  bottom / 2px var(--arm) no-repeat,
+    linear-gradient(var(--accent), var(--accent)) right bottom / var(--arm) 2px no-repeat,
+    linear-gradient(var(--accent), var(--accent)) right bottom / 2px var(--arm) no-repeat;
+}
+.portrait:hover .shot::before { inset: -0.45rem; opacity: 0.5; }
+.portrait:hover .shot::after  { inset: -0.45rem; opacity: 1; }
 .portrait img {
   position: relative; display: block; width: 100%; height: auto;
   filter: saturate(0.9) contrast(1.03);
@@ -762,11 +801,38 @@ footer .signoff em {
   background: #080C15;
   padding: 0.6rem 0.6rem 0.1rem;
 }
-.cpa-stack { position: relative; line-height: 0; }
-.cpa-img { display: block; width: 100%; height: auto; border-radius: 2px; }
-.cpa-dots { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-.cpa-scroll { width: 100%; }
 .cpa-fig svg { display: block; width: 100%; height: auto; pointer-events: none; }
+/* The wide science figure scrolls sideways so its labels stay legible. The
+   floor is the width at which the 15px viewBox type still paints at ~8.7px:
+   below it the diagram stops shrinking and the panel pans instead. Only the
+   diagram scrolls -- the caption stays put, which is why the wrapper hugs
+   the svg rather than hanging the overflow off the figure. Desktop never
+   scrolls: the column is wider than the floor. */
+.cpa-scroll { overflow-x: auto; }
+.cpa-scroll .cpa-diagram { min-width: 720px; }
+/* The pathway diagram is drawn inline (see the figure itself for why), so its
+   type and linework are styled here rather than baked into a raster. */
+.cpa-diagram text {
+  font-family: var(--mono);
+  font-size: 15px; letter-spacing: 0.08em;
+  fill: #8FA5B8;   /* --cs-dim: same label tone as the sim panel below */
+}
+.cpa-diagram .hdr text { font-size: 16px; letter-spacing: 0.2em; fill: var(--muted); }
+.cpa-diagram .lbl { fill: var(--ink); }
+.cpa-diagram .acc { fill: var(--accent); }
+.cpa-diagram .ions circle { fill: #7FD9EF; opacity: 0.85; }
+/* the tracks the ions ride: hairlines, kept dimmer than the species so the
+   travelling dots read as the data and the lines as the instrument */
+.cpa-diagram .track path {
+  fill: none; stroke: #24485A; stroke-width: 1.3;
+}
+.cpa-diagram .track-x {
+  fill: none; stroke: var(--accent); stroke-width: 1.6; opacity: 0.85;
+}
+.cpa-diagram .track-dash {
+  fill: none; stroke: #24485A; stroke-width: 1.3;
+  stroke-dasharray: 5 7; opacity: 0.8;
+}
 .cpa-fig figcaption {
   font-family: var(--serif); font-style: italic;
   font-size: 0.95rem; color: #93A8BC; line-height: 1.55;
@@ -787,6 +853,23 @@ footer .signoff em {
   border: 1px solid var(--cs-rule);
   background: #080C15;
   padding: 0.6rem;
+}
+/* Both CPA panels sat right at 33% browser zoom where the rest of the page
+   sat right at 50%, so they carry the remaining two-thirds themselves
+   (0.33 / 0.50 = 0.66) and everything inside them -- canvas, diagram, mono
+   labels, captions -- shrinks together, exactly what the browser-zoom test
+   showed. width: 100% is what lets the zoom actually narrow the boxes: left
+   at auto they would stretch back out to refill the column at full width.
+   The auto margins centre the narrowed panels in the column. Desktop only,
+   like the page zoom above: the phone breakpoints size these panels
+   full-bleed and were tuned without any zoom in the stack. */
+@media (min-width: 901px) {
+  .cpa-fig, .cpa-sim {
+    zoom: 0.66;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 .cs-head {
@@ -1001,7 +1084,9 @@ footer .signoff em {
   .name { font-size: clamp(1rem, 7.6vw, 3.4rem); line-height: 1.05; }
   .tilt { width: clamp(120px, 49vw, 240px); }
   .motif-caption { --cap-x: 0rem; }
-  .hero-foot { margin-top: 6.25rem; }   /* clears the out-of-flow caption */
+  /* No .hero-foot override here any more. It used to need 6.25rem to clear a
+     three-deep caption; the caption is one line now and the base 3.75rem
+     already clears it, so an override would only add dead space. */
   .about-grid { grid-template-columns: 1fr; gap: 2.75rem; }
   .portrait { max-width: 380px; }
   .triptych { grid-template-columns: 1fr; gap: 2.5rem; }
@@ -1052,8 +1137,13 @@ footer .signoff em {
   section { padding: 3rem 0; }
   .hero { padding: 2rem 0 3rem; }
   .portrait { max-width: 320px; }
-  /* 0.9rem is a 16px offset, which is a lot of frame against a 320px photo */
-  .portrait .shot::before { inset: 0.45rem -0.45rem -0.45rem 0.45rem; }
+  /* 0.75rem is a lot of frame to hang around a 320px photo, and the corner
+     arms have to come in with it or they meet in the middle of each edge */
+  .portrait .shot::before,
+  .portrait .shot::after { inset: -0.4rem; }
+  .portrait .shot::after { --arm: 0.95rem; }
+  .portrait:hover .shot::before,
+  .portrait:hover .shot::after { inset: -0.25rem; }
   footer .wrap { flex-direction: column; align-items: flex-start; }
   /* wide science figure scrolls sideways so its labels stay legible */
 }
@@ -1237,7 +1327,7 @@ footer .signoff em {
     <div class="eyebrow">
       <span>Rutgers</span><span class="dot">&#9671;</span>
       <span>Earth &amp; Planetary Sciences</span><span class="dot">&#9671;</span>
-      <span>Piscataway, NJ</span>
+      <span>Biomineralogy</span>
     </div>
 
     <div class="stage">
@@ -1302,14 +1392,16 @@ footer .signoff em {
 
         <div class="motif-caption">
           <span class="line">G-wire down the c-axis &middot; Na&#8314; in the channel</span>
-          <span class="line">3.3 &#8491; rise, 30&deg; twist per tetrad &middot; 14 tetrads total</span>
-          <em>Chapter I</em>
         </div>
 
+        <!-- Kept to two lines and no <em>, so this stays no taller than the
+             caption above it. Both are out of flow, and .hero-foot's margin is
+             the only thing holding the tagline clear of whichever one is
+             showing; a third line here would tuck under the tagline whenever
+             the egg is on. -->
         <div class="cheez-cap" aria-hidden="true">
           <span class="line">Guanine tetrad &middot; now 100% more snackable</span>
-          <span class="line">a Cheez-It has entered the channel</span>
-          <em>off the record</em>
+          <span class="line">a Cheez-It has entered the channel &middot; off the record</span>
         </div>
 
       </div>
@@ -1319,7 +1411,11 @@ footer .signoff em {
 
     <div class="hero-foot">
       <p class="tagline">Minerals remember how they were made.</p>
-      <p class="subtitle"><span id="phdYear">Second</span> year PhD candidate studying biomineralization across scales and chemistries to understand how biology recruits intrinsically self-organizing chemistry and transforms it into controlled biomineralization.</p>
+      <!-- The span is empty in the source and the sentence is complete without it,
+           so with no script the subtitle still reads "PhD candidate studying...".
+           The script writes the ordinal AND its trailing space, so there is no
+           stray gap to clean up when it does not run. -->
+      <p class="subtitle"><span id="progYear"></span>PhD candidate studying how biology steers crystallization, from ion-regulated molecular assembly to mesocrystalline organization.</p>
     </div>
 
   </div>
@@ -1327,27 +1423,27 @@ footer .signoff em {
 
 <section id="about">
   <div class="wrap">
-    <h2 class="h2-quote">&ldquo;Life leaves its fingerprint in stone we just have to learn how to read it&rdquo;<span class="attrib">&ndash; Someone Probably</span></h2>
-
+    <!-- The epigraph that used to open this section now closes the page; see
+         .coda just above the footer. -->
     <div class="about-grid">
       <div class="prose">
         <p>I am a PhD candidate in Earth and Planetary Sciences at <a href="https://eps.rutgers.edu/people/graduate-students/graduate-student/1565-jibrin-zakaria">Rutgers University</a>, working with Shaunna Morrison. My committee includes Nathan Yee, Vikas Nanda, Paul Falkowski, and Richard Remsing.</p>
-        <p>My master's work with Henry Sun at UNLV documented how halophilic bacteria precipitate a calcite, struvite, and guanine mineral succession out of their own metabolic waste. That succession still frames what I do now: asking whether life leaves a readable signature in the atoms, the unit cells, and the aggregate textures of the minerals it forms.</p>
-        <p>The question runs in both directions. If a mineral can record the life that made it, then the same reading applies to a sample returned from somewhere that has never had a confirmed biosphere.</p>
+        <p>My research asks how life enters the crystallization pathway and changes what forms. My master's work showed how microbial metabolism sequentially opened and closed pathways to calcite, struvite, and guanine monohydrate, each mineral altering the chemistry inherited by the next. The guanine is the part that should not have happened: it crystallizes from solutions at pH 0 to 3, and these plates grew at pH 8, five orders of magnitude away from where the mineral has any business forming. My PhD work follows that unexplained influence from solution chemistry through to the organized solid.</p>
+        <p>The goal is to treat that influence as a measurable continuum rather than a label. Minerals are not simply abiotic or biogenic. Metabolism, interfaces, precursor pathways, crystal chemistry, and structural organization each record a further degree of influence, and they can be ranked: a metastable phase held past the point where it should have converted is a stronger claim than the equilibrium polymorph that would have precipitated anyway, and a lattice aligned across an entire tissue is stronger still. Building that ranking is also what makes these records legible in samples where the organism itself is long gone.</p>
       </div>
 
       <figure class="portrait">
-        <!-- The offset frame hangs off this span, not off the figure. On the
-             figure it enclosed the caption too, and once the caption wrapped
-             to five lines on a phone the frame became a tall box drawn around
-             the text rather than a frame around the photograph. -->
+        <!-- The frame hangs off this span, not off the figure. On the figure
+             it enclosed the caption too, and once the caption wrapped to five
+             lines on a phone the frame became a tall box drawn around the text
+             rather than a frame around the photograph. -->
         <span class="shot">
           <img src="zak_rover.jpg" width="860" height="1002" loading="lazy" decoding="async"
                alt="Zak Jibrin standing beside a full-scale Mars rover.">
         </span>
         <figcaption>
-          Zak Jibrin <span class="accent">&#9671;</span> standing in for a rover that is<br>
-          still doing mineralogy 140 million miles away
+          Zak Jibrin <span class="accent">&#9671;</span> standing in front of Perseverance<br>
+          still doing mineralogy 140 million miles away!!!!
         </figcaption>
       </figure>
     </div>
@@ -1356,29 +1452,32 @@ footer .signoff em {
 
 <section id="research">
   <div class="wrap">
-    <h2>Three scales of biosignature.</h2>
+    <h2>From solution to organized solid.</h2>
     <div class="prose">
-      <p>My dissertation reads biosignatures across the scales at which minerals record them, from the moment molecules first assemble in prebiotic brines to the way whole crystals align in a biomineralized tissue.</p>
+      <p>My research follows biological influence through the whole pathway, beginning with the chemistry that decides which phases can precipitate, moving through ion-regulated assembly and crystallization by particle attachment, and ending in the unit-cell deviations, preferred orientations, and hierarchical structures preserved in the final material.</p>
     </div>
 
+    <!-- The scale labels below name a stage in the pathway, not a size. They used
+         to be Angstrom, nanometer, micrometer, which ran out of order against the
+         pillars and drew a size boundary between I and II that does not exist. -->
     <div class="triptych">
       <article class="pillar">
         <span class="roman">I</span>
-        <h3>Molecular self-assembly</h3>
-        <p>How cations choreograph the earliest guanine and urate assemblies out of prebiotic brines. From G-wires that recruit GMP, to biogenic reflectors, to the crystalline chemistry of gout.</p>
-        <span class="scale">&Aring;ngstr&ouml;m scale</span>
+        <h3>Precursors and pathway selection</h3>
+        <p>How metabolism, ion identity, and hydration structure decide which mineralization pathways stay open before a mature crystal exists. I use guanine and uric acid to follow precursor formation, aggregation, particle attachment, ripening, and polymorph selection across prebiotic, functional, and pathological settings.</p>
+        <span class="scale">Before a crystal exists</span>
       </article>
       <article class="pillar">
         <span class="roman">II</span>
-        <h3>Unit-cell deviations</h3>
-        <p>Whether life leaves measurable atomic strain in the minerals it precipitates. I am building a database of biogenic, biologically influenced, and abiotic carbonates and phosphates to test the idea.</p>
-        <span class="scale">Nanometer scale</span>
+        <h3>Crystal-chemical deviation</h3>
+        <p>Whether formation in a living system drives a mineral away from the structural behavior expected of abiotic chemistry alone. I am building comparative datasets for carbonates and phosphates to test whether composition, unit-cell geometry, vibrational disorder, and inherited precursor structure vary systematically with the degree of influence.</p>
+        <span class="scale">Within the lattice</span>
       </article>
       <article class="pillar">
         <span class="roman">III</span>
-        <h3>Preferred orientation</h3>
-        <p>Whether the way biominerals align at the aggregate scale, their crystallographic texture, is itself a biosignature carrying information about the life that made them.</p>
-        <span class="scale">Micrometer scale</span>
+        <h3>Crystallographic organization</h3>
+        <p>How influence is expressed between crystals rather than within them: preferred orientation, constrained misorientation, mesocrystalline superstructure, and hierarchical architecture. Because orientation is inherited as particles attach, the misorientation distribution is a record of the assembly itself. I ask whether its degree and complexity can separate chemically driven precipitation from tightly controlled mineral formation.</p>
+        <span class="scale">Among crystals</span>
       </article>
     </div>
   </div>
@@ -1568,10 +1667,212 @@ footer .signoff em {
     </div>
 
     <figure class="cpa-fig" id="cpaFig" aria-labelledby="cpaCap">
-      <div class="cpa-stack">
-        <img class="cpa-img" src="cpa.jpg" width="1700" height="1187" loading="lazy" decoding="async"
-             alt="Pathways to crystallization by particle attachment: from ions, atoms and molecules through oligomers, complexes, droplets, amorphous nanoparticles, poorly crystalline nanoparticles and nanocrystals, joining by oriented and nearly-oriented attachment, to a bulk crystal.">
-        <svg class="cpa-dots" viewBox="0 0 2099 1465" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false"><defs><radialGradient id="cpaHalo"><stop offset="0%" stop-color="#7FF6FF" stop-opacity="0.95"/><stop offset="45%" stop-color="#39D8F0" stop-opacity="0.45"/><stop offset="100%" stop-color="#12B6E0" stop-opacity="0"/></radialGradient><path id="cpaL1" d="M 262.0,541.0 L 276.0,516.3 L 290.0,493.2 L 304.0,471.3 L 318.0,451.1 L 332.0,431.2 L 346.0,412.2 L 360.0,394.1 L 374.0,376.2 L 388.0,359.2 L 402.0,343.2 L 416.0,328.1 L 430.0,313.2 L 444.0,299.2 L 458.0,286.0 L 472.0,273.0 L 486.0,260.2 L 500.0,248.2 L 514.0,237.0 L 528.0,226.0 L 542.0,215.2 L 556.0,205.0 L 570.0,195.2 L 584.0,186.0 L 598.0,177.0 L 612.0,168.2 L 626.0,160.2 L 640.0,152.2 L 654.0,145.2 L 668.0,138.2 L 682.0,132.0 L 695.9,126.1 L 708.4,120.3 L 717.4,116.1 L 738.0,112.7 L 752.0,108.8 L 771.4,98.8 L 783.0,98.1 L 794.3,98.1 L 804.8,99.7 L 818.8,119.3 L 834.5,126.3 L 857.5,123.6 L 868.4,118.1 L 882.2,102.6 L 887.9,84.1 L 898.7,54.8 L 923.2,34.2 L 928.0,30.0"/><path id="cpaL2" d="M 262.0,735.0 L 276.0,710.5 L 290.0,688.2 L 304.0,667.1 L 318.0,646.3 L 332.0,627.3 L 346.0,609.1 L 360.0,591.4 L 374.0,575.1 L 388.0,559.2 L 402.0,544.2 L 416.0,530.0 L 430.0,516.1 L 444.0,503.0 L 458.0,490.1 L 472.0,478.0 L 486.0,466.1 L 500.0,454.3 L 514.0,444.0 L 528.0,433.2 L 542.0,423.2 L 556.0,414.1 L 570.0,405.1 L 584.0,396.2 L 598.0,388.1 L 612.0,380.1 L 626.0,372.2 L 640.0,365.1 L 654.0,358.1 L 668.0,351.3 L 682.0,345.1 L 696.0,339.2 L 710.0,334.0 L 724.0,328.2 L 738.0,323.2 L 752.0,319.0 L 766.0,313.5 L 777.8,308.0 L 781.8,305.4 L 813.0,282.0 L 822.0,278.8 L 835.3,274.2 L 849.2,266.7 L 858.0,236.0"/><path id="cpaL3" d="M 262.0,912.0 L 276.0,886.4 L 290.0,862.4 L 304.0,840.3 L 318.0,820.2 L 332.0,801.1 L 346.0,783.1 L 360.0,765.4 L 374.0,750.0 L 388.0,734.3 L 402.0,720.1 L 416.0,706.1 L 430.0,693.1 L 444.0,680.3 L 458.0,669.0 L 472.0,657.2 L 486.0,646.2 L 500.0,636.1 L 514.0,626.1 L 528.0,616.2 L 542.0,607.1 L 556.0,598.3 L 570.0,590.1 L 584.0,582.1 L 598.0,574.3 L 612.0,567.1 L 626.0,560.1 L 640.0,553.3 L 654.0,547.1 L 668.0,541.2 L 682.0,536.0 L 696.0,530.1 L 710.0,518.4 L 724.0,472.4 L 738.0,419.8 L 752.0,367.1 L 766.0,311.1 L 780.0,240.0 L 794.0,165.5 L 808.0,91.0 L 821.3,122.8 L 836.0,132.3 L 856.5,137.6 L 864.0,132.6 L 877.3,120.7 L 887.0,115.1 L 916.8,121.3 L 920.7,121.9 L 932.3,125.6 L 936.0,125.0"/><path id="cpaL4" d="M 262.0,1048.0 L 276.0,1023.4 L 290.0,1000.4 L 304.0,979.4 L 318.0,960.3 L 332.0,942.4 L 346.0,926.1 L 360.0,910.1 L 374.0,895.1 L 388.0,881.1 L 402.0,868.0 L 416.0,855.1 L 430.0,843.0 L 444.0,831.1 L 458.0,820.1 L 472.0,809.1 L 486.0,799.1 L 500.0,789.1 L 514.0,779.4 L 528.0,771.0 L 542.0,762.3 L 556.0,754.1 L 570.0,746.2 L 584.0,739.1 L 598.0,732.1 L 612.0,725.2 L 626.0,719.0 L 640.0,712.4 L 654.0,707.0 L 668.0,701.3 L 682.0,696.1 L 696.0,691.3 L 710.0,687.1 L 724.0,683.1 L 738.0,679.1 L 752.0,675.2 L 766.0,672.1 L 780.0,669.2 L 794.0,666.9 L 808.0,664.8 L 814.8,666.3 L 843.2,667.1 L 850.0,674.2 L 864.0,683.3 L 878.0,689.2 L 892.0,689.1 L 906.0,681.1 L 918.2,664.7 L 921.0,660.0"/><path id="cpaL5" d="M 279.0,1100.0 L 293.0,1084.7 L 307.0,1068.2 L 321.0,1052.3 L 335.0,1038.3 L 349.0,1026.0 L 363.0,1013.4 L 377.0,1002.3 L 391.0,992.9 L 405.0,982.2 L 419.0,972.3 L 433.0,963.3 L 447.0,955.0 L 461.0,946.4 L 475.0,939.0 L 489.0,931.2 L 503.0,924.1 L 517.0,917.1 L 531.0,910.3 L 545.0,904.1 L 559.0,898.1 L 573.0,892.2 L 587.0,887.1 L 601.0,882.0 L 615.0,877.0 L 629.0,872.1 L 643.0,867.2 L 657.0,863.1 L 671.0,859.1 L 685.0,855.1 L 699.0,851.9 L 713.0,848.1 L 727.0,845.1 L 741.0,842.1 L 755.0,839.2 L 769.0,837.1 L 783.0,835.0 L 797.0,833.0 L 811.0,831.1 L 825.0,829.2 L 839.0,828.2 L 842.9,828.0 L 876.4,825.8 L 881.0,828.4 L 895.0,834.2 L 909.0,832.4 L 923.0,828.7 L 935.5,819.9 L 940.0,814.0"/><path id="cpaL6" d="M 274.0,1141.0 L 288.0,1136.3 L 295.5,1137.2 L 317.4,1129.6 L 330.0,1123.3 L 344.0,1114.3 L 358.0,1105.2 L 372.0,1097.0 L 386.0,1088.2 L 400.0,1080.2 L 414.0,1073.0 L 428.0,1065.2 L 442.0,1058.3 L 456.0,1052.0 L 470.0,1045.3 L 484.0,1039.1 L 498.0,1033.2 L 512.0,1028.0 L 526.0,1022.2 L 540.0,1017.1 L 554.0,1012.2 L 568.0,1008.0 L 582.0,1003.1 L 596.0,999.1 L 610.0,995.0 L 624.0,991.1 L 638.0,987.1 L 652.0,983.3 L 666.0,980.1 L 680.0,977.1 L 694.0,974.1 L 708.0,971.1 L 722.0,968.2 L 736.0,966.0 L 750.0,963.3 L 764.0,961.9 L 778.0,960.0 L 792.0,958.1 L 806.0,956.1 L 820.0,955.0 L 834.0,952.6 L 843.7,950.3 L 847.6,948.8 L 883.9,939.5 L 890.0,933.2 L 904.0,929.8 L 917.9,930.4 L 931.0,929.0"/><path id="cpaR1" d="M 940.0,75.0 L 941.0,77.1 L 950.7,79.3 L 968.3,117.4 L 987.3,115.2 L 997.7,123.9 L 1006.0,159.8 L 1025.0,164.8 L 1039.0,165.2 L 1053.0,163.5 L 1067.0,163.6 L 1077.4,166.7 L 1095.0,161.9 L 1109.0,130.3 L 1123.0,116.9 L 1127.6,117.0 L 1151.0,130.9 L 1165.0,139.6 L 1179.0,148.4 L 1206.0,165.7 L 1209.9,168.1 L 1221.0,173.5 L 1235.0,178.3 L 1249.0,183.1 L 1263.0,188.1 L 1277.0,193.3 L 1291.0,199.1 L 1305.0,205.1 L 1319.0,211.1 L 1333.0,217.3 L 1347.0,224.1 L 1361.0,231.1 L 1375.0,238.3 L 1389.0,240.4 L 1403.0,213.3 L 1417.0,180.2 L 1431.0,153.4 L 1435.6,151.1 L 1464.8,174.0 L 1473.0,182.1 L 1487.0,189.8 L 1501.0,203.1 L 1515.0,210.7 L 1529.0,227.0 L 1543.0,236.5 L 1557.0,248.4 L 1571.0,259.0 L 1585.0,271.0 L 1599.0,278.1 L 1613.0,285.1 L 1627.0,295.3 L 1641.0,304.7 L 1655.0,323.6 L 1669.0,332.1 L 1683.0,333.1 L 1696.3,303.9 L 1715.3,260.9 L 1725.0,250.0 L 1739.0,258.4 L 1753.0,276.9 L 1766.7,278.5 L 1779.0,269.0"/><path id="cpaR2" d="M 900.0,279.0 L 914.0,222.8 L 928.0,173.8 L 944.2,165.7 L 956.0,164.3 L 970.0,164.8 L 982.6,165.7 L 998.0,165.8 L 1012.0,176.6 L 1026.0,169.6 L 1040.0,176.5 L 1054.0,182.6 L 1068.0,188.9 L 1082.0,208.5 L 1101.8,233.9 L 1110.0,258.6 L 1119.0,307.2 L 1130.8,369.8 L 1152.0,438.9 L 1166.0,500.2 L 1180.0,553.0 L 1194.0,561.8 L 1203.7,558.5 L 1223.4,524.2 L 1236.0,522.7 L 1250.0,524.2 L 1264.0,529.0 L 1278.0,533.2 L 1292.0,538.1 L 1306.0,543.1 L 1320.0,548.3 L 1334.0,554.1 L 1348.0,554.4 L 1362.0,525.8 L 1388.2,481.7 L 1390.0,456.6 L 1404.0,432.3 L 1418.0,440.8 L 1432.0,438.4 L 1446.0,443.9 L 1460.0,432.4 L 1478.3,416.6 L 1488.0,407.6 L 1502.0,411.6 L 1511.0,405.5 L 1533.6,375.6 L 1544.0,377.0 L 1558.0,386.5 L 1572.0,392.5 L 1586.0,375.5 L 1602.9,363.3 L 1614.0,341.8 L 1628.0,346.8 L 1642.0,360.7 L 1656.0,377.0 L 1670.0,389.4 L 1684.0,401.0 L 1698.0,411.4 L 1712.0,433.7 L 1726.0,438.0 L 1740.0,441.0 L 1754.0,434.8 L 1768.0,412.4 L 1782.0,424.3 L 1796.0,444.4 L 1810.0,466.5 L 1824.0,491.3 L 1837.4,516.2 L 1848.0,537.0"/><path id="cpaR3" d="M 900.0,310.0 L 914.0,348.9 L 928.0,396.4 L 945.6,429.8 L 952.4,488.5 L 970.0,532.4 L 984.0,569.2 L 998.0,571.7 L 1010.6,586.3 L 1026.0,623.8 L 1040.0,656.5 L 1054.0,678.2 L 1068.0,688.2 L 1082.0,690.2 L 1096.0,681.2 L 1113.6,654.1 L 1124.0,606.8 L 1138.0,574.1 L 1152.0,575.4 L 1167.4,570.1 L 1180.0,562.7 L 1194.0,561.8 L 1203.7,558.5 L 1223.4,524.2 L 1236.0,522.7 L 1250.0,524.2 L 1264.0,529.0 L 1278.0,533.2 L 1292.0,538.1 L 1306.0,543.1 L 1320.0,540.5 L 1334.0,499.2 L 1348.0,449.8 L 1362.0,400.5 L 1376.0,444.7 L 1390.0,451.0 L 1404.0,432.3 L 1418.0,442.8 L 1432.0,452.8 L 1446.0,474.9 L 1460.0,478.1 L 1474.0,465.9 L 1488.0,453.3 L 1502.0,428.1 L 1516.0,427.8 L 1530.0,438.3 L 1544.0,447.6 L 1558.0,458.6 L 1572.0,470.5 L 1586.0,491.1 L 1600.0,497.5 L 1614.0,488.4 L 1628.0,464.4 L 1642.0,470.1 L 1656.0,490.0 L 1670.0,522.2 L 1684.0,535.9 L 1698.0,531.3 L 1712.0,515.0 L 1725.3,515.4 L 1736.4,540.1 L 1752.7,540.5 L 1759.0,536.0"/><path id="cpaR4" d="M 905.0,163.0 L 919.7,165.0 L 933.0,168.7 L 947.0,177.4 L 961.0,172.9 L 975.0,179.6 L 989.0,169.2 L 1003.0,165.9 L 1017.0,170.7 L 1031.0,190.8 L 1055.1,251.3 L 1059.0,308.7 L 1073.0,365.6 L 1087.0,407.0 L 1101.0,455.3 L 1113.6,505.2 L 1129.0,552.5 L 1143.0,575.5 L 1158.4,572.1 L 1171.0,566.5 L 1185.0,575.1 L 1199.0,568.5 L 1206.5,558.0 L 1227.0,522.4 L 1241.0,522.1 L 1255.0,526.1 L 1269.0,530.3 L 1283.0,535.1 L 1297.0,540.1 L 1311.0,545.1 L 1325.0,550.3 L 1339.0,556.1 L 1353.0,557.2 L 1367.0,533.5 L 1381.0,504.5 L 1395.0,478.9 L 1409.0,472.9 L 1423.0,472.7 L 1437.0,489.4 L 1451.0,502.1 L 1465.0,513.5 L 1479.0,505.9 L 1493.0,512.6 L 1507.0,527.5 L 1521.0,547.1 L 1535.0,536.0 L 1549.0,540.8 L 1563.0,560.6 L 1570.5,568.7 L 1593.9,578.0 L 1605.0,586.0 L 1619.0,599.1 L 1633.0,614.1 L 1647.0,629.4 L 1661.0,646.2 L 1675.0,664.2 L 1689.0,683.1 L 1703.0,702.5 L 1717.0,724.3 L 1731.0,747.6 L 1745.0,776.6 L 1761.9,817.6 L 1778.0,861.8 L 1792.0,906.8 L 1804.6,954.0 L 1815.0,999.0 L 1829.0,1037.0 L 1835.8,1040.4 L 1855.2,1034.9 L 1858.0,1035.0"/><path id="cpaR5" d="M 900.0,931.0 L 916.9,930.2 L 928.0,933.5 L 942.0,951.5 L 955.3,936.2 L 970.0,909.4 L 984.0,884.6 L 998.0,859.8 L 1012.0,836.8 L 1026.0,829.5 L 1041.4,831.1 L 1054.0,831.5 L 1068.0,824.1 L 1079.8,826.4 L 1083.8,826.7 L 1110.0,827.1 L 1130.5,828.1 L 1138.0,829.2 L 1152.0,831.1 L 1166.0,832.9 L 1180.0,834.3 L 1194.0,836.9 L 1208.0,839.1 L 1222.0,841.1 L 1236.0,844.0 L 1250.0,846.1 L 1264.0,849.1 L 1278.0,852.0 L 1292.0,855.1 L 1306.0,858.1 L 1320.0,862.0 L 1334.0,865.1 L 1348.0,869.1 L 1362.0,873.0 L 1376.0,877.1 L 1390.0,881.1 L 1404.0,886.0 L 1418.0,890.2 L 1432.0,891.6 L 1441.7,890.2 L 1458.6,845.0 L 1474.0,836.3 L 1488.0,826.4 L 1500.6,830.0 L 1514.6,836.0 L 1530.0,840.1 L 1544.0,834.1 L 1558.7,826.2 L 1572.0,820.7 L 1586.0,823.1 L 1600.7,827.1 L 1610.4,831.2 L 1625.8,835.2 L 1642.0,839.3 L 1656.0,841.3 L 1665.0,847.0 L 1684.0,880.1 L 1698.0,901.3 L 1712.0,924.3 L 1726.0,949.5 L 1740.0,981.0 L 1757.6,1030.9 L 1775.2,1084.7 L 1782.7,1135.6 L 1796.0,1200.8 L 1812.2,1255.5 L 1824.0,1304.0 L 1838.0,1309.9 L 1850.9,1306.4 L 1857.0,1305.0"/><path id="cpaR6" d="M 905.0,1263.0 L 919.0,1267.4 L 933.0,1268.0 L 947.0,1268.0 L 961.0,1268.0 L 975.0,1268.0 L 989.0,1268.0 L 1003.0,1268.0 L 1017.0,1268.0 L 1031.0,1268.0 L 1045.0,1268.0 L 1059.0,1268.0 L 1073.0,1268.0 L 1087.0,1268.0 L 1101.0,1268.0 L 1115.0,1268.0 L 1129.0,1268.0 L 1143.0,1268.0 L 1157.0,1268.0 L 1171.0,1267.9 L 1185.0,1264.9 L 1199.0,1244.7 L 1213.0,1189.5 L 1227.0,1134.9 L 1246.0,1116.0 L 1252.8,1108.3 L 1274.8,1084.1 L 1283.0,1081.9 L 1297.0,1081.2 L 1314.6,1083.1 L 1325.0,1085.0 L 1339.0,1081.9 L 1353.0,1057.6 L 1367.0,1028.8 L 1379.6,990.6 L 1395.0,974.3 L 1409.0,965.9 L 1424.4,970.2 L 1437.0,974.1 L 1451.0,974.4 L 1465.0,1004.5 L 1479.0,1013.4 L 1493.0,1018.1 L 1507.0,1023.0 L 1521.0,1028.1 L 1535.0,1033.1 L 1549.0,1039.1 L 1563.0,1045.0 L 1577.0,1045.8 L 1591.0,1019.8 L 1605.0,993.8 L 1619.0,997.3 L 1633.0,1007.1 L 1647.0,1017.3 L 1661.0,1028.1 L 1675.0,1039.3 L 1689.0,1052.1 L 1703.0,1065.0 L 1717.0,1075.3 L 1728.8,1072.7 L 1755.1,1061.6 L 1759.0,1059.5 L 1770.1,1053.9 L 1782.0,1053.0"/></defs><g class="cpa-dot" opacity="0"><animateMotion dur="4.56s" begin="0.0s" repeatCount="indefinite" rotate="0"><mpath href="#cpaL1"/></animateMotion><animate attributeName="opacity" dur="4.56s" begin="0.0s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.07;0.9;1"/><circle r="6" fill="url(#cpaHalo)"/><circle r="2.3" fill="#F2FEFF"/></g><g class="cpa-dot" opacity="0"><animateMotion dur="4.56s" begin="1.52s" repeatCount="indefinite" rotate="0"><mpath href="#cpaL1"/></animateMotion><animate attributeName="opacity" dur="4.56s" begin="1.52s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.07;0.9;1"/><circle r="6" fill="url(#cpaHalo)"/><circle r="2.3" fill="#F2FEFF"/></g><g class="cpa-dot" opacity="0"><animateMotion dur="4.56s" begin="3.04s" repeatCount="indefinite" rotate="0"><mpath href="#cpaL1"/></animateMotion><animate attributeName="opacity" dur="4.56s" begin="3.04s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.07;0.9;1"/><circle r="6" fill="url(#cpaHalo)"/><circle r="2.3" fill="#F2FEFF"/></g><g class="cpa-dot" opacity="0"><animateMotion dur="3.64s" begin="0.0s" repeatCount="indefinite" rotate="0"><mpath href="#cpaL2"/></animateMotion><animate attributeName="opacity" dur="3.64s" begin="0.0s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.07;0.9;1"/><circle r="6" fill="url(#cpaHalo)"/><circle r="2.3" fill="#F2FEFF"/></g><g class="cpa-dot" opacity="0"><animateMotion dur="3.64s" begin="1.21s" repeatCount="indefinite" rotate="0"><mpath href="#cpaL2"/></animateMotion><animate attributeName="opacity" dur="3.64s" begin="1.21s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.07;0.9;1"/><circle r="6" fill="url(#cpaHalo)"/><circle r="2.3" fill="#F2FEFF"/></g><g class="cpa-dot" opacity="0"><animateMotion dur="3.64s" begin="2.42s" repeatCount="indefinite" rotate="0"><mpath href="#cpaL2"/></animateMotion><animate attributeName="opacity" dur="3.64s" begin="2.42s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.07;0.9;1"/><circle r="6" fill="url(#cpaHalo)"/><circle r="2.3" fill="#F2FEFF"/></g><g class="cpa-dot" opacity="0"><animateMotion dur="5.90s" begin="0.0s" repeatCount="indefinite" rotate="0"><mpath href="#cpaL3"/></animateMotion><animate attributeName="opacity" dur="5.90s" begin="0.0s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.07;0.9;1"/><circle r="6" fill="url(#cpaHalo)"/><circle r="2.3" fill="#F2FEFF"/></g><g class="cpa-dot" opacity="0"><animateMotion dur="5.90s" begin="1.97s" repeatCount="indefinite" rotate="0"><mpath href="#cpaL3"/></animateMotion><animate attributeName="opacity" dur="5.90s" begin="1.97s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.07;0.9;1"/><circle r="6" fill="url(#cpaHalo)"/><circle r="2.3" fill="#F2FEFF"/></g><g class="cpa-dot" opacity="0"><animateMotion dur="5.90s" begin="3.93s" repeatCount="indefinite" rotate="0"><mpath href="#cpaL3"/></animateMotion><animate attributeName="opacity" dur="5.90s" begin="3.93s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.07;0.9;1"/><circle r="6" fill="url(#cpaHalo)"/><circle r="2.3" fill="#F2FEFF"/></g><g class="cpa-dot" opacity="0"><animateMotion dur="3.64s" begin="0.0s" repeatCount="indefinite" rotate="0"><mpath href="#cpaL4"/></animateMotion><animate attributeName="opacity" dur="3.64s" begin="0.0s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.07;0.9;1"/><circle r="6" fill="url(#cpaHalo)"/><circle r="2.3" fill="#F2FEFF"/></g><g class="cpa-dot" opacity="0"><animateMotion dur="3.64s" begin="1.21s" repeatCount="indefinite" rotate="0"><mpath href="#cpaL4"/></animateMotion><animate attributeName="opacity" dur="3.64s" begin="1.21s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.07;0.9;1"/><circle r="6" fill="url(#cpaHalo)"/><circle r="2.3" fill="#F2FEFF"/></g><g class="cpa-dot" opacity="0"><animateMotion dur="3.64s" begin="2.42s" repeatCount="indefinite" rotate="0"><mpath href="#cpaL4"/></animateMotion><animate attributeName="opacity" dur="3.64s" begin="2.42s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.07;0.9;1"/><circle r="6" fill="url(#cpaHalo)"/><circle r="2.3" fill="#F2FEFF"/></g><g class="cpa-dot" opacity="0"><animateMotion dur="3.32s" begin="0.0s" repeatCount="indefinite" rotate="0"><mpath href="#cpaL5"/></animateMotion><animate attributeName="opacity" dur="3.32s" begin="0.0s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.07;0.9;1"/><circle r="6" fill="url(#cpaHalo)"/><circle r="2.3" fill="#F2FEFF"/></g><g class="cpa-dot" opacity="0"><animateMotion dur="3.32s" begin="1.11s" repeatCount="indefinite" rotate="0"><mpath href="#cpaL5"/></animateMotion><animate attributeName="opacity" dur="3.32s" begin="1.11s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.07;0.9;1"/><circle r="6" fill="url(#cpaHalo)"/><circle r="2.3" fill="#F2FEFF"/></g><g class="cpa-dot" opacity="0"><animateMotion dur="3.32s" begin="2.21s" repeatCount="indefinite" rotate="0"><mpath href="#cpaL5"/></animateMotion><animate attributeName="opacity" dur="3.32s" begin="2.21s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.07;0.9;1"/><circle r="6" fill="url(#cpaHalo)"/><circle r="2.3" fill="#F2FEFF"/></g><g class="cpa-dot" opacity="0"><animateMotion dur="3.44s" begin="0.0s" repeatCount="indefinite" rotate="0"><mpath href="#cpaL6"/></animateMotion><animate attributeName="opacity" dur="3.44s" begin="0.0s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.07;0.9;1"/><circle r="6" fill="url(#cpaHalo)"/><circle r="2.3" fill="#F2FEFF"/></g><g class="cpa-dot" opacity="0"><animateMotion dur="3.44s" begin="1.15s" repeatCount="indefinite" rotate="0"><mpath href="#cpaL6"/></animateMotion><animate attributeName="opacity" dur="3.44s" begin="1.15s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.07;0.9;1"/><circle r="6" fill="url(#cpaHalo)"/><circle r="2.3" fill="#F2FEFF"/></g><g class="cpa-dot" opacity="0"><animateMotion dur="3.44s" begin="2.29s" repeatCount="indefinite" rotate="0"><mpath href="#cpaL6"/></animateMotion><animate attributeName="opacity" dur="3.44s" begin="2.29s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.07;0.9;1"/><circle r="6" fill="url(#cpaHalo)"/><circle r="2.3" fill="#F2FEFF"/></g><g class="cpa-dot" opacity="0"><animateMotion dur="5.98s" begin="0.0s" repeatCount="indefinite" rotate="0"><mpath href="#cpaR1"/></animateMotion><animate attributeName="opacity" dur="5.98s" begin="0.0s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.07;0.9;1"/><circle r="6" fill="url(#cpaHalo)"/><circle r="2.3" fill="#F2FEFF"/></g><g class="cpa-dot" opacity="0"><animateMotion dur="5.98s" begin="1.99s" repeatCount="indefinite" rotate="0"><mpath href="#cpaR1"/></animateMotion><animate attributeName="opacity" dur="5.98s" begin="1.99s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.07;0.9;1"/><circle r="6" fill="url(#cpaHalo)"/><circle r="2.3" fill="#F2FEFF"/></g><g class="cpa-dot" opacity="0"><animateMotion dur="5.98s" begin="3.99s" repeatCount="indefinite" rotate="0"><mpath href="#cpaR1"/></animateMotion><animate attributeName="opacity" dur="5.98s" begin="3.99s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.07;0.9;1"/><circle r="6" fill="url(#cpaHalo)"/><circle r="2.3" fill="#F2FEFF"/></g><g class="cpa-dot" opacity="0"><animateMotion dur="7.98s" begin="0.0s" repeatCount="indefinite" rotate="0"><mpath href="#cpaR2"/></animateMotion><animate attributeName="opacity" dur="7.98s" begin="0.0s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.07;0.9;1"/><circle r="6" fill="url(#cpaHalo)"/><circle r="2.3" fill="#F2FEFF"/></g><g class="cpa-dot" opacity="0"><animateMotion dur="7.98s" begin="2.66s" repeatCount="indefinite" rotate="0"><mpath href="#cpaR2"/></animateMotion><animate attributeName="opacity" dur="7.98s" begin="2.66s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.07;0.9;1"/><circle r="6" fill="url(#cpaHalo)"/><circle r="2.3" fill="#F2FEFF"/></g><g class="cpa-dot" opacity="0"><animateMotion dur="7.98s" begin="5.32s" repeatCount="indefinite" rotate="0"><mpath href="#cpaR2"/></animateMotion><animate attributeName="opacity" dur="7.98s" begin="5.32s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.07;0.9;1"/><circle r="6" fill="url(#cpaHalo)"/><circle r="2.3" fill="#F2FEFF"/></g><g class="cpa-dot" opacity="0"><animateMotion dur="7.35s" begin="0.0s" repeatCount="indefinite" rotate="0"><mpath href="#cpaR3"/></animateMotion><animate attributeName="opacity" dur="7.35s" begin="0.0s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.07;0.9;1"/><circle r="6" fill="url(#cpaHalo)"/><circle r="2.3" fill="#F2FEFF"/></g><g class="cpa-dot" opacity="0"><animateMotion dur="7.35s" begin="2.45s" repeatCount="indefinite" rotate="0"><mpath href="#cpaR3"/></animateMotion><animate attributeName="opacity" dur="7.35s" begin="2.45s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.07;0.9;1"/><circle r="6" fill="url(#cpaHalo)"/><circle r="2.3" fill="#F2FEFF"/></g><g class="cpa-dot" opacity="0"><animateMotion dur="7.35s" begin="4.9s" repeatCount="indefinite" rotate="0"><mpath href="#cpaR3"/></animateMotion><animate attributeName="opacity" dur="7.35s" begin="4.9s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.07;0.9;1"/><circle r="6" fill="url(#cpaHalo)"/><circle r="2.3" fill="#F2FEFF"/></g><g class="cpa-dot" opacity="0"><animateMotion dur="8.07s" begin="0.0s" repeatCount="indefinite" rotate="0"><mpath href="#cpaR4"/></animateMotion><animate attributeName="opacity" dur="8.07s" begin="0.0s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.07;0.9;1"/><circle r="6" fill="url(#cpaHalo)"/><circle r="2.3" fill="#F2FEFF"/></g><g class="cpa-dot" opacity="0"><animateMotion dur="8.07s" begin="2.69s" repeatCount="indefinite" rotate="0"><mpath href="#cpaR4"/></animateMotion><animate attributeName="opacity" dur="8.07s" begin="2.69s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.07;0.9;1"/><circle r="6" fill="url(#cpaHalo)"/><circle r="2.3" fill="#F2FEFF"/></g><g class="cpa-dot" opacity="0"><animateMotion dur="8.07s" begin="5.38s" repeatCount="indefinite" rotate="0"><mpath href="#cpaR4"/></animateMotion><animate attributeName="opacity" dur="8.07s" begin="5.38s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.07;0.9;1"/><circle r="6" fill="url(#cpaHalo)"/><circle r="2.3" fill="#F2FEFF"/></g><g class="cpa-dot" opacity="0"><animateMotion dur="6.94s" begin="0.0s" repeatCount="indefinite" rotate="0"><mpath href="#cpaR5"/></animateMotion><animate attributeName="opacity" dur="6.94s" begin="0.0s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.07;0.9;1"/><circle r="6" fill="url(#cpaHalo)"/><circle r="2.3" fill="#F2FEFF"/></g><g class="cpa-dot" opacity="0"><animateMotion dur="6.94s" begin="2.31s" repeatCount="indefinite" rotate="0"><mpath href="#cpaR5"/></animateMotion><animate attributeName="opacity" dur="6.94s" begin="2.31s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.07;0.9;1"/><circle r="6" fill="url(#cpaHalo)"/><circle r="2.3" fill="#F2FEFF"/></g><g class="cpa-dot" opacity="0"><animateMotion dur="6.94s" begin="4.62s" repeatCount="indefinite" rotate="0"><mpath href="#cpaR5"/></animateMotion><animate attributeName="opacity" dur="6.94s" begin="4.62s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.07;0.9;1"/><circle r="6" fill="url(#cpaHalo)"/><circle r="2.3" fill="#F2FEFF"/></g><g class="cpa-dot" opacity="0"><animateMotion dur="6.22s" begin="0.0s" repeatCount="indefinite" rotate="0"><mpath href="#cpaR6"/></animateMotion><animate attributeName="opacity" dur="6.22s" begin="0.0s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.07;0.9;1"/><circle r="6" fill="url(#cpaHalo)"/><circle r="2.3" fill="#F2FEFF"/></g><g class="cpa-dot" opacity="0"><animateMotion dur="6.22s" begin="2.07s" repeatCount="indefinite" rotate="0"><mpath href="#cpaR6"/></animateMotion><animate attributeName="opacity" dur="6.22s" begin="2.07s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.07;0.9;1"/><circle r="6" fill="url(#cpaHalo)"/><circle r="2.3" fill="#F2FEFF"/></g><g class="cpa-dot" opacity="0"><animateMotion dur="6.22s" begin="4.15s" repeatCount="indefinite" rotate="0"><mpath href="#cpaR6"/></animateMotion><animate attributeName="opacity" dur="6.22s" begin="4.15s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.07;0.9;1"/><circle r="6" fill="url(#cpaHalo)"/><circle r="2.3" fill="#F2FEFF"/></g></svg>
+      <!--
+        The pathway diagram, drawn inline. This used to be a raster figure,
+        cpa.jpg, with a transparent SVG of travelling ions registered on top of
+        it. The raster was never committed to the repo, so the figure rendered
+        as an empty panel with ions tracking over nothing.
+
+        Both halves are now a single SVG in the page's own idiom, which has a
+        second benefit: the line you see and the line an ion rides are the same
+        <path> element. Each dot's <mpath> points at the track it is drawn on,
+        so they cannot drift out of register the way an overlay traced onto a
+        bitmap eventually does.
+      -->
+      <div class="cpa-scroll">
+      <svg class="cpa-diagram" viewBox="0 0 1240 780" role="img"
+           aria-label="Pathways to crystallization by particle attachment. Ions, atoms and molecules in solution feed five routes: multi-ion complexes and oligomers, dense liquid droplets, amorphous nanoparticles, poorly crystalline nanoparticles, and nanocrystals. Each of those higher-order species travels to an assembly step, where particles rotate into registry and attach to one another, building a bulk crystal that is itself made of aligned blocks. A separate track along the bottom shows the classical route, in which single monomers add to the crystal one at a time.">
+        <defs>
+          <radialGradient id="cpaHalo">
+            <stop offset="0%" stop-color="#7FF6FF" stop-opacity="0.95"/>
+            <stop offset="45%" stop-color="#39D8F0" stop-opacity="0.45"/>
+            <stop offset="100%" stop-color="#12B6E0" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="cpaDrop" cx="38%" cy="32%">
+            <stop offset="0%" stop-color="#8FF3EA" stop-opacity="0.5"/>
+            <stop offset="60%" stop-color="#2FA9A2" stop-opacity="0.26"/>
+            <stop offset="100%" stop-color="#126E6A" stop-opacity="0.1"/>
+          </radialGradient>
+          <marker id="cpaArrow" viewBox="0 0 10 10" refX="9" refY="5"
+                  markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 Z" fill="#3FD9CB"/>
+          </marker>
+
+          <!-- One crystalline block, reused at every scale: the nanocrystal in
+               the species column, the two particles meeting at the assembly
+               step, and each block of the finished solid. Drawing them from one
+               symbol is the point of the figure, since what attaches is the
+               same object that ends up in the lattice. -->
+          <clipPath id="cpaHexClip">
+            <polygon points="0,-25 21.7,-12.5 21.7,12.5 0,25 -21.7,12.5 -21.7,-12.5"/>
+          </clipPath>
+          <g id="cpaBlock">
+            <polygon points="0,-25 21.7,-12.5 21.7,12.5 0,25 -21.7,12.5 -21.7,-12.5"
+                     fill="#0C2630" stroke="#3FD9CB" stroke-width="1.5" stroke-linejoin="round"/>
+            <g clip-path="url(#cpaHexClip)" stroke="#3FD9CB" stroke-width="0.85" opacity="0.5">
+              <path d="M-24,-15 H24 M-24,-7.5 H24 M-24,0 H24 M-24,7.5 H24 M-24,15 H24"/>
+            </g>
+          </g>
+        </defs>
+
+        <!-- column headers -->
+        <g class="hdr" text-anchor="middle">
+          <text x="185" y="36">SOLUTION</text>
+          <text x="430" y="36">HIGHER-ORDER SPECIES</text>
+          <text x="790" y="36">ASSEMBLY</text>
+          <text x="1078" y="36">SOLID</text>
+        </g>
+        <path d="M60,54 H1180" stroke="#26323F" stroke-width="1" opacity="0.5"/>
+
+        <!-- ===== the tracks. Every one of these is also a motion path. ===== -->
+        <g class="track">
+          <path id="cpaA1" d="M240,340 C305,330 320,105 385,105"/>
+          <path id="cpaA2" d="M240,342 C305,335 325,225 385,225"/>
+          <path id="cpaA3" d="M240,345 H385"/>
+          <path id="cpaA4" d="M240,348 C305,355 325,465 385,465"/>
+          <path id="cpaA5" d="M240,350 C305,360 320,585 385,585"/>
+          <path id="cpaB1" d="M478,105 C560,105 620,345 735,345"/>
+          <path id="cpaB2" d="M478,225 C560,225 630,345 735,345"/>
+          <path id="cpaB3" d="M478,345 H735"/>
+          <path id="cpaB4" d="M478,465 C560,465 630,345 735,345"/>
+          <path id="cpaB5" d="M478,585 C560,585 620,345 735,345"/>
+        </g>
+        <path id="cpaC" class="track track-x" d="M862,345 H1000" marker-end="url(#cpaArrow)"/>
+        <!-- the classical route, kept visually subordinate: dashed, and running
+             along the floor of the figure rather than through the species -->
+        <path id="cpaClassic" class="track track-dash"
+              d="M240,360 C300,712 420,720 700,720 C910,720 1030,585 1062,412"/>
+
+        <!-- ===== solution ===== -->
+        <g class="ions">
+          <circle cx="155" cy="318" r="3.4"/><circle cx="200" cy="308" r="3.1"/>
+          <circle cx="222" cy="332" r="3.4"/><circle cx="168" cy="350" r="3.1"/>
+          <circle cx="196" cy="356" r="3.4"/><circle cx="150" cy="372" r="3.1"/>
+          <circle cx="183" cy="382" r="3.4"/><circle cx="212" cy="384" r="3.1"/>
+          <circle cx="163" cy="336" r="3.4"/><circle cx="176" cy="300" r="3.1"/>
+          <circle cx="228" cy="348" r="3.1"/><circle cx="144" cy="352" r="3.4"/>
+        </g>
+        <g fill="#F0724A" opacity="0.9">
+          <circle cx="207" cy="330" r="3"/><circle cx="192" cy="332" r="2.6"/>
+          <circle cx="168" cy="368" r="3"/><circle cx="214" cy="362" r="2.6"/>
+        </g>
+        <text class="lbl" x="185" y="415" text-anchor="middle">IONS, ATOMS, MOLECULES</text>
+
+        <!-- ===== 1. multi-ion complexes and oligomers ===== -->
+        <g transform="translate(430,105)">
+          <g stroke="#3FD9CB" stroke-width="1.1" opacity="0.55">
+            <path d="M-14,-8 L0,-2 L14,-9 M0,-2 L-6,10 M0,-2 L11,7"/>
+          </g>
+          <g fill="#3FD9CB">
+            <circle cx="-14" cy="-8" r="4.6"/><circle cx="0" cy="-2" r="5.2"/>
+            <circle cx="14" cy="-9" r="4.6"/><circle cx="-6" cy="10" r="4.2"/>
+            <circle cx="11" cy="7" r="4.2"/>
+          </g>
+          <circle cx="-22" cy="4" r="3" fill="#F0724A"/>
+          <circle cx="20" cy="-1" r="3" fill="#F0724A"/>
+        </g>
+        <text x="430" y="155" text-anchor="middle">COMPLEXES, OLIGOMERS</text>
+
+        <!-- ===== 2. dense liquid droplets ===== -->
+        <g transform="translate(430,225)">
+          <ellipse rx="31" ry="25" fill="url(#cpaDrop)" stroke="#3FD9CB"
+                   stroke-width="1.2" stroke-dasharray="4 4" opacity="0.9"/>
+          <g fill="#8FF3EA" opacity="0.55">
+            <circle cx="-12" cy="-6" r="2.2"/><circle cx="4" cy="-11" r="2.2"/>
+            <circle cx="13" cy="3" r="2.2"/><circle cx="-4" cy="9" r="2.2"/>
+            <circle cx="-17" cy="7" r="2.2"/><circle cx="8" cy="12" r="2.2"/>
+            <circle cx="0" cy="0" r="2.2"/>
+          </g>
+        </g>
+        <text x="430" y="275" text-anchor="middle">DENSE LIQUID DROPLETS</text>
+
+        <!-- ===== 3. amorphous nanoparticles: dense, and no lattice at all ===== -->
+        <g transform="translate(430,345)">
+          <path d="M2,-29 C18,-27 31,-15 29,-1 C27,15 15,29 -1,28 C-17,27 -30,14 -29,-2 C-28,-17 -14,-31 2,-29 Z"
+                fill="#132A33" stroke="#7FD9EF" stroke-width="1.4" opacity="0.95"/>
+          <g fill="#7FD9EF" opacity="0.5">
+            <circle cx="-14" cy="-12" r="2.3"/><circle cx="2" cy="-17" r="2.3"/>
+            <circle cx="15" cy="-7" r="2.3"/><circle cx="-19" cy="3" r="2.3"/>
+            <circle cx="-5" cy="-3" r="2.3"/><circle cx="10" cy="6" r="2.3"/>
+            <circle cx="-11" cy="14" r="2.3"/><circle cx="4" cy="18" r="2.3"/>
+            <circle cx="19" cy="12" r="2.3"/><circle cx="-2" cy="7" r="2.3"/>
+          </g>
+        </g>
+        <text x="430" y="395" text-anchor="middle">AMORPHOUS NANOPARTICLES</text>
+
+        <!-- ===== 4. poorly crystalline: order in one lobe only ===== -->
+        <g transform="translate(430,465)">
+          <path d="M2,-29 C18,-27 31,-15 29,-1 C27,15 15,29 -1,28 C-17,27 -30,14 -29,-2 C-28,-17 -14,-31 2,-29 Z"
+                fill="#132A33" stroke="#7FD9EF" stroke-width="1.4" opacity="0.95"/>
+          <g stroke="#3FD9CB" stroke-width="1" opacity="0.75">
+            <path d="M-2,-20 H24 M-4,-13 H27 M-6,-6 H28 M-7,1 H27"/>
+          </g>
+          <g fill="#7FD9EF" opacity="0.5">
+            <circle cx="-18" cy="-6" r="2.3"/><circle cx="-12" cy="6" r="2.3"/>
+            <circle cx="2" cy="12" r="2.3"/><circle cx="16" cy="15" r="2.3"/>
+            <circle cx="-4" cy="21" r="2.3"/><circle cx="-20" cy="9" r="2.3"/>
+          </g>
+        </g>
+        <text x="430" y="515" text-anchor="middle">POORLY CRYSTALLINE</text>
+
+        <!-- ===== 5. nanocrystals: the same block the solid is built from ===== -->
+        <g transform="translate(430,585)"><use href="#cpaBlock"/></g>
+        <text x="430" y="635" text-anchor="middle">NANOCRYSTALS</text>
+
+        <!-- ===== assembly: two blocks closing, the right one still off-register ===== -->
+        <g transform="translate(766,345)"><use href="#cpaBlock"/></g>
+        <g transform="translate(822,337) rotate(13)"><use href="#cpaBlock"/></g>
+        <path d="M792,352 C800,357 806,357 812,354" fill="none" stroke="#F0724A"
+              stroke-width="1.3" stroke-dasharray="3 3" opacity="0.85"/>
+        <path d="M836,300 A26,26 0 0 1 851,320" fill="none" stroke="#F0724A"
+              stroke-width="1.3" opacity="0.85" marker-end="url(#cpaArrow)"/>
+        <text class="acc" x="790" y="415" text-anchor="middle">ORIENTED ATTACHMENT</text>
+
+        <!-- ===== the solid: one crystal made of aligned blocks, flaws kept ===== -->
+        <g transform="translate(1078,345)">
+          <use href="#cpaBlock" x="0" y="0"/>
+          <use href="#cpaBlock" x="-43.3" y="0"/>
+          <use href="#cpaBlock" x="43.3" y="0"/>
+          <use href="#cpaBlock" x="-21.65" y="-37.5"/>
+          <g transform="translate(21.65,-37.5) rotate(6)"><use href="#cpaBlock"/></g>
+          <use href="#cpaBlock" x="-21.65" y="37.5"/>
+          <use href="#cpaBlock" x="21.65" y="37.5"/>
+          <!-- a pore left behind at a triple junction, the flaw the caption
+               promises: the product remembers how it was assembled -->
+          <circle cx="0" cy="-37.5" r="5.2" fill="#080C15" stroke="#F0724A"
+                  stroke-width="1.1" opacity="0.9"/>
+        </g>
+        <text class="lbl" x="1078" y="440" text-anchor="middle">BULK CRYSTAL</text>
+        <text x="1078" y="462" text-anchor="middle">BUILT OF ALIGNED BLOCKS</text>
+
+        <text x="700" y="750" text-anchor="middle">CLASSICAL ROUTE &#183; MONOMER BY MONOMER</text>
+
+        <!-- ===== the ions. Two per track, half a cycle apart. ===== -->
+        <g class="cpa-dot" opacity="0"><animateMotion dur="4.8s" begin="0s" repeatCount="indefinite"><mpath href="#cpaA1"/></animateMotion><animate attributeName="opacity" dur="4.8s" begin="0s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
+        <g class="cpa-dot" opacity="0"><animateMotion dur="4.8s" begin="2.4s" repeatCount="indefinite"><mpath href="#cpaA1"/></animateMotion><animate attributeName="opacity" dur="4.8s" begin="2.4s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
+        <g class="cpa-dot" opacity="0"><animateMotion dur="4.2s" begin="0.5s" repeatCount="indefinite"><mpath href="#cpaA2"/></animateMotion><animate attributeName="opacity" dur="4.2s" begin="0.5s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
+        <g class="cpa-dot" opacity="0"><animateMotion dur="4.2s" begin="2.6s" repeatCount="indefinite"><mpath href="#cpaA2"/></animateMotion><animate attributeName="opacity" dur="4.2s" begin="2.6s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
+        <g class="cpa-dot" opacity="0"><animateMotion dur="3.6s" begin="0.2s" repeatCount="indefinite"><mpath href="#cpaA3"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="0.2s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
+        <g class="cpa-dot" opacity="0"><animateMotion dur="3.6s" begin="2s" repeatCount="indefinite"><mpath href="#cpaA3"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="2s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
+        <g class="cpa-dot" opacity="0"><animateMotion dur="4.2s" begin="0.9s" repeatCount="indefinite"><mpath href="#cpaA4"/></animateMotion><animate attributeName="opacity" dur="4.2s" begin="0.9s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
+        <g class="cpa-dot" opacity="0"><animateMotion dur="4.2s" begin="3s" repeatCount="indefinite"><mpath href="#cpaA4"/></animateMotion><animate attributeName="opacity" dur="4.2s" begin="3s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
+        <g class="cpa-dot" opacity="0"><animateMotion dur="4.8s" begin="0.7s" repeatCount="indefinite"><mpath href="#cpaA5"/></animateMotion><animate attributeName="opacity" dur="4.8s" begin="0.7s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
+        <g class="cpa-dot" opacity="0"><animateMotion dur="4.8s" begin="3.1s" repeatCount="indefinite"><mpath href="#cpaA5"/></animateMotion><animate attributeName="opacity" dur="4.8s" begin="3.1s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
+        <g class="cpa-dot" opacity="0"><animateMotion dur="5.6s" begin="1.1s" repeatCount="indefinite"><mpath href="#cpaB1"/></animateMotion><animate attributeName="opacity" dur="5.6s" begin="1.1s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
+        <g class="cpa-dot" opacity="0"><animateMotion dur="5.6s" begin="3.9s" repeatCount="indefinite"><mpath href="#cpaB1"/></animateMotion><animate attributeName="opacity" dur="5.6s" begin="3.9s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
+        <g class="cpa-dot" opacity="0"><animateMotion dur="5.2s" begin="0.4s" repeatCount="indefinite"><mpath href="#cpaB2"/></animateMotion><animate attributeName="opacity" dur="5.2s" begin="0.4s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
+        <g class="cpa-dot" opacity="0"><animateMotion dur="5.2s" begin="3s" repeatCount="indefinite"><mpath href="#cpaB2"/></animateMotion><animate attributeName="opacity" dur="5.2s" begin="3s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
+        <g class="cpa-dot" opacity="0"><animateMotion dur="4.4s" begin="1.4s" repeatCount="indefinite"><mpath href="#cpaB3"/></animateMotion><animate attributeName="opacity" dur="4.4s" begin="1.4s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
+        <g class="cpa-dot" opacity="0"><animateMotion dur="4.4s" begin="3.6s" repeatCount="indefinite"><mpath href="#cpaB3"/></animateMotion><animate attributeName="opacity" dur="4.4s" begin="3.6s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
+        <g class="cpa-dot" opacity="0"><animateMotion dur="5.2s" begin="1.8s" repeatCount="indefinite"><mpath href="#cpaB4"/></animateMotion><animate attributeName="opacity" dur="5.2s" begin="1.8s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
+        <g class="cpa-dot" opacity="0"><animateMotion dur="5.2s" begin="4.4s" repeatCount="indefinite"><mpath href="#cpaB4"/></animateMotion><animate attributeName="opacity" dur="5.2s" begin="4.4s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
+        <g class="cpa-dot" opacity="0"><animateMotion dur="5.6s" begin="2.2s" repeatCount="indefinite"><mpath href="#cpaB5"/></animateMotion><animate attributeName="opacity" dur="5.6s" begin="2.2s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
+        <g class="cpa-dot" opacity="0"><animateMotion dur="5.6s" begin="5s" repeatCount="indefinite"><mpath href="#cpaB5"/></animateMotion><animate attributeName="opacity" dur="5.6s" begin="5s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
+        <g class="cpa-dot" opacity="0"><animateMotion dur="2.6s" begin="0s" repeatCount="indefinite"><mpath href="#cpaC"/></animateMotion><animate attributeName="opacity" dur="2.6s" begin="0s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
+        <g class="cpa-dot" opacity="0"><animateMotion dur="2.6s" begin="1.3s" repeatCount="indefinite"><mpath href="#cpaC"/></animateMotion><animate attributeName="opacity" dur="2.6s" begin="1.3s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
+        <g class="cpa-dot cpa-dot--dim" opacity="0"><animateMotion dur="7.4s" begin="0.3s" repeatCount="indefinite"><mpath href="#cpaClassic"/></animateMotion><animate attributeName="opacity" dur="7.4s" begin="0.3s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="5.5" fill="url(#cpaHalo)"/><circle r="2" fill="#CFEAF5"/></g>
+        <g class="cpa-dot cpa-dot--dim" opacity="0"><animateMotion dur="7.4s" begin="3.7s" repeatCount="indefinite"><mpath href="#cpaClassic"/></animateMotion><animate attributeName="opacity" dur="7.4s" begin="3.7s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="5.5" fill="url(#cpaHalo)"/><circle r="2" fill="#CFEAF5"/></g>
+      </svg>
       </div>
       <figcaption id="cpaCap">
         Pathways to crystallization by particle attachment, after De Yoreo and colleagues. Higher-order
@@ -1582,21 +1883,23 @@ footer .signoff em {
 
 <figure class="cpa-sim" id="cpaSim">
   <div class="cs-head">
-    <span class="cs-title">Ions to Mesocrystal</span>
+    <span class="cs-title">Ions to Nacre Tablet</span>
   </div>
 
   <div class="cs-stage">
     <canvas class="cs-canvas" id="csCanvas" role="img"
-            aria-label="An animated sequence: ions drift in solution and aggregate into dense amorphous nanoparticles, which keep feeding, merge when they collide, and trade ions with solution while the smallest dissolve away, until the solution is consumed. Crystallinity then nucleates at a spot on each particle's surface and sweeps through it as a front, in place, with no rotation. The crystallites diffuse toward a growing array and snap into contact, oriented attachment, building a hexagonal mesocrystal that keeps its flaws: trapped pores and slightly misregistered blocks. The camera pulls back to show the micron-scale platelet, then further still, until the platelet is one tablet among many piled in offset courses the way nacre is. Pulling back once more, the stack gives way to the shell it was building: an abalone, its interior playing the rainbow that those stacked layers produce. The sequence then resets and repeats."></canvas>
+            aria-label="An animated sequence following calcium carbonate from solution to shell. Ions jitter in solution and associate into small prenucleation clusters that form and dissolve reversibly. Organic matrix strands then appear and concentrate ions onto themselves; dense liquid globules condense on the strands, grow, and densify into solid amorphous nanoparticles as their water leaves. The granules travel to a growth site and pack, still amorphous, into a hexagonal tablet. Crystallinity then nucleates inside a few packed grains at different moments, sweeps each grain as a front, and jumps from grain to grain across contacts; finished grains rotate into a shared orientation and fuse until the tablet is a single crystal. The camera pulls back to show the micron-scale platelet, then further, until it is one tablet among many piled in offset courses the way nacre is. Pulling back once more, the stack gives way to the shell it was building: an abalone, its interior playing the rainbow that those stacked layers produce. The sequence then resets and repeats."></canvas>
     <div class="cs-hint" id="csHint">Scroll into view to start</div>
   </div>
 
   <ol class="cs-stages" id="csStages">
     <li data-stage="ions">Ions</li>
-    <li data-stage="amorphous">Amorphous nanoparticles</li>
-    <li data-stage="nanocrystals">Nanocrystals</li>
-    <li data-stage="attach">Oriented attachment</li>
-    <li data-stage="mesocrystal">Hexagonal mesocrystal</li>
+    <li data-stage="pnc">Prenucleation clusters</li>
+    <li data-stage="matrix">Matrix binds calcium</li>
+    <li data-stage="acc">Dense liquid to ACC</li>
+    <li data-stage="pack">Nanogranular packing</li>
+    <li data-stage="xtal">Crystallization and fusion</li>
+    <li data-stage="tablet">Single-crystal tablet</li>
     <li data-stage="nacre">Stacked nacre</li>
     <li data-stage="shell">Shell</li>
   </ol>
@@ -1607,22 +1910,23 @@ footer .signoff em {
   </div>
 
   <figcaption>
-    Ions condensing out of solution aggregate into amorphous nanoparticles, which grow by eating
-    stray ions, merge outright when they collide, and ripen: the smallest redissolve and feed their
-    larger neighbours, and a thin background of ions keeps exchanging with solution throughout.
-    When supersaturation is spent, crystallinity nucleates at a spot on each particle&rsquo;s surface and
-    sweeps through it as a front, a transformation in place, with no spinning or tumbling. Then comes
-    <em>oriented attachment</em>: each crystallite diffuses until it closes with the growing array and
-    jumps to contact, still accelerating as it lands. The product keeps the flaws of its assembly,
-    trapped pores and slightly misregistered blocks, and reads as one crystal only from a distance.
-    Keep pulling back and the flaws stop being resolvable, exactly as they would in an image taken
-    at lower magnification: the platelet resolves into one clean hexagonal tablet among many, stacked
-    in sheets. That is the architecture of <em>nacre</em>.
-    A cartoon of the pathway after De&nbsp;Yoreo and colleagues, staged to be legible, not a
-    quantitative model; ions are drawn far oversized, and here every particle shares one lattice
-    orientation from the start, standing in for the rotation-to-registry that real attachment
-    involves. The blocks are near-monodisperse because a periodic, long-range-ordered array is a
-    type&nbsp;I mesocrystal, which is defined as being built from uniform units.
+    Ions associate into <em>prenucleation clusters</em>, stable solute species that form and
+    dissolve reversibly and exist even below saturation (Avaro et&nbsp;al. 2023, <em>J.&nbsp;Phys.
+    Chem.&nbsp;Lett.</em>). An acidic organic matrix then concentrates the bath: calcium binds to
+    the strands, and dense liquid globules condense on them and nowhere else (Smeets et&nbsp;al.
+    2015, <em>Nat.&nbsp;Mater.</em>). The globules densify and dehydrate into solid amorphous
+    nanoparticles, crossing the amorphous solubility limit, past which no granule redissolves;
+    only the sub-critical runts that never reached a granule's size drain back. The
+    granules then pack, still amorphous and deformable, into a hexagonal tablet. Only afterwards
+    does crystallinity arrive: it nucleates inside a few packed grains at different moments, sweeps
+    each grain as a front, jumps grain to grain across contacts, and the finished grains rotate
+    into a shared orientation and fuse, boundary by boundary, until the tablet is one monolithic
+    crystal (Zhang&nbsp;&amp; Xu 2013, <em>J.&nbsp;Struct.&nbsp;Biol.</em>). Keep pulling back and
+    the platelet resolves into one clean tablet among many, stacked in offset courses. That is the
+    architecture of <em>nacre</em>.
+    A cartoon staged to be legible, not a quantitative model: ions are drawn far oversized, the
+    matrix is reduced to a few strands, and beyond the finished tablet the pull-back through the
+    stacked courses to the shell is a fixed sequence rather than a simulation.
   </figcaption>
 </figure>
   </div>
@@ -1656,6 +1960,15 @@ footer .signoff em {
     </div>
   </div>
 </section>
+
+<!-- The epigraph. It opened the About section for a long time, where it had to
+     double as that section's heading; it reads better as a sign-off, after
+     everything it is commenting on, so it sits here instead. -->
+<aside class="coda">
+  <div class="wrap">
+    <p class="coda-quote">&ldquo;Life leaves its fingerprint in stone we just have to learn how to read it&rdquo;<span class="attrib">&ndash; Someone Probably</span></p>
+  </div>
+</aside>
 
 <footer>
   <div class="wrap">
@@ -2024,20 +2337,25 @@ footer .signoff em {
 <script>
 /* Standing advances itself. The academic year turns over at the start of
    September, so this counts from the Rutgers calendar rather than the
-   calendar year: second year through 2025-26, third from September 2026,
-   and so on without anyone editing the page. The HTML carries the current
-   value as its default, so the sentence still reads correctly if this
-   never runs. */
+   calendar year: the programme began in the autumn of 2024, so 2024-25 is
+   year one and September 2026 starts year three, without anyone editing
+   the page.
+
+   Outside years one to seven the span is left empty on purpose. The HTML
+   sentence is already complete and correct without it, so a stale or
+   out-of-range count degrades to "PhD candidate studying..." rather than
+   to a wrong number. The trailing space belongs to the script for the
+   same reason: nothing is left behind when it writes nothing. */
 (function () {
-  var el = document.getElementById('phdYear');
+  var el = document.getElementById('progYear');
   if (!el) return;
   var now = new Date();
-  var acadStart = now.getMonth() >= 8 ? now.getFullYear() : now.getFullYear() - 1;
-  var n = 2 + (acadStart - 2025);
-  if (n < 1) n = 1;
-  var words = ['', 'First', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth',
-               'Seventh', 'Eighth', 'Ninth', 'Tenth'];
-  el.textContent = words[n] || (n + 'th');
+  var acadYearStart = now.getMonth() >= 8 ? now.getFullYear() : now.getFullYear() - 1;
+  var n = acadYearStart - 2023;
+  var words = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh'];
+  if (n < 1 || n > words.length) return;
+  var w = words[n - 1];
+  el.textContent = w.charAt(0).toUpperCase() + w.slice(1) + '-year ';
 })();
 </script>
 
@@ -2096,17 +2414,20 @@ footer .signoff em {
 
 
 <script>
-/* Crystallization by particle attachment, run as an actual emergent process
-   rather than a choreographed animation: ions random-walk and stick to
-   whichever neighbour they happen to meet; the resulting loose cluster is
-   drawn as the rubber-band hull of its real member ions; each cluster then
-   bends (in place, no rotation) from that ragged hull into a dipyramidal
-   nanocrystal of the same rough size, keeps absorbing ions afterward until
-   every crystallite reaches one common size, and travels to its slot in an
-   expanding periodic array -- an array that keeps being extended by new
-   crystallites appearing from beyond the edge of view, most of the array
-   never on screen at all, until the camera pulls back and shows that the
-   whole thing was always a hexagonal mesocrystal plate. */
+/* Nacre-tablet formation, run as an actual emergent process rather than a
+   choreographed animation, staged after Avaro 2023, Smeets 2015, and
+   Zhang & Xu 2013 (see the pathway comment above the phase constants).
+   Ions random-walk under an overdamped Brownian thermostat and associate
+   into prenucleation clusters that form and dissolve; matrix strands then
+   concentrate the bath and dense liquid globules condense on them, densify
+   into solid ACC granules, and travel to a periodic packing where they park
+   WHILE STILL AMORPHOUS -- an array kept growing by further granules
+   arriving from beyond the edge of view, most of it never on screen at all.
+   Only once the packing is complete does crystallinity appear: it nucleates
+   inside scattered grains, sweeps each as a front, spreads across contacts,
+   and the finished grains rotate into one shared registry and fuse, until
+   the camera pulls back and shows that the whole thing was always one
+   aragonite tablet in the making. */
 (function () {
   var fig = document.getElementById('cpaSim');
   if (!fig) return;
@@ -2172,12 +2493,31 @@ footer .signoff em {
   // without that barrier the whole bath nucleates at once into a hundred
   // dimers and nothing ever grows to a usable size.
   var NUC_P = 0.013;
-  var KT_FREE = 0.34, KT_BOUND = 0.10;
-  var DAMP_FREE = 0.92, DAMP_BOUND = 0.84;
+  /* Overdamped Brownian motion. At this scale inertia is irrelevant (the
+     Reynolds number of a nanoparticle in water is ~1e-9): velocity does not
+     persist, and displacement is accumulated random kicks. The damping
+     factors below kill a step's velocity within about two steps, so nothing
+     glides; the temperatures are retuned upward so the random walk covers
+     the same ground per unit time the old, glidier thermostat did (matched
+     on stationary RMS displacement, not by eye). Kicks are near-Gaussian
+     (sum of three uniforms) rather than uniform: real thermal noise has
+     tails, and the occasional larger kick is what makes the jitter read as
+     molecular rather than mechanical. */
+  var KT_FREE = 0.60, KT_BOUND = 0.13;
+  var DAMP_FREE = 0.62, DAMP_BOUND = 0.58;
   var VMAX_FREE = 2.0, VMAX_BOUND = 0.85;
+  function gk() { return (rnd() + rnd() + rnd()) - 1.5; }   // mean 0, std 0.5
+  // The bound-ion temperature is also the material's state: a dense liquid
+  // droplet wobbles at full temperature, solid ACC only trembles. Densify
+  // ramps this down and it stays down -- dehydration is not undone.
+  var ktBoundMul = 1;
+  // Bound-bound contact distance, as a multiple of ION_D. Densification pulls
+  // it toward the (still amorphous) ACC spacing: denser than the liquid it
+  // came from, looser than the crystal it becomes.
+  var ionDMul = 1;
+  var ACC_DMUL = 0.90;
   var STICK_R, NUC_R;                   // contact distances for joining and nucleating
   var GROW_TARGET = IONS_PER_TILE;
-  var CLUSTER_TIMEOUT = 320;            // backstop for the depletion latch
   var NM_PER_UNIT = 15;                 // one world unit ~15 nm: blocks ~79 nm, platelet ~2.9 um
   var FILL_RATE = 11;                   // new off-screen tiles claimed per unit time, once seeding is under way
   // No deliberate voids. Growth fills the space it already has before it
@@ -2203,6 +2543,41 @@ footer .signoff em {
   // with the approach speed these set how fast the array grows: too few in
   // flight and the front crawls, too many and it reads as a swarm again.
   var MAX_INFLIGHT = 22, SPAWN_OUT = 1.4;
+
+  /* ---- the pathway, staged after the papers it is drawn from ----
+     Avaro et al. 2023 (J Phys Chem Lett 14, 4517): prenucleation clusters are
+     stable, hydrated solutes that form and dissolve reversibly, present even
+     in undersaturated solution; growth runs as a continuum through dense
+     liquid droplets that densify and dehydrate toward hydrated ACC, and
+     crossing the amorphous solubility limit is the one-way gate.
+     Smeets et al. 2015 (Nat Mater 14, 394): an acidic matrix binds calcium
+     first, condensing into immobilized globules that hold most of the
+     cation supply; carbonate then outcompetes the weaker matrix binding and
+     ACC nucleates in the globules exclusively, on the matrix's own store.
+     Zhang & Xu 2013 (J Struct Biol 182, 36): the tablet packs FIRST as
+     deformable amorphous nanogranules; crystallinity then nucleates at
+     multiple sites, asynchronously, sweeps each grain, jumps grain to grain
+     at contacts, and touching grains rotate into registry and fuse until
+     the mature tablet is one monolithic crystal. */
+  // prenucleation: clusters this small churn -- they form and redissolve.
+  // The dissolution rate is set so the cluster population stays a MINORITY
+  // of the bath (as in the SAXS observations): most ions remain free for
+  // the matrix to concentrate in the next act.
+  var PNC_CAP = 6, PNC_DISS = 0.22, PNC_DUR = 70;
+  // the matrix: a few adsorbed acidic strands that bind and concentrate ions
+  var N_STRANDS = 3, STRAND_PTS = 22, STRAND_R = 2.4;
+  var STRAND_PULL_ION = 0.34, STRAND_PULL_PT = 0.06, STRAND_PULL_NEAR = 0.11;
+  var STRAND_RANGE = 26, NUC_P_MATRIX = 0.055, MATRIX_MAXT = 260;
+  var MATRIX_FREE_FRAC = 0.25;          // leave when ~75% of the bath is bound
+  var DENSIFY_DUR = 80;
+  var P_LAUNCH = 0.035;                 // granules leave the matrix for the tablet
+  // in-place crystallization of the packed tablet: rare spontaneous starts,
+  // fast catalysis across grain contacts, and a finite transformation time
+  // per grain, so the wave is ragged rather than clocklike
+  var P_NUC_X = 0.00012, P_SPREAD = 0.13, XT_SPREAD_AT = 0.55, XT_RATE = 1 / 38;
+  var NBR_R = SPACING * 1.45;           // parked grains this close are in contact
+  var TH_SPREAD = 0.9;                  // nucleation orientation scatter, radians
+  var ALIGN_K = 0.06, ALIGN_SNAP = 0.015, HEAL_K = 0.05, HEAL_WAIT = 18;
 
   // The blocks are squares, so they sit on a square lattice and meet edge to
   // edge with no forced overlap. The hexagon is cut out of that lattice --
@@ -2302,9 +2677,12 @@ footer .signoff em {
   var clusters, ions, phase, phaseT, t;
   var mesoTh, fillBank, depletionT, seedSizes;
   var occupied, frontier, frontierAt, seeded, seedX, seedY, latOX, latOY;
+  var strands, strandA, strandOn, xtNbrsBuilt;
 
   function reset() {
-    mesoTh = rnd() * TAU;              // every crystallite in the episode shares this one orientation
+    // the tablet's final texture: every grain nucleates misoriented and
+    // rotates into registry with this one shared orientation as it fuses
+    mesoTh = rnd() * TAU;
     clusters = [];
     ions = [];
     // spread evenly over the whole solution volume, edge to edge -- a bath of
@@ -2315,18 +2693,57 @@ footer .signoff em {
         vx: (rnd() - 0.5) * 0.5, vy: (rnd() - 0.5) * 0.5
       });
     }
+    // The matrix: a few adsorbed acidic strands, drawn fresh each episode.
+    // Gentle sinusoids rather than straight lines, so they read as flexible
+    // macromolecule chains lying where they happened to settle.
+    strands = [];
+    for (var sI = 0; sI < N_STRANDS; sI++) {
+      var sy0 = (sI - (N_STRANDS - 1) / 2) * (VIEW_H * 0.34) + (rnd() - 0.5) * 5;
+      var amp = 2.2 + rnd() * 2.2, ph0 = rnd() * TAU, freq = 1.5 + rnd();
+      var pts = [];
+      for (var sP = 0; sP < STRAND_PTS; sP++) {
+        var fx = sP / (STRAND_PTS - 1);
+        pts.push({
+          x: (fx - 0.5) * (VIEW_W + 8),
+          y: sy0 + Math.sin(ph0 + fx * freq * TAU * 0.5) * amp
+        });
+      }
+      strands.push(pts);
+    }
+    strandA = 0; strandOn = 0; xtNbrsBuilt = false;
+    // the fringe raster bakes in mesoTh, which this reset just re-rolled;
+    // left cached, a Restart clicked mid-crystallization would clip the OLD
+    // run's fringe angle into the NEW run's grains for the whole static-
+    // camera act, since the cache key is only canvas size + zoom bucket
+    fringeKey = '';
     occupied = {}; frontier = []; frontierAt = {}; seeded = false;
     seedX = 0; seedY = 0; latOX = 0; latOY = 0;
     fillBank = 0; depletionT = -1; seedSizes = [];
+    ktBoundMul = 1; ionDMul = 1;
     phase = 'ions'; phaseT = 0; t = 0;
   }
   reset();
 
+  // nearest point on any strand -- the matrix as a field the chemistry feels
+  function nearestStrand(x, y) {
+    var bd = Infinity, bx = 0, by = 0;
+    for (var sI = 0; sI < strands.length; sI++) {
+      var pts = strands[sI];
+      for (var k = 0; k < pts.length; k++) {
+        var dx = pts[k].x - x, dy = pts[k].y - y;
+        var d2 = dx * dx + dy * dy;
+        if (d2 < bd) { bd = d2; bx = pts[k].x; by = pts[k].y; }
+      }
+    }
+    return { d: Math.sqrt(bd), x: bx, y: by };
+  }
+
   function ionPt(x, y) {
     // one member ion: real position and velocity, plus its (eventual) lattice
     // site, its distance from the nucleation site, a fixed per-ion jitter that
-    // roughens the crystallization front, and whether the front has recruited it
-    return { x: x, y: y, vx: 0, vy: 0, lx: 0, ly: 0, fd: 0, jit: rnd(), rec: false, ok: 0 };
+    // roughens the crystallization front, whether the front has recruited it,
+    // and its rest offset in the parked granule (set when the granule lands)
+    return { x: x, y: y, vx: 0, vy: 0, lx: 0, ly: 0, fd: 0, jit: rnd(), rec: false, ok: 0, rx0: 0, ry0: 0 };
   }
 
   function newCluster(x, y) {
@@ -2340,33 +2757,52 @@ footer .signoff em {
       lpts: null,                      // grain pattern, set at the schematic handoff
       seedborn: false, kicked: false,
       tx: 0, ty: 0, attachT: 0, fromX: 0, fromY: 0,
-      phx: 0, phy: 0, offTile: false,  // small translational misregistry (no rotation, ever)
+      phx: 0, phy: 0, offTile: false,  // small translational misregistry, healed as grains fuse
+      cellPX: 0, cellPY: 0,            // the cell centre itself, for the healing to aim at
+      // in-place transformation state: grains pack amorphous (cryst 0) and
+      // crystallize after -- Zhang & Xu 2013's order of events, not the
+      // crystallize-then-attach the first version of this sim showed
+      cryst: 0, xt: false, xtDoneAt: -1,
+      aligned: false,                  // rotated into registry with mesoTh
+      strandD: Infinity,               // distance to the matrix, while it matters
+      nbrs: null,                      // contact list, built once the packing is still
       poppedAt: -1
     };
     clusters.push(c);
     return c;
   }
 
-  function startOrdering(c) {
+  function startOrdering(c, dirX, dirY) {
     // heterogeneous nucleation: crystallinity starts at one spot on the
     // particle surface and spreads from there, it does not appear everywhere
-    // at once (Ihli et al. 2014; Liu et al. 2020)
+    // at once (Ihli et al. 2014; Liu et al. 2020). When the transformation
+    // arrives by contact with an already-crystalline neighbour, the front
+    // enters through that face: pass the direction of the neighbour and the
+    // nucleation site is the surface site nearest to it. Spontaneous starts
+    // pick a surface site at random compass instead.
     // The lattice always has a site for every ion the particle can ever hold.
     // Sizing it any smaller used to make late arrivals share the last site,
     // and a permanent pile of ions on one point dragged the whole frame off
     // centre so the particle could never finish ordering.
     var n = c.pts.length, q;
+    // Each grain nucleates with its own lattice orientation -- neighbouring
+    // grains disagree, exactly as the SAED of immature nacre says they do,
+    // and the disagreement is resolved later by rotation into registry.
+    c.th = mesoTh + (rnd() - 0.5) * TH_SPREAD;
     c.latCells = microCellsFor(Math.max(LAT_CAP, n));
     c.latIdx = n;
     for (q = 0; q < n; q++) { c.pts[q].lx = c.latCells[q].lx; c.pts[q].ly = c.latCells[q].ly; }
-    var far = 0, fr = -1;
+    var best = 0, bs = -Infinity, hasDir = (dirX !== undefined);
+    var dl = hasDir ? (Math.hypot(dirX, dirY) || 1) : 1;
     for (q = 0; q < n; q++) {
-      var r0 = Math.hypot(c.latCells[q].lx, c.latCells[q].ly);
-      if (r0 > fr) { fr = r0; far = q; }
+      var lx = c.latCells[q].lx, ly = c.latCells[q].ly;
+      var sc0 = hasDir ? (lx * dirX + ly * dirY) / dl : Math.hypot(lx, ly);
+      if (sc0 > bs) { bs = sc0; best = q; }
     }
-    c.nucLx = c.latCells[far].lx; c.nucLy = c.latCells[far].ly;
+    c.nucLx = c.latCells[best].lx; c.nucLy = c.latCells[best].ly;
     for (q = 0; q < n; q++) c.pts[q].fd = Math.hypot(c.pts[q].lx - c.nucLx, c.pts[q].ly - c.nucLy);
     c.frontR = 0;
+    c.xt = true;
     c.state = 'order';
   }
 
@@ -2513,8 +2949,12 @@ footer .signoff em {
             if (rr2 > PAIR_CUT * PAIR_CUT || rr2 < 1e-9) continue;
             var rr = Math.sqrt(rr2);
             var ux2 = rdx / rr, uy2 = rdy / rr, f;
-            if (rr < ION_D) {
-              f = -K_REP2 * (ION_D - rr) / ION_D;        // negative: apart
+            // two condensed ions sit at the current material's own contact
+            // distance: liquid at first, pulled tighter as densification
+            // dehydrates the droplets into ACC
+            var cD = (aCl[k] >= 0 && aCl[m2] >= 0) ? ION_D * ionDMul : ION_D;
+            if (rr < cD) {
+              f = -K_REP2 * (cD - rr) / cD;              // negative: apart
             } else {
               // strong between ions that have already condensed, weak between
               // two still in solution
@@ -2536,9 +2976,11 @@ footer .signoff em {
     for (k = 0; k < aN; k++) {
       if (aStatic[k]) continue;
       var free = aCl[k] < 0;
-      var kt = free ? KT_FREE : KT_BOUND, dmp = free ? DAMP_FREE : DAMP_BOUND;
-      aVX[k] += (rnd() - 0.5) * kt * dt;
-      aVY[k] += (rnd() - 0.5) * kt * dt;
+      // bound temperature carries the material's state: full for a liquid
+      // droplet, ramped down by densification once the water is leaving
+      var kt = free ? KT_FREE : KT_BOUND * ktBoundMul, dmp = free ? DAMP_FREE : DAMP_BOUND;
+      aVX[k] += gk() * kt * dt;
+      aVY[k] += gk() * kt * dt;
       aVX[k] *= dmp; aVY[k] *= dmp;
       var vcap = free ? VMAX_FREE : VMAX_BOUND;
       var vsp = Math.hypot(aVX[k], aVY[k]);
@@ -2553,11 +2995,124 @@ footer .signoff em {
     }
   }
 
+  // a granule that lands remembers where each of its ions sits in its own
+  // frame; the pin is what lets it stay a granule while parked in the packing
+  function parkPts(c) {
+    if (!c.pts) return;
+    for (var q = 0; q < c.pts.length; q++) {
+      c.pts[q].rx0 = c.pts[q].x - c.cx;
+      c.pts[q].ry0 = c.pts[q].y - c.cy;
+    }
+  }
+  function translatePts(c, dx, dy) {
+    if (!c.pts) return;
+    for (var q = 0; q < c.pts.length; q++) { c.pts[q].x += dx; c.pts[q].y += dy; }
+  }
+  // Parked granules are solid ACC: no pair dance, no drift -- each ion is
+  // sprung to its rest offset and trembles at the (dehydrated) temperature.
+  function parkedPass(dt) {
+    for (var j = 0; j < clusters.length; j++) {
+      var c = clusters[j];
+      if (c.state !== 'attached' || !c.pts || c.xt) continue;
+      for (var q = 0; q < c.pts.length; q++) {
+        var p = c.pts[q];
+        p.vx += (c.cx + p.rx0 - p.x) * 0.14 * dt + gk() * 0.05 * ktBoundMul * dt;
+        p.vy += (c.cy + p.ry0 - p.y) * 0.14 * dt + gk() * 0.05 * ktBoundMul * dt;
+        p.vx *= 0.66; p.vy *= 0.66;
+        p.x += p.vx * dt; p.y += p.vy * dt;
+      }
+    }
+  }
+
+  /* The crystallization front, running IN PLACE through a parked granule.
+     This used to happen out in solution before attachment; Zhang & Xu 2013
+     puts it here, inside the already-packed tablet, so the granule's centre
+     is pinned to its cell and only its interior reorganises. Only ions the
+     front has recruited feel the lattice restoring force; the rest stay
+     amorphous, held by their neighbours and their pin, until it reaches
+     them. Per-ion jitter in the recruitment radius keeps the boundary
+     ragged. The ions keep touching all the way through: behind the front
+     they sit on the tighter crystalline spacing, ahead of it they are still
+     at the ACC contact distance, so the granule visibly draws itself in and
+     squares up as the front passes. */
+  function orderPass(c, dt) {
+    c.frontR += FRONT_V * dt;
+    var np4 = c.pts.length, pI;
+    var mobO = 1 / Math.sqrt(Math.max(2, np4));
+    var jAmp = 0.35 * (0.6 + 1.4 * mobO);
+    for (pI = 0; pI < np4; pI++) {
+      var pa = c.pts[pI];
+      for (var pB = pI + 1; pB < np4; pB++) {
+        var pb = c.pts[pB];
+        var cd2 = (pa.rec && pb.rec) ? MICRO_SPACING : ION_D * ionDMul;
+        var ddx = pb.x - pa.x, ddy = pb.y - pa.y;
+        var ddr = Math.hypot(ddx, ddy);
+        if (ddr < cd2 && ddr > 1e-4) {
+          var pf = (cd2 - ddr) / cd2 * REP_K * dt;
+          var ux2 = ddx / ddr, uy2 = ddy / ddr;
+          pa.vx -= ux2 * pf; pa.vy -= uy2 * pf;
+          pb.vx += ux2 * pf; pb.vy += uy2 * pf;
+        }
+      }
+    }
+    var cs0 = Math.cos(c.th), sn0 = Math.sin(c.th), sumD = 0;
+    for (pI = 0; pI < np4; pI++) {
+      var p1 = c.pts[pI];
+      if (!p1.rec && p1.fd <= c.frontR * (0.75 + 0.5 * p1.jit)) p1.rec = true;
+      var tgx = c.cx + p1.lx * cs0 - p1.ly * sn0, tgy = c.cy + p1.lx * sn0 + p1.ly * cs0;
+      var dtg = Math.hypot(p1.x - tgx, p1.y - tgy);
+      if (p1.rec) {
+        p1.vx += (tgx - p1.x) * ORDER_K * dt; p1.vy += (tgy - p1.y) * ORDER_K * dt;
+        p1.ok = Math.max(0, 1 - dtg / ORDER_REF);
+      } else {
+        // not yet reached by the front: still amorphous, held together by
+        // its neighbours and loosely by its pin in the granule
+        p1.ok = 0;
+        for (var pC = 0; pC < np4; pC++) {
+          if (pC === pI) continue;
+          var pz = c.pts[pC];
+          var zdx = pz.x - p1.x, zdy = pz.y - p1.y;
+          var zr = Math.hypot(zdx, zdy);
+          if (zr > ION_D && zr < PAIR_CUT) {
+            var zf = K_ATT_BOUND * (1 - (zr - ION_D) / (PAIR_CUT - ION_D)) * dt;
+            p1.vx += zdx / zr * zf; p1.vy += zdy / zr * zf;
+          }
+        }
+        p1.vx += (c.cx + p1.rx0 - p1.x) * 0.04 * dt;
+        p1.vy += (c.cy + p1.ry0 - p1.y) * 0.04 * dt;
+      }
+      // an ion that has found its site stops rattling around
+      var jl = jAmp * (1 - 0.75 * p1.ok) * ktBoundMul;
+      p1.vx += gk() * jl * 0.6 * dt; p1.vy += gk() * jl * 0.6 * dt;
+      p1.vx *= 0.76; p1.vy *= 0.76;
+      p1.x += p1.vx * dt; p1.y += p1.vy * dt;
+      sumD += dtg;
+    }
+    c.orderFrac = Math.max(0, Math.min(1, 1 - (sumD / np4) / ORDER_REF));
+    c.cryst = c.orderFrac;
+    // The centre is deliberately NOT recomputed from the ions: the granule
+    // is parked on its cell, the lattice is anchored there, and ordering
+    // happens around that anchor. Recomputing it let the transformation
+    // walk the grain off its site.
+    if (c.orderFrac >= ORDER_DONE) {
+      // pseudomorphic completion: keep the pattern, drop the ion machinery
+      c.lpts = c.pts.map(function (pp) { return { lx: pp.lx, ly: pp.ly }; });
+      c.pts = null;
+      c.hw = blockHalf(c.lpts.length); c.hh = c.hw;
+      c.cryst = 1; c.state = 'attached';
+      c.xtDoneAt = t; c.poppedAt = t;
+    }
+  }
+
   function step(dt) {
     t += dt; phaseT += dt;
     var i, j, c;
 
     var BOUND_X = VIEW_W / 2 + 8, BOUND_Y = VIEW_H / 2 + 8;
+    // the matrix strands fade in when the matrix act starts and back out
+    // once the granules leave for the tablet
+    strandA += (strandOn - strandA) * Math.min(1, 0.04 * dt);
+
     // Once supersaturation is spent the bath is no longer uniform: what solute
     // is left sits in a concentration gradient and drifts down it toward the
     // nearest particle. This is a bias on top of the pair forces, not a
@@ -2579,13 +3134,38 @@ footer .signoff em {
         }
       }
     }
+    // The matrix as a sponge (Smeets 2015): free ions inside its reach feel
+    // a weak steady pull toward the nearest strand, which is what locally
+    // concentrates the bath without any capture at range.
+    if ((phase === 'matrix' || phase === 'densify') && strandA > 0.3) {
+      for (i = 0; i < ions.length; i++) {
+        var si = ions[i];
+        var nsI = nearestStrand(si.x, si.y);
+        if (nsI.d > STRAND_RANGE || nsI.d < 1e-6) continue;
+        si.vx += ((nsI.x - si.x) / nsI.d) * STRAND_PULL_ION * dt;
+        si.vy += ((nsI.y - si.y) / nsI.d) * STRAND_PULL_ION * dt;
+        var sspI = Math.hypot(si.vx, si.vy);
+        if (sspI > SWEEP_MAX) { si.vx *= SWEEP_MAX / sspI; si.vy *= SWEEP_MAX / sspI; }
+      }
+      // assemblies feel the matrix too, and record how far off it they sit:
+      // that distance decides below whether they may grow or must churn
+      for (j = 0; j < clusters.length; j++) {
+        c = clusters[j];
+        if (c.state !== 'blob') continue;
+        c.strandD = nearestStrand(c.cx, c.cy).d;
+      }
+    }
     // every ion moves here, under the same law
     amorphousPass(dt);
+    // parked granules are solid ACC pinned in the packing: they tremble
+    // in place instead of taking part in the liquid's pair dance
+    if (phase === 'pack' || phase === 'fill' || phase === 'xtalize') parkedPass(dt);
 
     if (phase === 'ions') {
-      if (phaseT > 60) { phase = 'cluster'; phaseT = 0; }
+      if (phaseT > 60) { phase = 'pnc'; phaseT = 0; }
 
-    } else if (phase === 'cluster' || phase === 'fill') {
+    } else if (phase === 'pnc' || phase === 'matrix' || phase === 'densify' ||
+               phase === 'pack' || phase === 'fill') {
       // Joining is bookkeeping, not movement. The pair forces have already
       // drawn the ion in; it becomes a member only once it is genuinely
       // touching, and it keeps the position it arrived at. Nothing is grabbed
@@ -2596,11 +3176,14 @@ footer .signoff em {
         var bestC = -1, bestD = STICK_R;
         for (j = 0; j < clusters.length; j++) {
           c = clusters[j];
-          if (c.state !== 'blob' && c.state !== 'order') continue;
-          if (c.pts.length >= SIZE_CAP) continue;
-          // a crystallite that has handed out every lattice site is full, even
-          // if dissolution has since shrunk it -- sites are never reissued
-          if (c.state === 'order' && c.latIdx >= c.latCells.length) continue;
+          if (c.state !== 'blob') continue;
+          // How big an assembly may grow is the phase speaking: in the open
+          // bath everything stays cluster-sized and churns (Avaro 2023's
+          // undersaturated PNCs); on the matrix, and only there, an assembly
+          // may take on a globule's worth of ions (Smeets 2015)
+          var cap = (phase === 'pnc' ||
+                     (phase === 'matrix' && c.strandD > STRAND_R * 2)) ? PNC_CAP : SIZE_CAP;
+          if (c.pts.length >= cap) continue;
           if (Math.abs(c.cx - ia.x) > 14 || Math.abs(c.cy - ia.y) > 14) continue;
           for (var m = 0; m < c.pts.length; m++) {
             var dd = Math.hypot(c.pts[m].x - ia.x, c.pts[m].y - ia.y);
@@ -2611,20 +3194,26 @@ footer .signoff em {
           c = clusters[bestC];
           var np = ionPt(ia.x, ia.y);
           np.vx = ia.vx; np.vy = ia.vy;   // it keeps the momentum it came in with
-          if (c.state === 'order') {
-            // lands on the crystal: takes the next free lattice site
-            var mc = c.latCells[c.latIdx++];
-            np.lx = mc.lx; np.ly = mc.ly;
-            np.fd = Math.hypot(np.lx - c.nucLx, np.ly - c.nucLy);
-          }
           c.pts.push(np);
           ions.splice(i, 1);
           continue;
         }
-        // two solvated ions in contact: a new particle, where they met
+        // Two solvated ions in contact: a new association, where they met.
+        // In the pnc act this happens anywhere, because prenucleation
+        // clusters are solutes of the whole bath; in the matrix act new
+        // associations start only against a strand, where the bound calcium
+        // actually is. After densification nothing new nucleates at all.
+        if (phase !== 'pnc' && phase !== 'matrix') continue;
         for (var k = i - 1; k >= 0; k--) {
           var ib = ions[k];
-          if (Math.hypot(ib.x - ia.x, ib.y - ia.y) < NUC_R && rnd() < NUC_P) {
+          if (Math.hypot(ib.x - ia.x, ib.y - ia.y) >= NUC_R) continue;
+          var pN = NUC_P;
+          if (phase === 'matrix') {
+            if (nearestStrand(ia.x, ia.y).d > STRAND_R ||
+                nearestStrand(ib.x, ib.y).d > STRAND_R) continue;
+            pN = NUC_P_MATRIX;
+          }
+          if (rnd() < pN) {
             var nc = newCluster((ia.x + ib.x) / 2, (ia.y + ib.y) / 2);
             var q1 = ionPt(ia.x, ia.y), q2 = ionPt(ib.x, ib.y);
             q1.vx = ia.vx; q1.vy = ia.vy; q2.vx = ib.vx; q2.vy = ib.vy;
@@ -2645,8 +3234,9 @@ footer .signoff em {
         for (j = i - 1; j >= 0; j--) {
           var cj = clusters[j]; if (cj.state !== 'blob') continue;
           // coalescence dominates while droplets are small; two already-large
-          // particles bump and part instead of fusing
-          if (ci.pts.length + cj.pts.length > SIZE_CAP) continue;
+          // particles bump and part instead of fusing. In the open bath the
+          // ceiling is a PNC's, so nothing grows past cluster size out there.
+          if (ci.pts.length + cj.pts.length > (phase === 'pnc' ? PNC_CAP : SIZE_CAP)) continue;
           var ri = Math.sqrt(ci.pts.length) * 0.7, rj = Math.sqrt(cj.pts.length) * 0.7;
           if (Math.hypot(ci.cx - cj.cx, ci.cy - cj.cy) < (ri + rj) * 0.8) {
             var ni = ci.pts.length, nj = cj.pts.length;
@@ -2691,24 +3281,43 @@ footer .signoff em {
         if (n0 > 0) { nBar += n0; nCnt++; }
       }
       nBar = nCnt ? nBar / nCnt : GROW_TARGET;
+      /* Dissolution is the reversibility of the pathway, and it is phased:
+         in the pnc act EVERYTHING churns, because prenucleation clusters are
+         equilibrium solutes that dissolve as readily as they form; in the
+         matrix act the strand-bound globules are stabilised while anything
+         loose in the bath keeps churning; densification is the crossing of
+         the amorphous solubility limit, the one-way gate, after which no
+         granule redissolves (Avaro 2023). The exception is deliberate: the
+         sub-critical runts. The densify ramp cooled and tightened them like
+         everything else, but solid or not they never reached a granule's
+         size, surface energy wins at that radius (Gibbs-Thomson, per the
+         MIN_XTAL note above), and they drain back during packing -- which
+         is also what keeps a stray 13-ion blob from deadlocking the gate
+         into crystallization, since only granules of MIN_XTAL and up ever
+         launch for the tablet. */
       for (j = clusters.length - 1; j >= 0; j--) {
         c = clusters[j];
-        if (c.state !== 'blob' && c.state !== 'order') continue;
+        if (c.state !== 'blob') continue;
         var n1 = c.pts.length;
-        var shed = BG_DETACH;
-        if (c.state === 'blob') {
+        var shed = 0;
+        if (phase === 'pnc') {
+          shed = BG_DETACH + PNC_DISS;
+        } else if (phase === 'matrix') {
           var gt = K_DISS * (1 / Math.sqrt(n1) - 1 / Math.sqrt(nBar));
-          if (gt > 0) shed += gt;
-          if (depletionT >= 0 && n1 < MIN_XTAL) shed += RUNT_DETACH;
+          shed = BG_DETACH + (gt > 0 ? gt : 0);
+          if (c.strandD > STRAND_R * 2) shed += PNC_DISS * 0.8;
+          else shed *= 0.3;
+        } else if (phase === 'pack' || phase === 'fill') {
+          if (n1 < MIN_XTAL) shed = RUNT_DETACH;
         }
-        if (rnd() < shed * dt) {
+        if (shed > 0 && rnd() < shed * dt) {
           var far2 = 0, fdd = -1;
           for (var pd = 0; pd < n1; pd++) {
             var d2 = Math.hypot(c.pts[pd].x - c.cx, c.pts[pd].y - c.cy);
             if (d2 > fdd) { fdd = d2; far2 = pd; }
           }
           var rp = c.pts.splice(far2, 1)[0];
-          // once the crystallites are aggregating, anything shed is taken up
+          // once the granules are aggregating, anything shed is taken up
           // by the growing structure immediately rather than going back into
           // solution -- no strays are left drifting over the finished array
           if (phase !== 'fill') {
@@ -2719,171 +3328,100 @@ footer .signoff em {
         }
       }
 
-      // the depletion latch marks loss of supersaturation -- the free pool
-      // is nearly (never exactly) exhausted, since dissolution keeps a thin
-      // background of solute alive for the rest of the episode
-      if (depletionT < 0 && (ions.length <= 5 || phaseT > CLUSTER_TIMEOUT)) depletionT = t;
-
       for (j = 0; j < clusters.length; j++) {
         c = clusters[j];
-        if (c.state !== 'blob' && c.state !== 'order') continue;
+        if (c.state !== 'blob') continue;
 
         var pI, mxT, myT, np2 = c.pts.length;
-        var mob = 1 / Math.sqrt(Math.max(2, np2));
-        var jAmp = 0.35 * (0.6 + 1.4 * mob);   // internal wobble is quieter in bigger particles
-        if (c.state === 'blob') {
-          // Nothing to integrate here: the droplet's ions were moved by the
-          // pair pass, along with every other ion in the scene. All this needs
-          // is where the particle now is. Its drift is the average of what its
-          // own ions are doing, so a large droplet creeps and a fresh dimer
-          // darts without that having to be imposed.
-          mxT = 0; myT = 0;
-          var svx = 0, svy = 0;
+        // Nothing to integrate here: the droplet's ions were moved by the
+        // pair pass, along with every other ion in the scene. All this needs
+        // is where the particle now is. Its drift is the average of what its
+        // own ions are doing, so a large droplet creeps and a fresh dimer
+        // darts without that having to be imposed.
+        mxT = 0; myT = 0;
+        var svx = 0, svy = 0;
+        for (pI = 0; pI < np2; pI++) {
+          mxT += c.pts[pI].x; myT += c.pts[pI].y;
+          svx += c.pts[pI].vx; svy += c.pts[pI].vy;
+        }
+        c.cx = mxT / np2; c.cy = myT / np2;
+        c.vx = svx / np2; c.vy = svy / np2;
+
+        // The matrix holds what it has bound: every ion of a nearby assembly
+        // feels a weak spring toward the nearest point of the strand, so
+        // free-floating clusters drift onto the matrix, and once there they
+        // spread along the chain into the flat, strand-hugging globules the
+        // liquid-cell TEM actually shows (Smeets 2015, Fig 2).
+        if ((phase === 'matrix' || phase === 'densify') && strandA > 0.5 &&
+            c.strandD < STRAND_RANGE) {
           for (pI = 0; pI < np2; pI++) {
-            mxT += c.pts[pI].x; myT += c.pts[pI].y;
-            svx += c.pts[pI].vx; svy += c.pts[pI].vy;
-          }
-          c.cx = mxT / np2; c.cy = myT / np2;
-          c.vx = svx / np2; c.vy = svy / np2;
-
-          // crystallization onset: enabled by loss of supersaturation (the
-          // depletion latch), but the trigger itself is a stochastic
-          // nucleation event per particle -- and contact with an already-
-          // crystalline neighbour makes it far more likely, so the change
-          // spreads through the population unevenly instead of on a clock
-          if (depletionT >= 0 && c.pts.length >= MIN_XTAL) {
-            var hz = P_NUC;
-            for (var oj = 0; oj < clusters.length; oj++) {
-              var oc = clusters[oj];
-              if (oc === c) continue;
-              if (oc.state !== 'order' && oc.state !== 'ready') continue;
-              var rr2 = Math.sqrt(c.pts.length) * 0.7 + Math.sqrt(oc.pts ? oc.pts.length : GROW_TARGET) * 0.7;
-              if (Math.hypot(c.cx - oc.cx, c.cy - oc.cy) < rr2 * 1.1) { hz = P_NUC_CONTACT; break; }
-            }
-            if (rnd() < hz * dt) startOrdering(c);
-          }
-        } else {
-          // the crystallization front sweeps out from the nucleation site;
-          // only ions the front has recruited feel the lattice restoring
-          // force, the rest stay amorphous until it reaches them. Per-ion
-          // jitter in the recruitment radius keeps the boundary ragged.
-          c.frontR += FRONT_V * dt;
-          var np4 = c.pts.length;
-          // The ions keep touching all the way through. What changes is how
-          // close they can get: behind the front they sit on the tighter
-          // crystalline spacing, ahead of it they are still at the looser
-          // amorphous contact distance. So the particle draws itself in and
-          // squares up into a brick rather than loosening into a cloud.
-          for (pI = 0; pI < np4; pI++) {
-            var pa = c.pts[pI];
-            for (var pB = pI + 1; pB < np4; pB++) {
-              var pb = c.pts[pB];
-              var cd2 = (pa.rec && pb.rec) ? MICRO_SPACING : ION_D;
-              var ddx = pb.x - pa.x, ddy = pb.y - pa.y;
-              var ddr = Math.hypot(ddx, ddy);
-              if (ddr < cd2 && ddr > 1e-4) {
-                var pf = (cd2 - ddr) / cd2 * REP_K * dt;
-                var ux2 = ddx / ddr, uy2 = ddy / ddr;
-                pa.vx -= ux2 * pf; pa.vy -= uy2 * pf;
-                pb.vx += ux2 * pf; pb.vy += uy2 * pf;
-              }
-            }
-          }
-          var cs0 = Math.cos(c.th), sn0 = Math.sin(c.th), sumD = 0;
-          for (pI = 0; pI < np4; pI++) {
-            var p1 = c.pts[pI];
-            if (!p1.rec && p1.fd <= c.frontR * (0.75 + 0.5 * p1.jit)) p1.rec = true;
-            var tgx = c.cx + p1.lx * cs0 - p1.ly * sn0, tgy = c.cy + p1.lx * sn0 + p1.ly * cs0;
-            var dtg = Math.hypot(p1.x - tgx, p1.y - tgy);
-            if (p1.rec) {
-              p1.vx += (tgx - p1.x) * ORDER_K * dt; p1.vy += (tgy - p1.y) * ORDER_K * dt;
-              p1.ok = Math.max(0, 1 - dtg / ORDER_REF);
-            } else {
-              // not yet reached by the front: still liquid, and still held
-              // together by its neighbours rather than by anything central
-              p1.ok = 0;
-              for (var pC = 0; pC < np4; pC++) {
-                if (pC === pI) continue;
-                var pz = c.pts[pC];
-                var zdx = pz.x - p1.x, zdy = pz.y - p1.y;
-                var zr = Math.hypot(zdx, zdy);
-                if (zr > ION_D && zr < PAIR_CUT) {
-                  var zf = K_ATT_BOUND * (1 - (zr - ION_D) / (PAIR_CUT - ION_D)) * dt;
-                  p1.vx += zdx / zr * zf; p1.vy += zdy / zr * zf;
-                }
-              }
-            }
-            // an ion that has found its site stops rattling around
-            var jl = jAmp * (1 - 0.75 * p1.ok);
-            p1.vx += (rnd() - 0.5) * jl * dt; p1.vy += (rnd() - 0.5) * jl * dt;
-            p1.vx *= 0.80; p1.vy *= 0.80;
-            p1.x += p1.vx * dt; p1.y += p1.vy * dt;
-            sumD += dtg;
-          }
-          c.orderFrac = Math.max(0, Math.min(1, 1 - (sumD / c.pts.length) / ORDER_REF));
-          mxT = 0; myT = 0;
-          var ovx = 0, ovy = 0;
-          for (pI = 0; pI < c.pts.length; pI++) {
-            mxT += c.pts[pI].x; myT += c.pts[pI].y;
-            ovx += c.pts[pI].vx; ovy += c.pts[pI].vy;
-          }
-          c.cx = mxT / c.pts.length; c.cy = myT / c.pts.length;
-          c.vx = ovx / c.pts.length; c.vy = ovy / c.pts.length;
-
-          // fully transformed once the front has passed everything and the
-          // whole cloud has actually settled onto its sites; the particle
-          // keeps its real ions -- the transformation is pseudomorphic, the
-          // outline stays whatever the ions make it
-          if (c.orderFrac >= ORDER_DONE) {
-            c.seedborn = true;
-            c.state = 'ready';
+            var sp0 = c.pts[pI];
+            var nsP = nearestStrand(sp0.x, sp0.y);
+            if (nsP.d < 1e-6) continue;
+            var kS = nsP.d < 4 ? STRAND_PULL_NEAR : STRAND_PULL_PT;
+            sp0.vx += ((nsP.x - sp0.x) / nsP.d) * kS * dt;
+            sp0.vy += ((nsP.y - sp0.y) / nsP.d) * kS * dt;
           }
         }
       }
 
-      // transformed crystallites claim a slot in the periodic array -- from
-      // here on is the schematic half of the pathway. The handoff keeps the
-      // particle's own lattice as its grain pattern and derives the drawn
-      // footprint from it, so blocks are polydisperse, not identical tiles.
-      for (j = 0; j < clusters.length; j++) {
-        c = clusters[j];
-        if (c.state !== 'ready') continue;
-        c.lpts = c.pts.map(function (pp) { return { lx: pp.lx, ly: pp.ly }; });
-        c.pts = null;
-        c.hw = blockHalf(c.lpts.length);   // square, and sized by how many ions it actually gathered
-        c.hh = c.hw;
-        if (c.seedborn) seedSizes.push(c.lpts.length);
-        var slot = claimCell(c.cx, c.cy);
-        if (!slot) {
-          // array already complete: a late crystal attaches where it is, an
-          // off-lattice grain on the platelet rim
-          c.tx = c.cx; c.ty = c.cy; c.offTile = true;
-          c.state = 'attached'; c.poppedAt = t;
-          continue;
+      // Densified granules leave the matrix for the tablet and claim a slot
+      // in the packing WHILE STILL AMORPHOUS -- Zhang & Xu 2013's order of
+      // events: self-assembly first, crystallization in place afterwards.
+      // The granule keeps its real ions through the journey; footprint is
+      // sized by how many it actually gathered, so the packing is
+      // polydisperse, not identical tiles. Launches are staggered, one
+      // granule deciding to go at a time, not a synchronized departure.
+      if (phase === 'pack' || phase === 'fill') {
+        for (j = 0; j < clusters.length; j++) {
+          c = clusters[j];
+          if (c.state !== 'blob' || c.pts.length < MIN_XTAL) continue;
+          if (rnd() > P_LAUNCH * dt) continue;
+          c.hw = blockHalf(c.pts.length);
+          c.hh = c.hw;
+          c.seedborn = true;
+          seedSizes.push(c.pts.length);
+          var slot = claimCell(c.cx, c.cy);
+          if (!slot) {
+            // array already complete: a late granule parks where it is, an
+            // off-lattice grain on the platelet rim
+            c.tx = c.cx; c.ty = c.cy; c.offTile = true;
+            c.cellPX = c.cx; c.cellPY = c.cy;
+            parkPts(c);
+            c.state = 'attached'; c.poppedAt = t;
+            continue;
+          }
+          var toff = tileOffset();
+          c.phx = toff.phx; c.phy = toff.phy; c.offTile = toff.off;
+          c.cellPX = cellX(slot); c.cellPY = cellY(slot);
+          c.tx = c.cellPX + c.phx; c.ty = c.cellPY + c.phy;
+          c.fromX = c.cx; c.fromY = c.cy;
+          c.attachT = 0; c.kicked = false;
+          c.state = 'attach';
         }
-        var toff = tileOffset();
-        c.phx = toff.phx; c.phy = toff.phy; c.offTile = toff.off;
-        c.tx = cellX(slot) + c.phx; c.ty = cellY(slot) + c.phy;
-        c.fromX = c.cx; c.fromY = c.cy;
-        c.attachT = 0; c.kicked = false;
-        c.state = 'attach';
       }
       // attachment kinematics per Li et al. 2012: a long diffusive search
       // with only a weak bias, transient aborted encounters, then -- once
       // inside short range -- a jump to contact that is still ACCELERATING
-      // at the moment of impact. Never an eased glide.
+      // at the moment of impact. Never an eased glide. The search leg is a
+      // proper random walk now: heavy damping and Gaussian kicks, scaled by
+      // Stokes-Einstein mobility so a big granule wanders more sluggishly
+      // than a small one.
       for (j = 0; j < clusters.length; j++) {
         c = clusters[j];
         if (c.state !== 'attach') continue;
         c.attachT += dt;
+        var ox0 = c.cx, oy0 = c.cy;
         var gx = c.tx - c.cx, gy = c.ty - c.cy, g = Math.hypot(gx, gy) || 1e-6;
         var ux = gx / g, uy = gy / g;
+        var mobA = Math.sqrt(TILE_HW / Math.max(c.hw, 0.8));
         if (g > SNAP_R) {
-          c.vx += ux * A_BIAS * dt + (rnd() - 0.5) * 0.5 * dt;
-          c.vy += uy * A_BIAS * dt + (rnd() - 0.5) * 0.5 * dt;
-          c.vx *= 0.93; c.vy *= 0.93;
+          c.vx += ux * A_BIAS * mobA * dt + gk() * 0.30 * mobA * dt;
+          c.vy += uy * A_BIAS * mobA * dt + gk() * 0.30 * mobA * dt;
+          c.vx *= 0.80; c.vy *= 0.80;
           var sp1 = Math.hypot(c.vx, c.vy);
-          if (sp1 > VS_SEARCH) { c.vx *= VS_SEARCH / sp1; c.vy *= VS_SEARCH / sp1; }
+          var vc1 = VS_SEARCH * mobA;
+          if (sp1 > vc1) { c.vx *= vc1 / sp1; c.vy *= vc1 / sp1; }
         } else if (!c.kicked && c.seedborn && rnd() < 0.45) {
           // transient contact that fails to hold: recoil once, then return
           c.kicked = true;
@@ -2896,18 +3434,22 @@ footer .signoff em {
           if (sp2 > VS_SNAP) { c.vx *= VS_SNAP / sp2; c.vy *= VS_SNAP / sp2; }
         }
         c.cx += c.vx * dt; c.cy += c.vy * dt;
+        // the granule is a solid: its ions travel with it, rigidly
+        translatePts(c, c.cx - ox0, c.cy - oy0);
         if (g < CONTACT_R || c.attachT > ATTACH_TIMEOUT) {
+          translatePts(c, c.tx - c.cx, c.ty - c.cy);
           c.cx = c.tx; c.cy = c.ty; c.vx = 0; c.vy = 0;
           c.state = 'attached'; c.poppedAt = t;
+          if (c.pts) parkPts(c);
         }
       }
-      // beyond the crystallites that actually grew from real ion clustering,
-      // the array keeps extending itself outward -- with block sizes drawn
-      // from the same distribution the real seeds produced, so the far array
-      // is just as polydisperse as the part that assembled on screen
-      // Three particles stuck together is the nucleus that gets past the
+      // beyond the granules that actually grew from real ion clustering,
+      // the packing keeps extending itself outward -- with granule sizes
+      // drawn from the same distribution the real seeds produced, so the far
+      // packing is just as polydisperse as the part that assembled on screen
+      // Three granules stuck together is the nucleus that gets past the
       // barrier -- below that an aggregate is as likely to come apart again.
-      // Once one survives, everything else in solution is crystallizing on
+      // Once one survives, everything else on the matrix is densifying on
       // much the same schedule, and the assembly ramps up.
       if (!arrayComplete() && (phase === 'fill' || countAttached() >= 3)) {
         // aggregation proper begins here: the solution is spent, so the last
@@ -2940,27 +3482,149 @@ footer .signoff em {
           var nIons = seedSizes.length ? seedSizes[Math.floor(rnd() * seedSizes.length)] : GROW_TARGET;
           var nc2 = newCluster(sx2 + (sx2 - latOX) / d0 * SPACING * SPAWN_OUT,
                                sy2 + (sy2 - latOY) / d0 * SPACING * SPAWN_OUT);
+          // fabricated far-field granules arrive AMORPHOUS, like everything
+          // else -- cryst 0 -- and carry their eventual grain pattern with
+          // them for the day the crystallization wave reaches their cell
           nc2.pts = null;
           nc2.lpts = microCellsFor(nIons);
           nc2.hw = blockHalf(nIons);
           nc2.hh = nc2.hw;
-          nc2.th = mesoTh;
           var toff2 = tileOffset();
           nc2.phx = toff2.phx; nc2.phy = toff2.phy; nc2.offTile = toff2.off;
+          nc2.cellPX = sx2; nc2.cellPY = sy2;
           nc2.tx = sx2 + nc2.phx; nc2.ty = sy2 + nc2.phy;
           nc2.fromX = nc2.cx; nc2.fromY = nc2.cy;
           nc2.state = 'attach'; nc2.attachT = 0; nc2.kicked = true;
         }
       }
+      // advancing through the solution acts
+      if (phase === 'pnc' && phaseT > PNC_DUR) {
+        phase = 'matrix'; phaseT = 0;
+        strandOn = 1;                    // the matrix enters the story
+      } else if (phase === 'matrix' &&
+                 ((phaseT > 120 && ions.length <= Math.round(N_ION * MATRIX_FREE_FRAC)) ||
+                  phaseT > MATRIX_MAXT)) {
+        // a minimum stay regardless of how fast the strands sequester the
+        // bath -- this act is the story's centrepiece, not a checkpoint
+        phase = 'densify'; phaseT = 0;   // the binodal: reversibility ends here
+      } else if (phase === 'densify') {
+        var df = Math.min(1, phaseT / DENSIFY_DUR);
+        ktBoundMul = 1 - 0.55 * df;      // the water leaves: the wobble cools
+        ionDMul = 1 - (1 - ACC_DMUL) * df; // and the packing pulls tighter
+        if (phaseT > DENSIFY_DUR) {
+          phase = 'pack'; phaseT = 0;
+          depletionT = t;                // what solute is left drains to the granules
+          strandOn = 0;                  // the matrix hands its cargo on
+        }
+      }
       if (arrayComplete()) {
         var allIn = true;
-        for (j = 0; j < clusters.length; j++) if (clusters[j].state === 'attach') { allIn = false; break; }
-        if (allIn) {
-          // the platelet is finished, so the solution is finished with too:
-          // any last stray has been taken up by the structure by now
-          ions.length = 0;
-          phase = 'zoomout'; phaseT = 0;
+        for (j = 0; j < clusters.length; j++) {
+          var stJ = clusters[j].state;
+          if (stJ === 'attach' || stJ === 'blob') { allIn = false; break; }
         }
+        if (allIn) {
+          // the packing is finished, and the solution is finished with too:
+          // any last stray has been taken up by the structure by now. The
+          // tablet is complete but still a colloidal aggregate: amorphous
+          // granules pressed together. Crystallinity comes next, in place.
+          ions.length = 0;
+          phase = 'xtalize'; phaseT = 0;
+        }
+      }
+
+    } else if (phase === 'xtalize') {
+      // -------- in-place crystallization of the packed tablet ----------
+      // Zhang & Xu 2013: nucleation at multiple sites, at different times;
+      // growth by transformation of each granule's ACC; spread by contact;
+      // then rotation into shared registry and fusion of touching grains,
+      // until the tablet is one monolithic crystal.
+      if (!xtNbrsBuilt) {
+        // contact lists, built once -- the packing no longer moves
+        var bkt = {}, bkey, bi2, bc;
+        for (j = 0; j < clusters.length; j++) {
+          bc = clusters[j];
+          bkey = Math.round(bc.cx / SPACING) + ',' + Math.round(bc.cy / SPACING);
+          if (bkt[bkey]) bkt[bkey].push(bc); else bkt[bkey] = [bc];
+          bc.nbrs = [];
+        }
+        for (j = 0; j < clusters.length; j++) {
+          bc = clusters[j];
+          var bgx = Math.round(bc.cx / SPACING), bgy = Math.round(bc.cy / SPACING);
+          for (var box = -1; box <= 1; box++) for (var boy = -1; boy <= 1; boy++) {
+            var bl = bkt[(bgx + box) + ',' + (bgy + boy)];
+            if (!bl) continue;
+            for (bi2 = 0; bi2 < bl.length; bi2++) {
+              var oc2 = bl[bi2];
+              if (oc2 === bc) continue;
+              if (Math.hypot(oc2.cx - bc.cx, oc2.cy - bc.cy) < NBR_R) bc.nbrs.push(oc2);
+            }
+          }
+        }
+        xtNbrsBuilt = true;
+      }
+      var allDone = true;
+      for (j = 0; j < clusters.length; j++) {
+        c = clusters[j];
+        if (c.state === 'order') {
+          // a real granule mid-transformation: the front is sweeping it
+          orderPass(c, dt);
+          allDone = false;
+          continue;
+        }
+        if (c.cryst < 1) {
+          allDone = false;
+          if (!c.xt) {
+            // not yet started: rare spontaneous starts anywhere, fast
+            // catalysis where a neighbour's transformation has reached the
+            // shared boundary -- so a few independent origins fire at
+            // different moments and ragged waves spread from each
+            var hz = P_NUC_X, inf = null;
+            if (c.nbrs) {
+              for (var nj = 0; nj < c.nbrs.length; nj++) {
+                if (c.nbrs[nj].cryst >= XT_SPREAD_AT) { hz = P_SPREAD; inf = c.nbrs[nj]; break; }
+              }
+            }
+            if (rnd() < hz * dt) {
+              if (c.pts) {
+                // the front enters through the face the neighbour touches
+                if (inf) startOrdering(c, inf.cx - c.cx, inf.cy - c.cy);
+                else startOrdering(c);
+              } else {
+                // schematic far-field granule: transformation as a ramp
+                c.xt = true;
+                c.th = mesoTh + (rnd() - 0.5) * TH_SPREAD;
+              }
+            }
+          } else {
+            c.cryst = Math.min(1, c.cryst + XT_RATE * dt * (0.7 + 0.6 * rnd()));
+            if (c.cryst >= 1) { c.xtDoneAt = t; c.poppedAt = t; }
+          }
+        } else if (!c.aligned) {
+          // fusion: the finished grain rotates into registry with its
+          // neighbours (grain-rotation-induced grain coalescence, caught in
+          // the act in Zhang & Xu's Fig 5c) and any translational misfit
+          // heals as the boundary is eliminated. When both are gone the
+          // grain joins the coherent domain and its fringes run continuously
+          // into its neighbours'.
+          allDone = false;
+          if (t - c.xtDoneAt > HEAL_WAIT) {
+            c.th += (mesoTh - c.th) * Math.min(1, ALIGN_K * dt);
+            c.cx += (c.cellPX - c.cx) * Math.min(1, HEAL_K * dt);
+            c.cy += (c.cellPY - c.cy) * Math.min(1, HEAL_K * dt);
+            if (Math.abs(c.th - mesoTh) < ALIGN_SNAP &&
+                Math.hypot(c.cx - c.cellPX, c.cy - c.cellPY) < 0.05) {
+              c.th = mesoTh; c.cx = c.cellPX; c.cy = c.cellPY;
+              c.tx = c.cellPX; c.ty = c.cellPY;
+              c.phx = 0; c.phy = 0;
+              c.offTile = false; c.aligned = true;
+            }
+          }
+        }
+      }
+      if (allDone) {
+        ions.length = 0;
+        phase = 'zoomout'; phaseT = 0;
       }
 
     } else if (phase === 'zoomout') {
@@ -2970,7 +3634,10 @@ footer .signoff em {
     } else if (phase === 'shell') {
       if (phaseT > SHELL_DUR) { phase = 'hold'; phaseT = 0; }
     } else if (phase === 'hold') {
-      if (phaseT > 170) { phase = 'done'; phaseT = 0; }
+      // 170 before the ray show was added; two seconds longer (39 units per
+      // second) so the rays have room to sweep on, flicker, and click off
+      // one colour at a time with the shell quiet again before the fade
+      if (phaseT > 248) { phase = 'done'; phaseT = 0; }
     }
   }
 
@@ -3330,6 +3997,13 @@ footer .signoff em {
     p.closePath();
     return p;
   }
+  // One palette for everything iridescent: the sweeps inside the shell and
+  // the rays it throws during the hold both index into this, which is what
+  // lets each ray die in the colour of the band it came from.
+  var SHELL_BANDS = [
+    [40, 255, 180], [70, 226, 255], [140, 150, 255], [255, 105, 175],
+    [255, 190, 90], [205, 110, 255], [120, 255, 140], [255, 235, 160]
+  ];
   function drawShell(a0, w, h, zoom) {
     var R = Math.min(w * 0.40, h * 0.66) * (zoom || 1);
     var cx = w * 0.5, cy = h * 0.5;
@@ -3360,10 +4034,7 @@ footer .signoff em {
     // Inside the shell outline this can be full strength -- it is the point.
     ctx.save();
     ctx.globalCompositeOperation = 'lighter';
-    var bands = [
-      [40, 255, 180], [70, 226, 255], [140, 150, 255], [255, 105, 175],
-      [255, 190, 90], [205, 110, 255], [120, 255, 140], [255, 235, 160]
-    ];
+    var bands = SHELL_BANDS;
     for (var b = 0; b < bands.length; b++) {
       var ph = ((t * 0.0017 + b * 0.128) % 1.75) - 0.38;
       var ang = 0.30 + b * 0.23;
@@ -3455,6 +4126,60 @@ footer .signoff em {
     ctx.stroke(body);
     ctx.restore();
     ctx.globalAlpha = a0;
+  }
+  /* The diffraction demonstration. During the hold the shell throws its
+     colours as rays: one wavy line per band of SHELL_BANDS, fanning out from
+     the nacre face, drawn at four times the growth-line weight but at low
+     opacity, so they read as light and not as wire. Each ray then clicks off
+     like a flashlight, in its own colour, with a short flicker first and a
+     fast snap to black -- staggered, so the shell goes quiet one colour at a
+     time before the sequence fades and resets.
+
+     ht is the hold phase's own clock. The timeline, in phase units
+     (39 per second):
+       0-14   rays sweep on, staggered by index
+       ~112   first ray begins to flicker
+       118+13b  ray b snaps off over 5 units
+       all quiet by ~214, and the hold runs to HOLD_DUR (248) */
+  function drawLightRays(a0, w, h, zoom, ht) {
+    var R = Math.min(w * 0.40, h * 0.66) * (zoom || 1);
+    var cx = w * 0.5, cy = h * 0.5;
+    // emitted from the iridescent face, clear of the spiral apex
+    var ox = cx + R * 0.10, oy = cy - R * 0.05;
+    var len = R * 1.55;
+    var lw = Math.max(4, 4.4 * dpr);   // 4x the growth lines' 1.1*dpr
+    var waveL = R * 0.23;              // wavelength of the wiggle
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.lineWidth = lw;
+    ctx.lineCap = 'round';
+    for (var b = 0; b < SHELL_BANDS.length; b++) {
+      var onA = Math.min(1, Math.max(0, (ht - b * 3) / 14));   // staggered sweep-on
+      var offAt = 118 + b * 13;
+      var offA = ht > offAt ? Math.max(0, 1 - (ht - offAt) / 5) : 1;   // the snap
+      // the dying-filament flicker in the last few moments before the snap
+      if (ht > offAt - 10 && ht <= offAt) {
+        offA = 0.72 + 0.28 * Math.sin(t * 0.9 + b * 2.1);
+      }
+      var a = a0 * 0.16 * onA * offA;
+      if (a <= 0.003) continue;
+      var ang = -1.92 + b * 0.205;     // the fan, spread across the upper field
+      var ex = Math.cos(ang), ey = Math.sin(ang);
+      ctx.strokeStyle = 'rgba(' + SHELL_BANDS[b][0] + ',' + SHELL_BANDS[b][1] + ',' +
+                        SHELL_BANDS[b][2] + ',' + a.toFixed(3) + ')';
+      ctx.beginPath();
+      for (var s = 0; s <= 34; s++) {
+        var f = s / 34, d = f * len;
+        // travelling sine, perpendicular to the ray: wavy like light, and the
+        // waves run outward because t drives the phase
+        var wob = Math.sin(d / waveL * TAU - t * 0.11 + b * 1.7) * lw * 1.15 * f;
+        var px = ox + ex * d - ey * wob;
+        var py = oy + ey * d + ex * wob;
+        if (s === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+    }
+    ctx.restore();
   }
   // by this point the subject is a shell you could hold, so the bar reads in
   // millimetres off the drawn size rather than off the camera
@@ -3557,6 +4282,9 @@ footer .signoff em {
     if (shellA > 0) {
       // everything else is gone by now: no ions, no blocks, no lattice
       drawShell(alpha * shellA, w, h, shellZoom);
+      // the rays belong to the hold alone: the pull-back is still moving
+      // before it, and by 'done' every one of them has clicked off anyway
+      if (phase === 'hold') drawLightRays(alpha * shellA, w, h, shellZoom, phaseT);
       if (shellZoom < 1.12) drawShellScaleBar(alpha * shellA, w, h);
       ctx.globalAlpha = 1;
       return;
@@ -3587,6 +4315,26 @@ footer .signoff em {
     }
 
     var margin = TILE_HW * 3;
+    // The organic matrix: a few adsorbed acidic strands, warm against the
+    // mineral cyan -- the one organic actor in an inorganic scene. Drawn
+    // under the ions, since the chemistry happens on top of it.
+    if (strandA > 0.01 && strands) {
+      ctx.save();
+      ctx.globalAlpha = alpha * strandA * 0.55;
+      ctx.strokeStyle = 'rgba(222,158,138,0.9)';
+      ctx.lineWidth = Math.max(1, 0.10 * sc);
+      ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+      for (i = 0; i < strands.length; i++) {
+        var sPts = strands[i];
+        ctx.beginPath();
+        for (var sk = 0; sk < sPts.length; sk++) {
+          if (sk === 0) ctx.moveTo(X(sPts[sk].x), Y(sPts[sk].y));
+          else ctx.lineTo(X(sPts[sk].x), Y(sPts[sk].y));
+        }
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
     ctx.fillStyle = C.solute;
     ctx.beginPath();
     var rs = Math.max(1, 0.28 * sc);
@@ -3611,22 +4359,36 @@ footer .signoff em {
     for (i = 0; i < clusters.length; i++) if (inView(clusters[i], gMargin)) inViewCount++;
     var showGrains = grainPx > 13 && inViewCount <= 220;
     var bodies = new Path2D(), union = new Path2D(), grains = new Path2D();
+    var amBodies = new Path2D(), amAny = false;
     var pops = null, anyXtal = false;
     var grainR = Math.max(0.6, 0.20 * sc);
 
     for (i = 0; i < clusters.length; i++) {
       c = clusters[i];
       if (!inView(c, margin)) continue;
-      if (c.state === 'blob' || c.state === 'order' || c.state === 'ready') {
+      if (c.pts) {
+        // anything still carrying real ions is drawn as its ions -- liquid
+        // droplet, travelling granule, parked granule, and a grain mid-
+        // transformation alike. The front sweeping a parked grain is visible
+        // ion by ion, which is the whole point of keeping them.
         drawClusterIons(c);
+      } else if (c.cryst < 1) {
+        // schematic far-field granule, still amorphous: a soft disc. The
+        // sharp block face is earned by crystallization, not by arrival.
+        var dp = new Path2D();
+        dp.arc(X(c.cx), Y(c.cy), Math.max(1, c.hw * 0.98 * sc), 0, TAU);
+        amBodies.addPath(dp);
+        amAny = true;
       } else {
         anyXtal = true;
         var sh = xtalPath(c);
         bodies.addPath(sh);
-        // blocks with a translational misregistry are excluded from the
-        // coherent-fringe union: they read as darker mosaic domains, the way
-        // slightly misregistered grains lose contrast in TEM
-        if (c.state === 'attached' && !c.offTile) union.addPath(sh);
+        // Only grains that have finished fusing join the coherent-fringe
+        // union: a grain still rotating toward registry, or still carrying
+        // translational misfit, reads as a darker mosaic domain, the way
+        // misoriented grains lose contrast in TEM. As fusion proceeds the
+        // coherent domain visibly annexes them one by one.
+        if (c.state === 'attached' && !c.offTile && c.aligned) union.addPath(sh);
         if (showGrains) addGrains(grains, c, grainR);
         var age = t - c.poppedAt;
         if (c.poppedAt >= 0 && age >= 0 && age < 20) {
@@ -3634,6 +4396,14 @@ footer .signoff em {
           pops.push([sh, age]);
         }
       }
+    }
+    if (amAny) {
+      // denser than solution, well short of crystal: the nanogranular tablet
+      ctx.fillStyle = '#102836';
+      ctx.fill(amBodies);
+      ctx.strokeStyle = 'rgba(127,217,239,0.30)';
+      ctx.lineWidth = Math.max(1, 0.05 * sc);
+      ctx.stroke(amBodies);
     }
     if (anyXtal) {
       ctx.fillStyle = C.xtBody;
@@ -3653,7 +4423,8 @@ footer .signoff em {
     // lattice fringes only where the magnification could actually resolve
     // them -- once the camera pulls far enough back they go sub-pixel and
     // are dropped, as they would be in a real low-mag image
-    if (anyXtal && spPx > 2.2 && (phase === 'zoomout' || phase === 'hold' || phase === 'done' || phase === 'fill')) {
+    if (anyXtal && spPx > 2.2 && (phase === 'zoomout' || phase === 'hold' || phase === 'done' ||
+                                  phase === 'fill' || phase === 'xtalize')) {
       // The fringe field is hundreds of line segments and does not change
       // while the camera is still, which is the whole of the array stage.
       // Rasterise it once and blit it through the clip instead of restroking
@@ -3693,17 +4464,12 @@ footer .signoff em {
     stageEls[el.getAttribute('data-stage')] = el;
   });
   var PHASE_LABEL = {
-    ions: 'ions', cluster: 'amorphous', fill: 'attach',
-    zoomout: 'mesocrystal', nacre: 'nacre', shell: 'shell', hold: 'shell', done: 'shell'
+    ions: 'ions', pnc: 'pnc', matrix: 'matrix', densify: 'acc',
+    pack: 'pack', fill: 'pack', xtalize: 'xtal',
+    zoomout: 'tablet', nacre: 'nacre', shell: 'shell', hold: 'shell', done: 'shell'
   };
   function readout() {
     var shown = PHASE_LABEL[phase] || 'ions';
-    if (phase === 'cluster') {
-      for (var j = 0; j < clusters.length; j++) {
-        var st = clusters[j].state;
-        if (st === 'ready' || st === 'attach' || st === 'attached') { shown = 'nanocrystals'; break; }
-      }
-    }
     for (var k in stageEls) {
       if (stageEls[k]) stageEls[k].classList.toggle('active', k === shown);
     }
@@ -3844,7 +4610,9 @@ footer .signoff em {
   if (still) {
     playing = false;
     var guard = 0;
-    while (phase !== 'done' && guard++ < 4000) step(DT);
+    // a full run measures ~3900 steps with the staged pathway (three runs:
+    // 3816-3878); the guard is only a runaway stop, so it stays far above
+    while (phase !== 'done' && guard++ < 9000) step(DT);
     readout(); render(1);
     if (btnPlay) { btnPlay.textContent = 'Play'; btnPlay.setAttribute('aria-pressed', 'true'); }
     if (hint) hint.textContent = 'Finished sequence shown. Press play to watch it assemble.';
