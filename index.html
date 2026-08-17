@@ -2587,6 +2587,11 @@ footer .signoff em {
   // fed by the ions each strand has already bound locally rather than by a
   // stream from solution (their Fig 4c crosses that arrow out).
   var MATRIX_LOAD_T = 70;
+  // Condensation opens over a ramp rather than switching on: when the size
+  // ceiling stepped straight from a cluster's to a globule's, the whole
+  // field snapped from small clusters to full-size droplets in one frame.
+  // Globules should grow into existence.
+  var MATRIX_COND_RAMP = 30;
   var DENSIFY_DUR = 80;
   // dehydration made visible: densifying droplets shed water specks outward
   // through a thickening diffuse shell (Avaro 2023: the core contracts while
@@ -2748,6 +2753,18 @@ footer .signoff em {
   }
   reset();
 
+  // How large an assembly may grow right now. In the open bath everything
+  // stays cluster-sized and churns (Avaro 2023's undersaturated PNCs). On
+  // the matrix the ceiling opens, but as a ramp over MATRIX_COND_RAMP once
+  // the quiet loading act is over, so condensation reads as globules
+  // growing rather than as a ceiling being lifted on one frame.
+  function growCap() {
+    if (phase === 'pnc') return PNC_CAP;
+    if (phase !== 'matrix') return SIZE_CAP;
+    var rf = Math.max(0, Math.min(1, (phaseT - MATRIX_LOAD_T) / MATRIX_COND_RAMP));
+    return Math.round(PNC_CAP + (SIZE_CAP - PNC_CAP) * rf);
+  }
+
   // nearest point on any strand -- the matrix as a field the chemistry feels
   function nearestStrand(x, y) {
     var bd = Infinity, bx = 0, by = 0;
@@ -2790,6 +2807,7 @@ footer .signoff em {
       aligned: false,                  // rotated into registry with mesoTh
       strandD: Infinity,               // distance to the matrix, while it matters
       nbrs: null,                      // contact list, built once the packing is still
+      haloA: 0,                        // diffuse-shell opacity, eased so it never pops
       poppedAt: -1
     };
     clusters.push(c);
@@ -3149,6 +3167,18 @@ footer .signoff em {
       wp.age += dt;
       if (wp.age > WATER_LIFE) { waterFx[i] = waterFx[waterFx.length - 1]; waterFx.pop(); }
     }
+    // The diffuse shell is the droplet's own hydrated interface, so its
+    // opacity is per-droplet state, eased: it grows in as a globule
+    // condenses (never during the quiet loading act) and strips away as
+    // the solid granule departs for the tablet -- it must never pop on a
+    // phase boundary while the droplet itself is unchanged.
+    var haloOn = (phase === 'matrix' && phaseT > MATRIX_LOAD_T) ||
+                 phase === 'densify' || phase === 'pack' || phase === 'fill';
+    for (i = 0; i < clusters.length; i++) {
+      var hc = clusters[i];
+      var hTgt = (haloOn && hc.state === 'blob' && hc.pts && hc.pts.length >= 8) ? 1 : 0;
+      hc.haloA += (hTgt - hc.haloA) * Math.min(1, 0.08 * dt);
+    }
 
     // Once supersaturation is spent the bath is no longer uniform: what solute
     // is left sits in a concentration gradient and drifts down it toward the
@@ -3219,12 +3249,13 @@ footer .signoff em {
         for (j = 0; j < clusters.length; j++) {
           c = clusters[j];
           if (c.state !== 'blob') continue;
-          // How big an assembly may grow is the phase speaking: in the open
-          // bath everything stays cluster-sized and churns (Avaro 2023's
-          // undersaturated PNCs); on the matrix, and only there, an assembly
-          // may take on a globule's worth of ions (Smeets 2015)
-          var cap = (phase === 'pnc' ||
-                     (phase === 'matrix' && c.strandD > STRAND_R * 2)) ? PNC_CAP : SIZE_CAP;
+          // Only on the matrix may an assembly take on a globule's worth of
+          // ions (Smeets 2015), and only once the loading act is over --
+          // without that gate the PNCs carried over from the last act
+          // ballooned into full globules during the very act the caption
+          // calls quiet. Off the strands the ceiling stays a cluster's.
+          var cap = (phase === 'matrix' && c.strandD > STRAND_R * 2)
+                    ? PNC_CAP : growCap();
           if (c.pts.length >= cap) continue;
           if (Math.abs(c.cx - ia.x) > 14 || Math.abs(c.cy - ia.y) > 14) continue;
           for (var m = 0; m < c.pts.length; m++) {
@@ -3275,15 +3306,22 @@ footer .signoff em {
       // merged object is briefly a lopsided peanut that relaxes as it
       // jostles. Droplet-droplet aggregation belongs to the dense-liquid
       // stage and later: while the species are PNCs, growth is by monomer
-      // addition only (Avaro 2023's log-slope evidence), so no merging yet.
+      // addition only (Avaro 2023's log-slope evidence), so no merging yet
+      // -- and none either during the matrix's quiet loading act, or away
+      // from the strands while the matrix act runs, since condensation is
+      // exclusive to the matrix (Smeets 2015).
       for (i = clusters.length - 1; i >= 0; i--) {
-        var ci = clusters[i]; if (ci.state !== 'blob' || phase === 'pnc') continue;
+        var ci = clusters[i];
+        if (ci.state !== 'blob' || phase === 'pnc' ||
+            (phase === 'matrix' && phaseT <= MATRIX_LOAD_T)) continue;
         for (j = i - 1; j >= 0; j--) {
           var cj = clusters[j]; if (cj.state !== 'blob') continue;
+          if (phase === 'matrix' &&
+              (ci.strandD > STRAND_R * 2 || cj.strandD > STRAND_R * 2)) continue;
           // coalescence dominates while droplets are small; two already-large
-          // particles bump and part instead of fusing. In the open bath the
-          // ceiling is a PNC's, so nothing grows past cluster size out there.
-          if (ci.pts.length + cj.pts.length > (phase === 'pnc' ? PNC_CAP : SIZE_CAP)) continue;
+          // particles bump and part instead of fusing. The merged size obeys
+          // the same ramping ceiling, so merges cannot outrun condensation.
+          if (ci.pts.length + cj.pts.length > growCap()) continue;
           var ri = Math.sqrt(ci.pts.length) * 0.7, rj = Math.sqrt(cj.pts.length) * 0.7;
           if (Math.hypot(ci.cx - cj.cx, ci.cy - cj.cy) < (ri + rj) * 0.8) {
             var ni = ci.pts.length, nj = cj.pts.length;
@@ -3300,13 +3338,18 @@ footer .signoff em {
       // droplets that could still fuse pull on each other and close the gap
       // themselves rather than waiting on a chance collision. Like
       // coalescence, this is dense-liquid behaviour -- PNCs are solutes in
-      // equilibrium and feel no such drive.
+      // equilibrium and feel no such drive, nothing feels it during the
+      // quiet loading act, and during the matrix act it acts only between
+      // droplets that are actually on the matrix.
       for (i = 0; i < clusters.length; i++) {
         var ca = clusters[i];
-        if (ca.state !== 'blob' || phase === 'pnc') continue;
+        if (ca.state !== 'blob' || phase === 'pnc' ||
+            (phase === 'matrix' && phaseT <= MATRIX_LOAD_T)) continue;
         for (j = i + 1; j < clusters.length; j++) {
           var cb = clusters[j];
           if (cb.state !== 'blob') continue;
+          if (phase === 'matrix' &&
+              (ca.strandD > STRAND_R * 2 || cb.strandD > STRAND_R * 2)) continue;
           if (ca.pts.length + cb.pts.length > SIZE_CAP) continue;
           var ax = cb.cx - ca.cx, ay = cb.cy - ca.cy;
           var ad = Math.hypot(ax, ay);
@@ -3757,8 +3800,8 @@ footer .signoff em {
     if (r < 2) return;
     var gx = X(c.cx), gy = Y(c.cy);
     var g = ctx.createRadialGradient(gx, gy, 0, gx, gy, r);
-    g.addColorStop(0, 'rgba(127,217,239,' + (0.10 + 0.07 * denseF) + ')');
-    g.addColorStop(0.55, 'rgba(127,217,239,' + (0.05 + 0.045 * denseF) + ')');
+    g.addColorStop(0, 'rgba(127,217,239,' + ((0.10 + 0.07 * denseF) * c.haloA).toFixed(3) + ')');
+    g.addColorStop(0.55, 'rgba(127,217,239,' + ((0.05 + 0.045 * denseF) * c.haloA).toFixed(3) + ')');
     g.addColorStop(1, 'rgba(127,217,239,0)');
     ctx.fillStyle = g;
     ctx.beginPath();
@@ -4478,9 +4521,9 @@ footer .signoff em {
         // droplet, travelling granule, parked granule, and a grain mid-
         // transformation alike. The front sweeping a parked grain is visible
         // ion by ion, which is the whole point of keeping them. Dense liquid
-        // globules additionally wear their diffuse hydrated interface.
-        if (c.state === 'blob' && c.pts.length >= 8 &&
-            (phase === 'matrix' || phase === 'densify' || phase === 'pack')) drawHalo(c);
+        // globules additionally wear their diffuse hydrated interface, whose
+        // opacity is the cluster's own eased state, not a phase gate.
+        if (c.haloA > 0.02) drawHalo(c);
         drawClusterIons(c);
       } else if (c.cryst < 1) {
         // schematic far-field granule, still amorphous: a soft disc. The
@@ -4722,8 +4765,8 @@ footer .signoff em {
   if (still) {
     playing = false;
     var guard = 0;
-    // a full run measures ~4000 steps with the staged pathway and two-act
-    // matrix (five runs: 3957-4087); the guard is only a runaway stop, so
+    // a full run measures ~3900 steps with the staged pathway and two-act
+    // matrix (three runs: 3855-3884); the guard is only a runaway stop, so
     // it stays far above
     while (phase !== 'done' && guard++ < 9000) step(DT);
     readout(); render(1);
