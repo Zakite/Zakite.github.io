@@ -1889,7 +1889,7 @@ footer .signoff em {
 
   <div class="cs-stage">
     <canvas class="cs-canvas" id="csCanvas" role="img"
-            aria-label="An animated sequence following calcium carbonate from solution to shell. Ions jitter in solution and associate into small prenucleation clusters that form and dissolve reversibly. Organic matrix strands then appear and concentrate ions onto themselves; dense liquid globules condense on the strands, grow, and densify into solid amorphous nanoparticles as their water leaves. The granules travel to a growth site and pack, still amorphous, into a hexagonal tablet. Crystallinity then nucleates inside a few packed grains at different moments, sweeps each grain as a front, and jumps from grain to grain across contacts; finished grains rotate into a shared orientation and fuse until the tablet is a single crystal. The camera pulls back to show the micron-scale platelet, then further, until it is one tablet among many piled in offset courses the way nacre is. Pulling back once more, the stack gives way to the shell it was building: an abalone, its interior playing the rainbow that those stacked layers produce. The sequence then resets and repeats."></canvas>
+            aria-label="An animated sequence following calcium carbonate from solution to shell. Ions jitter in solution and associate into loose, chain-like prenucleation clusters that form and dissolve reversibly. Organic matrix strands then appear and quietly sequester ions onto themselves; once loaded, dense liquid globules with soft diffuse edges condense on the strands and densify into solid amorphous nanoparticles, visibly shedding water as each core draws in. The granules travel to a growth site and pack, still amorphous, into a hexagonal tablet. Crystallinity then nucleates inside a few packed grains at different moments, sweeps each grain as a front, and jumps from grain to grain across contacts; finished grains rotate into a shared orientation and fuse until the tablet is a single crystal. The camera pulls back to show the micron-scale platelet, then further, until it is one tablet among many piled in offset courses the way nacre is. Pulling back once more, the stack gives way to the shell it was building: an abalone, its interior playing the rainbow that those stacked layers produce. The sequence then resets and repeats."></canvas>
     <div class="cs-hint" id="csHint">Scroll into view to start</div>
   </div>
 
@@ -1911,13 +1911,16 @@ footer .signoff em {
   </div>
 
   <figcaption>
-    Ions associate into <em>prenucleation clusters</em>, stable solute species that form and
-    dissolve reversibly and exist even below saturation (Avaro et&nbsp;al. 2023, <em>J.&nbsp;Phys.
-    Chem.&nbsp;Lett.</em>). An acidic organic matrix then concentrates the bath: calcium binds to
-    the strands, and dense liquid globules condense on them and nowhere else (Smeets et&nbsp;al.
-    2015, <em>Nat.&nbsp;Mater.</em>). The globules densify and dehydrate into solid amorphous
-    nanoparticles, crossing the amorphous solubility limit, past which no granule redissolves;
-    only the sub-critical runts that never reached a granule's size drain back. The
+    Ions associate into <em>prenucleation clusters</em>, wispy chain-like solute species that
+    grow one ion at a time, form and dissolve reversibly, and exist even below saturation
+    (Avaro et&nbsp;al. 2023, <em>J.&nbsp;Phys. Chem.&nbsp;Lett.</em>). An acidic organic matrix
+    then concentrates the bath in two acts: first the strands quietly sequester calcium, then
+    dense liquid globules condense on them and nowhere else, each fed by the ions its strand
+    already holds (Smeets et&nbsp;al. 2015, <em>Nat.&nbsp;Mater.</em>). The globules densify and
+    dehydrate, water escaping through a thickening diffuse shell as each core draws in, into
+    solid amorphous nanoparticles, crossing the amorphous solubility limit, past which no
+    granule redissolves; only the sub-critical runts that never reached a granule's size drain
+    back. The
     granules then pack, still amorphous and deformable, into a hexagonal tablet. Only afterwards
     does crystallinity arrive: it nucleates inside a few packed grains at different moments, sweeps
     each grain as a front, jumps grain to grain across contacts, and the finished grains rotate
@@ -2565,12 +2568,31 @@ footer .signoff em {
   // of the bath (as in the SAXS observations): most ions remain free for
   // the matrix to concentrate in the next act.
   var PNC_CAP = 6, PNC_DISS = 0.22, PNC_DUR = 70;
+  // PNCs are 'liquid-like ionic polymers' (Avaro 2023, after Demichelis):
+  // floppy, writhing chains, NOT little droplets, and they grow by monomer
+  // addition, not by slamming into each other. Cohesion is turned down while
+  // they are the story so they stay wispy; full cohesion returns when
+  // condensation on the matrix begins, which is what visibly turns chains
+  // into round dense-liquid droplets -- the liquid-liquid phase separation.
+  var PNC_ATT_MUL = 0.55;
+  var attMul = 1;
   // the matrix: a few adsorbed acidic strands that bind and concentrate ions
   var N_STRANDS = 3, STRAND_PTS = 22, STRAND_R = 2.4;
   var STRAND_PULL_ION = 0.34, STRAND_PULL_PT = 0.06, STRAND_PULL_NEAR = 0.11;
   var STRAND_RANGE = 26, NUC_P_MATRIX = 0.055, MATRIX_MAXT = 260;
   var MATRIX_FREE_FRAC = 0.25;          // leave when ~75% of the bath is bound
+  // The matrix act is TWO acts (Smeets 2015): first a long quiet loading in
+  // which the strands only sequester ions -- no condensation, no mineral
+  // chemistry, the sponge filling -- and only then does condensation begin,
+  // fed by the ions each strand has already bound locally rather than by a
+  // stream from solution (their Fig 4c crosses that arrow out).
+  var MATRIX_LOAD_T = 70;
   var DENSIFY_DUR = 80;
+  // dehydration made visible: densifying droplets shed water specks outward
+  // through a thickening diffuse shell (Avaro 2023: the core contracts while
+  // the watery corona grows -- expulsion, never swelling)
+  var waterFx = [], WATER_MAX = 140, WATER_LIFE = 12;
+  var denseF = 0;                       // densification progress, 0 liquid -> 1 ACC
   var P_LAUNCH = 0.035;                 // granules leave the matrix for the tablet
   // in-place crystallization of the packed tablet: rare spontaneous starts,
   // fast catalysis across grain contacts, and a finite transformation time
@@ -2720,7 +2742,8 @@ footer .signoff em {
     occupied = {}; frontier = []; frontierAt = {}; seeded = false;
     seedX = 0; seedY = 0; latOX = 0; latOY = 0;
     fillBank = 0; depletionT = -1; seedSizes = [];
-    ktBoundMul = 1; ionDMul = 1;
+    ktBoundMul = 1; ionDMul = 1; attMul = 1;
+    waterFx.length = 0; denseF = 0;
     phase = 'ions'; phaseT = 0; t = 0;
   }
   reset();
@@ -2958,8 +2981,10 @@ footer .signoff em {
               f = -K_REP2 * (cD - rr) / cD;              // negative: apart
             } else {
               // strong between ions that have already condensed, weak between
-              // two still in solution
-              var kA = (aCl[k] >= 0 || aCl[m2] >= 0) ? K_ATT_BOUND : K_ATT_FREE;
+              // two still in solution. attMul quiets condensed-phase cohesion
+              // while the species on screen are chain-like PNCs, so they
+              // writhe instead of balling up.
+              var kA = (aCl[k] >= 0 || aCl[m2] >= 0) ? K_ATT_BOUND * attMul : K_ATT_FREE;
               f = kA * (1 - (rr - ION_D) / (PAIR_CUT - ION_D));
             }
             var fx = ux2 * f * dt, fy = uy2 * f * dt;
@@ -3113,6 +3138,17 @@ footer .signoff em {
     // the matrix strands fade in when the matrix act starts and back out
     // once the granules leave for the tablet
     strandA += (strandOn - strandA) * Math.min(1, 0.04 * dt);
+    // wispy chains while PNCs are the story, round droplets once
+    // condensation on the matrix begins
+    attMul = phase === 'pnc' ? PNC_ATT_MUL : 1;
+    // expelled water drifts off and fades; the array empties itself
+    for (i = waterFx.length - 1; i >= 0; i--) {
+      var wp = waterFx[i];
+      wp.x += wp.vx * dt; wp.y += wp.vy * dt;
+      wp.vx *= 0.97; wp.vy *= 0.97;
+      wp.age += dt;
+      if (wp.age > WATER_LIFE) { waterFx[i] = waterFx[waterFx.length - 1]; waterFx.pop(); }
+    }
 
     // Once supersaturation is spent the bath is no longer uniform: what solute
     // is left sits in a concentration gradient and drifts down it toward the
@@ -3139,12 +3175,17 @@ footer .signoff em {
     // a weak steady pull toward the nearest strand, which is what locally
     // concentrates the bath without any capture at range.
     if ((phase === 'matrix' || phase === 'densify') && strandA > 0.3) {
+      // sequestration runs at full strength only during the loading act;
+      // once condensation starts, the globules grow on the ions the strand
+      // already holds, not on a stream from solution (Smeets Fig 4c)
+      var pullK = STRAND_PULL_ION *
+                  (phase === 'matrix' && phaseT <= MATRIX_LOAD_T ? 1 : 0.55);
       for (i = 0; i < ions.length; i++) {
         var si = ions[i];
         var nsI = nearestStrand(si.x, si.y);
         if (nsI.d > STRAND_RANGE || nsI.d < 1e-6) continue;
-        si.vx += ((nsI.x - si.x) / nsI.d) * STRAND_PULL_ION * dt;
-        si.vy += ((nsI.y - si.y) / nsI.d) * STRAND_PULL_ION * dt;
+        si.vx += ((nsI.x - si.x) / nsI.d) * pullK * dt;
+        si.vy += ((nsI.y - si.y) / nsI.d) * pullK * dt;
         var sspI = Math.hypot(si.vx, si.vy);
         if (sspI > SWEEP_MAX) { si.vx *= SWEEP_MAX / sspI; si.vy *= SWEEP_MAX / sspI; }
       }
@@ -3203,8 +3244,12 @@ footer .signoff em {
         // In the pnc act this happens anywhere, because prenucleation
         // clusters are solutes of the whole bath; in the matrix act new
         // associations start only against a strand, where the bound calcium
-        // actually is. After densification nothing new nucleates at all.
+        // actually is -- and only AFTER the loading act, since sequestration
+        // alone involves no mineral chemistry (Smeets: a ~20 min quiet
+        // loading before anything condenses). After densification nothing
+        // new nucleates at all.
         if (phase !== 'pnc' && phase !== 'matrix') continue;
+        if (phase === 'matrix' && phaseT <= MATRIX_LOAD_T) continue;
         for (var k = i - 1; k >= 0; k--) {
           var ib = ions[k];
           if (Math.hypot(ib.x - ia.x, ib.y - ia.y) >= NUC_R) continue;
@@ -3225,13 +3270,14 @@ footer .signoff em {
         }
       }
 
-      // coalescence: two amorphous particles that run into each other merge
-      // into one -- early growth is dominated by collision and coalescence,
-      // not only by single-ion capture (De Yoreo et al. 2015). The member
-      // ions keep their absolute positions, so the merged object is briefly
-      // a lopsided peanut that relaxes as it jostles. No rotation involved.
+      // coalescence: two dense-liquid droplets that run into each other merge
+      // into one. The member ions keep their absolute positions, so the
+      // merged object is briefly a lopsided peanut that relaxes as it
+      // jostles. Droplet-droplet aggregation belongs to the dense-liquid
+      // stage and later: while the species are PNCs, growth is by monomer
+      // addition only (Avaro 2023's log-slope evidence), so no merging yet.
       for (i = clusters.length - 1; i >= 0; i--) {
-        var ci = clusters[i]; if (ci.state !== 'blob') continue;
+        var ci = clusters[i]; if (ci.state !== 'blob' || phase === 'pnc') continue;
         for (j = i - 1; j >= 0; j--) {
           var cj = clusters[j]; if (cj.state !== 'blob') continue;
           // coalescence dominates while droplets are small; two already-large
@@ -3252,10 +3298,12 @@ footer .signoff em {
 
       // surface energy at work between particles, not just within them: two
       // droplets that could still fuse pull on each other and close the gap
-      // themselves rather than waiting on a chance collision
+      // themselves rather than waiting on a chance collision. Like
+      // coalescence, this is dense-liquid behaviour -- PNCs are solutes in
+      // equilibrium and feel no such drive.
       for (i = 0; i < clusters.length; i++) {
         var ca = clusters[i];
-        if (ca.state !== 'blob') continue;
+        if (ca.state !== 'blob' || phase === 'pnc') continue;
         for (j = i + 1; j < clusters.length; j++) {
           var cb = clusters[j];
           if (cb.state !== 'blob') continue;
@@ -3384,12 +3432,20 @@ footer .signoff em {
           seedSizes.push(c.pts.length);
           var slot = claimCell(c.cx, c.cy);
           if (!slot) {
-            // array already complete: a late granule parks where it is, an
-            // off-lattice grain on the platelet rim
-            c.tx = c.cx; c.ty = c.cy; c.offTile = true;
-            c.cellPX = c.cx; c.cellPY = c.cy;
-            parkPts(c);
-            c.state = 'attached'; c.poppedAt = t;
+            // Array already complete: a late granule still TRAVELS to the
+            // tablet and parks on its rim, an off-lattice grain -- never
+            // marooned out in the bath where the crystallization wave could
+            // not reach it (a stranded granule with no contacts once froze
+            // the whole transformation waiting on its lone spontaneous
+            // nucleation).
+            var ra = Math.atan2(c.cy - latOY, c.cx - latOX);
+            c.tx = latOX + Math.cos(ra) * (HEX_A + TILE_HW * 1.2);
+            c.ty = latOY + Math.sin(ra) * (HEX_A + TILE_HW * 1.2);
+            c.offTile = true;
+            c.cellPX = c.tx; c.cellPY = c.ty;
+            c.fromX = c.cx; c.fromY = c.cy;
+            c.attachT = 0; c.kicked = true;
+            c.state = 'attach';
             continue;
           }
           var toff = tileOffset();
@@ -3503,15 +3559,31 @@ footer .signoff em {
         phase = 'matrix'; phaseT = 0;
         strandOn = 1;                    // the matrix enters the story
       } else if (phase === 'matrix' &&
-                 ((phaseT > 120 && ions.length <= Math.round(N_ION * MATRIX_FREE_FRAC)) ||
+                 ((phaseT > MATRIX_LOAD_T + 100 &&
+                   ions.length <= Math.round(N_ION * MATRIX_FREE_FRAC)) ||
                   phaseT > MATRIX_MAXT)) {
-        // a minimum stay regardless of how fast the strands sequester the
-        // bath -- this act is the story's centrepiece, not a checkpoint
+        // a minimum stay long enough for BOTH acts -- the quiet loading and
+        // then condensation -- this act is the story's centrepiece, not a
+        // checkpoint
         phase = 'densify'; phaseT = 0;   // the binodal: reversibility ends here
       } else if (phase === 'densify') {
         var df = Math.min(1, phaseT / DENSIFY_DUR);
+        denseF = df;
         ktBoundMul = 1 - 0.55 * df;      // the water leaves: the wobble cools
         ionDMul = 1 - (1 - ACC_DMUL) * df; // and the packing pulls tighter
+        // and the water is SEEN leaving: droplets shed specks outward
+        // through the diffuse shell while their cores draw in
+        if (waterFx.length < WATER_MAX) {
+          for (j = 0; j < clusters.length; j++) {
+            c = clusters[j];
+            if (c.state !== 'blob' || c.pts.length < 6) continue;
+            if (rnd() > 0.16 * dt) continue;
+            var pw = c.pts[Math.floor(rnd() * c.pts.length)];
+            var wa = Math.atan2(pw.y - c.cy, pw.x - c.cx) + (rnd() - 0.5) * 0.6;
+            waterFx.push({ x: pw.x, y: pw.y,
+                           vx: Math.cos(wa) * 0.55, vy: Math.sin(wa) * 0.55, age: 0 });
+          }
+        }
         if (phaseT > DENSIFY_DUR) {
           phase = 'pack'; phaseT = 0;
           depletionT = t;                // what solute is left drains to the granules
@@ -3586,6 +3658,10 @@ footer .signoff em {
                 if (c.nbrs[nj].cryst >= XT_SPREAD_AT) { hz = P_SPREAD; inf = c.nbrs[nj]; break; }
               }
             }
+            // a grain the wave cannot reach -- no contacts at all -- runs on
+            // its own, much shorter spontaneous clock, so one isolated rim
+            // straggler can never hold the terminal gate open indefinitely
+            if (!c.nbrs || !c.nbrs.length) hz = P_NUC_X * 60;
             if (rnd() < hz * dt) {
               if (c.pts) {
                 // the front enters through the face the neighbour touches
@@ -3670,6 +3746,24 @@ footer .signoff em {
     return 'rgb(' + Math.round(COL_AMORPH[0] + (COL_ORDERED[0] - COL_AMORPH[0]) * k) + ',' +
       Math.round(COL_AMORPH[1] + (COL_ORDERED[1] - COL_AMORPH[1]) * k) + ',' +
       Math.round(COL_AMORPH[2] + (COL_ORDERED[2] - COL_AMORPH[2]) * k) + ')';
+  }
+  // A dense liquid droplet has no edge: SAXS puts a sigmoidal density
+  // gradient around the core (Avaro 2023, d > 4), so the globules wear a
+  // soft radial halo -- their diffuse hydrated interface -- and the halo
+  // THICKENS through densification as water is expelled through it, while
+  // the core of dots visibly draws in. A gradient, never a stroked outline.
+  function drawHalo(c) {
+    var r = (Math.sqrt(c.pts.length) * 0.7 + 1.1 + denseF * 1.7) * sc;
+    if (r < 2) return;
+    var gx = X(c.cx), gy = Y(c.cy);
+    var g = ctx.createRadialGradient(gx, gy, 0, gx, gy, r);
+    g.addColorStop(0, 'rgba(127,217,239,' + (0.10 + 0.07 * denseF) + ')');
+    g.addColorStop(0.55, 'rgba(127,217,239,' + (0.05 + 0.045 * denseF) + ')');
+    g.addColorStop(1, 'rgba(127,217,239,0)');
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(gx, gy, r, 0, TAU);
+    ctx.fill();
   }
   // pre-attachment clusters are drawn as literally what they are: their own
   // member ions, each still its own distinct dot, tinted by how close the
@@ -4346,6 +4440,18 @@ footer .signoff em {
       ctx.arc(X(s.x), Y(s.y), rs, 0, TAU);
     }
     ctx.fill();
+    // expelled water: smaller and paler than the solute, drifting away from
+    // the densifying droplets and fading as it rejoins the bath
+    if (waterFx.length) {
+      var wr = Math.max(0.8, 0.16 * sc);
+      for (i = 0; i < waterFx.length; i++) {
+        var wq = waterFx[i];
+        ctx.fillStyle = 'rgba(196,238,250,' + (0.5 * (1 - wq.age / WATER_LIFE)).toFixed(3) + ')';
+        ctx.beginPath();
+        ctx.arc(X(wq.x), Y(wq.y), wr, 0, TAU);
+        ctx.fill();
+      }
+    }
 
     // Everything that can share a colour is accumulated into one path and
     // drawn in a single call. Filling and stroking several hundred blocks
@@ -4371,7 +4477,10 @@ footer .signoff em {
         // anything still carrying real ions is drawn as its ions -- liquid
         // droplet, travelling granule, parked granule, and a grain mid-
         // transformation alike. The front sweeping a parked grain is visible
-        // ion by ion, which is the whole point of keeping them.
+        // ion by ion, which is the whole point of keeping them. Dense liquid
+        // globules additionally wear their diffuse hydrated interface.
+        if (c.state === 'blob' && c.pts.length >= 8 &&
+            (phase === 'matrix' || phase === 'densify' || phase === 'pack')) drawHalo(c);
         drawClusterIons(c);
       } else if (c.cryst < 1) {
         // schematic far-field granule, still amorphous: a soft disc. The
@@ -4545,6 +4654,8 @@ footer .signoff em {
         })(),
         nan: bad, seedSizes: seedSizes.slice(),
         pending: pending, offTiles: offs,
+        water: waterFx.length, denseF: Math.round(denseF * 100) / 100,
+        strandA: Math.round(strandA * 100) / 100, phaseT: Math.round(phaseT),
         hwMin: hws.length ? Math.min.apply(null, hws) : null,
         hwMax: hws.length ? Math.max.apply(null, hws) : null,
         hwMean: hws.length ? Math.round(hws.reduce(function (a, b) { return a + b; }, 0) / hws.length * 100) / 100 : null,
@@ -4611,8 +4722,9 @@ footer .signoff em {
   if (still) {
     playing = false;
     var guard = 0;
-    // a full run measures ~3900 steps with the staged pathway (three runs:
-    // 3816-3878); the guard is only a runaway stop, so it stays far above
+    // a full run measures ~4000 steps with the staged pathway and two-act
+    // matrix (five runs: 3957-4087); the guard is only a runaway stop, so
+    // it stays far above
     while (phase !== 'done' && guard++ < 9000) step(DT);
     readout(); render(1);
     if (btnPlay) { btnPlay.textContent = 'Play'; btnPlay.setAttribute('aria-pressed', 'true'); }
