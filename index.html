@@ -65,20 +65,24 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 23px; scroll-behavior: smooth; background: #070B11; }
-/* The page is authored large and scaled down as one piece. It sat right at
-   50% browser zoom, so that ratio is baked in here as the default. CSS zoom,
-   not transform: scale, on purpose: zoom reflows layout, so sticky-nav
-   offsets, IntersectionObserver rects and canvas bounding boxes all agree
-   with what is on screen, where a transform would leave them at full size.
+/* The page is authored large and scaled down as one piece. CSS zoom, not
+   transform: scale, on purpose: zoom reflows layout, so sticky-nav offsets,
+   IntersectionObserver rects and canvas bounding boxes all agree with what
+   is on screen, where a transform would leave them at full size.
 
-   Desktop only. The 50% calibration was made against a desktop window; the
-   phone breakpoints below re-tune the root to 21/19/18px as final rendered
-   sizes, and media queries evaluate against the real viewport, so letting
-   the zoom stack onto them would halve every size they were chosen to set:
-   9px body copy and 7px tap targets. Above 900px the breakpoints never
-   fire, so the gate and the tuning cannot overlap. */
+   The factor is set from the size body copy ends up at, not from a browser
+   zoom stop. Body copy is 1.05rem of the 23px root, so this 0.6 puts it at
+   about 14.5px on screen: dense and technical, which is the register the
+   page wants, while the half-scale it used to run at left it near 12px and
+   read as too far away.
+
+   Desktop only. The phone breakpoints below re-tune the root to 21/19/18px
+   as final rendered sizes, and media queries evaluate against the real
+   viewport, so letting the zoom stack onto them would shrink every size
+   they were chosen to set. Above 900px the breakpoints never fire, so the
+   gate and the tuning cannot overlap. */
 @media (min-width: 901px) {
-  html { zoom: 0.5; }
+  html { zoom: 0.6; }
 }
 
 body {
@@ -855,18 +859,19 @@ footer .signoff em {
   background: #080C15;
   padding: 0.6rem;
 }
-/* Both CPA panels sat right at 33% browser zoom where the rest of the page
-   sat right at 50%, so they carry the remaining two-thirds themselves
-   (0.33 / 0.50 = 0.66) and everything inside them -- canvas, diagram, mono
-   labels, captions -- shrinks together, exactly what the browser-zoom test
-   showed. width: 100% is what lets the zoom actually narrow the boxes: left
-   at auto they would stretch back out to refill the column at full width.
-   The auto margins centre the narrowed panels in the column. Desktop only,
-   like the page zoom above: the phone breakpoints size these panels
-   full-bleed and were tuned without any zoom in the stack. */
+/* Both CPA panels were calibrated by eye to sit at 33% overall, so they
+   carry whatever the page zoom above does not: 0.33 / 0.60 = 0.55. That 33%
+   is the fixed quantity -- if the page factor changes again, this one has to
+   be recomputed against it or the panels drift off their calibration.
+   Everything inside them -- canvas, diagram, mono labels, captions --
+   shrinks together. width: 100% is what lets the zoom actually narrow the
+   boxes: left at auto they would stretch back out to refill the column at
+   full width. The auto margins centre the narrowed panels in the column.
+   Desktop only, like the page zoom above: the phone breakpoints size these
+   panels full-bleed and were tuned without any zoom in the stack. */
 @media (min-width: 901px) {
   .cpa-fig, .cpa-sim {
-    zoom: 0.66;
+    zoom: 0.55;
     width: 100%;
     margin-left: auto;
     margin-right: auto;
