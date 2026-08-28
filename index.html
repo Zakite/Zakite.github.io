@@ -814,29 +814,38 @@ footer .signoff em {
    the svg rather than hanging the overflow off the figure. Desktop never
    scrolls: the column is wider than the floor. */
 .cpa-scroll { overflow-x: auto; }
-.cpa-scroll .cpa-diagram { min-width: 720px; }
+.cpa-scroll .cpa-diagram { min-width: 900px; }
 /* The pathway diagram is drawn inline (see the figure itself for why), so its
    type and linework are styled here rather than baked into a raster. */
+/* Text sizes are in viewBox units (2000 wide); at the panel's rendered
+   width they land near the sim panel's label sizes. */
 .cpa-diagram text {
   font-family: var(--mono);
-  font-size: 15px; letter-spacing: 0.08em;
+  font-size: 33px; letter-spacing: 0.03em;
   fill: #8FA5B8;   /* --cs-dim: same label tone as the sim panel below */
 }
-.cpa-diagram .hdr text { font-size: 16px; letter-spacing: 0.2em; fill: var(--muted); }
 .cpa-diagram .lbl { fill: var(--ink); }
 .cpa-diagram .acc { fill: var(--accent); }
-.cpa-diagram .ions circle { fill: #7FD9EF; opacity: 0.85; }
-/* the tracks the ions ride: hairlines, kept dimmer than the species so the
-   travelling dots read as the data and the lines as the instrument */
-.cpa-diagram .track path {
-  fill: none; stroke: #24485A; stroke-width: 1.3;
-}
-.cpa-diagram .track-x {
-  fill: none; stroke: var(--accent); stroke-width: 1.6; opacity: 0.85;
-}
+.cpa-diagram .dim { fill: #7E96AC; font-style: italic; }
+.cpa-diagram .ions circle { fill: #7FD9EF; opacity: 0.9; }
+/* the classical route: present, dashed, deliberately quieter than the fan */
 .cpa-diagram .track-dash {
-  fill: none; stroke: #24485A; stroke-width: 1.3;
-  stroke-dasharray: 5 7; opacity: 0.8;
+  fill: none; stroke: #4A6E86; stroke-width: 2.5;
+  stroke-dasharray: 12 10; opacity: 0.75;
+}
+/* Scroll entrance: the fan of routes settles in first, then everything the
+   routes connect. Initial states hang off .cpa-prep, which the script adds
+   at load, so a no-JS visit simply gets the finished figure; the motion
+   itself exists only under no-preference, so reduced-motion users get the
+   finished figure the instant it enters view. The routes' resting opacity
+   is 0.78, matching the group's own attribute. */
+.cpa-fig.cpa-prep .cpa-routes { opacity: 0; }
+.cpa-fig.cpa-prep .cpa-body   { opacity: 0; }
+.cpa-fig.cpa-run  .cpa-routes { opacity: 0.78; }
+.cpa-fig.cpa-run  .cpa-body   { opacity: 1; }
+@media (prefers-reduced-motion: no-preference) {
+  .cpa-fig .cpa-routes { transition: opacity 1.1s ease; }
+  .cpa-fig .cpa-body   { transition: opacity 1.0s ease 0.45s; }
 }
 .cpa-fig figcaption {
   font-family: var(--serif); font-style: italic;
@@ -1689,198 +1698,211 @@ footer .signoff em {
         bitmap eventually does.
       -->
       <div class="cpa-scroll">
-      <svg class="cpa-diagram" viewBox="0 0 1240 780" role="img"
-           aria-label="Pathways to crystallization by particle attachment. Ions, atoms and molecules in solution feed five routes: multi-ion complexes and oligomers, dense liquid droplets, amorphous nanoparticles, poorly crystalline nanoparticles, and nanocrystals. Each of those higher-order species travels to an assembly step, where particles rotate into registry and attach to one another, building a bulk crystal that is itself made of aligned blocks. A separate track along the bottom shows the classical route, in which single monomers add to the crystal one at a time.">
+      <svg class="cpa-diagram" viewBox="0 0 2000 1150" role="img"
+           aria-label="Pathways to crystallization by particle attachment, drawn as a fan. From a pool of ions, atoms and molecules at the lower left, seven routes arc up and over to converge on a single bulk crystal at the lower right. Each route climbs through its own species: oligomers, complexes, dense liquid droplets, amorphous nanoparticles, poorly crystalline nanoparticles, and fully faceted nanocrystals. On the way down, the particle routes pass through intermediate products: chains of nanocrystals joined by oriented attachment, nearly oriented chains still rotating into registry, an amorphous solid, and polymers. A dashed arc underneath shows the classical alternative, monomer-by-monomer crystal growth, and a progress arrow runs along the bottom.">
         <defs>
           <radialGradient id="cpaHalo">
             <stop offset="0%" stop-color="#7FF6FF" stop-opacity="0.95"/>
             <stop offset="45%" stop-color="#39D8F0" stop-opacity="0.45"/>
             <stop offset="100%" stop-color="#12B6E0" stop-opacity="0"/>
           </radialGradient>
-          <radialGradient id="cpaDrop" cx="38%" cy="32%">
-            <stop offset="0%" stop-color="#8FF3EA" stop-opacity="0.5"/>
-            <stop offset="60%" stop-color="#2FA9A2" stop-opacity="0.26"/>
-            <stop offset="100%" stop-color="#126E6A" stop-opacity="0.1"/>
+          <linearGradient id="cpaArcG" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#6FE8F7"/>
+            <stop offset="55%" stop-color="#4FB6EC"/>
+            <stop offset="100%" stop-color="#3E7BD0"/>
+          </linearGradient>
+          <linearGradient id="cpaGemG" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#8FE8FA"/>
+            <stop offset="100%" stop-color="#2E62D9"/>
+          </linearGradient>
+          <linearGradient id="cpaBigGemG" x1="0" y1="0" x2="0.8" y2="1">
+            <stop offset="0%" stop-color="#9FF0FF"/>
+            <stop offset="55%" stop-color="#3E8BE8"/>
+            <stop offset="100%" stop-color="#2450C8"/>
+          </linearGradient>
+          <radialGradient id="cpaDropG" cx="35%" cy="30%">
+            <stop offset="0%" stop-color="#A8DFFF"/>
+            <stop offset="55%" stop-color="#2E7FD6"/>
+            <stop offset="100%" stop-color="#14406F"/>
           </radialGradient>
-          <marker id="cpaArrow" viewBox="0 0 10 10" refX="9" refY="5"
-                  markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-            <path d="M0,0 L10,5 L0,10 Z" fill="#3FD9CB"/>
+          <linearGradient id="cpaBlobG" x1="0" y1="0" x2="0.7" y2="1">
+            <stop offset="0%" stop-color="#4E8FE0"/>
+            <stop offset="100%" stop-color="#2B4FA0"/>
+          </linearGradient>
+          <linearGradient id="cpaSolidG" x1="0" y1="0" x2="0.7" y2="1">
+            <stop offset="0%" stop-color="#6A6FD8"/>
+            <stop offset="100%" stop-color="#383D9C"/>
+          </linearGradient>
+          <radialGradient id="cpaGlow">
+            <stop offset="0%" stop-color="#4FD2FF" stop-opacity="0.30"/>
+            <stop offset="60%" stop-color="#2E7FD6" stop-opacity="0.10"/>
+            <stop offset="100%" stop-color="#2E7FD6" stop-opacity="0"/>
+          </radialGradient>
+          <marker id="cpaArrow" viewBox="0 0 10 10" refX="8.5" refY="5"
+                  markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 Z" fill="#6FD2F0"/>
+          </marker>
+          <marker id="cpaArrowBig" viewBox="0 0 10 10" refX="8" refY="5"
+                  markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 Z" fill="#3E7BD0"/>
           </marker>
 
-          <!-- One crystalline block, reused at every scale: the nanocrystal in
-               the species column, the two particles meeting at the assembly
-               step, and each block of the finished solid. Drawing them from one
-               symbol is the point of the figure, since what attaches is the
-               same object that ends up in the lattice. -->
-          <clipPath id="cpaHexClip">
-            <polygon points="0,-25 21.7,-12.5 21.7,12.5 0,25 -21.7,12.5 -21.7,-12.5"/>
-          </clipPath>
-          <g id="cpaBlock">
-            <polygon points="0,-25 21.7,-12.5 21.7,12.5 0,25 -21.7,12.5 -21.7,-12.5"
-                     fill="#0C2630" stroke="#3FD9CB" stroke-width="1.5" stroke-linejoin="round"/>
-            <g clip-path="url(#cpaHexClip)" stroke="#3FD9CB" stroke-width="0.85" opacity="0.5">
-              <path d="M-24,-15 H24 M-24,-7.5 H24 M-24,0 H24 M-24,7.5 H24 M-24,15 H24"/>
-            </g>
+          <!-- one faceted nanocrystal, reused everywhere a crystal appears:
+               the species row, the OA chains, and (scaled up) the bulk
+               crystal itself. What attaches is the same object that the
+               product is made of, so they are drawn from the same symbol. -->
+          <g id="cpaGem">
+            <path d="M0,-30 L21,0 L0,30 L-21,0 Z" fill="url(#cpaGemG)"
+                  stroke="#9FE8F8" stroke-width="1.6" stroke-linejoin="round"/>
+            <path d="M0,-30 L0,30" stroke="#0E3550" stroke-width="1.3" opacity="0.6"/>
+            <path d="M-21,0 L21,0" stroke="#DFF6FF" stroke-width="0.9" opacity="0.35"/>
           </g>
+          <!-- a poorly crystalline nanoparticle: a lumpy aggregate -->
+          <g id="cpaClump" fill="#2E5FA8" stroke="#7FB2E8" stroke-width="1">
+            <circle cx="-14" cy="-4" r="13"/><circle cx="0" cy="-13" r="12"/>
+            <circle cx="13" cy="-5" r="13"/><circle cx="8" cy="9" r="12"/>
+            <circle cx="-7" cy="10" r="12"/><circle cx="1" cy="-1" r="13"/>
+            <circle cx="-9" cy="-9" r="2.2" fill="#9FE8F8" stroke="none"/>
+            <circle cx="10" cy="2" r="2.2" fill="#9FE8F8" stroke="none"/>
+            <circle cx="-2" cy="12" r="2.2" fill="#9FE8F8" stroke="none"/>
+          </g>
+          <!-- an amorphous nanoparticle: smooth, irregular, no facets -->
+          <path id="cpaBlobP" d="M-30,-8 C-28,-24 -10,-32 6,-27 C24,-32 33,-16 28,1
+                                 C35,15 16,29 1,25 C-15,31 -33,10 -30,-8 Z"/>
         </defs>
 
-        <!-- column headers -->
-        <g class="hdr" text-anchor="middle">
-          <text x="185" y="36">SOLUTION</text>
-          <text x="430" y="36">HIGHER-ORDER SPECIES</text>
-          <text x="790" y="36">ASSEMBLY</text>
-          <text x="1078" y="36">SOLID</text>
+        <!-- ================= the fan of routes ================= -->
+        <!-- Quadratic arcs from one origin to one destination; every dot's
+             mpath references the very path it is drawn on, so particle and
+             rail cannot drift out of register. -->
+        <g fill="none" stroke="url(#cpaArcG)" stroke-width="3" opacity="0.78">
+          <path id="cpaR1" d="M340,935 Q1010,-572 1745,790" marker-end="url(#cpaArrow)"/>
+          <path id="cpaR2" d="M340,935 Q1010,-275 1738,815" marker-end="url(#cpaArrow)"/>
+          <path id="cpaR3" d="M340,935 Q1010,40 1731,842" marker-end="url(#cpaArrow)"/>
+          <path id="cpaR4" d="M340,935 Q1010,278 1724,868" marker-end="url(#cpaArrow)"/>
+          <path id="cpaR5" d="M340,935 Q1010,516 1717,893" marker-end="url(#cpaArrow)"/>
+          <path id="cpaR6" d="M340,935 Q1010,704 1710,916" marker-end="url(#cpaArrow)"/>
         </g>
-        <path d="M60,54 H1180" stroke="#26323F" stroke-width="1" opacity="0.5"/>
+        <path id="cpaClassic" class="track-dash" d="M340,935 Q1010,845 1712,975"
+              marker-end="url(#cpaArrow)"/>
 
-        <!-- ===== the tracks. Every one of these is also a motion path. ===== -->
-        <g class="track">
-          <path id="cpaA1" d="M240,340 C305,330 320,105 385,105"/>
-          <path id="cpaA2" d="M240,342 C305,335 325,225 385,225"/>
-          <path id="cpaA3" d="M240,345 H385"/>
-          <path id="cpaA4" d="M240,348 C305,355 325,465 385,465"/>
-          <path id="cpaA5" d="M240,350 C305,360 320,585 385,585"/>
-          <path id="cpaB1" d="M478,105 C560,105 620,345 735,345"/>
-          <path id="cpaB2" d="M478,225 C560,225 630,345 735,345"/>
-          <path id="cpaB3" d="M478,345 H735"/>
-          <path id="cpaB4" d="M478,465 C560,465 630,345 735,345"/>
-          <path id="cpaB5" d="M478,585 C560,585 620,345 735,345"/>
-        </g>
-        <path id="cpaC" class="track track-x" d="M862,345 H1000" marker-end="url(#cpaArrow)"/>
-        <!-- the classical route, kept visually subordinate: dashed, and running
-             along the floor of the figure rather than through the species -->
-        <path id="cpaClassic" class="track track-dash"
-              d="M240,360 C300,712 420,720 700,720 C910,720 1030,585 1062,412"/>
-
-        <!-- ===== solution ===== -->
+        <!-- ================= origin: the solution ================= -->
         <g class="ions">
-          <circle cx="155" cy="318" r="3.4"/><circle cx="200" cy="308" r="3.1"/>
-          <circle cx="222" cy="332" r="3.4"/><circle cx="168" cy="350" r="3.1"/>
-          <circle cx="196" cy="356" r="3.4"/><circle cx="150" cy="372" r="3.1"/>
-          <circle cx="183" cy="382" r="3.4"/><circle cx="212" cy="384" r="3.1"/>
-          <circle cx="163" cy="336" r="3.4"/><circle cx="176" cy="300" r="3.1"/>
-          <circle cx="228" cy="348" r="3.1"/><circle cx="144" cy="352" r="3.4"/>
+          <circle cx="252" cy="872" r="6.5"/><circle cx="292" cy="851" r="6.5"/>
+          <circle cx="334" cy="866" r="6.5"/><circle cx="372" cy="849" r="6.5"/>
+          <circle cx="401" cy="879" r="6.5"/><circle cx="238" cy="915" r="6.5"/>
+          <circle cx="279" cy="899" r="6.5"/><circle cx="321" cy="909" r="6.5"/>
+          <circle cx="362" cy="895" r="6.5"/><circle cx="396" cy="921" r="6.5"/>
+          <circle cx="247" cy="958" r="6.5"/><circle cx="288" cy="944" r="6.5"/>
+          <circle cx="329" cy="953" r="6.5"/><circle cx="371" cy="940" r="6.5"/>
+          <circle cx="404" cy="963" r="6.5"/><circle cx="262" cy="998" r="6.5"/>
+          <circle cx="304" cy="988" r="6.5"/><circle cx="347" cy="997" r="6.5"/>
+          <circle cx="386" cy="1002" r="6.5"/><circle cx="311" cy="1028" r="6.5"/>
         </g>
-        <g fill="#F0724A" opacity="0.9">
-          <circle cx="207" cy="330" r="3"/><circle cx="192" cy="332" r="2.6"/>
-          <circle cx="168" cy="368" r="3"/><circle cx="214" cy="362" r="2.6"/>
+        <text class="lbl" x="315" y="1078" text-anchor="middle">Ions, atoms,</text>
+        <text class="lbl" x="315" y="1114" text-anchor="middle">molecules</text>
+
+        <!-- ================= species tiers on the way up ================= -->
+        <g transform="translate(875,205)">
+          <use href="#cpaGem" transform="rotate(-12) scale(0.92)"/>
+          <use href="#cpaGem" transform="translate(40,-6) rotate(18) scale(0.85)"/>
+          <use href="#cpaGem" transform="translate(80,3) rotate(-25) scale(0.95)"/>
+          <use href="#cpaGem" transform="translate(120,-4) rotate(8) scale(0.82)"/>
+          <use href="#cpaGem" transform="translate(160,4) rotate(-16) scale(0.9)"/>
+          <use href="#cpaGem" transform="translate(200,-5) rotate(24) scale(0.86)"/>
+          <use href="#cpaGem" transform="translate(240,2) rotate(-6) scale(0.93)"/>
+          <use href="#cpaGem" transform="translate(280,-2) rotate(14) scale(0.84)"/>
         </g>
-        <text class="lbl" x="185" y="415" text-anchor="middle">IONS, ATOMS, MOLECULES</text>
+        <text class="lbl" x="1015" y="272" text-anchor="middle">Nanocrystals</text>
 
-        <!-- ===== 1. multi-ion complexes and oligomers ===== -->
-        <g transform="translate(430,105)">
-          <g stroke="#3FD9CB" stroke-width="1.1" opacity="0.55">
-            <path d="M-14,-8 L0,-2 L14,-9 M0,-2 L-6,10 M0,-2 L11,7"/>
-          </g>
-          <g fill="#3FD9CB">
-            <circle cx="-14" cy="-8" r="4.6"/><circle cx="0" cy="-2" r="5.2"/>
-            <circle cx="14" cy="-9" r="4.6"/><circle cx="-6" cy="10" r="4.2"/>
-            <circle cx="11" cy="7" r="4.2"/>
-          </g>
-          <circle cx="-22" cy="4" r="3" fill="#F0724A"/>
-          <circle cx="20" cy="-1" r="3" fill="#F0724A"/>
+        <use href="#cpaClump" x="935" y="350"/>
+        <use href="#cpaClump" x="1015" y="344" transform="rotate(30 1015 344)"/>
+        <use href="#cpaClump" x="1095" y="352" transform="rotate(-40 1095 352)"/>
+        <text class="lbl" x="1015" y="404" text-anchor="middle">Poorly crystalline</text>
+        <text class="lbl" x="1015" y="438" text-anchor="middle">nanoparticles</text>
+
+        <g fill="url(#cpaBlobG)" stroke="#86B9EE" stroke-width="1.4">
+          <use href="#cpaBlobP" transform="translate(925,499) rotate(15)"/>
+          <use href="#cpaBlobP" transform="translate(1005,494) rotate(140) scale(0.92)"/>
+          <use href="#cpaBlobP" transform="translate(1085,501) rotate(-70) scale(1.05)"/>
+          <use href="#cpaBlobP" transform="translate(1165,495) rotate(200) scale(0.9)"/>
         </g>
-        <text x="430" y="155" text-anchor="middle">COMPLEXES, OLIGOMERS</text>
+        <text class="lbl" x="1045" y="571" text-anchor="middle">Amorphous nanoparticles</text>
 
-        <!-- ===== 2. dense liquid droplets ===== -->
-        <g transform="translate(430,225)">
-          <ellipse rx="31" ry="25" fill="url(#cpaDrop)" stroke="#3FD9CB"
-                   stroke-width="1.2" stroke-dasharray="4 4" opacity="0.9"/>
-          <g fill="#8FF3EA" opacity="0.55">
-            <circle cx="-12" cy="-6" r="2.2"/><circle cx="4" cy="-11" r="2.2"/>
-            <circle cx="13" cy="3" r="2.2"/><circle cx="-4" cy="9" r="2.2"/>
-            <circle cx="-17" cy="7" r="2.2"/><circle cx="8" cy="12" r="2.2"/>
-            <circle cx="0" cy="0" r="2.2"/>
-          </g>
+        <circle cx="955" cy="640" r="27" fill="url(#cpaDropG)"/>
+        <circle cx="1015" cy="638" r="27" fill="url(#cpaDropG)"/>
+        <circle cx="1075" cy="641" r="27" fill="url(#cpaDropG)"/>
+        <text class="lbl" x="1015" y="700" text-anchor="middle">Droplets</text>
+
+        <text class="lbl" x="1015" y="762" text-anchor="middle">Complexes</text>
+        <text class="lbl" x="1015" y="862" text-anchor="middle">Oligomers</text>
+        <text class="dim" x="1015" y="1005" text-anchor="middle">Monomer - by - monomer crystal growth</text>
+
+        <!-- ============ intermediates on the way down ============ -->
+        <g transform="translate(1310,231) rotate(40)">
+          <text class="acc" x="0" y="-40" text-anchor="middle">Oriented attachment (OA)</text>
+          <use href="#cpaGem" transform="translate(-102) scale(0.78)"/>
+          <use href="#cpaGem" transform="translate(-68) scale(0.78)"/>
+          <use href="#cpaGem" transform="translate(-34) scale(0.78)"/>
+          <use href="#cpaGem" transform="scale(0.78)"/>
+          <use href="#cpaGem" transform="translate(34) scale(0.78)"/>
+          <use href="#cpaGem" transform="translate(68) scale(0.78)"/>
+          <use href="#cpaGem" transform="translate(102) scale(0.78)"/>
         </g>
-        <text x="430" y="275" text-anchor="middle">DENSE LIQUID DROPLETS</text>
-
-        <!-- ===== 3. amorphous nanoparticles: dense, and no lattice at all ===== -->
-        <g transform="translate(430,345)">
-          <path d="M2,-29 C18,-27 31,-15 29,-1 C27,15 15,29 -1,28 C-17,27 -30,14 -29,-2 C-28,-17 -14,-31 2,-29 Z"
-                fill="#132A33" stroke="#7FD9EF" stroke-width="1.4" opacity="0.95"/>
-          <g fill="#7FD9EF" opacity="0.5">
-            <circle cx="-14" cy="-12" r="2.3"/><circle cx="2" cy="-17" r="2.3"/>
-            <circle cx="15" cy="-7" r="2.3"/><circle cx="-19" cy="3" r="2.3"/>
-            <circle cx="-5" cy="-3" r="2.3"/><circle cx="10" cy="6" r="2.3"/>
-            <circle cx="-11" cy="14" r="2.3"/><circle cx="4" cy="18" r="2.3"/>
-            <circle cx="19" cy="12" r="2.3"/><circle cx="-2" cy="7" r="2.3"/>
-          </g>
+        <g transform="translate(1306,368) rotate(40)">
+          <text class="acc" x="0" y="-38" text-anchor="middle">Nearly-OA</text>
+          <use href="#cpaGem" transform="translate(-85) rotate(9) scale(0.76)"/>
+          <use href="#cpaGem" transform="translate(-51) rotate(-7) scale(0.76)"/>
+          <use href="#cpaGem" transform="translate(-17) rotate(5) scale(0.76)"/>
+          <use href="#cpaGem" transform="translate(17) rotate(-10) scale(0.76)"/>
+          <use href="#cpaGem" transform="translate(51) rotate(7) scale(0.76)"/>
+          <use href="#cpaGem" transform="translate(85) rotate(-5) scale(0.76)"/>
         </g>
-        <text x="430" y="395" text-anchor="middle">AMORPHOUS NANOPARTICLES</text>
-
-        <!-- ===== 4. poorly crystalline: order in one lobe only ===== -->
-        <g transform="translate(430,465)">
-          <path d="M2,-29 C18,-27 31,-15 29,-1 C27,15 15,29 -1,28 C-17,27 -30,14 -29,-2 C-28,-17 -14,-31 2,-29 Z"
-                fill="#132A33" stroke="#7FD9EF" stroke-width="1.4" opacity="0.95"/>
-          <g stroke="#3FD9CB" stroke-width="1" opacity="0.75">
-            <path d="M-2,-20 H24 M-4,-13 H27 M-6,-6 H28 M-7,1 H27"/>
-          </g>
-          <g fill="#7FD9EF" opacity="0.5">
-            <circle cx="-18" cy="-6" r="2.3"/><circle cx="-12" cy="6" r="2.3"/>
-            <circle cx="2" cy="12" r="2.3"/><circle cx="16" cy="15" r="2.3"/>
-            <circle cx="-4" cy="21" r="2.3"/><circle cx="-20" cy="9" r="2.3"/>
-          </g>
+        <g transform="translate(1370,515) rotate(38)">
+          <text class="acc" x="0" y="-38" text-anchor="middle">Nearly-OA</text>
+          <use href="#cpaClump" transform="translate(-80) scale(0.82)"/>
+          <use href="#cpaClump" transform="translate(-34) rotate(50) scale(0.82)"/>
+          <use href="#cpaGem" transform="translate(8) rotate(-8) scale(0.76)"/>
+          <use href="#cpaGem" transform="translate(42) rotate(6) scale(0.76)"/>
+          <use href="#cpaGem" transform="translate(76) rotate(-4) scale(0.76)"/>
         </g>
-        <text x="430" y="515" text-anchor="middle">POORLY CRYSTALLINE</text>
+        <use href="#cpaBlobP" transform="translate(1300,600) rotate(25) scale(2.2)"
+             fill="url(#cpaSolidG)" stroke="#8E93E8" stroke-width="0.8"/>
+        <text class="lbl" x="1238" y="700" text-anchor="middle">Amorphous solid</text>
+        <text class="dim" x="1400" y="900" text-anchor="middle">Polymers</text>
 
-        <!-- ===== 5. nanocrystals: the same block the solid is built from ===== -->
-        <g transform="translate(430,585)"><use href="#cpaBlock"/></g>
-        <text x="430" y="635" text-anchor="middle">NANOCRYSTALS</text>
-
-        <!-- ===== assembly: two blocks closing, the right one still off-register ===== -->
-        <g transform="translate(766,345)"><use href="#cpaBlock"/></g>
-        <g transform="translate(822,337) rotate(13)"><use href="#cpaBlock"/></g>
-        <path d="M792,352 C800,357 806,357 812,354" fill="none" stroke="#F0724A"
-              stroke-width="1.3" stroke-dasharray="3 3" opacity="0.85"/>
-        <path d="M836,300 A26,26 0 0 1 851,320" fill="none" stroke="#F0724A"
-              stroke-width="1.3" opacity="0.85" marker-end="url(#cpaArrow)"/>
-        <text class="acc" x="790" y="415" text-anchor="middle">ORIENTED ATTACHMENT</text>
-
-        <!-- ===== the solid: one crystal made of aligned blocks, flaws kept ===== -->
-        <g transform="translate(1078,345)">
-          <use href="#cpaBlock" x="0" y="0"/>
-          <use href="#cpaBlock" x="-43.3" y="0"/>
-          <use href="#cpaBlock" x="43.3" y="0"/>
-          <use href="#cpaBlock" x="-21.65" y="-37.5"/>
-          <g transform="translate(21.65,-37.5) rotate(6)"><use href="#cpaBlock"/></g>
-          <use href="#cpaBlock" x="-21.65" y="37.5"/>
-          <use href="#cpaBlock" x="21.65" y="37.5"/>
-          <!-- a pore left behind at a triple junction, the flaw the caption
-               promises: the product remembers how it was assembled -->
-          <circle cx="0" cy="-37.5" r="5.2" fill="#080C15" stroke="#F0724A"
-                  stroke-width="1.1" opacity="0.9"/>
+        <!-- ================= destination ================= -->
+        <circle cx="1815" cy="950" r="145" fill="url(#cpaGlow)"/>
+        <g transform="translate(1815,950)">
+          <path d="M0,-120 L82,0 L0,120 L-82,0 Z" fill="url(#cpaBigGemG)"
+                stroke="#AFEcFB" stroke-width="2.4" stroke-linejoin="round"/>
+          <path d="M0,-120 L-26,8 L0,120" fill="none" stroke="#0E3550"
+                stroke-width="1.8" opacity="0.55"/>
+          <path d="M-26,8 L82,0" fill="none" stroke="#DFF6FF"
+                stroke-width="1.2" opacity="0.4"/>
         </g>
-        <text class="lbl" x="1078" y="440" text-anchor="middle">BULK CRYSTAL</text>
-        <text x="1078" y="462" text-anchor="middle">BUILT OF ALIGNED BLOCKS</text>
+        <text class="acc" x="1815" y="1114" text-anchor="middle">Bulk crystal</text>
 
-        <text x="700" y="750" text-anchor="middle">CLASSICAL ROUTE &#183; MONOMER BY MONOMER</text>
+        <!-- ================= progress ================= -->
+        <line x1="470" y1="1055" x2="1580" y2="1055" stroke="url(#cpaArcG)"
+              stroke-width="8" marker-end="url(#cpaArrowBig)" opacity="0.9"/>
+        <text class="lbl" x="1015" y="1108" text-anchor="middle">Progress</text>
 
-        <!-- ===== the ions. Two per track, half a cycle apart. ===== -->
-        <g class="cpa-dot" opacity="0"><animateMotion dur="4.8s" begin="0s" repeatCount="indefinite"><mpath href="#cpaA1"/></animateMotion><animate attributeName="opacity" dur="4.8s" begin="0s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
-        <g class="cpa-dot" opacity="0"><animateMotion dur="4.8s" begin="2.4s" repeatCount="indefinite"><mpath href="#cpaA1"/></animateMotion><animate attributeName="opacity" dur="4.8s" begin="2.4s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
-        <g class="cpa-dot" opacity="0"><animateMotion dur="4.2s" begin="0.5s" repeatCount="indefinite"><mpath href="#cpaA2"/></animateMotion><animate attributeName="opacity" dur="4.2s" begin="0.5s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
-        <g class="cpa-dot" opacity="0"><animateMotion dur="4.2s" begin="2.6s" repeatCount="indefinite"><mpath href="#cpaA2"/></animateMotion><animate attributeName="opacity" dur="4.2s" begin="2.6s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
-        <g class="cpa-dot" opacity="0"><animateMotion dur="3.6s" begin="0.2s" repeatCount="indefinite"><mpath href="#cpaA3"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="0.2s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
-        <g class="cpa-dot" opacity="0"><animateMotion dur="3.6s" begin="2s" repeatCount="indefinite"><mpath href="#cpaA3"/></animateMotion><animate attributeName="opacity" dur="3.6s" begin="2s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
-        <g class="cpa-dot" opacity="0"><animateMotion dur="4.2s" begin="0.9s" repeatCount="indefinite"><mpath href="#cpaA4"/></animateMotion><animate attributeName="opacity" dur="4.2s" begin="0.9s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
-        <g class="cpa-dot" opacity="0"><animateMotion dur="4.2s" begin="3s" repeatCount="indefinite"><mpath href="#cpaA4"/></animateMotion><animate attributeName="opacity" dur="4.2s" begin="3s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
-        <g class="cpa-dot" opacity="0"><animateMotion dur="4.8s" begin="0.7s" repeatCount="indefinite"><mpath href="#cpaA5"/></animateMotion><animate attributeName="opacity" dur="4.8s" begin="0.7s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
-        <g class="cpa-dot" opacity="0"><animateMotion dur="4.8s" begin="3.1s" repeatCount="indefinite"><mpath href="#cpaA5"/></animateMotion><animate attributeName="opacity" dur="4.8s" begin="3.1s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
-        <g class="cpa-dot" opacity="0"><animateMotion dur="5.6s" begin="1.1s" repeatCount="indefinite"><mpath href="#cpaB1"/></animateMotion><animate attributeName="opacity" dur="5.6s" begin="1.1s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
-        <g class="cpa-dot" opacity="0"><animateMotion dur="5.6s" begin="3.9s" repeatCount="indefinite"><mpath href="#cpaB1"/></animateMotion><animate attributeName="opacity" dur="5.6s" begin="3.9s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
-        <g class="cpa-dot" opacity="0"><animateMotion dur="5.2s" begin="0.4s" repeatCount="indefinite"><mpath href="#cpaB2"/></animateMotion><animate attributeName="opacity" dur="5.2s" begin="0.4s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
-        <g class="cpa-dot" opacity="0"><animateMotion dur="5.2s" begin="3s" repeatCount="indefinite"><mpath href="#cpaB2"/></animateMotion><animate attributeName="opacity" dur="5.2s" begin="3s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
-        <g class="cpa-dot" opacity="0"><animateMotion dur="4.4s" begin="1.4s" repeatCount="indefinite"><mpath href="#cpaB3"/></animateMotion><animate attributeName="opacity" dur="4.4s" begin="1.4s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
-        <g class="cpa-dot" opacity="0"><animateMotion dur="4.4s" begin="3.6s" repeatCount="indefinite"><mpath href="#cpaB3"/></animateMotion><animate attributeName="opacity" dur="4.4s" begin="3.6s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
-        <g class="cpa-dot" opacity="0"><animateMotion dur="5.2s" begin="1.8s" repeatCount="indefinite"><mpath href="#cpaB4"/></animateMotion><animate attributeName="opacity" dur="5.2s" begin="1.8s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
-        <g class="cpa-dot" opacity="0"><animateMotion dur="5.2s" begin="4.4s" repeatCount="indefinite"><mpath href="#cpaB4"/></animateMotion><animate attributeName="opacity" dur="5.2s" begin="4.4s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
-        <g class="cpa-dot" opacity="0"><animateMotion dur="5.6s" begin="2.2s" repeatCount="indefinite"><mpath href="#cpaB5"/></animateMotion><animate attributeName="opacity" dur="5.6s" begin="2.2s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
-        <g class="cpa-dot" opacity="0"><animateMotion dur="5.6s" begin="5s" repeatCount="indefinite"><mpath href="#cpaB5"/></animateMotion><animate attributeName="opacity" dur="5.6s" begin="5s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
-        <g class="cpa-dot" opacity="0"><animateMotion dur="2.6s" begin="0s" repeatCount="indefinite"><mpath href="#cpaC"/></animateMotion><animate attributeName="opacity" dur="2.6s" begin="0s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
-        <g class="cpa-dot" opacity="0"><animateMotion dur="2.6s" begin="1.3s" repeatCount="indefinite"><mpath href="#cpaC"/></animateMotion><animate attributeName="opacity" dur="2.6s" begin="1.3s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.6" fill="#F2FEFF"/></g>
-        <g class="cpa-dot cpa-dot--dim" opacity="0"><animateMotion dur="7.4s" begin="0.3s" repeatCount="indefinite"><mpath href="#cpaClassic"/></animateMotion><animate attributeName="opacity" dur="7.4s" begin="0.3s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="5.5" fill="url(#cpaHalo)"/><circle r="2" fill="#CFEAF5"/></g>
-        <g class="cpa-dot cpa-dot--dim" opacity="0"><animateMotion dur="7.4s" begin="3.7s" repeatCount="indefinite"><mpath href="#cpaClassic"/></animateMotion><animate attributeName="opacity" dur="7.4s" begin="3.7s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.08;0.88;1"/><circle r="5.5" fill="url(#cpaHalo)"/><circle r="2" fill="#CFEAF5"/></g>
+        <!-- ================= travelling species ================= -->
+        <g class="cpa-dot" opacity="0"><animateMotion dur="15s" begin="0s" repeatCount="indefinite"><mpath href="#cpaR1"/></animateMotion><animate attributeName="opacity" dur="15s" begin="0s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.05;0.92;1"/><circle r="8" fill="url(#cpaHalo)"/><circle r="2.8" fill="#F2FEFF"/></g>
+        <g class="cpa-dot" opacity="0"><animateMotion dur="15s" begin="7.5s" repeatCount="indefinite"><mpath href="#cpaR1"/></animateMotion><animate attributeName="opacity" dur="15s" begin="7.5s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.05;0.92;1"/><circle r="8" fill="url(#cpaHalo)"/><circle r="2.8" fill="#F2FEFF"/></g>
+        <g class="cpa-dot" opacity="0"><animateMotion dur="16s" begin="0.9s" repeatCount="indefinite"><mpath href="#cpaR2"/></animateMotion><animate attributeName="opacity" dur="16s" begin="0.9s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.05;0.92;1"/><circle r="8" fill="url(#cpaHalo)"/><circle r="2.8" fill="#F2FEFF"/></g>
+        <g class="cpa-dot" opacity="0"><animateMotion dur="16s" begin="8.9s" repeatCount="indefinite"><mpath href="#cpaR2"/></animateMotion><animate attributeName="opacity" dur="16s" begin="8.9s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.05;0.92;1"/><circle r="8" fill="url(#cpaHalo)"/><circle r="2.8" fill="#F2FEFF"/></g>
+        <g class="cpa-dot" opacity="0"><animateMotion dur="17s" begin="0.4s" repeatCount="indefinite"><mpath href="#cpaR3"/></animateMotion><animate attributeName="opacity" dur="17s" begin="0.4s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.05;0.92;1"/><circle r="8" fill="url(#cpaHalo)"/><circle r="2.8" fill="#F2FEFF"/></g>
+        <g class="cpa-dot" opacity="0"><animateMotion dur="17s" begin="8.9s" repeatCount="indefinite"><mpath href="#cpaR3"/></animateMotion><animate attributeName="opacity" dur="17s" begin="8.9s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.05;0.92;1"/><circle r="8" fill="url(#cpaHalo)"/><circle r="2.8" fill="#F2FEFF"/></g>
+        <g class="cpa-dot" opacity="0"><animateMotion dur="18s" begin="1.3s" repeatCount="indefinite"><mpath href="#cpaR4"/></animateMotion><animate attributeName="opacity" dur="18s" begin="1.3s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.05;0.92;1"/><circle r="8" fill="url(#cpaHalo)"/><circle r="2.8" fill="#F2FEFF"/></g>
+        <g class="cpa-dot" opacity="0"><animateMotion dur="18s" begin="10.3s" repeatCount="indefinite"><mpath href="#cpaR4"/></animateMotion><animate attributeName="opacity" dur="18s" begin="10.3s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.05;0.92;1"/><circle r="8" fill="url(#cpaHalo)"/><circle r="2.8" fill="#F2FEFF"/></g>
+        <g class="cpa-dot" opacity="0"><animateMotion dur="19s" begin="0.7s" repeatCount="indefinite"><mpath href="#cpaR5"/></animateMotion><animate attributeName="opacity" dur="19s" begin="0.7s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.05;0.92;1"/><circle r="8" fill="url(#cpaHalo)"/><circle r="2.8" fill="#F2FEFF"/></g>
+        <g class="cpa-dot" opacity="0"><animateMotion dur="19s" begin="10.2s" repeatCount="indefinite"><mpath href="#cpaR5"/></animateMotion><animate attributeName="opacity" dur="19s" begin="10.2s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.05;0.92;1"/><circle r="8" fill="url(#cpaHalo)"/><circle r="2.8" fill="#F2FEFF"/></g>
+        <g class="cpa-dot" opacity="0"><animateMotion dur="20s" begin="1.6s" repeatCount="indefinite"><mpath href="#cpaR6"/></animateMotion><animate attributeName="opacity" dur="20s" begin="1.6s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.05;0.92;1"/><circle r="8" fill="url(#cpaHalo)"/><circle r="2.8" fill="#F2FEFF"/></g>
+        <g class="cpa-dot" opacity="0"><animateMotion dur="20s" begin="11.6s" repeatCount="indefinite"><mpath href="#cpaR6"/></animateMotion><animate attributeName="opacity" dur="20s" begin="11.6s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.05;0.92;1"/><circle r="8" fill="url(#cpaHalo)"/><circle r="2.8" fill="#F2FEFF"/></g>
+        <g class="cpa-dot cpa-dot--dim" opacity="0"><animateMotion dur="30s" begin="2s" repeatCount="indefinite"><mpath href="#cpaClassic"/></animateMotion><animate attributeName="opacity" dur="30s" begin="2s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.05;0.92;1"/><circle r="6" fill="url(#cpaHalo)"/><circle r="2.2" fill="#CFEAF5"/></g>
+        <g class="cpa-dot cpa-dot--dim" opacity="0"><animateMotion dur="30s" begin="17s" repeatCount="indefinite"><mpath href="#cpaClassic"/></animateMotion><animate attributeName="opacity" dur="30s" begin="17s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.05;0.92;1"/><circle r="6" fill="url(#cpaHalo)"/><circle r="2.2" fill="#CFEAF5"/></g>
       </svg>
       </div>
       <figcaption id="cpaCap">
