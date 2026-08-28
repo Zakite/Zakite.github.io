@@ -1775,7 +1775,7 @@ footer .signoff em {
         <!-- Quadratic arcs from one origin to one destination; every dot's
              mpath references the very path it is drawn on, so particle and
              rail cannot drift out of register. -->
-        <g fill="none" stroke="url(#cpaArcG)" stroke-width="3" opacity="0.78">
+        <g class="cpa-routes" fill="none" stroke="url(#cpaArcG)" stroke-width="3" opacity="0.78">
           <path id="cpaR1" d="M340,935 Q1010,-572 1745,790" marker-end="url(#cpaArrow)"/>
           <path id="cpaR2" d="M340,935 Q1010,-275 1738,815" marker-end="url(#cpaArrow)"/>
           <path id="cpaR3" d="M340,935 Q1010,40 1731,842" marker-end="url(#cpaArrow)"/>
@@ -1783,6 +1783,9 @@ footer .signoff em {
           <path id="cpaR5" d="M340,935 Q1010,516 1717,893" marker-end="url(#cpaArrow)"/>
           <path id="cpaR6" d="M340,935 Q1010,704 1710,916" marker-end="url(#cpaArrow)"/>
         </g>
+        <!-- everything the routes connect, faded in as one body once the
+             routes have settled -->
+        <g class="cpa-body">
         <path id="cpaClassic" class="track-dash" d="M340,935 Q1010,845 1712,975"
               marker-end="url(#cpaArrow)"/>
 
@@ -1887,6 +1890,7 @@ footer .signoff em {
         <line x1="470" y1="1055" x2="1580" y2="1055" stroke="url(#cpaArcG)"
               stroke-width="8" marker-end="url(#cpaArrowBig)" opacity="0.9"/>
         <text class="lbl" x="1015" y="1108" text-anchor="middle">Progress</text>
+        </g>
 
         <!-- ================= travelling species ================= -->
         <g class="cpa-dot" opacity="0"><animateMotion dur="15s" begin="0s" repeatCount="indefinite"><mpath href="#cpaR1"/></animateMotion><animate attributeName="opacity" dur="15s" begin="0s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.05;0.92;1"/><circle r="8" fill="url(#cpaHalo)"/><circle r="2.8" fill="#F2FEFF"/></g>
@@ -2398,8 +2402,9 @@ footer .signoff em {
    CPA figure. Each species rides its own arc with an SVG <animateMotion> that
    references that arc's own <path>, so particle and line always agree. This is
    native SVG motion (works in every browser), unlike CSS offset-path, which is
-   unreliable on SVG elements. Everything is gated on scroll: the arcs, crystal,
-   ammonite and progress bar draw via CSS on the .cpa-run class, and the SMIL
+   unreliable on SVG elements. Everything is gated on scroll: .cpa-prep (added
+   here, so a no-JS visit sees the finished figure) hides the fan and its body,
+   .cpa-run fades the routes in and then everything they connect, and the SMIL
    particle motion is frozen with pauseAnimations() until the figure is in view.
 -------------------------------------------------------------------------- */
 (function () {
@@ -2407,6 +2412,8 @@ footer .signoff em {
   if (!fig) return;
   var svg = fig.querySelector('svg');
 
+  // hide for the entrance -- only from script, never from static CSS
+  fig.classList.add('cpa-prep');
   // freeze the particle motion until the figure is scrolled into view
   try { svg.pauseAnimations(); } catch (e) {}
 
