@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Paragenesis mix · Zak Jibrin</title>
+<title>Breakdown · Zak Jibrin</title>
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#10161E">
 <style>
@@ -47,6 +47,12 @@
   #msg { margin-top: 1rem; color: var(--warn); font-size: 0.9rem; }
   #msg[hidden] { display: none; }
   #msg code { font-family: var(--mono); font-size: 0.82rem; }
+  .all-cta { text-align: center; margin: 2rem 0 0; }
+  .big-btn { display: inline-block; font-family: var(--sans); font-size: 1.3rem; font-weight: 700;
+    color: var(--bg); background: var(--accent); padding: 1rem 2.4rem; border-radius: 10px;
+    text-decoration: none; letter-spacing: 0.01em; transition: transform 0.15s ease, filter 0.15s ease; }
+  .big-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+  .big-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
   .back { display: inline-block; margin-top: 1.4rem; color: var(--accent); text-decoration: none; font-size: 0.92rem; }
   .back:hover { text-decoration: underline; }
   @media (prefers-reduced-motion: no-preference) {
@@ -56,7 +62,7 @@
 </head>
 <body>
 <main>
-  <h1>Paragenesis mix</h1>
+  <h1>Breakdown</h1>
   <p class="sub">Samples in the main table, grouped by how the mineral formed.</p>
 
   <section class="card" aria-labelledby="pieTitle">
@@ -79,6 +85,8 @@
     </div>
     <p id="msg" hidden></p>
   </section>
+
+  <p class="all-cta"><a class="big-btn" href="https://app.nocodb.com/wuwqmmt6/ph0ijbeh6mm2gzd/m7b3yjpvsekon14/vwoadsvkibt4wq0b/click-me!!!!!!!-all-minerals" target="_blank" rel="noopener">All minerals &rarr;</a></p>
 
   <a class="back" href="/">← back to the homepage</a>
 </main>
