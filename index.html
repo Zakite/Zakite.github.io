@@ -794,6 +794,7 @@ footer {
   color: var(--muted); letter-spacing: 0.05em;
 }
 footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+footer .signoff { margin-left: auto; }   /* stays at the right now the location is gone */
 footer .signoff em {
   font-family: var(--serif); font-style: italic;
   font-size: 0.85rem; color: var(--accent); letter-spacing: 0;
@@ -822,8 +823,8 @@ footer .signoff em {
 }
 .cpa-fig figcaption {
   font-family: var(--serif); font-style: italic;
-  font-size: 0.95rem; color: #93A8BC; line-height: 1.55;
-  max-width: 70ch; margin: 1.25rem auto 1.25rem; text-align: center;
+  font-size: 1.5rem; color: #93A8BC; line-height: 1.55;
+  max-width: 95ch; margin: 1.25rem auto 1.25rem; text-align: center;
 }
 
 /* Crystallization by particle attachment, simulation figure. */
@@ -864,7 +865,7 @@ footer .signoff em {
   display: flex; align-items: baseline; gap: 0.75rem;
   padding: 0.15rem 0.2rem 0.6rem;
   font-family: var(--mono);
-  font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase;
+  font-size: 1.5rem; letter-spacing: 0.18em; text-transform: uppercase;
 }
 .cs-title { color: var(--cs-cyan); font-weight: 500; }
 .cs-sub { color: var(--cs-dim); letter-spacing: 0.12em; }
@@ -880,7 +881,7 @@ footer .signoff em {
   position: absolute; left: 50%; top: 50%;
   translate: -50% -50%;
   font-family: var(--mono);
-  font-size: 0.66rem; letter-spacing: 0.16em; text-transform: uppercase;
+  font-size: 1.45rem; letter-spacing: 0.16em; text-transform: uppercase;
   color: var(--cs-dim);
   padding: 0.55rem 0.9rem;
   border: 1px solid var(--cs-rule);
@@ -894,7 +895,7 @@ footer .signoff em {
 .cs-stages {
   display: flex; flex-wrap: wrap; gap: 0.4rem 0;
   list-style: none; margin: 1rem 0 0; padding: 0;
-  font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.1em;
+  font-family: var(--mono); font-size: 1.45rem; letter-spacing: 0.1em;
   text-transform: uppercase; color: var(--cs-dim);
 }
 .cs-stages li {
@@ -986,7 +987,7 @@ footer .signoff em {
   margin-top: 0.9rem;
 }
 .cs-btn {
-  font-family: var(--mono); font-size: 0.68rem; font-weight: 500;
+  font-family: var(--mono); font-size: 1.5rem; font-weight: 500;
   letter-spacing: 0.15em; text-transform: uppercase;
   color: var(--cs-dim); background: transparent;
   border: 1px solid var(--cs-rule);
@@ -1019,8 +1020,8 @@ footer .signoff em {
 
 .cpa-sim figcaption {
   font-family: var(--serif); font-style: italic;
-  font-size: 0.95rem; color: #93A8BC; line-height: 1.55;
-  max-width: 70ch; margin: 0.9rem auto 1.25rem; text-align: center;
+  font-size: 1.5rem; color: #93A8BC; line-height: 1.55;
+  max-width: 95ch; margin: 0.9rem auto 1.25rem; text-align: center;
 }
 .cpa-sim figcaption em { font-style: normal; color: #BBD3E0; }
 
@@ -1807,13 +1808,12 @@ footer .signoff em {
      everything it is commenting on, so it sits here instead. -->
 <aside class="coda">
   <div class="wrap">
-    <p class="coda-quote">&ldquo;Life leaves its fingerprint in stone we just have to learn how to read it&rdquo;<span class="attrib">&ndash; Someone Probably</span></p>
+    <p class="coda-quote">&ldquo;Life leaves its fingerprint in stone<br>we just have to learn how to read it&rdquo;<span class="attrib">&ndash; Someone Probably</span></p>
   </div>
 </aside>
 
 <footer>
   <div class="wrap">
-    <span>Rutgers University &middot; Piscataway, NJ</span>
     <span class="signoff">Last updated 2026</span>
   </div>
 </footer>
@@ -3357,7 +3357,7 @@ footer .signoff em {
     ctx.moveTo(bx - 5 * dpr, yTop + gap); ctx.lineTo(bx + 5 * dpr, yTop + gap);
     ctx.stroke();
     ctx.fillStyle = 'rgba(236,250,255,0.95)';
-    ctx.font = (8.4 * dpr) + 'px ui-monospace, monospace';
+    ctx.font = (12 * dpr) + 'px ui-monospace, monospace';
     ctx.textBaseline = 'middle';
     ctx.textAlign = 'left';
     ctx.fillText('d ~ 0.5 um', bx + 9 * dpr, yTop + gap / 2);
@@ -3415,7 +3415,7 @@ footer .signoff em {
     }
 
     ctx.fillStyle = 'rgba(236,250,255,0.95)';
-    ctx.font = (8.4 * dpr) + 'px ui-monospace, monospace';
+    ctx.font = (12 * dpr) + 'px ui-monospace, monospace';
     ctx.textAlign = 'left';
     ctx.fillText('2d = mλ  ->  reflections in step', w * 0.055, h * 0.90);
     ctx.fillText('one colour reinforced', w * 0.055, h * 0.90 + 13 * dpr);
@@ -3646,7 +3646,7 @@ footer .signoff em {
     ctx.moveTo(bx + barW, by - 3 * dpr); ctx.lineTo(bx + barW, by + 3 * dpr);
     ctx.stroke();
     ctx.fillStyle = C.rule;
-    ctx.font = (7.5 * dpr) + 'px ui-monospace, monospace';
+    ctx.font = (11 * dpr) + 'px ui-monospace, monospace';
     ctx.textBaseline = 'alphabetic';
     ctx.fillText(label, bx, by - 5 * dpr);
   }
@@ -3670,7 +3670,7 @@ footer .signoff em {
     ctx.moveTo(bx + barW, by - 3 * dpr); ctx.lineTo(bx + barW, by + 3 * dpr);
     ctx.stroke();
     ctx.fillStyle = C.rule;
-    ctx.font = (7.5 * dpr) + 'px ui-monospace, monospace';
+    ctx.font = (11 * dpr) + 'px ui-monospace, monospace';
     ctx.textBaseline = 'alphabetic';
     ctx.fillText(barLabel, bx, by - 5 * dpr);
   }
