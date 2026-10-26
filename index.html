@@ -847,9 +847,9 @@ footer .signoff em {
   padding: 0.6rem;
 }
 /* Both CPA panels were calibrated by eye to sit at 33% overall, so they
-   carry whatever the page zoom above does not: 0.33 / 0.60 = 0.55. That 33%
-   is the fixed quantity -- if the page factor changes again, this one has to
-   be recomputed against it or the panels drift off their calibration.
+   carry whatever the page zoom above does not: 0.55. The page zoom now follows
+   the window width, and this one is relative to it, so the panels keep their
+   proportion to the page at every width.
    Everything inside them -- canvas, diagram, mono labels, captions --
    shrinks together. width: 100% is what lets the zoom actually narrow the
    boxes: left at auto they would stretch back out to refill the column at
@@ -1170,6 +1170,22 @@ footer .signoff em {
 }
 .elsewhere-db a:hover, .elsewhere-db a:focus-visible { background: rgba(63, 217, 203, 0.22); outline: none; }
 </style>
+<script>
+  /* The page is authored at one size and scaled as a whole, so it keeps the same
+     proportions on any screen: its zoom follows the window width. 2560px is the
+     width it was tuned at (a 1440p monitor at 100%), where the zoom is 0.6. Phones
+     under 901px keep their own sizes, as before. */
+  (function () {
+    var REF = 2560, BASE = 0.6, MIN = 0.42, MAX = 0.75, root = document.documentElement;
+    function fit() {
+      var w = window.innerWidth;
+      if (w < 901) { root.style.zoom = ''; return; }
+      root.style.zoom = Math.max(MIN, Math.min(MAX, BASE * w / REF)).toFixed(3);
+    }
+    fit();
+    window.addEventListener('resize', fit);
+  })();
+</script>
 </head>
 <body>
 <a class="skip" href="#about">Skip to content</a>
