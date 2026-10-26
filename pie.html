@@ -28,11 +28,10 @@
   @media (max-width: 600px) { .row { grid-template-columns: 1fr; justify-items: center; } }
   svg#pie { width: 100%; max-width: 280px; height: auto; display: block; }
   svg#pie text { font-family: var(--mono); fill: var(--ink); }
-  /* slice labels: the site's sans, semibold white, with a fine soft halo that keeps
-     them legible on the lighter slices without looking outlined */
-  svg#pie text.slice-label { font-family: var(--sans); fill: #ffffff; font-weight: 600; letter-spacing: 0.01em;
-    paint-order: stroke; stroke: rgba(8, 12, 18, 0.5); stroke-width: 2.4px; stroke-linejoin: round;
-    text-anchor: middle; dominant-baseline: central; }
+  /* slice labels: the site's sans, bold white, set crisp with no halo or outline */
+  svg#pie text.slice-label { font-family: var(--sans); fill: #ffffff; font-weight: 700; letter-spacing: 0.01em;
+    text-anchor: middle; dominant-baseline: central;
+    text-rendering: geometricPrecision; -webkit-font-smoothing: antialiased; }
   ul.legend { list-style: none; margin: 0; padding: 0; }
   ul.legend li { display: grid; grid-template-columns: 14px 1fr auto auto; gap: 0.6rem; align-items: center; padding: 0.35rem 0; border-bottom: 1px solid var(--rule); }
   ul.legend li:last-child { border-bottom: 0; }

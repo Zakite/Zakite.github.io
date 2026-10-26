@@ -1155,6 +1155,15 @@ footer .signoff em {
   .spin, .glow { animation: none; }
   .fibril, .badge, .plate { transition: none; }
 }
+/* the biomineral database link: small, cyan, set off with a fine cyan frame */
+.elsewhere-db { margin: 1.6rem 0 0; text-align: center; }
+.elsewhere-db a {
+  display: inline-block; font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.04em;
+  color: var(--accent); text-decoration: none;
+  background: rgba(63, 217, 203, 0.12); border: 1px solid rgba(63, 217, 203, 0.45);
+  border-radius: 4px; padding: 0.3rem 0.7rem;
+}
+.elsewhere-db a:hover, .elsewhere-db a:focus-visible { background: rgba(63, 217, 203, 0.22); outline: none; }
 </style>
 </head>
 <body>
@@ -1789,6 +1798,7 @@ footer .signoff em {
         <span class="link-text">GitHub <span class="arrow">&rarr;</span></span>
       </a>
     </div>
+    <p class="elsewhere-db"><a href="https://app.nocodb.com/wuwqmmt6/home" target="_blank" rel="noopener">biomineral database</a></p>
   </div>
 </section>
 
@@ -1804,7 +1814,7 @@ footer .signoff em {
 <footer>
   <div class="wrap">
     <span>Rutgers University &middot; Piscataway, NJ</span>
-    <span class="signoff">Set in <em>Newsreader</em>, <em>Lora</em>, and <em>Inter</em>. Last updated 2026.</span>
+    <span class="signoff">Last updated 2026</span>
   </div>
 </footer>
 
