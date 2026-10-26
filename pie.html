@@ -28,8 +28,11 @@
   @media (max-width: 600px) { .row { grid-template-columns: 1fr; justify-items: center; } }
   svg#pie { width: 100%; max-width: 280px; height: auto; display: block; }
   svg#pie text { font-family: var(--mono); fill: var(--ink); }
-  /* slice labels sit on the coloured ring, so they are dark for contrast */
-  svg#pie text.slice-label { fill: #0b1117; font-size: 9.5px; font-weight: 700; letter-spacing: 0.04em; }
+  /* slice labels: the site's sans, semibold white, with a fine soft halo that keeps
+     them legible on the lighter slices without looking outlined */
+  svg#pie text.slice-label { font-family: var(--sans); fill: #ffffff; font-weight: 600; letter-spacing: 0.01em;
+    paint-order: stroke; stroke: rgba(8, 12, 18, 0.5); stroke-width: 2.4px; stroke-linejoin: round;
+    text-anchor: middle; dominant-baseline: central; }
   ul.legend { list-style: none; margin: 0; padding: 0; }
   ul.legend li { display: grid; grid-template-columns: 14px 1fr auto auto; gap: 0.6rem; align-items: center; padding: 0.35rem 0; border-bottom: 1px solid var(--rule); }
   ul.legend li:last-child { border-bottom: 0; }
@@ -64,7 +67,7 @@
         <title id="pieLabel">Pie chart of samples by paragenesis</title>
         <g id="slices"></g>
         <g id="labels"></g>
-        <circle cx="120" cy="120" r="54" fill="var(--card)"></circle>
+        <circle cx="120" cy="120" r="40" fill="var(--card)"></circle>
         <text id="ctrN" x="120" y="122" text-anchor="middle" font-size="26">0</text>
         <text id="ctrL" x="120" y="142" text-anchor="middle" font-size="9" fill="var(--muted)">samples</text>
       </svg>
@@ -95,19 +98,21 @@
     ["BCM", "biologically controlled", "#4fa3e8"],
     ["BIM", "biologically induced", "#6cc070"],
     ["Geologic", "geologic", "#a1887f"],
-    ["Geo_Semi_bio", "geologic, partly biological", "#f9c74f"],
+    ["Geo_Semi_bio", "geologic, semi biological", "#f9c74f"],
     ["synthetic", "synthetic", "#c792ea"],
   ];
   const BLANK = ["(blank)", "no paragenesis recorded", "#6b7a80"];
+  const SHORT = { BCM: "BCM", BIM: "BIM", Geologic: "Geo", Geo_Semi_bio: "Geo_SB", synthetic: "Syn" };
   const FALLBACK = "#8fa5b8";
 
   const $ = id => document.getElementById(id);
   const SVGNS = "http://www.w3.org/2000/svg";
 
   function meta(key) {
-    if (key === BLANK[0]) return { key, gloss: BLANK[1], color: BLANK[2] };
+    if (key === BLANK[0]) return { key, short: key, gloss: BLANK[1], color: BLANK[2] };
     const hit = ORDER.find(o => o[0] === key);
-    return hit ? { key, gloss: hit[1], color: hit[2] } : { key, gloss: "", color: FALLBACK };
+    return hit ? { key, short: SHORT[key] || key, gloss: hit[1], color: hit[2] }
+               : { key, short: key, gloss: "", color: FALLBACK };
   }
 
   // counts -> an ordered list of [meta, n]; known categories first, then any
@@ -153,16 +158,13 @@
       t.textContent = `${m.key}: ${n} (${Math.round(frac * 100)}%)`;
       el.appendChild(t);
       g.appendChild(el);
-      // a curved label along the coloured ring, reading upright: clockwise
-      // across the top, reversed across the bottom so it never sits upside down
+      // a curved label along the coloured ring. Every label runs clockwise, so its
+      // top points outward throughout the ring, the same way for each slice
       if (frac >= 0.05 && frac < 0.9999) {
-        const r = 60, a1 = a + frac * 2 * Math.PI, big = frac > 0.5 ? 1 : 0;
+        const r = 53, a1 = a + frac * 2 * Math.PI, big = frac > 0.5 ? 1 : 0;
         const p0 = [120 + r * Math.cos(a), 120 + r * Math.sin(a)];
         const p1 = [120 + r * Math.cos(a1), 120 + r * Math.sin(a1)];
-        const bottom = Math.sin(a + frac * Math.PI) > 0;
-        const d = bottom
-          ? `M${p1[0].toFixed(2)} ${p1[1].toFixed(2)} A${r} ${r} 0 ${big} 0 ${p0[0].toFixed(2)} ${p0[1].toFixed(2)}`
-          : `M${p0[0].toFixed(2)} ${p0[1].toFixed(2)} A${r} ${r} 0 ${big} 1 ${p1[0].toFixed(2)} ${p1[1].toFixed(2)}`;
+        const d = `M${p0[0].toFixed(2)} ${p0[1].toFixed(2)} A${r} ${r} 0 ${big} 1 ${p1[0].toFixed(2)} ${p1[1].toFixed(2)}`;
         const id = "lbl-" + m.key.replace(/[^A-Za-z0-9]/g, "_");
         const arcPath = document.createElementNS(SVGNS, "path");
         arcPath.setAttribute("id", id);
@@ -171,11 +173,17 @@
         labels.appendChild(arcPath);
         const txt = document.createElementNS(SVGNS, "text");
         txt.setAttribute("class", "slice-label");
+        txt.setAttribute("text-anchor", "middle");
+        txt.setAttribute("dominant-baseline", "central");
         const tp = document.createElementNS(SVGNS, "textPath");
         tp.setAttribute("href", "#" + id);
         tp.setAttribute("startOffset", "50%");
         tp.setAttribute("text-anchor", "middle");
-        tp.textContent = m.key;
+        const label = m.short;
+        tp.textContent = label;
+        // one size for every label where the slice allows, smaller only where it must be
+        const arcLen = r * frac * 2 * Math.PI;
+        txt.style.fontSize = Math.max(7, Math.min(11, arcLen / (label.length * 0.6))) + "px";
         txt.appendChild(tp);
         labels.appendChild(txt);
       }
@@ -189,7 +197,7 @@
       sw.style.background = m.color;
       const name = document.createElement("span");
       name.className = "name";
-      name.textContent = m.key;
+      name.textContent = m.short;
       const gloss = document.createElement("span");
       gloss.className = "gloss";
       gloss.textContent = m.gloss ? ` · ${m.gloss}` : "";
