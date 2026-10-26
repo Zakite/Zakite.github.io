@@ -1,0 +1,11 @@
+{
+  "updated": "2026-10-26T20:40:19Z",
+  "source": "https://app.nocodb.com/api/v2/public/shared-view/da706988-efef-4f95-939d-50d8a6f938ca/rows",
+  "total": 472,
+  "counts": {
+    "BCM": 259,
+    "Geologic": 110,
+    "synthetic": 66,
+    "BIM": 37
+  }
+}

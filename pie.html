@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paragenesis mix · Zak Jibrin</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#10161E">
+<style>
+  :root {
+    --bg: #10161E; --card: #161E29; --ink: #DCE8F0; --muted: #8FA5B8; --rule: #26323F;
+    --accent: #3FD9CB; --warn: #E9B872;
+    --serif: 'Newsreader', Georgia, serif;
+    --sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --mono: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) { --bg: #10161E; }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); }
+  body { min-height: 100vh; font-family: var(--sans); line-height: 1.5; padding: 2.5rem 1rem; }
+  main { max-width: 760px; margin: 0 auto; }
+  h1 { font-family: var(--serif); font-weight: 400; font-size: 2rem; margin: 0 0 0.3rem; }
+  .sub { color: var(--muted); margin: 0 0 1.5rem; }
+  .card { background: var(--card); border: 1px solid var(--rule); border-radius: 8px; padding: 1.4rem; }
+  .row { display: grid; grid-template-columns: minmax(200px, 280px) 1fr; gap: 1.6rem; align-items: center; }
+  @media (max-width: 600px) { .row { grid-template-columns: 1fr; justify-items: center; } }
+  svg#pie { width: 100%; max-width: 280px; height: auto; display: block; }
+  svg#pie text { font-family: var(--mono); fill: var(--ink); }
+  /* slice labels sit on the coloured ring, so they are dark for contrast */
+  svg#pie text.slice-label { fill: #0b1117; font-size: 9.5px; font-weight: 700; letter-spacing: 0.04em; }
+  ul.legend { list-style: none; margin: 0; padding: 0; }
+  ul.legend li { display: grid; grid-template-columns: 14px 1fr auto auto; gap: 0.6rem; align-items: center; padding: 0.35rem 0; border-bottom: 1px solid var(--rule); }
+  ul.legend li:last-child { border-bottom: 0; }
+  .sw { width: 14px; height: 14px; border-radius: 3px; }
+  .name { font-family: var(--mono); font-size: 0.92rem; }
+  .gloss { color: var(--muted); font-size: 0.82rem; }
+  .n { font-family: var(--mono); }
+  .pct { font-family: var(--mono); color: var(--muted); min-width: 4.2rem; text-align: right; }
+  .meta { margin-top: 1.1rem; color: var(--muted); font-size: 0.9rem; display: flex; flex-wrap: wrap; gap: 0.6rem 1rem; align-items: center; justify-content: space-between; }
+  button { font: inherit; font-family: var(--mono); font-size: 0.85rem; color: var(--bg); background: var(--accent); border: 0; border-radius: 6px; padding: 0.45rem 0.9rem; cursor: pointer; }
+  button:disabled { opacity: 0.55; cursor: progress; }
+  button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  #msg { margin-top: 1rem; color: var(--warn); font-size: 0.9rem; }
+  #msg[hidden] { display: none; }
+  #msg code { font-family: var(--mono); font-size: 0.82rem; }
+  .back { display: inline-block; margin-top: 1.4rem; color: var(--accent); text-decoration: none; font-size: 0.92rem; }
+  .back:hover { text-decoration: underline; }
+  @media (prefers-reduced-motion: no-preference) {
+    svg#pie path { transition: opacity 0.2s ease; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>Paragenesis mix</h1>
+  <p class="sub">Samples in the main table, grouped by how the mineral formed.</p>
+
+  <section class="card" aria-labelledby="pieTitle">
+    <h2 id="pieTitle" class="sr" style="position:absolute;left:-9999px">Samples by paragenesis</h2>
+    <div class="row">
+      <svg id="pie" viewBox="0 0 240 240" role="img" aria-labelledby="pieLabel">
+        <title id="pieLabel">Pie chart of samples by paragenesis</title>
+        <g id="slices"></g>
+        <g id="labels"></g>
+        <circle cx="120" cy="120" r="54" fill="var(--card)"></circle>
+        <text id="ctrN" x="120" y="122" text-anchor="middle" font-size="26">0</text>
+        <text id="ctrL" x="120" y="142" text-anchor="middle" font-size="9" fill="var(--muted)">samples</text>
+      </svg>
+      <ul class="legend" id="legend"></ul>
+    </div>
+
+    <div class="meta">
+      <span id="stamp">loading…</span>
+      <button id="refresh" type="button">Refresh now</button>
+    </div>
+    <p id="msg" hidden></p>
+  </section>
+
+  <a class="back" href="/">← back to the homepage</a>
+</main>
+
+<script>
+(() => {
+  // The public NocoDB shared view behind "Paragenesis (pie source)". Reading it
+  // is public; the counts are also kept in counts.json, refreshed daily by
+  // GitHub Actions (fetch_counts.py), so the page works even when NocoDB
+  // refuses a browser read.
+  const SOURCE = "da706988-efef-4f95-939d-50d8a6f938ca";
+  const BASE = "https://app.nocodb.com";
+  const BASES = [`${BASE}/api/v2/public/shared-view`, `${BASE}/api/v1/db/public/shared-view`];
+
+  const ORDER = [
+    ["BCM", "biologically controlled", "#4fa3e8"],
+    ["BIM", "biologically induced", "#6cc070"],
+    ["Geologic", "geologic", "#a1887f"],
+    ["Geo_Semi_bio", "geologic, partly biological", "#f9c74f"],
+    ["synthetic", "synthetic", "#c792ea"],
+  ];
+  const BLANK = ["(blank)", "no paragenesis recorded", "#6b7a80"];
+  const FALLBACK = "#8fa5b8";
+
+  const $ = id => document.getElementById(id);
+  const SVGNS = "http://www.w3.org/2000/svg";
+
+  function meta(key) {
+    if (key === BLANK[0]) return { key, gloss: BLANK[1], color: BLANK[2] };
+    const hit = ORDER.find(o => o[0] === key);
+    return hit ? { key, gloss: hit[1], color: hit[2] } : { key, gloss: "", color: FALLBACK };
+  }
+
+  // counts -> an ordered list of [meta, n]; known categories first, then any
+  // new ones NocoDB has gained, then blanks
+  function ordered(counts) {
+    const keys = [...ORDER.map(o => o[0]), ...Object.keys(counts).filter(k => !ORDER.some(o => o[0] === k) && k !== BLANK[0])];
+    if (counts[BLANK[0]]) keys.push(BLANK[0]);
+    return keys.filter(k => (counts[k] || 0) > 0 || ORDER.some(o => o[0] === k))
+               .map(k => [meta(k), counts[k] || 0]);
+  }
+
+  function arc(cx, cy, r, a0, a1) {
+    const p = a => [cx + r * Math.cos(a), cy + r * Math.sin(a)];
+    const [x0, y0] = p(a0), [x1, y1] = p(a1);
+    const big = a1 - a0 > Math.PI ? 1 : 0;
+    return `M${cx} ${cy} L${x0.toFixed(2)} ${y0.toFixed(2)} A${r} ${r} 0 ${big} 1 ${x1.toFixed(2)} ${y1.toFixed(2)} Z`;
+  }
+
+  function draw(counts, when, how) {
+    const rows = ordered(counts);
+    const total = rows.reduce((s, [, n]) => s + n, 0);
+    const g = $("slices");
+    g.replaceChildren();
+    const labels = $("labels");
+    labels.replaceChildren();
+    const legend = $("legend");
+    legend.replaceChildren();
+
+    let a = -Math.PI / 2;
+    for (const [m, n] of rows) {
+      if (!n) continue;
+      const frac = n / total;
+      const el = document.createElementNS(SVGNS, "path");
+      if (frac >= 0.9999) {
+        el.setAttribute("d", `M120 66 A54 54 0 1 1 119.99 66 Z`);
+        el.setAttribute("r", "66");
+      } else {
+        el.setAttribute("d", arc(120, 120, 66, a, a + frac * 2 * Math.PI));
+      }
+      el.setAttribute("fill", m.color);
+      el.setAttribute("aria-label", `${m.key}: ${n}`);
+      const t = document.createElementNS(SVGNS, "title");
+      t.textContent = `${m.key}: ${n} (${Math.round(frac * 100)}%)`;
+      el.appendChild(t);
+      g.appendChild(el);
+      // a curved label along the coloured ring, reading upright: clockwise
+      // across the top, reversed across the bottom so it never sits upside down
+      if (frac >= 0.05 && frac < 0.9999) {
+        const r = 60, a1 = a + frac * 2 * Math.PI, big = frac > 0.5 ? 1 : 0;
+        const p0 = [120 + r * Math.cos(a), 120 + r * Math.sin(a)];
+        const p1 = [120 + r * Math.cos(a1), 120 + r * Math.sin(a1)];
+        const bottom = Math.sin(a + frac * Math.PI) > 0;
+        const d = bottom
+          ? `M${p1[0].toFixed(2)} ${p1[1].toFixed(2)} A${r} ${r} 0 ${big} 0 ${p0[0].toFixed(2)} ${p0[1].toFixed(2)}`
+          : `M${p0[0].toFixed(2)} ${p0[1].toFixed(2)} A${r} ${r} 0 ${big} 1 ${p1[0].toFixed(2)} ${p1[1].toFixed(2)}`;
+        const id = "lbl-" + m.key.replace(/[^A-Za-z0-9]/g, "_");
+        const arcPath = document.createElementNS(SVGNS, "path");
+        arcPath.setAttribute("id", id);
+        arcPath.setAttribute("d", d);
+        arcPath.setAttribute("fill", "none");
+        labels.appendChild(arcPath);
+        const txt = document.createElementNS(SVGNS, "text");
+        txt.setAttribute("class", "slice-label");
+        const tp = document.createElementNS(SVGNS, "textPath");
+        tp.setAttribute("href", "#" + id);
+        tp.setAttribute("startOffset", "50%");
+        tp.setAttribute("text-anchor", "middle");
+        tp.textContent = m.key;
+        txt.appendChild(tp);
+        labels.appendChild(txt);
+      }
+      a += frac * 2 * Math.PI;
+    }
+
+    for (const [m, n] of rows) {
+      const li = document.createElement("li");
+      const sw = document.createElement("span");
+      sw.className = "sw";
+      sw.style.background = m.color;
+      const name = document.createElement("span");
+      name.className = "name";
+      name.textContent = m.key;
+      const gloss = document.createElement("span");
+      gloss.className = "gloss";
+      gloss.textContent = m.gloss ? ` · ${m.gloss}` : "";
+      name.appendChild(gloss);
+      const cnt = document.createElement("span");
+      cnt.className = "n";
+      cnt.textContent = n;
+      const pct = document.createElement("span");
+      pct.className = "pct";
+      pct.textContent = total ? `${Math.round((100 * n) / total)}%` : "";
+      li.append(sw, name, cnt, pct);
+      legend.appendChild(li);
+    }
+
+    $("ctrN").textContent = total;
+    $("stamp").textContent = `${total} samples · ${how} · ${when}`;
+  }
+
+  function fmt(iso) {
+    const d = new Date(iso);
+    return isNaN(d) ? iso : d.toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
+  }
+
+  function say(html) { const m = $("msg"); m.innerHTML = html; m.hidden = !html; }
+
+  async function fromSnapshot() {
+    const r = await fetch("counts.json", { cache: "no-store" });
+    if (!r.ok) throw new Error(`counts.json ${r.status}`);
+    return r.json();
+  }
+
+  // the same paged read as the NocoDB view itself, straight from the browser
+  async function fromNocoDB() {
+    let lastErr = null;
+    for (const base of BASES) {
+      try {
+        const rows = [];
+        for (let off = 0, n = 0; n < 40; n++) {
+          const r = await fetch(`${base}/${SOURCE}/rows?limit=1000&offset=${off}`, { headers: { accept: "application/json" } });
+          if (!r.ok) throw new Error(`${r.status} from NocoDB`);
+          const d = await r.json();
+          const list = d.list || [];
+          rows.push(...list);
+          if (!list.length || (d.pageInfo && d.pageInfo.isLastPage)) break;
+          off += list.length;
+        }
+        return rows;
+      } catch (e) { lastErr = e; }
+    }
+    throw lastErr || new Error("no NocoDB base answered");
+  }
+
+  function tally(rows) {
+    const counts = {};
+    let blank = 0;
+    for (const r of rows) {
+      const k = (r.Paragenesis || "").trim();
+      if (!k) blank++;
+      else counts[k] = (counts[k] || 0) + 1;
+    }
+    if (blank) counts[BLANK[0]] = blank;
+    return counts;
+  }
+
+  async function showSnapshot() {
+    try {
+      const d = await fromSnapshot();
+      draw(d.counts || {}, `updated ${fmt(d.updated)}`, "daily snapshot");
+      say("");
+    } catch (e) {
+      $("stamp").textContent = "no data yet";
+      say(`Could not read <code>counts.json</code> (${e.message}). The first run of the <em>pie counts</em> workflow writes it.`);
+    }
+  }
+
+  async function refreshLive() {
+    const btn = $("refresh");
+    btn.disabled = true;
+    $("stamp").textContent = "reading NocoDB…";
+    try {
+      const rows = await fromNocoDB();
+      draw(tally(rows), `read ${fmt(new Date().toISOString())}`, "live from NocoDB");
+      say("");
+    } catch (e) {
+      say(`Live read failed (${e.message}). Showing the last daily snapshot instead.`);
+      await showSnapshot();
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  $("refresh").addEventListener("click", refreshLive);
+  showSnapshot();
+})();
+</script>
+</body>
+</html>

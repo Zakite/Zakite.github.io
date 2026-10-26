@@ -1,0 +1,41 @@
+name: pie counts
+
+# Refreshes counts.json, which pie.html draws from, once a day. Runs on a
+# schedule and on demand (Actions tab -> pie counts -> Run workflow).
+
+on:
+  schedule:
+    - cron: "17 6 * * *"   # 06:17 UTC daily
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pie-counts
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch counts from NocoDB
+        run: python fetch_counts.py
+
+      - name: Commit counts.json if it changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add counts.json
+          if git diff --cached --quiet; then
+            echo "counts unchanged; nothing to commit"
+          else
+            git commit -m "pie: refresh counts"
+            git push
+          fi
