@@ -1660,9 +1660,9 @@ footer .signoff em {
     <figure class="cpa-fig" id="cpaFig" aria-labelledby="cpaCap">
       <!--
         The pathway diagram is the supplied figure itself, shown untouched. The
-        ions are a transparent SVG laid over it: each ion's <mpath> points at a
-        track that was fitted to the bright cyan line in the picture, so the
-        ions ride the lines rather than sitting near them.
+        ions are a transparent SVG laid over it. Each ion moves along a hidden
+        track fitted to the bright cyan line in the picture, and skips across
+        any stretch of its track that runs through a word or a drawing.
       -->
       <div class="cpa-scroll">
         <div class="cpa-stage">
@@ -1688,22 +1688,22 @@ footer .signoff em {
           <path id="tMONO" d="M454.7,916.2 L461.3,914.6 L467.9,917.0 L474.5,919.4 L481.1,921.9 L487.7,924.4 L494.3,927.0 L500.9,926.5 L507.7,924.5 L514.4,922.5 L521.2,920.5 L527.9,918.6 L534.7,916.7 L541.5,914.8 L548.3,912.9 L555.1,911.1 L561.9,909.3 L568.7,907.6 L575.5,905.9 L582.4,904.2 L589.2,902.6 L596.0,901.0 L602.9,899.4 L609.8,897.8 L616.6,896.3 L623.5,894.8 L630.4,893.4 L637.3,892.0 L644.2,890.6 L651.1,889.3 L658.0,888.0 L665.0,887.0 L671.9,886.0 L678.9,885.0 L685.9,884.0 L692.8,882.9 L699.8,881.8 L706.7,880.7 L713.7,879.6 L720.6,878.6 L727.6,877.6 L734.6,876.7 L741.6,876.1 L748.6,875.4 L755.6,874.8 L762.6,874.2 L769.6,873.4 L776.6,872.7 L783.6,871.9 L790.6,871.3 L797.6,870.6 L804.6,870.0 L811.6,869.4 L818.7,868.8 L825.7,868.3 L832.7,867.8 L839.7,867.3 L846.7,866.9 L853.8,866.5 L860.8,866.1 L867.8,865.8 L874.8,865.5 L881.9,865.2 L888.9,864.9 L895.9,864.4 L902.9,864.0 L910.0,863.6 L917.0,863.3 L924.0,863.2 L931.1,863.1 L938.1,863.1 L945.1,863.0 L952.2,863.1 L959.2,863.0 L966.2,862.8 L973.3,862.7 L980.3,862.6 L987.4,862.6 L994.4,862.8 L1001.4,863.0 L1008.5,863.3 L1015.5,863.5 L1022.5,863.6 L1029.6,863.6 L1036.6,863.6 L1043.6,863.6 L1050.7,863.8 L1057.7,864.0 L1064.7,864.3 L1071.8,864.6 L1078.8,864.9 L1085.8,865.3 L1092.8,865.6 L1099.9,866.0 L1106.9,866.3 L1113.9,866.7 L1120.9,867.1 L1128.0,867.5 L1135.0,867.9 L1142.0,868.3 L1149.0,868.8 L1156.1,869.3 L1163.1,869.7 L1170.1,870.2 L1177.1,870.7 L1184.1,871.3 L1191.1,871.9 L1198.1,872.7 L1205.1,873.5 L1212.1,874.3 L1219.1,875.1 L1226.1,875.8 L1233.1,876.4 L1240.1,877.1 L1247.1,877.8 L1254.1,878.7 L1261.1,879.7 L1268.0,880.7 L1275.0,881.7 L1282.0,882.6 L1289.0,883.4 L1295.9,884.3 L1302.9,885.1 L1309.9,886.0 L1316.8,887.1 L1323.8,888.3 L1330.7,889.5 L1337.6,890.9 L1344.5,892.3 L1351.4,893.6 L1358.3,894.9 L1365.2,896.3 L1372.2,897.5 L1379.1,899.0 L1385.9,900.4 L1392.8,902.0 L1399.7,903.4 L1406.6,904.8 L1413.5,906.2 L1420.4,907.6 L1427.3,909.1 L1434.1,910.6 L1441.0,912.1 L1447.8,913.7 L1454.7,915.4 L1461.5,917.2 L1468.2,919.2 L1475.0,921.2 L1481.7,923.3 L1488.4,925.3 L1495.2,927.3 L1501.9,929.3 L1508.7,931.3 L1515.4,933.4 L1522.1,935.4 L1528.9,937.4 L1535.6,939.5 L1542.3,941.7"/>
             </g>
             <!-- ions in transit: two per route, offset half a cycle -->
-          <g class="cpa-dot" opacity="0"><animateMotion dur="19s" begin="0s" repeatCount="indefinite"><mpath href="#tN1"/></animateMotion><animate attributeName="opacity" dur="19s" begin="0s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.06;0.9;1"/><circle r="9" fill="url(#cpaHalo)"/><circle r="3" fill="#F2FEFF"/></g>
-          <g class="cpa-dot" opacity="0"><animateMotion dur="19s" begin="9.5s" repeatCount="indefinite"><mpath href="#tN1"/></animateMotion><animate attributeName="opacity" dur="19s" begin="9.5s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.06;0.9;1"/><circle r="9" fill="url(#cpaHalo)"/><circle r="3" fill="#F2FEFF"/></g>
-          <g class="cpa-dot" opacity="0"><animateMotion dur="20s" begin="3s" repeatCount="indefinite"><mpath href="#tN2"/></animateMotion><animate attributeName="opacity" dur="20s" begin="3s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.06;0.9;1"/><circle r="9" fill="url(#cpaHalo)"/><circle r="3" fill="#F2FEFF"/></g>
-          <g class="cpa-dot" opacity="0"><animateMotion dur="20s" begin="13s" repeatCount="indefinite"><mpath href="#tN2"/></animateMotion><animate attributeName="opacity" dur="20s" begin="13s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.06;0.9;1"/><circle r="9" fill="url(#cpaHalo)"/><circle r="3" fill="#F2FEFF"/></g>
-          <g class="cpa-dot" opacity="0"><animateMotion dur="18s" begin="1.5s" repeatCount="indefinite"><mpath href="#tPC"/></animateMotion><animate attributeName="opacity" dur="18s" begin="1.5s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.06;0.9;1"/><circle r="9" fill="url(#cpaHalo)"/><circle r="3" fill="#F2FEFF"/></g>
-          <g class="cpa-dot" opacity="0"><animateMotion dur="18s" begin="10.5s" repeatCount="indefinite"><mpath href="#tPC"/></animateMotion><animate attributeName="opacity" dur="18s" begin="10.5s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.06;0.9;1"/><circle r="9" fill="url(#cpaHalo)"/><circle r="3" fill="#F2FEFF"/></g>
-          <g class="cpa-dot" opacity="0"><animateMotion dur="17s" begin="5s" repeatCount="indefinite"><mpath href="#tAN"/></animateMotion><animate attributeName="opacity" dur="17s" begin="5s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.06;0.9;1"/><circle r="9" fill="url(#cpaHalo)"/><circle r="3" fill="#F2FEFF"/></g>
-          <g class="cpa-dot" opacity="0"><animateMotion dur="17s" begin="13.5s" repeatCount="indefinite"><mpath href="#tAN"/></animateMotion><animate attributeName="opacity" dur="17s" begin="13.5s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.06;0.9;1"/><circle r="9" fill="url(#cpaHalo)"/><circle r="3" fill="#F2FEFF"/></g>
-          <g class="cpa-dot" opacity="0"><animateMotion dur="17s" begin="0.6s" repeatCount="indefinite"><mpath href="#tDR"/></animateMotion><animate attributeName="opacity" dur="17s" begin="0.6s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.06;0.9;1"/><circle r="9" fill="url(#cpaHalo)"/><circle r="3" fill="#F2FEFF"/></g>
-          <g class="cpa-dot" opacity="0"><animateMotion dur="17s" begin="9.1s" repeatCount="indefinite"><mpath href="#tDR"/></animateMotion><animate attributeName="opacity" dur="17s" begin="9.1s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.06;0.9;1"/><circle r="9" fill="url(#cpaHalo)"/><circle r="3" fill="#F2FEFF"/></g>
-          <g class="cpa-dot" opacity="0"><animateMotion dur="21s" begin="2.2s" repeatCount="indefinite"><mpath href="#tCX"/></animateMotion><animate attributeName="opacity" dur="21s" begin="2.2s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.06;0.9;1"/><circle r="9" fill="url(#cpaHalo)"/><circle r="3" fill="#F2FEFF"/></g>
-          <g class="cpa-dot" opacity="0"><animateMotion dur="21s" begin="12.7s" repeatCount="indefinite"><mpath href="#tCX"/></animateMotion><animate attributeName="opacity" dur="21s" begin="12.7s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.06;0.9;1"/><circle r="9" fill="url(#cpaHalo)"/><circle r="3" fill="#F2FEFF"/></g>
-          <g class="cpa-dot" opacity="0"><animateMotion dur="22s" begin="4.1s" repeatCount="indefinite"><mpath href="#tOL"/></animateMotion><animate attributeName="opacity" dur="22s" begin="4.1s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.06;0.9;1"/><circle r="9" fill="url(#cpaHalo)"/><circle r="3" fill="#F2FEFF"/></g>
-          <g class="cpa-dot" opacity="0"><animateMotion dur="22s" begin="15.1s" repeatCount="indefinite"><mpath href="#tOL"/></animateMotion><animate attributeName="opacity" dur="22s" begin="15.1s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.06;0.9;1"/><circle r="9" fill="url(#cpaHalo)"/><circle r="3" fill="#F2FEFF"/></g>
-          <g class="cpa-dot cpa-dot--dim" opacity="0"><animateMotion dur="26s" begin="2s" repeatCount="indefinite"><mpath href="#tMONO"/></animateMotion><animate attributeName="opacity" dur="26s" begin="2s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.06;0.9;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.4" fill="#CFEAF5"/></g>
-          <g class="cpa-dot cpa-dot--dim" opacity="0"><animateMotion dur="26s" begin="15s" repeatCount="indefinite"><mpath href="#tMONO"/></animateMotion><animate attributeName="opacity" dur="26s" begin="15s" repeatCount="indefinite" calcMode="linear" values="0;1;1;0" keyTimes="0;0.06;0.9;1"/><circle r="7" fill="url(#cpaHalo)"/><circle r="2.4" fill="#CFEAF5"/></g>
+            <g class="cpa-dot" data-track="tN1" data-period="19" data-offset="0.0" opacity="0"><circle r="9" fill="url(#cpaHalo)"/><circle r="3" fill="#F2FEFF"/></g>
+            <g class="cpa-dot" data-track="tN1" data-period="19" data-offset="9.5" opacity="0"><circle r="9" fill="url(#cpaHalo)"/><circle r="3" fill="#F2FEFF"/></g>
+            <g class="cpa-dot" data-track="tN2" data-period="20" data-offset="3.0" opacity="0"><circle r="9" fill="url(#cpaHalo)"/><circle r="3" fill="#F2FEFF"/></g>
+            <g class="cpa-dot" data-track="tN2" data-period="20" data-offset="13.0" opacity="0"><circle r="9" fill="url(#cpaHalo)"/><circle r="3" fill="#F2FEFF"/></g>
+            <g class="cpa-dot" data-track="tPC" data-period="18" data-offset="1.5" opacity="0"><circle r="9" fill="url(#cpaHalo)"/><circle r="3" fill="#F2FEFF"/></g>
+            <g class="cpa-dot" data-track="tPC" data-period="18" data-offset="10.5" opacity="0"><circle r="9" fill="url(#cpaHalo)"/><circle r="3" fill="#F2FEFF"/></g>
+            <g class="cpa-dot" data-track="tAN" data-period="17" data-offset="5.0" opacity="0"><circle r="9" fill="url(#cpaHalo)"/><circle r="3" fill="#F2FEFF"/></g>
+            <g class="cpa-dot" data-track="tAN" data-period="17" data-offset="13.5" opacity="0"><circle r="9" fill="url(#cpaHalo)"/><circle r="3" fill="#F2FEFF"/></g>
+            <g class="cpa-dot" data-track="tDR" data-period="17" data-offset="0.6" opacity="0"><circle r="9" fill="url(#cpaHalo)"/><circle r="3" fill="#F2FEFF"/></g>
+            <g class="cpa-dot" data-track="tDR" data-period="17" data-offset="9.1" opacity="0"><circle r="9" fill="url(#cpaHalo)"/><circle r="3" fill="#F2FEFF"/></g>
+            <g class="cpa-dot" data-track="tCX" data-period="21" data-offset="2.2" opacity="0"><circle r="9" fill="url(#cpaHalo)"/><circle r="3" fill="#F2FEFF"/></g>
+            <g class="cpa-dot" data-track="tCX" data-period="21" data-offset="12.7" opacity="0"><circle r="9" fill="url(#cpaHalo)"/><circle r="3" fill="#F2FEFF"/></g>
+            <g class="cpa-dot" data-track="tOL" data-period="22" data-offset="4.1" opacity="0"><circle r="9" fill="url(#cpaHalo)"/><circle r="3" fill="#F2FEFF"/></g>
+            <g class="cpa-dot" data-track="tOL" data-period="22" data-offset="15.1" opacity="0"><circle r="9" fill="url(#cpaHalo)"/><circle r="3" fill="#F2FEFF"/></g>
+            <g class="cpa-dot cpa-dot--dim" data-track="tMONO" data-period="26" data-offset="2.0" opacity="0"><circle r="7" fill="url(#cpaHalo)"/><circle r="2.4" fill="#CFEAF5"/></g>
+            <g class="cpa-dot cpa-dot--dim" data-track="tMONO" data-period="26" data-offset="15.0" opacity="0"><circle r="7" fill="url(#cpaHalo)"/><circle r="2.4" fill="#CFEAF5"/></g>
           </svg>
         </div>
       </div>
@@ -2200,31 +2200,131 @@ footer .signoff em {
 
 <script>
 /* --------------------------------------------------------------------------
-   CPA figure. The ions ride the photo's lines with SVG <animateMotion>, which
-   is frozen with pauseAnimations() until the figure is scrolled into view.
-   Reduced-motion visitors get the photo with the ions parked off-screen.
+   CPA figure. Each ion travels its hidden track at constant speed. Where the
+   track runs through a word or a drawing it skips across that stretch unseen,
+   then carries on along the same line. Ions run only while the figure is in
+   view; reduced-motion visitors get the photo alone.
 -------------------------------------------------------------------------- */
 (function () {
   var fig = document.getElementById('cpaFig');
   if (!fig) return;
-  var svg = fig.querySelector('svg');
+  var svg = fig.querySelector('svg.cpa-dots');
+  if (!svg) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  try { svg.pauseAnimations(); } catch (e) {}
+  // words and drawings in the photo's own 2000 x 1172 coordinates
+  var BLOCKS = [
+    [812, 32, 1148, 134],     // nanocrystals
+    [888, 138, 1088, 172],    // "Nanocrystals"
+    [848, 200, 1104, 276],    // poorly crystalline clumps
+    [850, 282, 1106, 356],    // "Poorly crystalline nanoparticles"
+    [793, 385, 1148, 448],    // amorphous nanoparticles
+    [786, 455, 1164, 490],    // "Amorphous nanoparticles"
+    [870, 503, 1092, 572],    // droplets
+    [915, 575, 1046, 608],    // "Droplets"
+    [898, 652, 1064, 692],    // "Complexes"
+    [902, 750, 1058, 790],    // "Oligomers"
+    [1305, 533, 1493, 655],   // amorphous solid
+    [1352, 658, 1532, 730],   // "Amorphous solid"
+    [1290, 770, 1434, 812],   // "Polymers"
+    [1292, 343, 1452, 482],   // nearly-OA clumps
+    [1360, 318, 1500, 432],   // "Nearly-OA"
+    [1408, 272, 1602, 472],   // nearly-OA octahedra
+    [1362, 132, 1558, 296],   // oriented-attachment chain
+    [1338, 68, 1676, 302],    // "Oriented attachment (OA)"
+    [706, 882, 1294, 928],    // "Monomer - by - monomer crystal growth"
+    [1576, 878, 1780, 1062],  // bulk crystal
+    [1586, 1068, 1770, 1108]  // "Bulk crystal"
+  ];
+  var PAD = 3;
 
-  var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (still) return;
+  function blocked(x, y) {
+    for (var i = 0; i < BLOCKS.length; i++) {
+      var b = BLOCKS[i];
+      if (x >= b[0] - PAD && x <= b[2] + PAD && y >= b[1] - PAD && y <= b[3] + PAD) return true;
+    }
+    return false;
+  }
 
-  function run() { try { svg.unpauseAnimations(); } catch (e) {} }
+  // the stretches of a track clear of every block, as arc lengths along it
+  function clearRuns(path) {
+    var L = path.getTotalLength(), runs = [], cur = null;
+    for (var s = 0; s <= L + 0.5; s += 1) {
+      var at = Math.min(s, L);
+      var p = path.getPointAtLength(at);
+      if (!blocked(p.x, p.y)) {
+        if (cur) cur[1] = at; else cur = [at, at];
+      } else if (cur) { runs.push(cur); cur = null; }
+    }
+    if (cur) runs.push(cur);
+    return runs;
+  }
+
+  var cache = {}, ions = [];
+  svg.querySelectorAll('g.cpa-dot').forEach(function (g) {
+    var id = g.getAttribute('data-track');
+    var path = document.getElementById(id);
+    if (!path) return;
+    if (!cache[id]) {
+      var runs = clearRuns(path), total = 0;
+      runs.forEach(function (r) { total += r[1] - r[0]; });
+      cache[id] = { path: path, runs: runs, total: total };
+    }
+    ions.push({
+      g: g, track: cache[id],
+      period: parseFloat(g.getAttribute('data-period')),
+      begin: parseFloat(g.getAttribute('data-offset'))
+    });
+  });
+
+  // distance d measured along the clear stretches only -> arc length on the path
+  function locate(runs, d) {
+    var acc = 0;
+    for (var i = 0; i < runs.length; i++) {
+      var len = runs[i][1] - runs[i][0];
+      if (d <= acc + len) return runs[i][0] + (d - acc);
+      acc += len;
+    }
+    return runs[runs.length - 1][1];
+  }
+
+  function place(ion, t) {
+    var tr = ion.track;
+    if (!tr.total) { ion.g.setAttribute('opacity', '0'); return; }
+    var ph = (((t - ion.begin) / ion.period) % 1 + 1) % 1;
+    var p = tr.path.getPointAtLength(locate(tr.runs, ph * tr.total));
+    ion.g.setAttribute('transform', 'translate(' + p.x.toFixed(1) + ' ' + p.y.toFixed(1) + ')');
+    // soft in at the source, soft out at the bulk
+    var a = Math.min(1, ph / 0.06) * Math.min(1, (1 - ph) / 0.1);
+    ion.g.setAttribute('opacity', a.toFixed(3));
+  }
+
+  var t = 0, last = 0, visible = false, looping = false;
+  function tick(now) {
+    if (!visible) { looping = false; return; }
+    t += (now - last) / 1000;
+    last = now;
+    for (var i = 0; i < ions.length; i++) place(ions[i], t);
+    requestAnimationFrame(tick);
+  }
+  function start() {
+    if (looping || !visible) return;
+    looping = true;
+    last = performance.now();
+    requestAnimationFrame(tick);
+  }
 
   if ('IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
-        if (e.isIntersecting) { run(); io.disconnect(); }
+        visible = e.isIntersecting;
+        if (visible) start();
       });
-    }, { threshold: 0.33 });
+    }, { threshold: 0.2 });
     io.observe(fig);
   } else {
-    run();
+    visible = true;
+    start();
   }
 })();
 </script>
