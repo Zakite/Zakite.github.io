@@ -471,7 +471,7 @@ nav .wrap { display: grid; grid-template-columns: 1fr auto 1fr; align-items: bas
 .cheez-cap {
   position: absolute; top: 100%; left: 50%;
   translate: -50% 0;
-  width: max-content; max-width: min(92vw, 34rem);
+  width: max-content; max-width: min(92vw, 46rem);
   margin-top: 1.25rem;
   font-family: var(--mono);
   font-size: 0.64rem; letter-spacing: 0.14em; text-transform: uppercase;
@@ -483,6 +483,12 @@ nav .wrap { display: grid; grid-template-columns: 1fr auto 1fr; align-items: bas
 .cheez-cap .line { display: block; margin-right: -0.14em; }
 .cheezit-on .motif-caption { opacity: 0 !important; }
 .cheezit-on .cheez-cap { opacity: 1; }
+/* words that change with the Cheez-It: shown only in that mode */
+.cheez-only, .t-cheez { display: none; }
+.cheezit-on .cheez-only, .cheezit-on .t-cheez { display: inline; }
+.cheezit-on .t-norm { display: none; }
+/* the year is mid-sentence in cheez mode, so it reads lower case */
+.cheezit-on #progYear { text-transform: lowercase; }
 
 .hero-foot {
   /* The caption is out of flow, so this margin is the only thing keeping the
@@ -1398,8 +1404,8 @@ footer .signoff em {
              showing; a third line here would tuck under the tagline whenever
              the egg is on. -->
         <div class="cheez-cap" aria-hidden="true">
-          <span class="line">Guanine tetrad &middot; now 100% more snackable</span>
-          <span class="line">a Cheez-It has entered the channel &middot; off the record</span>
+          <span class="line">Chz-wire down the c-axis &middot; NaCl in the cracker &middot; now 100% more snackable</span>
+          <span class="line">a Cheez-It has entered off the record</span>
         </div>
 
       </div>
@@ -1408,12 +1414,12 @@ footer .signoff em {
     </div>
 
     <div class="hero-foot">
-      <p class="tagline">Minerals remember how they were made.</p>
+      <p class="tagline"><span class="t-norm">Minerals remember how they were made.</span><span class="t-cheez">Snacks also remember how they were made.</span></p>
       <!-- The span is empty in the source and the sentence is complete without it,
            so with no script the subtitle still reads "PhD candidate studying...".
            The script writes the ordinal AND its trailing space, so there is no
            stray gap to clean up when it does not run. -->
-      <p class="subtitle"><span id="progYear"></span>PhD candidate studying how biology steers crystallization, from ion-regulated molecular assembly to mesocrystalline organization.</p>
+      <p class="subtitle"><span class="cheez-only">Snack loving </span><span id="progYear"></span>PhD candidate studying how biology steers crystallization, from ion-regulated molecular assembly to mesocrystalline organization.</p>
     </div>
 
   </div>
@@ -2355,7 +2361,8 @@ footer .signoff em {
    Cheez-It, built in pure CSS 3D. Click again to swap back. */
 (function () {
   var z   = document.getElementById('secretZ');
-  var col = document.querySelector('.motif-col');
+  // the hero as a whole, so the tagline and subtitle change with the figure
+  var col = document.getElementById('hero') || document.querySelector('.motif-col');
   if (!z || !col) return;
   z.addEventListener('click', function () {
     var on = col.classList.toggle('cheezit-on');
