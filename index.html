@@ -1728,18 +1728,17 @@ footer .signoff em {
 
   <div class="cs-stage">
     <canvas class="cs-canvas" id="csCanvas" role="img"
-            aria-label="An animated sequence following calcium carbonate from solution to shell. Ions drift in solution and associate into floppy, liquid-like prenucleation clusters that form and dissolve reversibly. Organic matrix strands then bind calcium; dense liquid globules condense on the strands and densify into solid amorphous nanoparticles, expelling water as they do. The granules pack, still amorphous, into a hexagonal tablet. Crystallinity then nucleates at a few points inside the packed granules, sweeps each granule as a front, and spreads across contacts; neighbouring grains share one lattice orientation and fuse until the tablet is a single crystal. The camera pulls back to show the micron-scale platelet, then further, until it is one tablet among many piled in offset courses as nacre is. Pulling back once more, the stack gives way to an abalone shell, its interior playing the rainbow those layers produce. The sequence then resets and repeats."></canvas>
+            aria-label="An animated sequence from solution to a mesocrystal, with precursors drawn as dots. Ions drift in solution and gather into prenucleation clusters that form and dissolve. Clusters coalesce into dense liquid droplets, which keep taking up solute. Inside a droplet a nucleus forms at its rim, and an ordered core sweeps outward through it dot by dot. The resulting nanocrystals drift in and attach to the growing array by oriented attachment, jumping into contact at short range. The camera then pulls back to the hexagonal platelet, and on to stacked tablets and an abalone shell."></canvas>
     <div class="cs-hint" id="csHint">Scroll into view to start</div>
   </div>
 
   <ol class="cs-stages" id="csStages">
     <li data-stage="ions">Ions</li>
     <li data-stage="pnc">Prenucleation clusters</li>
-    <li data-stage="matrix">Matrix binds calcium</li>
-    <li data-stage="acc">Dense liquid to ACC</li>
-    <li data-stage="pack">Nanogranular packing</li>
-    <li data-stage="xtal">Crystallization and fusion</li>
-    <li data-stage="tablet">Single-crystal tablet</li>
+    <li data-stage="amorphous">Dense liquid droplets</li>
+    <li data-stage="nucleate">Nucleation and ordering</li>
+    <li data-stage="attach">Oriented attachment</li>
+    <li data-stage="tablet">Mesocrystal</li>
     <li data-stage="nacre">Stacked nacre</li>
     <li data-stage="shell">Shell</li>
   </ol>
@@ -1750,27 +1749,15 @@ footer .signoff em {
   </div>
 
   <figcaption>
-    Ions associate into <em>prenucleation clusters</em>: floppy, liquid-like chains and rings of
-    calcium and carbonate that reshape continually and exist even in undersaturated solution
+    Ions in solution gather into <em>prenucleation clusters</em> that form and dissolve reversibly
     (Gebauer et&nbsp;al. 2008, <em>Science</em>; Avaro et&nbsp;al. 2023, <em>J.&nbsp;Phys. Chem.&nbsp;Lett.</em>).
-    An acidic organic matrix then concentrates the bath in two acts: first its strands sequester
-    calcium, then dense liquid globules condense on them, each fed by the ions its strand already
-    holds (Smeets et&nbsp;al. 2015, <em>Nat.&nbsp;Mater.</em>). The globules dehydrate into solid
-    amorphous nanoparticles, expelling water as they densify. The granules then pack, still
-    amorphous and deformable, into a hexagonal tablet. Only then does crystallinity arrive inside
-    the packed grains: it nucleates at a few points, sweeps each grain as a front, and spreads across
-    contacts (Zhang&nbsp;&amp; Xu 2013, <em>J.&nbsp;Struct.&nbsp;Biol.</em>). Neighbouring grains fuse,
-    boundary by boundary, into one crystal: the architecture of <em>nacre</em>.
-    <br>
-    Simplified on purpose. This shows one branch of the general pathway, amorphous granules
-    packing into a nacre tablet. The route in which pre-formed nanocrystals attach by oriented
-    attachment (De Yoreo et&nbsp;al. 2015, <em>Science</em>) is not drawn. Solute is drawn out of the
-    bath before packing, but in nature it keeps exchanging with the solution throughout, and monomer
-    addition runs alongside attachment. Real populations mix amorphous, partly ordered and
-    crystalline particles; here they are shown as separate stages. The grains share one lattice
-    orientation from the start: the rotation that brings real neighbours into registry is not drawn.
-    Ions are drawn far oversized, and the matrix is reduced to a few strands. Beyond the finished
-    tablet, the pull-back through stacked courses to the shell is a fixed sequence, not a simulation.
+    Clusters collide and coalesce into dense liquid droplets, which keep taking up solute: a precursor, not
+    a stable phase (De Yoreo et&nbsp;al. 2015, <em>Science</em>). Inside a droplet a nucleus forms at the rim
+    and an ordered core sweeps outward through it, dot by dot, until the droplet is a nanocrystal.
+    Nanocrystals then attach by oriented attachment, approaching by diffusion and jumping into contact at
+    short range (Li et&nbsp;al. 2012, <em>Science</em>). Monomer addition runs alongside attachment throughout.
+    Every mark before the zoom-out is a dot standing for a precursor unit, not an atom. Beyond the finished
+    array, the pull-back through stacked tablets to the shell is a fixed sequence, not a simulation.
   </figcaption>
 </figure>
   </div>
@@ -2369,21 +2356,12 @@ footer .signoff em {
 
 
 <script>
-/* Nacre-tablet formation, run as an actual emergent process rather than a
-   choreographed animation, staged after Avaro 2023, Smeets 2015, and
-   Zhang & Xu 2013 (see the pathway comment above the phase constants).
-   Ions random-walk under an overdamped Brownian thermostat and associate
-   into prenucleation clusters that form and dissolve; matrix strands then
-   concentrate the bath and dense liquid globules condense on them, densify
-   into solid ACC granules, and travel to a periodic packing where they park
-   WHILE STILL AMORPHOUS -- an array kept growing by further granules
-   arriving from beyond the edge of view, most of it never on screen at all.
-   Only once the packing is complete does crystallinity appear: it nucleates
-   inside scattered grains, sweeps each as a front, spreads across contacts,
-   and the finished grains fuse across their contacts, sharing one lattice
-   orientation, until
-   the camera pulls back and shows that the whole thing was always one
-   aragonite tablet in the making. */
+/* Nacre-tablet formation, run as an emergent process. Precursors are dots:
+   solute gathers into prenucleation clusters, clusters coalesce into dense
+   liquid droplets, a nucleus orders a nanocrystal from the rim inward, and
+   nanocrystals attach to the array by oriented attachment (De Yoreo et al.
+   2015). From the zoom-out onward the drawing is the same schematic tail as
+   before. */
 (function () {
   var fig = document.getElementById('cpaSim');
   if (!fig) return;
@@ -2659,1044 +2637,412 @@ footer .signoff em {
   var occupied, frontier, frontierAt, seeded, seedX, seedY, latOX, latOY;
   var strands, strandA, strandOn, xtNbrsBuilt;
 
+  // ---- Pre-zoom: precursors as dots (De Yoreo et al. 2015, Science 349) ----
+  // Every mark before the zoom-out is a dot. Solute dots diffuse; a few meet
+  // and gather into prenucleation clusters that form and dissolve; clusters
+  // collide and coalesce into dense liquid droplets, which keep taking up
+  // solute; inside a droplet a nucleus forms at its rim and the ordered core
+  // sweeps outward through it; the nanocrystals so formed attach to the array
+  // by oriented attachment, jumping in at short range. Monomer addition runs
+  // alongside all of it, and the bath is emptied once the array is complete.
+  var pzStage = { ions: 40, pnc: 70, cluster: 110, nucleate: 90 };
+  var PZ_BATH = 600, PZ_KICK = 0.30;
+  var PZ_PNC_NEAR = 2.4, PZ_PNC_P = 0.09, PZ_PNC_DISS = 0.015, PZ_PNC_MAX = 6;
+  var PZ_CAP_REACH = 1.6, PZ_CAP_DROP = 0.35, PZ_CAP_PNC = 0.12;
+  var PZ_DROP_MIN = 8, PZ_NUC_MIN = 12, PZ_NUC_P = 0.08, PZ_FRONT_V = 0.35, PZ_SHED = 0.05;
+  var PZ_ATT_RANGE = 3.6, PZ_NANO_LO = 16, PZ_NANO_HI = 24;
+  var PZ_FLY_A = 0.50, PZ_FLY_MAX = 2.2, PZ_SNAP = 1.3, PZ_INFLIGHT = 40, PZ_INSTANT = 12;
+  var PZ_BX = VIEW_W / 2 + 8, PZ_BY = VIEW_H / 2 + 8;
+  var attachedN = 0, occ = {};
+
+  function pzDot(x, y) {
+    return { x: x, y: y, vx: 0, vy: 0, ok: 0, tx: 0, ty: 0, hasT: false, reach: 0 };
+  }
+  function pzRadius(c) { return ION_D * 0.6 * Math.sqrt(c.pts.length); }
+  function pzCentre(c) {
+    var n = c.pts.length;
+    if (!n) return;
+    var sx = 0, sy = 0;
+    for (var k = 0; k < n; k++) { sx += c.pts[k].x; sy += c.pts[k].y; }
+    c.cx = sx / n; c.cy = sy / n;
+  }
+  function pzCluster(kind, pts) {
+    var c = {
+      kind: kind, state: kind, pts: pts, cx: 0, cy: 0, vx: 0, vy: 0, haloA: 0,
+      nuc: false, frontR: 0, maxReach: 0, nx: 0, ny: 0, cell: null,
+      lpts: null, hw: 0, hh: 0, th: mesoTh, cryst: 0, aligned: false, offTile: false,
+      poppedAt: -1, cellPX: 0, cellPY: 0, dead: false
+    };
+    pzCentre(c);
+    clusters.push(c);
+    return c;
+  }
+  // move a whole cluster rigidly
+  function pzShift(c, dx, dy) {
+    for (var k = 0; k < c.pts.length; k++) { c.pts[k].x += dx; c.pts[k].y += dy; }
+    c.cx += dx; c.cy += dy;
+  }
+  // idx ascending; removes those solute dots, swap-and-pop
+  function pzTakeIons(idx) {
+    for (var k = idx.length - 1; k >= 0; k--) {
+      ions[idx[k]] = ions[ions.length - 1];
+      ions.pop();
+    }
+  }
+  function pzSweep() {
+    clusters = clusters.filter(function (c) { return !c.dead; });
+  }
+
+  // solute: Brownian, reflected at the edge of the bath
+  function pzBath(dt) {
+    for (var i = 0; i < ions.length; i++) {
+      var s = ions[i];
+      s.vx = s.vx * 0.92 + (rnd() - 0.5) * PZ_KICK;
+      s.vy = s.vy * 0.92 + (rnd() - 0.5) * PZ_KICK;
+      s.x += s.vx * dt; s.y += s.vy * dt;
+      if (s.x > PZ_BX) { s.x = 2 * PZ_BX - s.x; s.vx = -s.vx; }
+      else if (s.x < -PZ_BX) { s.x = -2 * PZ_BX - s.x; s.vx = -s.vx; }
+      if (s.y > PZ_BY) { s.y = 2 * PZ_BY - s.y; s.vy = -s.vy; }
+      else if (s.y < -PZ_BY) { s.y = -2 * PZ_BY - s.y; s.vy = -s.vy; }
+    }
+  }
+
+  // two solute dots that meet gather into a prenucleation cluster
+  function pzForm(dt) {
+    var taken = {}, any = false;
+    for (var k = 0; k < 10 && ions.length > 1; k++) {
+      var a = Math.floor(rnd() * ions.length);
+      if (taken[a]) continue;
+      var sa = ions[a], best = -1, bd = PZ_PNC_NEAR;
+      for (var b = 0; b < ions.length; b++) {
+        if (b === a || taken[b]) continue;
+        var d = Math.hypot(ions[b].x - sa.x, ions[b].y - sa.y);
+        if (d < bd) { bd = d; best = b; }
+      }
+      if (best < 0 || rnd() > PZ_PNC_P * dt) continue;
+      taken[a] = true; taken[best] = true; any = true;
+      pzCluster('pnc', [pzDot(sa.x, sa.y), pzDot(ions[best].x, ions[best].y)]);
+    }
+    if (any) {
+      var idx = [];
+      for (var key in taken) idx.push(+key);
+      idx.sort(function (p, q) { return p - q; });
+      pzTakeIons(idx);
+    }
+  }
+
+  // free solute dots that reach a prenucleation cluster or droplet are taken up
+  function pzCapture(dt) {
+    if (!ions.length) return;
+    var take = [];
+    for (var i = 0; i < ions.length; i++) {
+      var s = ions[i], best = null, gap = Infinity;
+      for (var k = 0; k < clusters.length; k++) {
+        var c = clusters[k];
+        if (c.dead || !c.pts || (c.kind !== 'pnc' && c.kind !== 'drop') || c.nuc) continue;
+        if (c.pts.length >= (c.kind === 'drop' ? SIZE_CAP : PZ_PNC_MAX)) continue;
+        var d = Math.hypot(s.x - c.cx, s.y - c.cy) - pzRadius(c);
+        if (d < PZ_CAP_REACH && d < gap) { gap = d; best = c; }
+      }
+      if (best && rnd() < (best.kind === 'drop' ? PZ_CAP_DROP : PZ_CAP_PNC) * dt) {
+        take.push(i);
+        best.pts.push(pzDot(s.x, s.y));
+        pzCentre(best);
+      }
+    }
+    if (take.length) pzTakeIons(take);
+  }
+
+  // prenucleation clusters come apart again (reversible); small droplets
+  // shed dots back to solution (Gibbs-Thomson: the smaller, the more soluble)
+  function pzDissolve(dt) {
+    for (var k = 0; k < clusters.length; k++) {
+      var c = clusters[k];
+      if (c.dead || !c.pts || !c.pts.length) continue;
+      var n = c.pts.length, rate = 0;
+      if (c.kind === 'pnc') rate = PZ_PNC_DISS * (n <= 2 ? 2 : 1);
+      else if (c.kind === 'drop' && !c.nuc && n < PZ_NUC_MIN) rate = PZ_SHED * (1 - n / PZ_NUC_MIN);
+      if (rate && rnd() < rate * dt) {
+        var j = Math.floor(rnd() * n), p = c.pts[j];
+        c.pts.splice(j, 1);
+        ions.push({ x: p.x, y: p.y, vx: (rnd() - 0.5) * 0.8, vy: (rnd() - 0.5) * 0.8 });
+        if (c.pts.length === 0) c.dead = true; else pzCentre(c);
+      }
+    }
+    pzSweep();
+  }
+
+  // prenucleation clusters drift toward one another; when they touch they
+  // coalesce, and a merged cluster big enough is a dense liquid droplet
+  function pzAggregate(dt) {
+    for (var i = 0; i < clusters.length; i++) {
+      var a = clusters[i];
+      if (a.dead || !a.pts || a.nuc || (a.kind !== 'pnc' && a.kind !== 'drop')) continue;
+      for (var j = i + 1; j < clusters.length; j++) {
+        var b = clusters[j];
+        if (a.dead) break;
+        if (b.dead || !b.pts || b.nuc || (b.kind !== 'pnc' && b.kind !== 'drop')) continue;
+        var dx = b.cx - a.cx, dy = b.cy - a.cy, d = Math.hypot(dx, dy) || 1e-6;
+        var ra = pzRadius(a), rb = pzRadius(b);
+        if (d > ra + rb + PZ_ATT_RANGE) continue;
+        var n = a.pts.length + b.pts.length;
+        if (d < (ra + rb) * 1.1 && n <= SIZE_CAP && rnd() < 0.9 * dt) {
+          var big = a.pts.length >= b.pts.length ? a : b;
+          var small = big === a ? b : a;
+          big.pts = big.pts.concat(small.pts);
+          if (big.pts.length >= PZ_DROP_MIN) big.kind = big.state = 'drop';
+          pzCentre(big);
+          small.dead = true;
+          small.pts = [];
+        } else {
+          var pull = 0.6 * dt / (1 + d);
+          a.vx += dx / d * pull; a.vy += dy / d * pull;
+          b.vx -= dx / d * pull; b.vy -= dy / d * pull;
+        }
+      }
+    }
+    pzSweep();
+  }
+
+  // every free cluster diffuses (bigger ones more slowly), and its dots
+  // either jostle inside it (liquid) or are pulled onto their lattice sites
+  function pzMotion(dt) {
+    for (var k = 0; k < clusters.length; k++) {
+      var c = clusters[k];
+      if (c.dead || !c.pts || !c.pts.length) continue;
+      var n = c.pts.length, R = pzRadius(c);
+      if (c.kind !== 'fly') {
+        var mob = 1 / Math.sqrt(n);
+        c.vx = c.vx * 0.86 + (rnd() - 0.5) * 0.16 * mob;
+        c.vy = c.vy * 0.86 + (rnd() - 0.5) * 0.16 * mob;
+        var nx = c.cx + c.vx * dt, ny = c.cy + c.vy * dt;
+        if (nx > PZ_BX - R) { nx = 2 * (PZ_BX - R) - nx; c.vx = -c.vx; }
+        else if (nx < R - PZ_BX) { nx = 2 * (R - PZ_BX) - nx; c.vx = -c.vx; }
+        if (ny > PZ_BY - R) { ny = 2 * (PZ_BY - R) - ny; c.vy = -c.vy; }
+        else if (ny < R - PZ_BY) { ny = 2 * (R - PZ_BY) - ny; c.vy = -c.vy; }
+        pzShift(c, nx - c.cx, ny - c.cy);
+      }
+      var jit = c.kind === 'drop' ? 0.14 : 0.10;
+      for (var i = 0; i < n; i++) {
+        var p = c.pts[i];
+        var active = p.hasT && (c.kind === 'nano' || c.kind === 'fly' || c.frontR >= p.reach);
+        if (active) {
+          var tx = c.cx + p.tx, ty = c.cy + p.ty;
+          p.vx = p.vx * 0.6 + (tx - p.x) * 0.9 * dt + (rnd() - 0.5) * (0.01 + 0.03 * (1 - p.ok)) * dt;
+          p.vy = p.vy * 0.6 + (ty - p.y) * 0.9 * dt + (rnd() - 0.5) * (0.01 + 0.03 * (1 - p.ok)) * dt;
+        } else {
+          var rx = p.x - c.cx, ry = p.y - c.cy, rr = Math.hypot(rx, ry);
+          if (rr > R * 0.9) {
+            p.vx -= rx / rr * (rr - R * 0.9) * 0.08 * dt;
+            p.vy -= ry / rr * (rr - R * 0.9) * 0.08 * dt;
+          }
+          p.vx = p.vx * 0.75 + (rnd() - 0.5) * jit * dt;
+          p.vy = p.vy * 0.75 + (rnd() - 0.5) * jit * dt;
+        }
+      }
+      // liquid dots keep their spacing: pairwise repulsion between them
+      for (i = 0; i < n; i++) {
+        var pi = c.pts[i];
+        for (var q = i + 1; q < n; q++) {
+          var pq = c.pts[q];
+          if (pi.hasT && pq.hasT) continue;
+          var ex = pq.x - pi.x, ey = pq.y - pi.y, ed = Math.hypot(ex, ey);
+          if (ed < ION_D * 0.95 && ed > 1e-6) {
+            var f = (ION_D * 0.95 - ed) * 0.5 * dt;
+            pi.vx -= ex / ed * f; pi.vy -= ey / ed * f;
+            pq.vx += ex / ed * f; pq.vy += ey / ed * f;
+          }
+        }
+      }
+      for (i = 0; i < n; i++) {
+        var pp = c.pts[i];
+        pp.x += pp.vx * dt; pp.y += pp.vy * dt;
+      }
+      pzCentre(c);
+      var haloTo = c.kind === 'drop' ? 1 : 0;
+      c.haloA += (haloTo - c.haloA) * Math.min(1, 0.05 * dt);
+    }
+  }
+
+  // a droplet with enough dots may nucleate: a nucleus forms at its rim and
+  // the lattice is assigned to the dots nearest it first, so the ordered core
+  // sweeps outward from there, dot by dot, and colours as it goes
+  function pzNucleate(dt) {
+    for (var k = 0; k < clusters.length; k++) {
+      var c = clusters[k];
+      if (c.dead || !c.pts || c.kind !== 'drop') continue;
+      var n = c.pts.length;
+      if (!c.nuc) {
+        if (n < PZ_NUC_MIN || rnd() > PZ_NUC_P * dt) continue;
+        var best = null, bd = -1;
+        for (var q = 0; q < 4; q++) {
+          var cand = c.pts[Math.floor(rnd() * n)];
+          var dd = Math.hypot(cand.x - c.cx, cand.y - c.cy);
+          if (dd > bd) { bd = dd; best = cand; }
+        }
+        c.nuc = true; c.nx = best.x; c.ny = best.y; c.frontR = 0;
+        var lat = microCellsFor(n);
+        var near = c.pts.slice().sort(function (p1, p2) {
+          return Math.hypot(p1.x - c.nx, p1.y - c.ny) - Math.hypot(p2.x - c.nx, p2.y - c.ny);
+        });
+        var sx0 = c.nx - c.cx, sy0 = c.ny - c.cy;
+        var sites = lat.slice().sort(function (s1, s2) {
+          return Math.hypot(s1.lx - sx0, s1.ly - sy0) - Math.hypot(s2.lx - sx0, s2.ly - sy0);
+        });
+        c.maxReach = 0;
+        for (var m = 0; m < n; m++) {
+          var dm = near[m];
+          dm.tx = sites[m].lx; dm.ty = sites[m].ly; dm.hasT = true;
+          dm.reach = Math.hypot(dm.x - c.nx, dm.y - c.ny);
+          c.maxReach = Math.max(c.maxReach, dm.reach);
+        }
+      }
+      c.frontR += PZ_FRONT_V * dt;
+      var allOrdered = true;
+      for (var i = 0; i < n; i++) {
+        var p = c.pts[i];
+        if (!p.hasT) { allOrdered = false; continue; }
+        if (c.frontR < p.reach) { allOrdered = false; continue; }
+        var gap = Math.hypot(c.cx + p.tx - p.x, c.cy + p.ty - p.y);
+        p.ok = Math.max(p.ok, 1 - Math.min(1, gap / (ION_D * 0.8)));
+        if (p.ok < 0.7) allOrdered = false;
+      }
+      if (allOrdered && c.frontR >= c.maxReach) {
+        c.kind = c.state = 'nano';
+      }
+    }
+  }
+
+  // ---- the array: nanocrystals attach by oriented attachment ----
+  function pzVisible(cell, m) {
+    return Math.abs(cell.x) < VIEW_W / 2 + m && Math.abs(cell.y) < VIEW_H / 2 + m;
+  }
+  function pzNano(cell) {
+    var best = null, bd = Infinity;
+    for (var k = 0; k < clusters.length; k++) {
+      var c = clusters[k];
+      if (c.dead || !c.pts || c.kind !== 'nano') continue;
+      var d = Math.hypot(c.cx - cell.x, c.cy - cell.y);
+      if (d < bd) { bd = d; best = c; }
+    }
+    return best;
+  }
+  // a nanocrystal arriving from beyond the frame, already ordered
+  function pzSpawn() {
+    var a = rnd() * TAU, R = Math.hypot(VIEW_W, VIEW_H) / 2 + 6;
+    var n = PZ_NANO_LO + Math.floor(rnd() * (PZ_NANO_HI - PZ_NANO_LO + 1));
+    var lat = microCellsFor(n), ox = R * Math.cos(a), oy = R * Math.sin(a), pts = [];
+    for (var k = 0; k < n; k++) {
+      var p = pzDot(ox + lat[k].lx, oy + lat[k].ly);
+      p.ok = 1; p.tx = lat[k].lx; p.ty = lat[k].ly; p.hasT = true; p.reach = 0;
+      pts.push(p);
+    }
+    return pzCluster('nano', pts);
+  }
+  // a nanocrystal that has joined the array becomes a block of the mesocrystal
+  function pzPlace(cell, nano) {
+    var n = nano ? nano.pts.length : PZ_NANO_LO + Math.floor(rnd() * (PZ_NANO_HI - PZ_NANO_LO + 1));
+    var blk = nano || pzCluster('attached', []);
+    blk.kind = 'attached'; blk.state = 'attached'; blk.pts = null; blk.dead = false;
+    blk.cx = cell.x; blk.cy = cell.y; blk.vx = 0; blk.vy = 0; blk.cell = null;
+    blk.hw = blockHalf(n); blk.hh = blk.hw;
+    blk.lpts = microCellsFor(n);
+    blk.th = mesoTh; blk.cryst = 1; blk.aligned = true; blk.offTile = false; blk.poppedAt = -1;
+    blk.cellPX = cell.x; blk.cellPY = cell.y;
+    cell.claim = null;
+    occ[cell.i + ',' + cell.j] = true;
+    attachedN++;
+    var at = frontier.indexOf(cell);
+    if (at >= 0) frontier.splice(at, 1);
+    for (var q = 0; q < 4; q++) {
+      var key = (cell.i + NB4[q][0]) + ',' + (cell.j + NB4[q][1]), nb = CELLS[key];
+      if (nb && !occ[key] && frontier.indexOf(nb) < 0) frontier.push(nb);
+    }
+  }
+  // the array grows outward from its centre. Cells beyond the frame simply
+  // fill, out of sight; cells in view wait for a nanocrystal to fly in
+  function pzArray() {
+    frontier.sort(function (p, q) { return Math.hypot(p.x, p.y) - Math.hypot(q.x, q.y); });
+    var inflight = 0, k;
+    for (k = 0; k < clusters.length; k++) if (clusters[k].kind === 'fly') inflight++;
+    var instant = [];
+    for (k = 0; k < frontier.length; k++) {
+      var cell = frontier[k];
+      if (cell.claim) continue;
+      if (!pzVisible(cell, 4)) {
+        if (instant.length < PZ_INSTANT) instant.push(cell);
+        continue;
+      }
+      if (inflight >= PZ_INFLIGHT) continue;
+      var nano = pzNano(cell) || pzSpawn();
+      nano.kind = 'fly'; nano.state = 'fly'; nano.cell = cell; cell.claim = nano;
+      inflight++;
+    }
+    for (k = 0; k < instant.length; k++) pzPlace(instant[k], null);
+  }
+  // in flight, a nanocrystal diffuses toward its cell, pulled harder at short
+  // range (jump-to-contact); at contact it locks on
+  function pzFly(dt) {
+    var arrive = [];
+    for (var k = 0; k < clusters.length; k++) {
+      var c = clusters[k];
+      if (c.kind !== 'fly' || c.dead) continue;
+      var cell = c.cell, dx = cell.x - c.cx, dy = cell.y - c.cy, d = Math.hypot(dx, dy);
+      if (d < PZ_SNAP) { arrive.push(c); continue; }
+      var near = 1 + 6 * Math.pow(Math.max(0, 1 - d / 18), 2);
+      c.vx += dx / d * PZ_FLY_A * near * dt + (rnd() - 0.5) * 0.05 * dt;
+      c.vy += dy / d * PZ_FLY_A * near * dt + (rnd() - 0.5) * 0.05 * dt;
+      var sp = Math.hypot(c.vx, c.vy);
+      if (sp > PZ_FLY_MAX) { c.vx *= PZ_FLY_MAX / sp; c.vy *= PZ_FLY_MAX / sp; }
+      c.vx *= 0.96; c.vy *= 0.96;
+      pzShift(c, c.vx * dt, c.vy * dt);
+    }
+    for (k = 0; k < arrive.length; k++) pzPlace(arrive[k].cell, arrive[k]);
+  }
+
+  function pzFinish() {
+    clusters = clusters.filter(function (c) { return c.state === 'attached'; });
+    ions.length = 0;
+    phase = 'zoomout'; phaseT = 0;
+  }
+
   function reset() {
-    // every grain shares this one lattice orientation from the start. The
-    // rotation that brings real neighbours into registry is not drawn.
     mesoTh = rnd() * TAU;
     clusters = [];
     ions = [];
-    // spread evenly over the whole solution volume, edge to edge -- a bath of
-    // dissolved ions, not a cloud already gathered in the middle
-    for (var i = 0; i < N_ION; i++) {
+    for (var i = 0; i < PZ_BATH; i++) {
       ions.push({
         x: (rnd() - 0.5) * (VIEW_W + 12), y: (rnd() - 0.5) * (VIEW_H + 12),
-        vx: (rnd() - 0.5) * 0.5, vy: (rnd() - 0.5) * 0.5
+        vx: (rnd() - 0.5) * 0.4, vy: (rnd() - 0.5) * 0.4
       });
     }
-    // The matrix: a few adsorbed acidic strands, drawn fresh each episode.
-    // Gentle sinusoids rather than straight lines, so they read as flexible
-    // macromolecule chains lying where they happened to settle.
-    strands = [];
-    for (var sI = 0; sI < N_STRANDS; sI++) {
-      var sy0 = (sI - (N_STRANDS - 1) / 2) * (VIEW_H * 0.34) + (rnd() - 0.5) * 5;
-      var amp = 2.2 + rnd() * 2.2, ph0 = rnd() * TAU, freq = 1.5 + rnd();
-      var pts = [];
-      for (var sP = 0; sP < STRAND_PTS; sP++) {
-        var fx = sP / (STRAND_PTS - 1);
-        pts.push({
-          x: (fx - 0.5) * (VIEW_W + 8),
-          y: sy0 + Math.sin(ph0 + fx * freq * TAU * 0.5) * amp
-        });
-      }
-      strands.push(pts);
-    }
-    strandA = 0; strandOn = 0; xtNbrsBuilt = false;
-    // the fringe raster bakes in mesoTh, which this reset just re-rolled;
-    // left cached, a Restart clicked mid-crystallization would clip the OLD
-    // run's fringe angle into the NEW run's grains for the whole static-
-    // camera act, since the cache key is only canvas size + zoom bucket
-    fringeKey = '';
-    occupied = {}; frontier = []; frontierAt = {}; seeded = false;
-    seedX = 0; seedY = 0; latOX = 0; latOY = 0;
-    fillBank = 0; depletionT = -1; seedSizes = [];
-    ktBoundMul = 1; ionDMul = 1; attMul = 1;
+    strands = []; strandA = 0; strandOn = 0;
     waterFx.length = 0; denseF = 0;
+    occ = {}; attachedN = 0;
+    frontier = [CELLS['0,0']];
+    fringeKey = '';
     phase = 'ions'; phaseT = 0; t = 0;
   }
   reset();
 
-  // How large an assembly may grow right now. In the open bath everything
-  // stays cluster-sized and churns (Avaro 2023's undersaturated PNCs). On
-  // the matrix the ceiling opens, but as a ramp over MATRIX_COND_RAMP once
-  // the quiet loading act is over, so condensation reads as globules
-  // growing rather than as a ceiling being lifted on one frame.
-  function growCap() {
-    if (phase === 'pnc') return PNC_CAP;
-    if (phase !== 'matrix') return SIZE_CAP;
-    var rf = Math.max(0, Math.min(1, (phaseT - MATRIX_LOAD_T) / MATRIX_COND_RAMP));
-    return Math.round(PNC_CAP + (SIZE_CAP - PNC_CAP) * rf);
-  }
-
-  // nearest point on any strand -- the matrix as a field the chemistry feels
-  function nearestStrand(x, y) {
-    var bd = Infinity, bx = 0, by = 0;
-    for (var sI = 0; sI < strands.length; sI++) {
-      var pts = strands[sI];
-      for (var k = 0; k < pts.length; k++) {
-        var dx = pts[k].x - x, dy = pts[k].y - y;
-        var d2 = dx * dx + dy * dy;
-        if (d2 < bd) { bd = d2; bx = pts[k].x; by = pts[k].y; }
-      }
-    }
-    return { d: Math.sqrt(bd), x: bx, y: by };
-  }
-
-  function ionPt(x, y) {
-    // one member ion: real position and velocity, plus its (eventual) lattice
-    // site, its distance from the nucleation site, a fixed per-ion jitter that
-    // roughens the crystallization front, whether the front has recruited it,
-    // and its rest offset in the parked granule (set when the granule lands)
-    return { x: x, y: y, vx: 0, vy: 0, lx: 0, ly: 0, fd: 0, jit: rnd(), rec: false, ok: 0, rx0: 0, ry0: 0 };
-  }
-
-  function newCluster(x, y) {
-    var c = {
-      pts: [ionPt(x, y)],
-      cx: x, cy: y, vx: 0, vy: 0,
-      born: t, state: 'blob', th: mesoTh, orderFrac: 0,
-      latCells: null, latIdx: 0,       // this particle's own lattice, sized to what it actually gathered
-      frontR: 0, nucLx: 0, nucLy: 0,   // crystallization front: seeded at the surface, sweeps inward
-      hw: 2, hh: 2.6,
-      lpts: null,                      // grain pattern, set at the schematic handoff
-      seedborn: false, kicked: false,
-      tx: 0, ty: 0, attachT: 0, fromX: 0, fromY: 0,
-      phx: 0, phy: 0, offTile: false,  // small translational misregistry, healed as grains fuse
-      cellPX: 0, cellPY: 0,            // the cell centre itself, for the healing to aim at
-      // in-place transformation state: grains pack amorphous (cryst 0) and
-      // crystallize after -- Zhang & Xu 2013's order of events, not the
-      // crystallize-then-attach the first version of this sim showed
-      cryst: 0, xt: false, xtDoneAt: -1,
-      aligned: false,                  // translationally healed onto its lattice site
-      strandD: Infinity,               // distance to the matrix, while it matters
-      nbrs: null,                      // contact list, built once the packing is still
-      haloA: 0,                        // diffuse-shell opacity, eased so it never pops
-      poppedAt: -1
-    };
-    clusters.push(c);
-    return c;
-  }
-
-  function startOrdering(c, dirX, dirY) {
-    // heterogeneous nucleation: crystallinity starts at one spot on the
-    // particle surface and spreads from there, it does not appear everywhere
-    // at once (Ihli et al. 2014; Liu et al. 2020). When the transformation
-    // arrives by contact with an already-crystalline neighbour, the front
-    // enters through that face: pass the direction of the neighbour and the
-    // nucleation site is the surface site nearest to it. Spontaneous starts
-    // pick a surface site at random compass instead.
-    // The lattice always has a site for every ion the particle can ever hold.
-    // Sizing it any smaller used to make late arrivals share the last site,
-    // and a permanent pile of ions on one point dragged the whole frame off
-    // centre so the particle could never finish ordering.
-    var n = c.pts.length, q;
-    // Every grain nucleates in the one shared orientation. Real neighbours
-    // rotate into registry before they fuse (Li et al. 2012); that rotation is
-    // deliberately not drawn, so TH_SPREAD is zero.
-    c.th = mesoTh + (rnd() - 0.5) * TH_SPREAD;
-    c.latCells = microCellsFor(Math.max(LAT_CAP, n));
-    c.latIdx = n;
-    for (q = 0; q < n; q++) { c.pts[q].lx = c.latCells[q].lx; c.pts[q].ly = c.latCells[q].ly; }
-    var best = 0, bs = -Infinity, hasDir = (dirX !== undefined);
-    var dl = hasDir ? (Math.hypot(dirX, dirY) || 1) : 1;
-    for (q = 0; q < n; q++) {
-      var lx = c.latCells[q].lx, ly = c.latCells[q].ly;
-      var sc0 = hasDir ? (lx * dirX + ly * dirY) / dl : Math.hypot(lx, ly);
-      if (sc0 > bs) { bs = sc0; best = q; }
-    }
-    c.nucLx = c.latCells[best].lx; c.nucLy = c.latCells[best].ly;
-    for (q = 0; q < n; q++) c.pts[q].fd = Math.hypot(c.pts[q].lx - c.nucLx, c.pts[q].ly - c.nucLy);
-    c.frontR = 0;
-    c.xt = true;
-    c.state = 'order';
-  }
-
-  function tileOffset() {
-    // a minority of blocks land with a small translational misregistry --
-    // attachment writes defects into the product (Penn & Banfield 1998);
-    // expressed as translation only, never rotation
-    if (rnd() < 0.93) return { phx: 0, phy: 0, off: false };
-    return { phx: (rnd() - 0.5) * MICRO_SPACING * 0.4, phy: (rnd() - 0.5) * MICRO_SPACING * 0.4, off: true };
-  }
-
-  // The array is not filled from a list. One crystallite lands first and
-  // becomes the seed; everything after it attaches to the aggregate that
-  // already exists, at whichever free site on its perimeter is nearest.
-  // Sites at a tip -- with only one occupied neighbour -- are easier to
-  // reach than ones tucked into a notch, so protrusions run ahead of the
-  // rest and the thing grows outward in branches rather than as a disc.
-  function occupyCell(cell) {
-    var key = cell.i + ',' + cell.j;
-    occupied[key] = 1;
-    if (frontierAt[key]) {
-      delete frontierAt[key];
-      var at = frontier.indexOf(cell);
-      if (at >= 0) { frontier[at] = frontier[frontier.length - 1]; frontier.pop(); }
-    }
-    for (var n = 0; n < 4; n++) {
-      var nk = (cell.i + NB4[n][0]) + ',' + (cell.j + NB4[n][1]);
-      var nc = CELLS[nk];
-      if (!nc || occupied[nk] || frontierAt[nk]) continue;
-      frontierAt[nk] = 1;
-      frontier.push(nc);
-    }
-  }
-  function occNeighbours(cell) {
-    var c2 = 0;
-    for (var n = 0; n < 4; n++) {
-      if (occupied[(cell.i + NB4[n][0]) + ',' + (cell.j + NB4[n][1])]) c2++;
-    }
-    return c2;
-  }
-  // world position of a lattice site: the whole array hangs off wherever the
-  // first crystallite happened to be, not off some fixed point in space
-  function cellX(cell) { return cell.x + latOX; }
-  function cellY(cell) { return cell.y + latOY; }
-  function claimCell(px, py) {
-    for (var guard = 0; guard < 40; guard++) {
-      var pick = null;
-      if (!frontier.length) {
-        if (seeded) return null;
-        // Nucleation. The first crystallite to finish does not go anywhere --
-        // the array is anchored on it, so the crystal starts where a real
-        // particle already is. Held loosely near the middle only so the
-        // growth stays in frame.
-        latOX = Math.max(-22, Math.min(22, px || 0));
-        latOY = Math.max(-14, Math.min(14, py || 0));
-        pick = CELLS['0,0'];
-        seedX = cellX(pick); seedY = cellY(pick);
-        seeded = true;
-      } else {
-        // A site boxed in on several sides is always taken before one out on
-        // the open front, so growth fills the space it has before closing
-        // over anything. Between equals, the site nearest the arriving
-        // crystallite wins: it joins the cluster where it meets it rather
-        // than flying around to some far side of it.
-        var bestN = -1, bestS = Infinity;
-        for (var f = 0; f < frontier.length; f++) {
-          var fc = frontier[f];
-          var nb = occNeighbours(fc);
-          if (nb < bestN) continue;
-          var sco = Math.hypot(cellX(fc) - px, cellY(fc) - py) + rnd() * SPACING * 0.8;
-          if (nb > bestN || sco < bestS) { bestN = nb; bestS = sco; pick = fc; }
-        }
-      }
-      if (!pick) return null;
-      if (occupied[pick.i + ',' + pick.j]) continue;
-      occupyCell(pick);
-      return pick;
-    }
-    return null;
-  }
-  function arrayComplete() { return seeded && frontier.length === 0; }
-  function countAttached() {
-    var n = 0;
-    for (var i = 0; i < clusters.length; i++) if (clusters[i].state === 'attached') n++;
-    return n;
-  }
-
-  // Reused across steps so the per-frame allocation stays flat.
-  var aX = [], aY = [], aVX = [], aVY = [], aObj = [], aCl = [], aStatic = [], aN = 0;
-  var aCell = {};
-
-  /* One interaction, applied to everything at once.
-
-     Free ions and the ions inside amorphous droplets are the same objects
-     under the same forces: contact repulsion below a diameter, cohesion out
-     to a short cutoff, a thermal kick, and drag. Nothing is pulled toward a
-     centroid and nothing teleports -- a droplet holds together because its
-     ions hold each other, and a free ion joins one by being drawn in until
-     it touches.
-
-     Ions already ordering inside a crystallite take part as force sources
-     only: they still attract passing ions, but their own motion is governed
-     by the lattice, further down. */
-  function amorphousPass(dt) {
-    aN = 0;
-    var k, c2, p, np2;
-    for (k = 0; k < ions.length; k++) {
-      p = ions[k];
-      aX[aN] = p.x; aY[aN] = p.y; aVX[aN] = p.vx; aVY[aN] = p.vy;
-      aObj[aN] = p; aCl[aN] = -1; aStatic[aN] = 0; aN++;
-    }
-    for (k = 0; k < clusters.length; k++) {
-      c2 = clusters[k];
-      if (c2.state !== 'blob' && c2.state !== 'order') continue;
-      var isStatic = c2.state === 'order' ? 1 : 0;
-      for (np2 = 0; np2 < c2.pts.length; np2++) {
-        p = c2.pts[np2];
-        aX[aN] = p.x; aY[aN] = p.y; aVX[aN] = p.vx; aVY[aN] = p.vy;
-        aObj[aN] = p; aCl[aN] = k; aStatic[aN] = isStatic; aN++;
-      }
-    }
-    if (!aN) return;
-
-    // bucket by cell so each ion only tests its own neighbourhood
-    for (var key in aCell) delete aCell[key];
-    var inv = 1 / PAIR_CUT;
-    for (k = 0; k < aN; k++) {
-      var ck = Math.floor(aX[k] * inv) + ',' + Math.floor(aY[k] * inv);
-      if (aCell[ck]) aCell[ck].push(k); else aCell[ck] = [k];
-    }
-
-    for (k = 0; k < aN; k++) {
-      var gx0 = Math.floor(aX[k] * inv), gy0 = Math.floor(aY[k] * inv);
-      for (var ox2 = -1; ox2 <= 1; ox2++) {
-        for (var oy2 = -1; oy2 <= 1; oy2++) {
-          var bucket = aCell[(gx0 + ox2) + ',' + (gy0 + oy2)];
-          if (!bucket) continue;
-          for (var bi = 0; bi < bucket.length; bi++) {
-            var m2 = bucket[bi];
-            if (m2 <= k) continue;                       // each pair once
-            if (aStatic[k] && aStatic[m2]) continue;     // both lattice-governed
-            var rdx = aX[m2] - aX[k], rdy = aY[m2] - aY[k];
-            var rr2 = rdx * rdx + rdy * rdy;
-            if (rr2 > PAIR_CUT * PAIR_CUT || rr2 < 1e-9) continue;
-            var rr = Math.sqrt(rr2);
-            var ux2 = rdx / rr, uy2 = rdy / rr, f;
-            // two condensed ions sit at the current material's own contact
-            // distance: liquid at first, pulled tighter as densification
-            // dehydrates the droplets into ACC
-            var cD = (aCl[k] >= 0 && aCl[m2] >= 0) ? ION_D * ionDMul : ION_D;
-            if (rr < cD) {
-              f = -K_REP2 * (cD - rr) / cD;              // negative: apart
-            } else {
-              // strong between ions that have already condensed, weak between
-              // two still in solution. attMul quiets condensed-phase cohesion
-              // while the species on screen are chain-like PNCs, so they
-              // writhe instead of balling up.
-              var kA = (aCl[k] >= 0 || aCl[m2] >= 0) ? K_ATT_BOUND * attMul : K_ATT_FREE;
-              f = kA * (1 - (rr - ION_D) / (PAIR_CUT - ION_D));
-            }
-            var fx = ux2 * f * dt, fy = uy2 * f * dt;
-            if (!aStatic[k]) { aVX[k] += fx; aVY[k] += fy; }
-            if (!aStatic[m2]) { aVX[m2] -= fx; aVY[m2] -= fy; }
-          }
-        }
-      }
-    }
-
-    // thermostat and drag, then move. Free ions are hotter and slipperier
-    // than ones locked into a droplet, which is the whole difference between
-    // being in solution and being part of a particle.
-    var BX = VIEW_W / 2 + 8, BY = VIEW_H / 2 + 8;
-    for (k = 0; k < aN; k++) {
-      if (aStatic[k]) continue;
-      var free = aCl[k] < 0;
-      // bound temperature carries the material's state: full for a liquid
-      // droplet, ramped down by densification once the water is leaving
-      var kt = free ? KT_FREE : KT_BOUND * ktBoundMul, dmp = free ? DAMP_FREE : DAMP_BOUND;
-      aVX[k] += gk() * kt * dt;
-      aVY[k] += gk() * kt * dt;
-      aVX[k] *= dmp; aVY[k] *= dmp;
-      var vcap = free ? VMAX_FREE : VMAX_BOUND;
-      var vsp = Math.hypot(aVX[k], aVY[k]);
-      if (vsp > vcap) { aVX[k] *= vcap / vsp; aVY[k] *= vcap / vsp; }
-      var nx2 = aX[k] + aVX[k] * dt, ny2 = aY[k] + aVY[k] * dt;
-      if (nx2 < -BX) { nx2 = -BX; aVX[k] = Math.abs(aVX[k]); }
-      if (nx2 > BX) { nx2 = BX; aVX[k] = -Math.abs(aVX[k]); }
-      if (ny2 < -BY) { ny2 = -BY; aVY[k] = Math.abs(aVY[k]); }
-      if (ny2 > BY) { ny2 = BY; aVY[k] = -Math.abs(aVY[k]); }
-      p = aObj[k];
-      p.x = nx2; p.y = ny2; p.vx = aVX[k]; p.vy = aVY[k];
-    }
-  }
-
-  // a granule that lands remembers where each of its ions sits in its own
-  // frame; the pin is what lets it stay a granule while parked in the packing
-  function parkPts(c) {
-    if (!c.pts) return;
-    for (var q = 0; q < c.pts.length; q++) {
-      c.pts[q].rx0 = c.pts[q].x - c.cx;
-      c.pts[q].ry0 = c.pts[q].y - c.cy;
-    }
-  }
-  function translatePts(c, dx, dy) {
-    if (!c.pts) return;
-    for (var q = 0; q < c.pts.length; q++) { c.pts[q].x += dx; c.pts[q].y += dy; }
-  }
-  // Parked granules are solid ACC: no pair dance, no drift -- each ion is
-  // sprung to its rest offset and trembles at the (dehydrated) temperature.
-  function parkedPass(dt) {
-    for (var j = 0; j < clusters.length; j++) {
-      var c = clusters[j];
-      if (c.state !== 'attached' || !c.pts || c.xt) continue;
-      for (var q = 0; q < c.pts.length; q++) {
-        var p = c.pts[q];
-        p.vx += (c.cx + p.rx0 - p.x) * 0.14 * dt + gk() * 0.05 * ktBoundMul * dt;
-        p.vy += (c.cy + p.ry0 - p.y) * 0.14 * dt + gk() * 0.05 * ktBoundMul * dt;
-        p.vx *= 0.66; p.vy *= 0.66;
-        p.x += p.vx * dt; p.y += p.vy * dt;
-      }
-    }
-  }
-
-  /* The crystallization front, running IN PLACE through a parked granule.
-     This used to happen out in solution before attachment; Zhang & Xu 2013
-     puts it here, inside the already-packed tablet, so the granule's centre
-     is pinned to its cell and only its interior reorganises. Only ions the
-     front has recruited feel the lattice restoring force; the rest stay
-     amorphous, held by their neighbours and their pin, until it reaches
-     them. Per-ion jitter in the recruitment radius keeps the boundary
-     ragged. The ions keep touching all the way through: behind the front
-     they sit on the tighter crystalline spacing, ahead of it they are still
-     at the ACC contact distance, so the granule visibly draws itself in and
-     squares up as the front passes. */
-  function orderPass(c, dt) {
-    c.frontR += FRONT_V * dt;
-    var np4 = c.pts.length, pI;
-    var mobO = 1 / Math.sqrt(Math.max(2, np4));
-    var jAmp = 0.35 * (0.6 + 1.4 * mobO);
-    for (pI = 0; pI < np4; pI++) {
-      var pa = c.pts[pI];
-      for (var pB = pI + 1; pB < np4; pB++) {
-        var pb = c.pts[pB];
-        var cd2 = (pa.rec && pb.rec) ? MICRO_SPACING : ION_D * ionDMul;
-        var ddx = pb.x - pa.x, ddy = pb.y - pa.y;
-        var ddr = Math.hypot(ddx, ddy);
-        if (ddr < cd2 && ddr > 1e-4) {
-          var pf = (cd2 - ddr) / cd2 * REP_K * dt;
-          var ux2 = ddx / ddr, uy2 = ddy / ddr;
-          pa.vx -= ux2 * pf; pa.vy -= uy2 * pf;
-          pb.vx += ux2 * pf; pb.vy += uy2 * pf;
-        }
-      }
-    }
-    var cs0 = Math.cos(c.th), sn0 = Math.sin(c.th), sumD = 0;
-    for (pI = 0; pI < np4; pI++) {
-      var p1 = c.pts[pI];
-      if (!p1.rec && p1.fd <= c.frontR * (0.75 + 0.5 * p1.jit)) p1.rec = true;
-      var tgx = c.cx + p1.lx * cs0 - p1.ly * sn0, tgy = c.cy + p1.lx * sn0 + p1.ly * cs0;
-      var dtg = Math.hypot(p1.x - tgx, p1.y - tgy);
-      if (p1.rec) {
-        p1.vx += (tgx - p1.x) * ORDER_K * dt; p1.vy += (tgy - p1.y) * ORDER_K * dt;
-        p1.ok = Math.max(0, 1 - dtg / ORDER_REF);
-      } else {
-        // not yet reached by the front: still amorphous, held together by
-        // its neighbours and loosely by its pin in the granule
-        p1.ok = 0;
-        for (var pC = 0; pC < np4; pC++) {
-          if (pC === pI) continue;
-          var pz = c.pts[pC];
-          var zdx = pz.x - p1.x, zdy = pz.y - p1.y;
-          var zr = Math.hypot(zdx, zdy);
-          if (zr > ION_D && zr < PAIR_CUT) {
-            var zf = K_ATT_BOUND * (1 - (zr - ION_D) / (PAIR_CUT - ION_D)) * dt;
-            p1.vx += zdx / zr * zf; p1.vy += zdy / zr * zf;
-          }
-        }
-        p1.vx += (c.cx + p1.rx0 - p1.x) * 0.04 * dt;
-        p1.vy += (c.cy + p1.ry0 - p1.y) * 0.04 * dt;
-      }
-      // an ion that has found its site stops rattling around
-      var jl = jAmp * (1 - 0.75 * p1.ok) * ktBoundMul;
-      p1.vx += gk() * jl * 0.6 * dt; p1.vy += gk() * jl * 0.6 * dt;
-      p1.vx *= 0.76; p1.vy *= 0.76;
-      p1.x += p1.vx * dt; p1.y += p1.vy * dt;
-      sumD += dtg;
-    }
-    c.orderFrac = Math.max(0, Math.min(1, 1 - (sumD / np4) / ORDER_REF));
-    c.cryst = c.orderFrac;
-    // The centre is deliberately NOT recomputed from the ions: the granule
-    // is parked on its cell, the lattice is anchored there, and ordering
-    // happens around that anchor. Recomputing it let the transformation
-    // walk the grain off its site.
-    if (c.orderFrac >= ORDER_DONE) {
-      // pseudomorphic completion: keep the pattern, drop the ion machinery
-      c.lpts = c.pts.map(function (pp) { return { lx: pp.lx, ly: pp.ly }; });
-      c.pts = null;
-      c.hw = blockHalf(c.lpts.length); c.hh = c.hw;
-      c.cryst = 1; c.state = 'attached';
-      c.xtDoneAt = t; c.poppedAt = t;
-    }
-  }
-
   function step(dt) {
     t += dt; phaseT += dt;
-    var i, j, c;
-
-    var BOUND_X = VIEW_W / 2 + 8, BOUND_Y = VIEW_H / 2 + 8;
-    // the matrix strands fade in when the matrix act starts and back out
-    // once the granules leave for the tablet
-    strandA += (strandOn - strandA) * Math.min(1, 0.04 * dt);
-    // wispy chains while PNCs are the story, round droplets once
-    // condensation on the matrix begins
-    attMul = phase === 'pnc' ? PNC_ATT_MUL : 1;
-    // expelled water drifts off and fades; the array empties itself
-    for (i = waterFx.length - 1; i >= 0; i--) {
-      var wp = waterFx[i];
-      wp.x += wp.vx * dt; wp.y += wp.vy * dt;
-      wp.vx *= 0.97; wp.vy *= 0.97;
-      wp.age += dt;
-      if (wp.age > WATER_LIFE) { waterFx[i] = waterFx[waterFx.length - 1]; waterFx.pop(); }
-    }
-    // The diffuse shell is the droplet's own hydrated interface, so its
-    // opacity is per-droplet state, eased: it grows in as a globule
-    // condenses (never during the quiet loading act) and strips away as
-    // the solid granule departs for the tablet -- it must never pop on a
-    // phase boundary while the droplet itself is unchanged.
-    var haloOn = (phase === 'matrix' && phaseT > MATRIX_LOAD_T) ||
-                 phase === 'densify' || phase === 'pack' || phase === 'fill';
-    for (i = 0; i < clusters.length; i++) {
-      var hc = clusters[i];
-      var hTgt = (haloOn && hc.state === 'blob' && hc.pts && hc.pts.length >= 8) ? 1 : 0;
-      hc.haloA += (hTgt - hc.haloA) * Math.min(1, 0.08 * dt);
-    }
-
-    // Once supersaturation is spent the bath is no longer uniform: what solute
-    // is left sits in a concentration gradient and drifts down it toward the
-    // nearest particle. This is a bias on top of the pair forces, not a
-    // substitute for them -- nothing gets captured at range any more.
-    if (depletionT >= 0 && clusters.length) {
-      for (i = 0; i < ions.length; i++) {
-        var s = ions[i];
-        var nb = null, nbD = Infinity;
-        for (j = 0; j < clusters.length; j++) {
-          var cc = clusters[j];
-          var cd = Math.hypot(cc.cx - s.x, cc.cy - s.y);
-          if (cd < nbD) { nbD = cd; nb = cc; }
-        }
-        if (nb && nbD > 1e-6) {
-          s.vx += ((nb.cx - s.x) / nbD) * SWEEP_A * dt;
-          s.vy += ((nb.cy - s.y) / nbD) * SWEEP_A * dt;
-          var ssp = Math.hypot(s.vx, s.vy);
-          if (ssp > SWEEP_MAX) { s.vx *= SWEEP_MAX / ssp; s.vy *= SWEEP_MAX / ssp; }
-        }
-      }
-    }
-    // The matrix as a sponge (Smeets 2015): free ions inside its reach feel
-    // a weak steady pull toward the nearest strand, which is what locally
-    // concentrates the bath without any capture at range.
-    if ((phase === 'matrix' || phase === 'densify') && strandA > 0.3) {
-      // sequestration runs at full strength only during the loading act;
-      // once condensation starts, the globules grow on the ions the strand
-      // already holds, not on a stream from solution (Smeets Fig 4c)
-      var pullK = STRAND_PULL_ION *
-                  (phase === 'matrix' && phaseT <= MATRIX_LOAD_T ? 1 : 0.55);
-      for (i = 0; i < ions.length; i++) {
-        var si = ions[i];
-        var nsI = nearestStrand(si.x, si.y);
-        if (nsI.d > STRAND_RANGE || nsI.d < 1e-6) continue;
-        si.vx += ((nsI.x - si.x) / nsI.d) * pullK * dt;
-        si.vy += ((nsI.y - si.y) / nsI.d) * pullK * dt;
-        var sspI = Math.hypot(si.vx, si.vy);
-        if (sspI > SWEEP_MAX) { si.vx *= SWEEP_MAX / sspI; si.vy *= SWEEP_MAX / sspI; }
-      }
-      // assemblies feel the matrix too, and record how far off it they sit:
-      // that distance decides below whether they may grow or must churn
-      for (j = 0; j < clusters.length; j++) {
-        c = clusters[j];
-        if (c.state !== 'blob') continue;
-        c.strandD = nearestStrand(c.cx, c.cy).d;
-      }
-    }
-    // every ion moves here, under the same law
-    amorphousPass(dt);
-    // parked granules are solid ACC pinned in the packing: they tremble
-    // in place instead of taking part in the liquid's pair dance
-    if (phase === 'pack' || phase === 'fill' || phase === 'xtalize') parkedPass(dt);
-
     if (phase === 'ions') {
-      if (phaseT > 60) { phase = 'pnc'; phaseT = 0; }
-
-    } else if (phase === 'pnc' || phase === 'matrix' || phase === 'densify' ||
-               phase === 'pack' || phase === 'fill') {
-      // Joining is bookkeeping, not movement. The pair forces have already
-      // drawn the ion in; it becomes a member only once it is genuinely
-      // touching, and it keeps the position it arrived at. Nothing is grabbed
-      // from four diameters away, which is what used to make growth look like
-      // ions being teleported into place.
-      for (i = ions.length - 1; i >= 0; i--) {
-        var ia = ions[i];
-        var bestC = -1, bestD = STICK_R;
-        for (j = 0; j < clusters.length; j++) {
-          c = clusters[j];
-          if (c.state !== 'blob') continue;
-          // Only on the matrix may an assembly take on a globule's worth of
-          // ions (Smeets 2015), and only once the loading act is over --
-          // without that gate the PNCs carried over from the last act
-          // ballooned into full globules during the very act the caption
-          // calls quiet. Off the strands the ceiling stays a cluster's.
-          var cap = (phase === 'matrix' && c.strandD > STRAND_R * 2)
-                    ? PNC_CAP : growCap();
-          if (c.pts.length >= cap) continue;
-          if (Math.abs(c.cx - ia.x) > 14 || Math.abs(c.cy - ia.y) > 14) continue;
-          for (var m = 0; m < c.pts.length; m++) {
-            var dd = Math.hypot(c.pts[m].x - ia.x, c.pts[m].y - ia.y);
-            if (dd < bestD) { bestD = dd; bestC = j; }
-          }
-        }
-        if (bestC >= 0) {
-          c = clusters[bestC];
-          var np = ionPt(ia.x, ia.y);
-          np.vx = ia.vx; np.vy = ia.vy;   // it keeps the momentum it came in with
-          c.pts.push(np);
-          ions.splice(i, 1);
-          continue;
-        }
-        // Two solvated ions in contact: a new association, where they met.
-        // In the pnc act this happens anywhere, because prenucleation
-        // clusters are solutes of the whole bath; in the matrix act new
-        // associations start only against a strand, where the bound calcium
-        // actually is -- and only AFTER the loading act, since sequestration
-        // alone involves no mineral chemistry (Smeets: a ~20 min quiet
-        // loading before anything condenses). After densification nothing
-        // new nucleates at all.
-        if (phase !== 'pnc' && phase !== 'matrix') continue;
-        if (phase === 'matrix' && phaseT <= MATRIX_LOAD_T) continue;
-        for (var k = i - 1; k >= 0; k--) {
-          var ib = ions[k];
-          if (Math.hypot(ib.x - ia.x, ib.y - ia.y) >= NUC_R) continue;
-          var pN = NUC_P;
-          if (phase === 'matrix') {
-            if (nearestStrand(ia.x, ia.y).d > STRAND_R ||
-                nearestStrand(ib.x, ib.y).d > STRAND_R) continue;
-            pN = NUC_P_MATRIX;
-          }
-          if (rnd() < pN) {
-            var nc = newCluster((ia.x + ib.x) / 2, (ia.y + ib.y) / 2);
-            var q1 = ionPt(ia.x, ia.y), q2 = ionPt(ib.x, ib.y);
-            q1.vx = ia.vx; q1.vy = ia.vy; q2.vx = ib.vx; q2.vy = ib.vy;
-            nc.pts = [q1, q2];
-            ions.splice(i, 1); ions.splice(k, 1); i--;
-            break;
-          }
-        }
-      }
-
-      // coalescence: two dense-liquid droplets that run into each other merge
-      // into one. The member ions keep their absolute positions, so the
-      // merged object is briefly a lopsided peanut that relaxes as it
-      // jostles. Droplet-droplet aggregation belongs to the dense-liquid
-      // stage and later: while the species are PNCs, growth is by monomer
-      // addition only (Avaro 2023's log-slope evidence), so no merging yet
-      // -- and none either during the matrix's quiet loading act, or away
-      // from the strands while the matrix act runs, since condensation is
-      // exclusive to the matrix (Smeets 2015).
-      for (i = clusters.length - 1; i >= 0; i--) {
-        var ci = clusters[i];
-        if (ci.state !== 'blob' || phase === 'pnc' ||
-            (phase === 'matrix' && phaseT <= MATRIX_LOAD_T)) continue;
-        for (j = i - 1; j >= 0; j--) {
-          var cj = clusters[j]; if (cj.state !== 'blob') continue;
-          if (phase === 'matrix' &&
-              (ci.strandD > STRAND_R * 2 || cj.strandD > STRAND_R * 2)) continue;
-          // coalescence dominates while droplets are small; two already-large
-          // particles bump and part instead of fusing. The merged size obeys
-          // the same ramping ceiling, so merges cannot outrun condensation.
-          if (ci.pts.length + cj.pts.length > growCap()) continue;
-          var ri = Math.sqrt(ci.pts.length) * 0.7, rj = Math.sqrt(cj.pts.length) * 0.7;
-          if (Math.hypot(ci.cx - cj.cx, ci.cy - cj.cy) < (ri + rj) * 0.8) {
-            var ni = ci.pts.length, nj = cj.pts.length;
-            cj.vx = (cj.vx * nj + ci.vx * ni) / (ni + nj);
-            cj.vy = (cj.vy * nj + ci.vy * ni) / (ni + nj);
-            for (var pm = 0; pm < ci.pts.length; pm++) cj.pts.push(ci.pts[pm]);
-            clusters.splice(i, 1);
-            break;
-          }
-        }
-      }
-
-      // surface energy at work between particles, not just within them: two
-      // droplets that could still fuse pull on each other and close the gap
-      // themselves rather than waiting on a chance collision. Like
-      // coalescence, this is dense-liquid behaviour -- PNCs are solutes in
-      // equilibrium and feel no such drive, nothing feels it during the
-      // quiet loading act, and during the matrix act it acts only between
-      // droplets that are actually on the matrix.
-      for (i = 0; i < clusters.length; i++) {
-        var ca = clusters[i];
-        if (ca.state !== 'blob' || phase === 'pnc' ||
-            (phase === 'matrix' && phaseT <= MATRIX_LOAD_T)) continue;
-        for (j = i + 1; j < clusters.length; j++) {
-          var cb = clusters[j];
-          if (cb.state !== 'blob') continue;
-          if (phase === 'matrix' &&
-              (ca.strandD > STRAND_R * 2 || cb.strandD > STRAND_R * 2)) continue;
-          if (ca.pts.length + cb.pts.length > SIZE_CAP) continue;
-          var ax = cb.cx - ca.cx, ay = cb.cy - ca.cy;
-          var ad = Math.hypot(ax, ay);
-          if (ad > ATTRACT_R || ad < 1e-4) continue;
-          var af2 = ATTRACT_K * (1 - ad / ATTRACT_R) / ad * dt;
-          var ma = 1 / Math.sqrt(ca.pts.length), mb = 1 / Math.sqrt(cb.pts.length);
-          ca.vx += ax * af2 * ma; ca.vy += ay * af2 * ma;
-          cb.vx -= ax * af2 * mb; cb.vy -= ay * af2 * mb;
-        }
-      }
-
-      // dissolution and ripening: via Gibbs-Thomson, particles smaller than
-      // the ensemble average shed ions that larger neighbours re-absorb, and
-      // sub-critical nuclei dissolve away entirely instead of surviving as
-      // runts. Everything also trades a slow background of ions with the
-      // solution, so the field is never truly empty.
-      var nBar = 0, nCnt = 0;
-      for (j = 0; j < clusters.length; j++) {
-        c = clusters[j];
-        var n0 = c.pts ? c.pts.length : (c.lpts ? c.lpts.length : 0);
-        if (n0 > 0) { nBar += n0; nCnt++; }
-      }
-      nBar = nCnt ? nBar / nCnt : GROW_TARGET;
-      /* Dissolution is the reversibility of the pathway, and it is phased:
-         in the pnc act EVERYTHING churns, because prenucleation clusters are
-         equilibrium solutes that dissolve as readily as they form; in the
-         matrix act the strand-bound globules are stabilised while anything
-         loose in the bath keeps churning; densification is the crossing of
-         the amorphous solubility limit, the one-way gate, after which no
-         granule redissolves (Avaro 2023). The exception is deliberate: the
-         sub-critical runts. The densify ramp cooled and tightened them like
-         everything else, but solid or not they never reached a granule's
-         size, surface energy wins at that radius (Gibbs-Thomson, per the
-         MIN_XTAL note above), and they drain back during packing -- which
-         is also what keeps a stray 13-ion blob from deadlocking the gate
-         into crystallization, since only granules of MIN_XTAL and up ever
-         launch for the tablet. */
-      for (j = clusters.length - 1; j >= 0; j--) {
-        c = clusters[j];
-        if (c.state !== 'blob') continue;
-        var n1 = c.pts.length;
-        var shed = 0;
-        if (phase === 'pnc') {
-          shed = BG_DETACH + PNC_DISS;
-        } else if (phase === 'matrix') {
-          var gt = K_DISS * (1 / Math.sqrt(n1) - 1 / Math.sqrt(nBar));
-          shed = BG_DETACH + (gt > 0 ? gt : 0);
-          if (c.strandD > STRAND_R * 2) shed += PNC_DISS * 0.8;
-          else shed *= 0.3;
-        } else if (phase === 'pack' || phase === 'fill') {
-          if (n1 < MIN_XTAL) shed = RUNT_DETACH;
-        }
-        if (shed > 0 && rnd() < shed * dt) {
-          var far2 = 0, fdd = -1;
-          for (var pd = 0; pd < n1; pd++) {
-            var d2 = Math.hypot(c.pts[pd].x - c.cx, c.pts[pd].y - c.cy);
-            if (d2 > fdd) { fdd = d2; far2 = pd; }
-          }
-          var rp = c.pts.splice(far2, 1)[0];
-          // once the granules are aggregating, anything shed is taken up
-          // by the growing structure immediately rather than going back into
-          // solution -- no strays are left drifting over the finished array
-          if (phase !== 'fill') {
-            var oa = Math.atan2(rp.y - c.cy, rp.x - c.cx);
-            ions.push({ x: rp.x, y: rp.y, vx: Math.cos(oa) * 0.6, vy: Math.sin(oa) * 0.6 });
-          }
-          if (c.pts.length === 0) clusters.splice(j, 1);
-        }
-      }
-
-      for (j = 0; j < clusters.length; j++) {
-        c = clusters[j];
-        if (c.state !== 'blob') continue;
-
-        var pI, mxT, myT, np2 = c.pts.length;
-        // Nothing to integrate here: the droplet's ions were moved by the
-        // pair pass, along with every other ion in the scene. All this needs
-        // is where the particle now is. Its drift is the average of what its
-        // own ions are doing, so a large droplet creeps and a fresh dimer
-        // darts without that having to be imposed.
-        mxT = 0; myT = 0;
-        var svx = 0, svy = 0;
-        for (pI = 0; pI < np2; pI++) {
-          mxT += c.pts[pI].x; myT += c.pts[pI].y;
-          svx += c.pts[pI].vx; svy += c.pts[pI].vy;
-        }
-        c.cx = mxT / np2; c.cy = myT / np2;
-        c.vx = svx / np2; c.vy = svy / np2;
-
-        // The matrix holds what it has bound: every ion of a nearby assembly
-        // feels a weak spring toward the nearest point of the strand, so
-        // free-floating clusters drift onto the matrix, and once there they
-        // spread along the chain into the flat, strand-hugging globules the
-        // liquid-cell TEM actually shows (Smeets 2015, Fig 2).
-        if ((phase === 'matrix' || phase === 'densify') && strandA > 0.5 &&
-            c.strandD < STRAND_RANGE) {
-          for (pI = 0; pI < np2; pI++) {
-            var sp0 = c.pts[pI];
-            var nsP = nearestStrand(sp0.x, sp0.y);
-            if (nsP.d < 1e-6) continue;
-            var kS = nsP.d < 4 ? STRAND_PULL_NEAR : STRAND_PULL_PT;
-            sp0.vx += ((nsP.x - sp0.x) / nsP.d) * kS * dt;
-            sp0.vy += ((nsP.y - sp0.y) / nsP.d) * kS * dt;
-          }
-        }
-      }
-
-      // Densified granules leave the matrix for the tablet and claim a slot
-      // in the packing WHILE STILL AMORPHOUS -- Zhang & Xu 2013's order of
-      // events: self-assembly first, crystallization in place afterwards.
-      // The granule keeps its real ions through the journey; footprint is
-      // sized by how many it actually gathered, so the packing is
-      // polydisperse, not identical tiles. Launches are staggered, one
-      // granule deciding to go at a time, not a synchronized departure.
-      if (phase === 'pack' || phase === 'fill') {
-        for (j = 0; j < clusters.length; j++) {
-          c = clusters[j];
-          if (c.state !== 'blob' || c.pts.length < MIN_XTAL) continue;
-          if (rnd() > P_LAUNCH * dt) continue;
-          c.hw = blockHalf(c.pts.length);
-          c.hh = c.hw;
-          c.seedborn = true;
-          seedSizes.push(c.pts.length);
-          var slot = claimCell(c.cx, c.cy);
-          if (!slot) {
-            // Array already complete: a late granule still TRAVELS to the
-            // tablet and parks on its rim, an off-lattice grain -- never
-            // marooned out in the bath where the crystallization wave could
-            // not reach it (a stranded granule with no contacts once froze
-            // the whole transformation waiting on its lone spontaneous
-            // nucleation).
-            var ra = Math.atan2(c.cy - latOY, c.cx - latOX);
-            c.tx = latOX + Math.cos(ra) * (HEX_A + TILE_HW * 1.2);
-            c.ty = latOY + Math.sin(ra) * (HEX_A + TILE_HW * 1.2);
-            c.offTile = true;
-            c.cellPX = c.tx; c.cellPY = c.ty;
-            c.fromX = c.cx; c.fromY = c.cy;
-            c.attachT = 0; c.kicked = true;
-            c.state = 'attach';
-            continue;
-          }
-          var toff = tileOffset();
-          c.phx = toff.phx; c.phy = toff.phy; c.offTile = toff.off;
-          c.cellPX = cellX(slot); c.cellPY = cellY(slot);
-          c.tx = c.cellPX + c.phx; c.ty = c.cellPY + c.phy;
-          c.fromX = c.cx; c.fromY = c.cy;
-          c.attachT = 0; c.kicked = false;
-          c.state = 'attach';
-        }
-      }
-      // attachment kinematics per Li et al. 2012: a long diffusive search
-      // with only a weak bias, transient aborted encounters, then -- once
-      // inside short range -- a jump to contact that is still ACCELERATING
-      // at the moment of impact. Never an eased glide. The search leg is a
-      // proper random walk now: heavy damping and Gaussian kicks, scaled by
-      // Stokes-Einstein mobility so a big granule wanders more sluggishly
-      // than a small one.
-      for (j = 0; j < clusters.length; j++) {
-        c = clusters[j];
-        if (c.state !== 'attach') continue;
-        c.attachT += dt;
-        var ox0 = c.cx, oy0 = c.cy;
-        var gx = c.tx - c.cx, gy = c.ty - c.cy, g = Math.hypot(gx, gy) || 1e-6;
-        var ux = gx / g, uy = gy / g;
-        var mobA = Math.sqrt(TILE_HW / Math.max(c.hw, 0.8));
-        if (g > SNAP_R) {
-          c.vx += ux * A_BIAS * mobA * dt + gk() * 0.30 * mobA * dt;
-          c.vy += uy * A_BIAS * mobA * dt + gk() * 0.30 * mobA * dt;
-          c.vx *= 0.80; c.vy *= 0.80;
-          var sp1 = Math.hypot(c.vx, c.vy);
-          var vc1 = VS_SEARCH * mobA;
-          if (sp1 > vc1) { c.vx *= vc1 / sp1; c.vy *= vc1 / sp1; }
-        } else if (!c.kicked && c.seedborn && rnd() < 0.45) {
-          // transient contact that fails to hold: recoil once, then return
-          c.kicked = true;
-          c.vx -= ux * 1.8; c.vy -= uy * 1.8;
-        } else {
-          c.vx += ux * (A_SNAP / Math.max(g, 0.6)) * dt;
-          c.vy += uy * (A_SNAP / Math.max(g, 0.6)) * dt;
-          c.vx *= 0.90; c.vy *= 0.90;
-          var sp2 = Math.hypot(c.vx, c.vy);
-          if (sp2 > VS_SNAP) { c.vx *= VS_SNAP / sp2; c.vy *= VS_SNAP / sp2; }
-        }
-        c.cx += c.vx * dt; c.cy += c.vy * dt;
-        // the granule is a solid: its ions travel with it, rigidly
-        translatePts(c, c.cx - ox0, c.cy - oy0);
-        if (g < CONTACT_R || c.attachT > ATTACH_TIMEOUT) {
-          translatePts(c, c.tx - c.cx, c.ty - c.cy);
-          c.cx = c.tx; c.cy = c.ty; c.vx = 0; c.vy = 0;
-          c.state = 'attached'; c.poppedAt = t;
-          if (c.pts) parkPts(c);
-        }
-      }
-      // beyond the granules that actually grew from real ion clustering,
-      // the packing keeps extending itself outward -- with granule sizes
-      // drawn from the same distribution the real seeds produced, so the far
-      // packing is just as polydisperse as the part that assembled on screen
-      // Three granules stuck together is the nucleus that gets past the
-      // barrier -- below that an aggregate is as likely to come apart again.
-      // Once one survives, everything else on the matrix is densifying on
-      // much the same schedule, and the assembly ramps up.
-      if (!arrayComplete() && (phase === 'fill' || countAttached() >= 3)) {
-        // aggregation proper begins here: the solution is spent, so the last
-        // of it is taken up rather than left hanging around the array
-        if (phase !== 'fill') ions.length = 0;
-        phase = 'fill';
-        // Only so many are ever on their way at once, and the allowance grows
-        // with the crystal: a big one has the perimeter to be taking material
-        // at several points, a three-block nucleus does not, and letting a
-        // couple of dozen converge on it reads as a swarm again. Dispatching
-        // one per site the instant it was claimed put over a hundred in the
-        // air with nine attached.
-        var inFlight = 0, nAtt = 0;
-        for (j = 0; j < clusters.length; j++) {
-          if (clusters[j].state === 'attach') inFlight++;
-          else if (clusters[j].state === 'attached') nAtt++;
-        }
-        var allowed = Math.max(4, Math.min(MAX_INFLIGHT, Math.round(nAtt * 0.55)));
-        fillBank += FILL_RATE * dt;
-        while (fillBank >= 1 && inFlight < allowed && !arrayComplete()) {
-          fillBank -= 1;
-          inFlight++;
-          // a crystallite drifts in from some direction and joins the cluster
-          // at the nearest point of its edge, not at a predetermined site
-          var apA = rnd() * TAU;
-          var slot2 = claimCell(latOX + Math.cos(apA) * HEX_A * 2.4, latOY + Math.sin(apA) * HEX_A * 2.4);
-          if (!slot2) break;
-          var sx2 = cellX(slot2), sy2 = cellY(slot2);
-          var d0 = Math.hypot(sx2 - latOX, sy2 - latOY) || 1;
-          var nIons = seedSizes.length ? seedSizes[Math.floor(rnd() * seedSizes.length)] : GROW_TARGET;
-          var nc2 = newCluster(sx2 + (sx2 - latOX) / d0 * SPACING * SPAWN_OUT,
-                               sy2 + (sy2 - latOY) / d0 * SPACING * SPAWN_OUT);
-          // fabricated far-field granules arrive AMORPHOUS, like everything
-          // else -- cryst 0 -- and carry their eventual grain pattern with
-          // them for the day the crystallization wave reaches their cell
-          nc2.pts = null;
-          nc2.lpts = microCellsFor(nIons);
-          nc2.hw = blockHalf(nIons);
-          nc2.hh = nc2.hw;
-          var toff2 = tileOffset();
-          nc2.phx = toff2.phx; nc2.phy = toff2.phy; nc2.offTile = toff2.off;
-          nc2.cellPX = sx2; nc2.cellPY = sy2;
-          nc2.tx = sx2 + nc2.phx; nc2.ty = sy2 + nc2.phy;
-          nc2.fromX = nc2.cx; nc2.fromY = nc2.cy;
-          nc2.state = 'attach'; nc2.attachT = 0; nc2.kicked = true;
-        }
-      }
-      // advancing through the solution acts
-      if (phase === 'pnc' && phaseT > PNC_DUR) {
-        phase = 'matrix'; phaseT = 0;
-        strandOn = 1;                    // the matrix enters the story
-      } else if (phase === 'matrix' &&
-                 ((phaseT > MATRIX_LOAD_T + 100 &&
-                   ions.length <= Math.round(N_ION * MATRIX_FREE_FRAC)) ||
-                  phaseT > MATRIX_MAXT)) {
-        // a minimum stay long enough for BOTH acts -- the quiet loading and
-        // then condensation -- this act is the story's centrepiece, not a
-        // checkpoint
-        phase = 'densify'; phaseT = 0;   // the binodal: reversibility ends here
-      } else if (phase === 'densify') {
-        var df = Math.min(1, phaseT / DENSIFY_DUR);
-        denseF = df;
-        ktBoundMul = 1 - 0.55 * df;      // the water leaves: the wobble cools
-        ionDMul = 1 - (1 - ACC_DMUL) * df; // and the packing pulls tighter
-        // and the water is SEEN leaving: droplets shed specks outward
-        // through the diffuse shell while their cores draw in
-        if (waterFx.length < WATER_MAX) {
-          for (j = 0; j < clusters.length; j++) {
-            c = clusters[j];
-            if (c.state !== 'blob' || c.pts.length < 6) continue;
-            if (rnd() > 0.16 * dt) continue;
-            var pw = c.pts[Math.floor(rnd() * c.pts.length)];
-            var wa = Math.atan2(pw.y - c.cy, pw.x - c.cx) + (rnd() - 0.5) * 0.6;
-            waterFx.push({ x: pw.x, y: pw.y,
-                           vx: Math.cos(wa) * 0.55, vy: Math.sin(wa) * 0.55, age: 0 });
-          }
-        }
-        if (phaseT > DENSIFY_DUR) {
-          phase = 'pack'; phaseT = 0;
-          depletionT = t;                // what solute is left drains to the granules
-          strandOn = 0;                  // the matrix hands its cargo on
-        }
-      }
-      if (arrayComplete()) {
-        var allIn = true;
-        for (j = 0; j < clusters.length; j++) {
-          var stJ = clusters[j].state;
-          if (stJ === 'attach' || stJ === 'blob') { allIn = false; break; }
-        }
-        if (allIn) {
-          // the packing is finished, and the solution is finished with too:
-          // any last stray has been taken up by the structure by now. The
-          // tablet is complete but still a colloidal aggregate: amorphous
-          // granules pressed together. Crystallinity comes next, in place.
-          ions.length = 0;
-          phase = 'xtalize'; phaseT = 0;
-        }
-      }
-
-    } else if (phase === 'xtalize') {
-      // -------- in-place crystallization of the packed tablet ----------
-      // Zhang & Xu 2013: nucleation at multiple sites, at different times;
-      // growth by transformation of each granule's ACC; spread by contact;
-      // then fusion of touching grains across their boundaries, all sharing
-      // one lattice orientation (set in startOrdering),
-      // until the tablet is one monolithic crystal.
-      if (!xtNbrsBuilt) {
-        // contact lists, built once -- the packing no longer moves
-        var bkt = {}, bkey, bi2, bc;
-        for (j = 0; j < clusters.length; j++) {
-          bc = clusters[j];
-          bkey = Math.round(bc.cx / SPACING) + ',' + Math.round(bc.cy / SPACING);
-          if (bkt[bkey]) bkt[bkey].push(bc); else bkt[bkey] = [bc];
-          bc.nbrs = [];
-        }
-        for (j = 0; j < clusters.length; j++) {
-          bc = clusters[j];
-          var bgx = Math.round(bc.cx / SPACING), bgy = Math.round(bc.cy / SPACING);
-          for (var box = -1; box <= 1; box++) for (var boy = -1; boy <= 1; boy++) {
-            var bl = bkt[(bgx + box) + ',' + (bgy + boy)];
-            if (!bl) continue;
-            for (bi2 = 0; bi2 < bl.length; bi2++) {
-              var oc2 = bl[bi2];
-              if (oc2 === bc) continue;
-              if (Math.hypot(oc2.cx - bc.cx, oc2.cy - bc.cy) < NBR_R) bc.nbrs.push(oc2);
-            }
-          }
-        }
-        xtNbrsBuilt = true;
-      }
-      var allDone = true;
-      for (j = 0; j < clusters.length; j++) {
-        c = clusters[j];
-        if (c.state === 'order') {
-          // a real granule mid-transformation: the front is sweeping it
-          orderPass(c, dt);
-          allDone = false;
-          continue;
-        }
-        if (c.cryst < 1) {
-          allDone = false;
-          if (!c.xt) {
-            // not yet started: rare spontaneous starts anywhere, fast
-            // catalysis where a neighbour's transformation has reached the
-            // shared boundary -- so a few independent origins fire at
-            // different moments and ragged waves spread from each
-            var hz = P_NUC_X, inf = null;
-            if (c.nbrs) {
-              for (var nj = 0; nj < c.nbrs.length; nj++) {
-                if (c.nbrs[nj].cryst >= XT_SPREAD_AT) { hz = P_SPREAD; inf = c.nbrs[nj]; break; }
-              }
-            }
-            // a grain the wave cannot reach -- no contacts at all -- runs on
-            // its own, much shorter spontaneous clock, so one isolated rim
-            // straggler can never hold the terminal gate open indefinitely
-            if (!c.nbrs || !c.nbrs.length) hz = P_NUC_X * 60;
-            if (rnd() < hz * dt) {
-              if (c.pts) {
-                // the front enters through the face the neighbour touches
-                if (inf) startOrdering(c, inf.cx - c.cx, inf.cy - c.cy);
-                else startOrdering(c);
-              } else {
-                // schematic far-field granule: transformation as a ramp
-                c.xt = true;
-                c.th = mesoTh + (rnd() - 0.5) * TH_SPREAD;
-              }
-            }
-          } else {
-            c.cryst = Math.min(1, c.cryst + XT_RATE * dt * (0.7 + 0.6 * rnd()));
-            if (c.cryst >= 1) { c.xtDoneAt = t; c.poppedAt = t; }
-          }
-        } else if (!c.aligned) {
-          // fusion: the grain already shares its neighbours' lattice
-          // orientation (see startOrdering), so what remains is translational
-          // misfit. It heals as the boundary is eliminated; when it is gone the
-          // grain joins the coherent domain and its fringes run continuously
-          // into its neighbours'.
-          allDone = false;
-          if (t - c.xtDoneAt > HEAL_WAIT) {
-            c.cx += (c.cellPX - c.cx) * Math.min(1, HEAL_K * dt);
-            c.cy += (c.cellPY - c.cy) * Math.min(1, HEAL_K * dt);
-            if (Math.hypot(c.cx - c.cellPX, c.cy - c.cellPY) < 0.05) {
-              c.th = mesoTh; c.cx = c.cellPX; c.cy = c.cellPY;
-              c.tx = c.cellPX; c.ty = c.cellPY;
-              c.phx = 0; c.phy = 0;
-              c.offTile = false; c.aligned = true;
-            }
-          }
-        }
-      }
-      if (allDone) {
-        ions.length = 0;
-        phase = 'zoomout'; phaseT = 0;
-      }
-
+      pzBath(dt);
+      if (phaseT > pzStage.ions) { phase = 'pnc'; phaseT = 0; }
+    } else if (phase === 'pnc') {
+      pzBath(dt); pzForm(dt); pzMotion(dt); pzCapture(dt); pzDissolve(dt);
+      if (phaseT > pzStage.pnc) { phase = 'cluster'; phaseT = 0; }
+    } else if (phase === 'cluster') {
+      pzBath(dt); pzForm(dt); pzMotion(dt); pzAggregate(dt); pzCapture(dt); pzDissolve(dt); pzNucleate(dt);
+      if (phaseT > pzStage.cluster) { phase = 'nucleate'; phaseT = 0; }
+    } else if (phase === 'nucleate') {
+      pzBath(dt); pzMotion(dt); pzAggregate(dt); pzCapture(dt); pzDissolve(dt); pzNucleate(dt);
+      if (phaseT > pzStage.nucleate) { phase = 'attach'; phaseT = 0; }
+    } else if (phase === 'attach') {
+      pzBath(dt); pzMotion(dt); pzCapture(dt); pzNucleate(dt);
+      pzArray(); pzFly(dt);
+      if (attachedN >= HEX_CELLS.length) pzFinish();
     } else if (phase === 'zoomout') {
       if (phaseT > 260) { phase = 'nacre'; phaseT = 0; }
     } else if (phase === 'nacre') {
@@ -4403,26 +3749,6 @@ footer .signoff em {
     }
 
     var margin = TILE_HW * 3;
-    // The organic matrix: a few adsorbed acidic strands, warm against the
-    // mineral cyan -- the one organic actor in an inorganic scene. Drawn
-    // under the ions, since the chemistry happens on top of it.
-    if (strandA > 0.01 && strands) {
-      ctx.save();
-      ctx.globalAlpha = alpha * strandA * 0.55;
-      ctx.strokeStyle = 'rgba(222,158,138,0.9)';
-      ctx.lineWidth = Math.max(1, 0.10 * sc);
-      ctx.lineJoin = 'round'; ctx.lineCap = 'round';
-      for (i = 0; i < strands.length; i++) {
-        var sPts = strands[i];
-        ctx.beginPath();
-        for (var sk = 0; sk < sPts.length; sk++) {
-          if (sk === 0) ctx.moveTo(X(sPts[sk].x), Y(sPts[sk].y));
-          else ctx.lineTo(X(sPts[sk].x), Y(sPts[sk].y));
-        }
-        ctx.stroke();
-      }
-      ctx.restore();
-    }
     ctx.fillStyle = C.solute;
     ctx.beginPath();
     var rs = Math.max(1, 0.28 * sc);
@@ -4433,19 +3759,6 @@ footer .signoff em {
       ctx.arc(X(s.x), Y(s.y), rs, 0, TAU);
     }
     ctx.fill();
-    // expelled water: smaller and paler than the solute, drifting away from
-    // the densifying droplets and fading as it rejoins the bath
-    if (waterFx.length) {
-      var wr = Math.max(0.8, 0.16 * sc);
-      for (i = 0; i < waterFx.length; i++) {
-        var wq = waterFx[i];
-        ctx.fillStyle = 'rgba(196,238,250,' + (0.5 * (1 - wq.age / WATER_LIFE)).toFixed(3) + ')';
-        ctx.beginPath();
-        ctx.arc(X(wq.x), Y(wq.y), wr, 0, TAU);
-        ctx.fill();
-      }
-    }
-
     // Everything that can share a colour is accumulated into one path and
     // drawn in a single call. Filling and stroking several hundred blocks
     // individually -- and clipping for each one -- was what made the array
@@ -4462,6 +3775,8 @@ footer .signoff em {
     var amBodies = new Path2D(), amAny = false;
     var pops = null, anyXtal = false;
     var grainR = Math.max(0.6, 0.20 * sc);
+    var bodiesOn = phase === 'zoomout' || phase === 'hold' || phase === 'done';
+    var ordDots = new Path2D(), ordR = Math.max(0.6, 0.22 * sc);
 
     for (i = 0; i < clusters.length; i++) {
       c = clusters[i];
@@ -4475,6 +3790,10 @@ footer .signoff em {
         // opacity is the cluster's own eased state, not a phase gate.
         if (c.haloA > 0.02) drawHalo(c);
         drawClusterIons(c);
+      } else if (!bodiesOn) {
+        // before the zoom-out the array is its ordered dots only: no tile
+        // bodies, rims or lattice fringes
+        if (c.state === 'attached') addGrains(ordDots, c, ordR);
       } else if (c.cryst < 1) {
         // schematic far-field granule, still amorphous: a soft disc. The
         // sharp block face is earned by crystallization, not by arrival.
@@ -4500,6 +3819,7 @@ footer .signoff em {
         }
       }
     }
+    if (!bodiesOn) { ctx.fillStyle = ionColor(1); ctx.fill(ordDots); }
     if (amAny) {
       // denser than solution, well short of crystal: the nanogranular tablet
       ctx.fillStyle = '#102836';
@@ -4508,6 +3828,9 @@ footer .signoff em {
       ctx.lineWidth = Math.max(1, 0.05 * sc);
       ctx.stroke(amBodies);
     }
+    // the tile bodies fade in as the camera starts to pull back, so the
+    // ordered dots hand over to the tiles rather than being replaced
+    ctx.globalAlpha = alpha * (phase === 'zoomout' ? Math.min(1, phaseT / 60) : 1);
     if (anyXtal) {
       ctx.fillStyle = C.xtBody;
       ctx.fill(bodies);
@@ -4526,8 +3849,7 @@ footer .signoff em {
     // lattice fringes only where the magnification could actually resolve
     // them -- once the camera pulls far enough back they go sub-pixel and
     // are dropped, as they would be in a real low-mag image
-    if (anyXtal && spPx > 2.2 && (phase === 'zoomout' || phase === 'hold' || phase === 'done' ||
-                                  phase === 'fill' || phase === 'xtalize')) {
+    if (anyXtal && spPx > 2.2 && (phase === 'zoomout' || phase === 'hold' || phase === 'done')) {
       // The fringe field is hundreds of line segments and does not change
       // while the camera is still, which is the whole of the array stage.
       // Rasterise it once and blit it through the clip instead of restroking
@@ -4567,8 +3889,7 @@ footer .signoff em {
     stageEls[el.getAttribute('data-stage')] = el;
   });
   var PHASE_LABEL = {
-    ions: 'ions', pnc: 'pnc', matrix: 'matrix', densify: 'acc',
-    pack: 'pack', fill: 'pack', xtalize: 'xtal',
+    ions: 'ions', pnc: 'pnc', cluster: 'amorphous', nucleate: 'nucleate', attach: 'attach',
     zoomout: 'tablet', nacre: 'nacre', shell: 'shell', hold: 'shell', done: 'shell'
   };
   function readout() {
@@ -4595,64 +3916,15 @@ footer .signoff em {
     reset: reset,
     render: function () { render(1); },
     state: function () {
-      var counts = {}, bad = false, i, c;
+      var kinds = {}, nan = false, i;
       for (i = 0; i < clusters.length; i++) {
-        c = clusters[i];
-        counts[c.state] = (counts[c.state] || 0) + 1;
-        if (isNaN(c.cx) || isNaN(c.cy)) bad = true;
-        if (c.pts) for (var p = 0; p < c.pts.length; p++) if (isNaN(c.pts[p].x)) bad = true;
-      }
-      var pending = [], hws = [], offs = 0;
-      for (i = 0; i < clusters.length; i++) {
-        c = clusters[i];
-        if (c.state === 'blob' || c.state === 'order') {
-          var rec = 0;
-          for (var q = 0; q < c.pts.length; q++) if (c.pts[q].rec) rec++;
-          var nnSum = 0, rgSum = 0, np3 = c.pts.length;
-          for (var u = 0; u < np3; u++) {
-            var best = Infinity;
-            for (var v = 0; v < np3; v++) {
-              if (u === v) continue;
-              var dd2 = Math.hypot(c.pts[u].x - c.pts[v].x, c.pts[u].y - c.pts[v].y);
-              if (dd2 < best) best = dd2;
-            }
-            if (best < Infinity) nnSum += best;
-            rgSum += Math.pow(c.pts[u].x - c.cx, 2) + Math.pow(c.pts[u].y - c.cy, 2);
-          }
-          pending.push({
-            st: c.state, n: np3, rec: rec,
-            of: Math.round(c.orderFrac * 100) / 100, fr: Math.round(c.frontR * 10) / 10,
-            nnd: np3 > 1 ? Math.round(nnSum / np3 * 100) / 100 : null,
-            rg: np3 > 1 ? Math.round(Math.sqrt(rgSum / np3) * 100) / 100 : null
-          });
-        } else {
-          hws.push(Math.round(c.hw * 100) / 100);
-          if (c.offTile) offs++;
-        }
+        var c = clusters[i];
+        kinds[c.state] = (kinds[c.state] || 0) + 1;
+        if (isNaN(c.cx) || isNaN(c.cy)) nan = true;
       }
       return {
-        phase: phase, t: Math.round(t), ions: ions.length, clusters: clusters.length,
-        counts: counts, placed: Object.keys(occupied).length, cells: HEX_CELLS.length,
-        frontier: frontier.length, seeded: seeded, complete: arrayComplete(),
-        aggRg: (function () {
-          var ks = Object.keys(occupied), m = ks.length;
-          if (!m) return null;
-          var sx = 0, sy = 0, k, cc;
-          for (k = 0; k < m; k++) { cc = CELLS[ks[k]]; sx += cc.i; sy += cc.j; }
-          sx /= m; sy /= m;
-          var v = 0;
-          for (k = 0; k < m; k++) { cc = CELLS[ks[k]]; v += (cc.i - sx) * (cc.i - sx) + (cc.j - sy) * (cc.j - sy); }
-          // compact disc of the same cell count would give sqrt(m/PI)/sqrt(2)
-          return { rg: Math.sqrt(v / m), discRg: Math.sqrt(m / Math.PI) / Math.SQRT2 };
-        })(),
-        nan: bad, seedSizes: seedSizes.slice(),
-        pending: pending, offTiles: offs,
-        water: waterFx.length, denseF: Math.round(denseF * 100) / 100,
-        strandA: Math.round(strandA * 100) / 100, phaseT: Math.round(phaseT),
-        hwMin: hws.length ? Math.min.apply(null, hws) : null,
-        hwMax: hws.length ? Math.max.apply(null, hws) : null,
-        hwMean: hws.length ? Math.round(hws.reduce(function (a, b) { return a + b; }, 0) / hws.length * 100) / 100 : null,
-        spacing: SPACING, nnDist: Math.round(SPACING * Math.sqrt(3) * 100) / 100
+        phase: phase, t: Math.round(t), phaseT: Math.round(phaseT), ions: ions.length,
+        attached: attachedN, cells: HEX_CELLS.length, nan: nan, clusters: kinds
       };
     }
   };
