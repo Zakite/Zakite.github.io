@@ -22,6 +22,7 @@
   body { min-height: 100vh; font-family: var(--sans); line-height: 1.5; padding: 2.5rem 1rem; }
   main { max-width: 760px; margin: 0 auto; }
   h1 { font-family: var(--serif); font-weight: 400; font-size: 2rem; margin: 0 0 0.3rem; }
+  .banner { display: block; width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--rule); margin: 0 0 1.6rem; }
   .sub { color: var(--muted); margin: 0 0 1.5rem; }
   .card { background: var(--card); border: 1px solid var(--rule); border-radius: 8px; padding: 1.4rem; }
   .row { display: grid; grid-template-columns: minmax(200px, 280px) 1fr; gap: 1.6rem; align-items: center; }
@@ -62,7 +63,8 @@
 </head>
 <body>
 <main>
-  <h1>Biomineral Database Breakdown</h1>
+  <img class="banner" src="mission_banner.png" alt="Ambient-condition biomineral database across the gradient from life to not-life. Data: chemistry in apfu, unit-cell parameters, Raman spectra, and XRD patterns for biotic, abiotic, and everything between." width="1600" height="520">
+  <h1 class="sr" style="position:absolute;left:-9999px">Biomineral Database Breakdown</h1>
   <p class="sub">Samples in the main table, grouped by how the mineral formed.</p>
 
   <section class="card" aria-labelledby="pieTitle">
