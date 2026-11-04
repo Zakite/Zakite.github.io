@@ -38,3 +38,5 @@ The CV and writing pages fetch Google Docs HTML exports client-side. That depend
 ## Local preview
 
 Open any page directly in a browser, or serve the directory statically (e.g. `python -m http.server`). Note the Google-Docs fetch on `cv.html`/`piece.html` needs an http(s) origin in some browsers; `file://` may fall back to the error link.
+
+The homepage has a local editor. Run `python tools/edit_server.py` from the repo, open the printed address (it is 127.0.0.1 only), click "Last updated 2026" in the footer, then "edit". Changes are written to `index.html`, committed, and pushed to `origin main`. The script (`tools/editor.js`) does nothing on the published site, because there is no server there. Pass `--no-push` to commit without pushing.
