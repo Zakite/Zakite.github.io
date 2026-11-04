@@ -521,35 +521,6 @@ h2 {
   letter-spacing: -0.02em; margin-bottom: 2rem; max-width: 20ch;
 }
 
-/* ---------- Coda ----------
-   The closing epigraph. Italic display face, centred, well under the
-   section-heading size: it is an epigraph, not a headline, and it earns its
-   weight from being a quote rather than from being large. The attribution
-   drops out of the display face so the joke reads as an aside rather than as
-   part of the quote. */
-.coda {
-  padding: 4.5rem 0 3.75rem;
-  border-top: 1px solid var(--rule);
-  text-align: center;
-}
-.coda-quote {
-  font-family: var(--serif);
-  font-variation-settings: "opsz" 96, "SOFT" 30, "wght" 500;
-  font-style: italic;
-  font-size: clamp(1.3rem, 2.8vw, 1.95rem);
-  font-weight: 600;
-  line-height: 1.25;
-  letter-spacing: -0.01em;
-  max-width: 34ch;
-  margin: 0 auto;
-}
-.coda-quote .attrib {
-  display: block; margin-top: 0.85rem;
-  font-family: var(--sans); font-style: normal;
-  font-size: 0.82rem; font-weight: 500;
-  letter-spacing: 0.02em; color: var(--muted);
-}
-
 .prose { max-width: 58ch; font-size: 1.05rem; line-height: 1.75; }
 .prose p + p { margin-top: 1.25rem; }
 .prose a {
@@ -1428,11 +1399,9 @@ footer .signoff em {
 
     <div class="hero-foot">
       <p class="tagline"><span class="t-norm">Minerals remember how they were made.</span><span class="t-cheez">Snacks also remember how they were made.</span></p>
-      <!-- The span is empty in the source and the sentence is complete without it,
-           so with no script the subtitle still reads "PhD candidate studying...".
-           The script writes the ordinal AND its trailing space, so there is no
-           stray gap to clean up when it does not run. -->
-      <p class="subtitle"><span class="cheez-only">Snack loving </span><span id="progYear"></span>PhD candidate studying how biology steers crystallization, from ion-regulated molecular assembly to mesocrystalline organization.</p>
+      <!-- Two subtitles: the plain one, and the Cheez-It one, which keeps its own
+           wording and the year written into #progYear by the script below. -->
+      <p class="subtitle"><span class="t-norm">PhD candidate studying how biology influences mineral formation. From molecular self-assembly in solution and chemistry locked into the lattice to the mesostructures crystallites build together.</span><span class="t-cheez">Snack loving <span id="progYear"></span>PhD candidate studying how biology steers crystallization, from ion-regulated molecular assembly to mesocrystalline organization.</span></p>
     </div>
 
   </div>
@@ -1440,13 +1409,10 @@ footer .signoff em {
 
 <section id="about">
   <div class="wrap">
-    <!-- The epigraph that used to open this section now closes the page; see
-         .coda just above the footer. -->
     <div class="about-grid">
       <div class="prose">
-        <p>I am a PhD candidate in Earth and Planetary Sciences at <a href="https://eps.rutgers.edu/people/graduate-students/graduate-student/1565-jibrin-zakaria">Rutgers University</a>, working with Shaunna Morrison. My committee includes Nathan Yee, Vikas Nanda, Paul Falkowski, and Richard Remsing.</p>
-        <p>My research asks how life enters the crystallization pathway and changes what forms. My master's work showed how microbial metabolism sequentially opened and closed pathways to calcite, struvite, and guanine monohydrate, each mineral altering the chemistry inherited by the next. The guanine is the part that should not have happened: it crystallizes from solutions at pH 0 to 3, and these plates grew at pH 8, five orders of magnitude away from where the mineral has any business forming. My PhD work follows that unexplained influence from solution chemistry through to the organized solid.</p>
-        <p>The goal is to treat that influence as a measurable continuum rather than a label. Minerals are not simply abiotic or biogenic. Metabolism, interfaces, precursor pathways, crystal chemistry, and structural organization each record a further degree of influence, and they can be ranked: a metastable phase held past the point where it should have converted is a stronger claim than the equilibrium polymorph that would have precipitated anyway, and a lattice aligned across an entire tissue is stronger still. Building that ranking is also what makes these records legible in samples where the organism itself is long gone.</p>
+        <p>I am a PhD candidate in Earth and Planetary Sciences at <a href="https://eps.rutgers.edu/people/graduate-students/graduate-student/1565-jibrin-zakaria">Rutgers University</a>, working with Shaunna Morrison.</p>
+        <p>My master's research showed how microbial metabolism and colony dynamics drove the successive formation of calcite, struvite, and guanine monohydrate, with each precipitation step changing the chemistry available to the next. The most unexpected result was guanine monohydrate readily forming above pH 9, six or more pH units above the strongly acidic conditions (pH 1 to 3) where it is expected to form. A mineral forming that far outside its usual window points to cellular control, and I suspect that control is ionic, so I built an abiotic system to test it. That question drives my PhD research: how ions and precursor self-assembly steer nonclassical crystallization pathways toward otherwise unfavorable polymorphs.</p>
       </div>
 
       <figure class="portrait">
@@ -1484,19 +1450,19 @@ footer .signoff em {
       <article class="pillar">
         <span class="roman">I</span>
         <h3>Precursors and pathway selection</h3>
-        <p>How metabolism, ion identity, and hydration structure decide which mineralization pathways stay open before a mature crystal exists. I use guanine and uric acid to follow precursor formation, aggregation, particle attachment, ripening, and polymorph selection across prebiotic, functional, and pathological settings.</p>
+        <p>How do metabolism, ion identity, and hydration shape the precursors from which crystals form? Using guanine and uric acid, I investigate molecular assembly, aggregation, particle attachment, and polymorph selection.</p>
         <span class="scale">Before a crystal exists</span>
       </article>
       <article class="pillar">
         <span class="roman">II</span>
         <h3>Crystal-chemical deviation</h3>
-        <p>Whether formation in a living system drives a mineral away from the structural behavior expected of abiotic chemistry alone. I am building comparative datasets for carbonates and phosphates to test whether composition, unit-cell geometry, vibrational disorder, and inherited precursor structure vary systematically with the degree of influence.</p>
+        <p>How does biological activity alter mineral composition and structure relative to abiotic formation? I am building comparative datasets for carbonates and phosphates to investigate systematic variation in elemental composition, unit-cell geometry, and structural disorder.</p>
         <span class="scale">Within the lattice</span>
       </article>
       <article class="pillar">
         <span class="roman">III</span>
-        <h3>Crystallographic organization</h3>
-        <p>How influence is expressed between crystals rather than within them: preferred orientation, constrained misorientation, mesocrystalline superstructure, and hierarchical architecture. Because orientation is inherited as particles attach, the misorientation distribution is a record of the assembly itself. I ask whether its degree and complexity can separate chemically driven precipitation from tightly controlled mineral formation.</p>
+        <h3>Mesoscale organization</h3>
+        <p>How do individual crystals organize into larger structures? I investigate preferred orientation, misorientation, and mesocrystalline architecture to understand how crystallographic order develops across multiple length scales.</p>
         <span class="scale">Among crystals</span>
       </article>
     </div>
@@ -1532,7 +1498,7 @@ footer .signoff em {
         <div>
           <span class="entry-meta">2026<span class="sep">&middot;</span><span class="venue">In prep, JACS</span></span>
           <span class="title">Cation Radius Selects Helical Sense in the Self-Assembly of an Achiral Nucleobase</span>
-          <span class="sub">Swapping K&#8314; for Cs&#8314; inverts the circular dichroism signal, so a molecule with no chirality of its own is handed by the ion it recruits.</span>
+          <span class="sub">Replacing K&#8314; with Cs&#8314; reverses the circular dichroism signal, showing how an achiral molecule can acquire supramolecular handedness through ion-mediated assembly.</span>
         </div>
       </li>
 
@@ -1566,7 +1532,7 @@ footer .signoff em {
         <div>
           <span class="entry-meta">2026<span class="sep">&middot;</span><span class="venue">In prep</span></span>
           <span class="title">Mineral Succession in <em>Pseudoalteromonas haloplanktis</em></span>
-          <span class="sub">A halophile precipitates three minerals in a fixed order inside its own cells, each one set up by the waste chemistry of the last.</span>
+          <span class="sub">Microbial metabolism drives a succession of calcite, struvite, and guanine monohydrate, with each precipitation step reshaping the chemistry of the next. Guanine monohydrate forms above pH 9, far outside its usual acidic window.</span>
         </div>
       </li>
 
@@ -1593,7 +1559,7 @@ footer .signoff em {
         <div>
           <span class="entry-meta">2026<span class="sep">&middot;</span><span class="venue">In prep</span></span>
           <span class="title">MICP for Microplastic Sequestration Below the Biofouling Limit</span>
-          <span class="sub">Biofouling needs a particle big enough to ballast. Carbonate precipitation does not, which opens the size range where most microplastic actually sits.</span>
+          <span class="sub">A proposed use of microbially induced carbonate precipitation to mineralize and settle particles too small for conventional biofouling-based capture.</span>
         </div>
       </li>
 
@@ -1631,7 +1597,7 @@ footer .signoff em {
         <div>
           <span class="entry-meta">2026<span class="sep">&middot;</span><span class="venue">NASA FINESST</span></span>
           <span class="title">Guanine, Nature's First Chemical Engineer</span>
-          <span class="sub">A prebiotic G-wire is a passive recruiter: it templates its own growth by pulling GMP out of solution and stacking it onto the end.</span>
+          <span class="sub">A proposed prebiotic G-wire could recruit guanosine monophosphate from solution, templating further assembly through end-directed growth.</span>
         </div>
       </li>
 
@@ -1671,7 +1637,7 @@ footer .signoff em {
         <div>
           <span class="entry-meta">2026<span class="sep">&middot;</span><span class="venue">GRC Biomineralization</span></span>
           <span class="title">Before the Biomineral: How Ions Steer Guanine and Urate Self-Assembly</span>
-          <span class="sub">The same two molecules become a reflector, a wire, or a gout crystal. Which one depends on the ion in the water around them.</span>
+          <span class="sub">Purine systems can form optical reflectors, molecular wires, or pathological crystals. I investigate how solution ions influence which structures emerge.</span>
         </div>
       </li>
 
@@ -1683,7 +1649,8 @@ footer .signoff em {
   <div class="wrap">
     <h2>Crystallization by particle attachment.</h2>
     <div class="prose">
-      <p>Classical models grow a crystal one monomer at a time. The biomineralization literature shows a second route: ions cluster into higher-order species, prenucleation clusters, droplets, amorphous particles, and even whole nanocrystals, that attach to the growing solid. My work on guanine and urate precursors sits on these upper pathways, where the particle that attaches is already partly ordered before it arrives.</p>
+      <p>Crystals can grow not only through the addition of individual ions and molecules, but also through the attachment of larger, preassembled species. These pathways span molecular clusters, dense liquid precursors, amorphous particles, and nanocrystals. Their assembly and attachment can influence the structure and organization of the resulting solid.</p>
+      <p>My work on guanine and urate investigates the early stages of this process, where ion-regulated molecular assemblies and partially ordered precursors may shape subsequent crystallization.</p>
     </div>
 
     <figure class="cpa-fig" id="cpaFig" aria-labelledby="cpaCap">
@@ -1742,11 +1709,10 @@ footer .signoff em {
         </div>
       </div>
       <figcaption id="cpaCap">
-        Pathways to crystallization by particle attachment, after De Yoreo and colleagues (2015). The
-        species that attach are not one kind of object: multi-ion complexes, oligomers and nanoparticles
-        that may be crystalline, partly ordered, amorphous or liquid. Monomer-by-monomer addition is not
-        replaced by attachment; the two run concurrently, shown by the dashed route. Ions travel along
-        each route.
+        Pathways to crystallization by particle attachment, after De Yoreo et&nbsp;al. (2015). Crystalline
+        materials can form through the attachment of species ranging from molecular clusters and droplets
+        to amorphous particles and nanocrystals. These pathways coexist with monomer-by-monomer growth
+        rather than replacing it.
       </figcaption>
     </figure>
 
@@ -1778,15 +1744,14 @@ footer .signoff em {
   </div>
 
   <figcaption>
-    Ions in solution gather into <em>prenucleation clusters</em> that form and dissolve reversibly
-    (Gebauer et&nbsp;al. 2008, <em>Science</em>; Avaro et&nbsp;al. 2023, <em>J.&nbsp;Phys. Chem.&nbsp;Lett.</em>).
-    Clusters collide and coalesce into dense liquid droplets, which keep taking up solute: a precursor, not
-    a stable phase (De Yoreo et&nbsp;al. 2015, <em>Science</em>). Inside a droplet a nucleus forms at the rim
-    and an ordered core sweeps outward through it, dot by dot, until the droplet is a nanocrystal.
-    Nanocrystals then attach by oriented attachment, approaching by diffusion and jumping into contact at
-    short range (Li et&nbsp;al. 2012, <em>Science</em>). Monomer addition runs alongside attachment throughout.
-    Every mark before the zoom-out is a dot standing for a precursor unit, not an atom. Beyond the finished
-    array, the pull-back through stacked tablets to the shell is a fixed sequence, not a simulation.
+    The animation follows a conceptual pathway from dissolved ions through prenucleation clusters, dense
+    liquid precursors, nucleation, and oriented attachment to a mesocrystalline array. The sequence draws
+    on Gebauer et&nbsp;al. (2008), Avaro et&nbsp;al. (2023), De Yoreo et&nbsp;al. (2015), and Li et&nbsp;al.
+    (2012). Monomer addition continues alongside particle attachment. Individual dots represent precursor
+    units, not atoms. The rim-nucleation step, where order sweeps inward through a droplet, is one proposed
+    mechanism for dense liquid precursors and is shown here as an illustration, not a general rule. The
+    final transition from the assembled array through stacked tablets to the shell is illustrative, not a
+    simulation of shell growth.
   </figcaption>
 </figure>
   </div>
@@ -1821,15 +1786,6 @@ footer .signoff em {
     <p class="elsewhere-db"><a href="pie.html">biomineral database</a></p>
   </div>
 </section>
-
-<!-- The epigraph. It opened the About section for a long time, where it had to
-     double as that section's heading; it reads better as a sign-off, after
-     everything it is commenting on, so it sits here instead. -->
-<aside class="coda">
-  <div class="wrap">
-    <p class="coda-quote">&ldquo;Life leaves its fingerprint in stone<br>we just have to learn how to read it&rdquo;<span class="attrib">&ndash; Someone Probably</span></p>
-  </div>
-</aside>
 
 <footer>
   <div class="wrap">
