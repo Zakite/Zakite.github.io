@@ -1144,10 +1144,11 @@ footer .signoff em {
 .elsewhere-db a:hover, .elsewhere-db a:focus-visible { background: rgba(63, 217, 203, 0.22); outline: none; }
 </style>
 <script>
-  /* The page is authored at one size and scaled as a whole, so it keeps the same
-     proportions on any screen: its zoom follows the window width. 2560px is the
-     width it was tuned at (a 1440p monitor at 100%), where the zoom is 0.6. Phones
-     under 901px keep their own sizes, as before. */
+  /* The page is authored at one size and scaled as a whole. The zoom is 0.6, the
+     value tuned on a 2560px-wide window, on every desktop screen up to that
+     width, so text never shrinks below its readable baseline; on wider windows
+     it grows with the width (capped at 0.75) so the page keeps its proportions
+     on an ultrawide. Phones under 901px keep their own sizes, as before. */
   (function () {
     var REF = 2560, BASE = 0.6, MIN = 0.42, MAX = 0.75, root = document.documentElement;
     function fit() {
@@ -1382,7 +1383,7 @@ footer .signoff em {
         </div>
 
         <div class="motif-caption">
-          <span class="line">G-wire down the c-axis &middot; Na&#8314; in the channel</span>
+          <span class="line">G-wire down the c-axis &middot; Na&#8314; in the O6 coordination channel</span>
         </div>
 
         <!-- Kept to two lines and no <em>, so this stays no taller than the
