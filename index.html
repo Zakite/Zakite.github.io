@@ -520,6 +520,8 @@ h2 {
   font-weight: 600; line-height: 1.05;
   letter-spacing: -0.02em; margin-bottom: 2rem; max-width: 20ch;
 }
+/* a heading that is meant to sit on one line: no 20ch cap, wraps only on a phone */
+h2.one-line { max-width: none; }
 
 .prose { max-width: 58ch; font-size: 1.05rem; line-height: 1.75; }
 .prose p + p { margin-top: 1.25rem; }
@@ -1438,7 +1440,7 @@ footer .signoff em {
 
 <section id="research">
   <div class="wrap">
-    <h2>From solution to organized solid.</h2>
+    <h2 class="one-line">From solution to organized.</h2>
     <div class="prose">
       <p>My research follows biological influence through the whole pathway, beginning with the chemistry that decides which phases can precipitate, moving through ion-regulated assembly and crystallization by particle attachment, and ending in the unit-cell deviations, preferred orientations, and hierarchical structures preserved in the final material.</p>
     </div>
