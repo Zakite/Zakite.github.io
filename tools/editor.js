@@ -151,7 +151,7 @@
             });
           }
           status.textContent = 'Not saved: ' + (res.j.error || 'error') +
-            (res.j.detail ? ' — ' + res.j.detail : '');
+            (res.j.detail ? ': ' + res.j.detail : '');
           refreshSave();
         })
         .catch(function (err) {

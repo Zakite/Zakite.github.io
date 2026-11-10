@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-   gdoc.js — mirror a Google Doc into this site's own markup.
+   gdoc.js: mirror a Google Doc into this site's own markup.
 
    Shared by cv.html and piece.html. Both pages do the same thing: fetch a
    document's HTML export on every load and rewrite it, so the page always

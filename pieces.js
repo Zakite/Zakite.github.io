@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-   pieces.js — which entries in the Writing list have a document behind them.
+   pieces.js: which entries in the Writing list have a document behind them.
 
    This is the only file to edit when a piece becomes readable. Paste the
    Google Doc's id into `doc` and that entry turns into a link on the home

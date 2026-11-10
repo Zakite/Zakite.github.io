@@ -1,7 +1,7 @@
 # Source pictures for the nav biominerals
 
 Drop the originals here, named exactly as below. Any common image format
-works (`.png`, `.jpg`, `.webp`, …) — the extension does not matter, only the
+works (`.png`, `.jpg`, `.webp`, …): the extension does not matter, only the
 name before it.
 
 | file | picture | used for |
@@ -27,5 +27,5 @@ originals so the icons can be regenerated if the palette changes.
 
 **Note on rights:** these are whatever you supplied. The SEM micrograph in
 particular is the kind of image that usually belongs to a lab, a journal or a
-stock library, so it is worth being sure you have permission to publish it —
+stock library, so it is worth being sure you have permission to publish it,
 the site is public, and an icon is still a use.

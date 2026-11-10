@@ -4,24 +4,24 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this repo is
 
-`Zakite.github.io` — Zak Jibrin's academic homepage (PhD candidate, Earth and Planetary Sciences, Rutgers) on GitHub Pages. Pure static files served verbatim: a `.nojekyll` at the root disables the Jekyll pipeline entirely. There is no build step, bundler, framework, test suite, or linter.
+`Zakite.github.io`: Zak Jibrin's academic homepage (PhD candidate, Earth and Planetary Sciences, Rutgers) on GitHub Pages. Pure static files served verbatim: a `.nojekyll` at the root disables the Jekyll pipeline entirely. There is no build step, bundler, framework, test suite, or linter.
 
 The live pages and what they use:
 
-- [index.html](index.html) — the homepage. Single self-contained file; all CSS and JS inline.
-- [cv.html](cv.html) — CV, rendered live from a link-shared Google Doc on every load via [gdoc.js](gdoc.js) (no caching, no commit; falls back to a plain link to the doc if the fetch fails).
-- [piece.html](piece.html) — one page for every piece of writing (`piece.html?id=<key>`); keys and doc IDs live in [pieces.js](pieces.js), which also decides which entries on the homepage's Writing list become links. Uses the same `gdoc.js` reader as the CV — one copy to keep correct.
-- [404.html](404.html) — self-contained static not-found page in the site palette.
-- `zak_rover.jpg` — the About photo and the `og:image`. It shows **Curiosity** (the Namib Dune selfie mural), not Perseverance; the caption says so deliberately.
-- `bio/`, `tools/` — source assets and a dev helper script; not referenced by the live pages.
+- [index.html](index.html): the homepage. Single self-contained file; all CSS and JS inline.
+- [cv.html](cv.html): CV, rendered live from a link-shared Google Doc on every load via [gdoc.js](gdoc.js) (no caching, no commit; falls back to a plain link to the doc if the fetch fails).
+- [piece.html](piece.html): one page for every piece of writing (`piece.html?id=<key>`); keys and doc IDs live in [pieces.js](pieces.js), which also decides which entries on the homepage's Writing list become links. Uses the same `gdoc.js` reader as the CV: one copy to keep correct.
+- [404.html](404.html): self-contained static not-found page in the site palette.
+- `zak_rover.jpg`: the About photo and the `og:image`. It shows **Curiosity** (the Namib Dune selfie mural), not Perseverance; the caption says so deliberately.
+- `bio/`, `tools/`: source assets and a dev helper script; not referenced by the live pages.
 
-History note: the repo began as a fork of the "Revolve" Jekyll template (themefisher). All of that scaffolding (`_layouts/`, `_includes/`, `_data/`, `_posts/`, `_config.yml`, `about.html`, `contact.html`, `search.json`, `assets/`, `Gemfile`, template README/LICENSE) was deleted in 2026-08 because Pages was still building and serving the template's placeholder pages — including a 404 carrying the template author's social links. If a stray reference to any of those paths turns up, it is stale; don't resurrect them.
+History note: the repo began as a fork of the "Revolve" Jekyll template (themefisher). All of that scaffolding (`_layouts/`, `_includes/`, `_data/`, `_posts/`, `_config.yml`, `about.html`, `contact.html`, `search.json`, `assets/`, `Gemfile`, template README/LICENSE) was deleted in 2026-08 because Pages was still building and serving the template's placeholder pages, including a 404 carrying the template author's social links. If a stray reference to any of those paths turns up, it is stale; don't resurrect them.
 
 ## Working on index.html
 
 This is almost always where changes belong. Structure, top to bottom:
 
-- Inline `<style>` block: CSS custom properties (`--bg`, `--ink`, `--accent`, `--oxy`, font stacks) drive the whole palette/typography. The page is authored large and scaled down via CSS `zoom` (a deliberate choice — see the comment at the top of the style block — don't replace with `transform: scale`, which would desync layout rects from what's on screen). The page zoom is desktop-only (`@media (min-width: 901px)`) and is set by a small script in `<head>`: `0.6` on every desktop window up to 2560px wide (the width it was tuned at), growing as `0.6 * innerWidth / 2560` above that, capped at 0.75. It never drops below 0.6: a width-proportional zoom was tried and made the text unreadable on 1080p screens and on 1440p screens with Windows scaling. The two `#cpa` panels (`.cpa-fig`, `.cpa-sim`) carry a further `0.55` relative to the page, so they keep their proportion too. The phone breakpoints (≤900/600/400px) re-tune the root font size as final rendered sizes and must never have zoom stacked on them.
+- Inline `<style>` block: CSS custom properties (`--bg`, `--ink`, `--accent`, `--oxy`, font stacks) drive the whole palette/typography. The page is authored large and scaled down via CSS `zoom` (a deliberate choice: see the comment at the top of the style block, and do not replace it with `transform: scale`, which would desync layout rects from what's on screen). The page zoom is desktop-only (`@media (min-width: 901px)`) and is set by a small script in `<head>`: `0.75` on every desktop window up to 2560px wide (the width it was tuned at), growing as `0.75 * innerWidth / 2560` above that, capped at 0.92. It never drops below 0.75: a width-proportional zoom was tried and made the text unreadable on 1080p screens and on 1440p screens with Windows scaling. The two `#cpa` panels (`.cpa-fig`, `.cpa-sim`) carry a further `0.44` relative to the page (always `0.33 / <page factor>`), so they keep their proportion too. The phone breakpoints (≤900/600/400px) re-tune the root font size as final rendered sizes and must never have zoom stacked on them.
 - `<nav>` → `<header class="hero" id="hero">` → `<section id="about">` → `<section id="research">` → `<section id="writing">` → `<section id="cpa">` → `<section id="elsewhere">` → `<footer>` → coda/epigraph.
 - Several independent inline `<script>` blocks at the bottom, each IIFE-wrapped and null-guarded (`if (!el) return;`) so they no-op safely if their DOM isn't present:
   - The G-tetrad/fibril hero animation (pointer-tilt 3D CSS, builds a helical stack of "plates" as DOM siblings).
@@ -33,7 +33,7 @@ This is almost always where changes belong. Structure, top to bottom:
 
 ## Outside dependencies (can break without a commit)
 
-The CV and writing pages fetch Google Docs HTML exports client-side. That depends on (1) each doc staying link-shared ("anyone with the link" → Viewer) and (2) Google continuing to send permissive CORS headers on the export endpoint — undocumented behaviour, not an API. Both pages degrade to a plain link to the doc on failure.
+The CV and writing pages fetch Google Docs HTML exports client-side. That depends on (1) each doc staying link-shared ("anyone with the link" → Viewer) and (2) Google continuing to send permissive CORS headers on the export endpoint, which is undocumented behaviour rather than an API. Both pages degrade to a plain link to the doc on failure.
 
 ## Local preview
 
