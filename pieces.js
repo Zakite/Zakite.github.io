@@ -36,14 +36,8 @@ window.PIECES = {
 
   'micp-microplastic': {
     doc: null,
-    title: 'MICP for Microplastic Sequestration Below the Biofouling Limit',
+    title: 'Microplastic Sequestration Below the Biofouling Limit',
     meta: '2026 · In prep'
-  },
-
-  'finesst-guanine': {
-    doc: null,
-    title: "Guanine, Nature's First Chemical Engineer",
-    meta: '2026 · NASA FINESST'
   },
 
   'before-the-biomineral': {
