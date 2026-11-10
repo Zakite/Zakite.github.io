@@ -1150,7 +1150,7 @@ footer .signoff em {
      it grows with the width (capped at 0.75) so the page keeps its proportions
      on an ultrawide. Phones under 901px keep their own sizes, as before. */
   (function () {
-    var REF = 2560, BASE = 0.6, MIN = 0.42, MAX = 0.75, root = document.documentElement;
+    var REF = 2560, BASE = 0.6, MIN = 0.6, MAX = 0.75, root = document.documentElement;
     function fit() {
       var w = window.innerWidth;
       if (w < 901) { root.style.zoom = ''; return; }
