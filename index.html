@@ -625,15 +625,13 @@ h2.one-line { max-width: none; }
   font-variation-settings: "opsz" 36, "SOFT" 20, "wght" 600;
   font-size: 1.4rem; font-weight: 600; line-height: 1.2;
   margin-bottom: 0.75rem; letter-spacing: -0.01em;
+  min-height: 2.4em;   /* room for two lines, so the images below sit level */
 }
 .pillar p { font-size: 0.95rem; color: var(--ink-soft); line-height: 1.7; margin-bottom: 1rem; }
-/* the image slot under each chapter title: a 4:3 frame that an <img> can replace */
+/* the figure under each chapter title: all three are 16:10, so the row stays level */
 .pillar-img {
-  aspect-ratio: 4 / 3; margin-bottom: 1rem;
-  display: grid; place-items: center;
-  border: 1px dashed var(--rule); border-radius: 4px;
-  font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase;
-  color: var(--muted);
+  display: block; width: 100%; height: auto; margin-bottom: 1rem;
+  border: 1px solid var(--rule); border-radius: 4px;
 }
 .pillar .scale {
   font-family: var(--mono); font-size: 0.68rem;
@@ -1465,19 +1463,19 @@ footer .signoff em {
       <article class="pillar">
         <span class="roman">I</span>
         <h3>Precursors and pathway selection</h3>
-        <div class="pillar-img" aria-hidden="true">image here</div>
+        <img class="pillar-img" src="research-precursors.webp" width="1200" height="750" loading="lazy" decoding="async" alt="Proposed crystallization pathway for guanine: a G-wire nanowire, bundled fibrils in cryo-TEM, an aligned dense precursor with its diffraction pattern, the molecular packing, and the final guanine monohydrate crystal.">
         <span class="scale">Before a crystal exists</span>
       </article>
       <article class="pillar">
         <span class="roman">II</span>
         <h3>Crystal-chemical deviation</h3>
-        <div class="pillar-img" aria-hidden="true">image here</div>
+        <img class="pillar-img" src="research-deviation.webp" width="1200" height="750" loading="lazy" decoding="async" alt="Unit-cell a plotted against c for calcite-group carbonates. Every chemistry, from gaspeite to calcite, falls on one straight trend; biotic calcite sits above it.">
         <span class="scale">Within the lattice</span>
       </article>
       <article class="pillar">
         <span class="roman">III</span>
         <h3>Mesoscale organization</h3>
-        <div class="pillar-img" aria-hidden="true">image here</div>
+        <img class="pillar-img" src="research-order.webp" width="1200" height="750" loading="lazy" decoding="async" alt="Hierarchical order at three scales: individual hexagonal platelets, a mesoscopic domain of stacked aligned platelets, and a macroscopic architecture of aligned domains, with preferred orientation and constrained misorientation across scales.">
         <span class="scale">Among crystals</span>
       </article>
     </div>
