@@ -1,0 +1,1162 @@
+# Standard Gibbs energies of formation at 25 C and 1 bar (kJ/mol), converted by build_database.py
+# from the OBIGT database of CHNOSZ 2.3.0-2 (https://github.com/jedick/CHNOSZ, commit 4719c5c0a9a0c4188066a4c82e5046dde14e55e9 2026-10-23).
+# CHNOSZ and OBIGT: Dick (2019) Front. Earth Sci. 7:180. License GPL-3. 1 cal = 4.184 J.
+# ref / ref2 are OBIGT reference keys; citation columns give the primary sources.
+# Do not edit by hand. Put your own values in user_thermo.csv instead.
+name,formula,state,dGf_kJ_mol,kind,ref,ref2,origin,citation,citation2
+water,H2O,liq,-237.181,,JOH92,HGK84,R/water.R (SUPCRT92 reference value),"J. W. Johnson and E. H. Oelkers and H. C. Helgeson (1992) Comp. Geosci. 18, 899-947",L. Haar and J. S. Gallagher and G. S. Kell (1984) NBS/NRC Steam Tables
+H+,H+,aq,0.000,,Den81,,OBIGT/H2O_aq.csv,K. Denbigh (1981) The Principles of Chemical Equilibrium,
+Li+,Li+,aq,-292.600,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+Na+,Na+,aq,-261.881,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+K+,K+,aq,-282.462,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+Rb+,Rb+,aq,-283.675,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+Cs+,Cs+,aq,-291.667,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+Mg+2,Mg+2,aq,-453.985,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+Ca+2,Ca+2,aq,-552.790,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+Sr+2,Sr+2,aq,-563.836,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+Ba+2,Ba+2,aq,-560.782,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+HCO3-,HCO3-,aq,-586.940,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+CO3-2,CO3-2,aq,-527.983,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+Pb+2,Pb+2,aq,-23.891,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+NO3-,NO3-,aq,-110.905,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+NO2-,NO2-,aq,-32.217,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+NH4+,NH4+,aq,-79.454,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+H2PO4-,H2PO4-,aq,-1130.266,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+HPO4-2,HPO4-2,aq,-1089.137,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+OH-,OH-,aq,-157.297,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+HS-,HS-,aq,11.966,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+HSO3-,HSO3-,aq,-527.728,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+SO4-2,SO4-2,aq,-744.459,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+HSO4-,HSO4-,aq,-755.756,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+S2O3-2,S2O3-2,aq,-522.582,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+S2O8-2,S2O8-2,aq,-1115.036,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+F-,F-,aq,-281.751,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+Cl-,Cl-,aq,-131.290,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+ClO3-,ClO3-,aq,-7.950,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+Br-,Br-,aq,-104.056,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+BrO3-,BrO3-,aq,18.619,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+I-,I-,aq,-51.923,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+IO3-,IO3-,aq,-128.030,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+Ni+2,Ni+2,aq,-45.606,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+Cd+2,Cd+2,aq,-77.655,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+La+3,La+3,aq,-686.176,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+Sm+3,Sm+3,aq,-665.674,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+Eu+3,Eu+3,aq,-574.463,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+Gd+3,Gd+3,aq,-663.582,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+Dy+3,Dy+3,aq,-664.001,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+Ho+3,Ho+3,aq,-675.298,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+Er+3,Er+3,aq,-669.022,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+Tm+3,Tm+3,aq,-669.022,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+Yb+3,Yb+3,aq,-640.152,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+Lu+3,Lu+3,aq,-666.930,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+BO2-,BO2-,aq,-678.812,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+BF4-,BF4-,aq,-1486.994,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+SiF6-2,SiF6-2,aq,-2199.529,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+S2-2,S2-2,aq,79.496,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+S3-2,S3-2,aq,73.638,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+S4-2,S4-2,aq,69.036,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+S5-2,S5-2,aq,65.689,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+HF2-,HF2-,aq,-578.061,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+Br3-,Br3-,aq,-107.069,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+I3-,I3-,aq,-51.463,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+Ag+2,Ag+2,aq,269.031,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+Hg+2,Hg+2,aq,164.682,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+Cu+2,Cu+2,aq,65.584,,SH88,,OBIGT/inorganic_aq.csv,"E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036",
+He,He,aq,19.489,,SHS89,,OBIGT/inorganic_aq.csv,"E. L. Shock, H. C. Helgeson and D. A. Sverjensky (1989) Geochim. Cosmochim. Acta 53, 2157-2183",
+H2,H2,aq,17.723,,SHS89,,OBIGT/inorganic_aq.csv,"E. L. Shock, H. C. Helgeson and D. A. Sverjensky (1989) Geochim. Cosmochim. Acta 53, 2157-2183",
+O2,O2,aq,16.544,,SHS89,,OBIGT/inorganic_aq.csv,"E. L. Shock, H. C. Helgeson and D. A. Sverjensky (1989) Geochim. Cosmochim. Acta 53, 2157-2183",
+NH3,NH3,aq,-26.706,,SHS89,,OBIGT/inorganic_aq.csv,"E. L. Shock, H. C. Helgeson and D. A. Sverjensky (1989) Geochim. Cosmochim. Acta 53, 2157-2183",
+H2S,H2S,aq,-27.920,,SHS89,,OBIGT/inorganic_aq.csv,"E. L. Shock, H. C. Helgeson and D. A. Sverjensky (1989) Geochim. Cosmochim. Acta 53, 2157-2183",
+B(OH)3,B(OH)3,aq,-968.763,,SHS89,,OBIGT/inorganic_aq.csv,"E. L. Shock, H. C. Helgeson and D. A. Sverjensky (1989) Geochim. Cosmochim. Acta 53, 2157-2183",
+SiO2,SiO2,aq,-833.411,,SHS89,,OBIGT/inorganic_aq.csv,"E. L. Shock, H. C. Helgeson and D. A. Sverjensky (1989) Geochim. Cosmochim. Acta 53, 2157-2183",
+H3PO4,H3PO4,aq,-1142.650,,SHS89,,OBIGT/inorganic_aq.csv,"E. L. Shock, H. C. Helgeson and D. A. Sverjensky (1989) Geochim. Cosmochim. Acta 53, 2157-2183",
+Ne,Ne,aq,19.100,,SHS89,,OBIGT/inorganic_aq.csv,"E. L. Shock, H. C. Helgeson and D. A. Sverjensky (1989) Geochim. Cosmochim. Acta 53, 2157-2183",
+Kr,Kr,aq,14.870,,SHS89,,OBIGT/inorganic_aq.csv,"E. L. Shock, H. C. Helgeson and D. A. Sverjensky (1989) Geochim. Cosmochim. Acta 53, 2157-2183",
+Rn,Rn,aq,11.673,,SHS89,,OBIGT/inorganic_aq.csv,"E. L. Shock, H. C. Helgeson and D. A. Sverjensky (1989) Geochim. Cosmochim. Acta 53, 2157-2183",
+N2,N2,aq,18.188,,SHS89,,OBIGT/inorganic_aq.csv,"E. L. Shock, H. C. Helgeson and D. A. Sverjensky (1989) Geochim. Cosmochim. Acta 53, 2157-2183",
+SO2,SO2,aq,-301.164,,SHS89,,OBIGT/inorganic_aq.csv,"E. L. Shock, H. C. Helgeson and D. A. Sverjensky (1989) Geochim. Cosmochim. Acta 53, 2157-2183",
+HF,HF,aq,-299.834,,SHS89,,OBIGT/inorganic_aq.csv,"E. L. Shock, H. C. Helgeson and D. A. Sverjensky (1989) Geochim. Cosmochim. Acta 53, 2157-2183",
+MgSO4,MgSO4,aq,-1211.172,,MS97,SLOP98.11,OBIGT/inorganic_aq.csv,"T. M. McCollom and E. L. Shock (1997) Geochim. Cosmochim. Acta 61, 4375-4391",E. L. Shock et al. (1998) slop98.dat computer data file
+NaSO4-,NaSO4-,aq,-1010.336,,MS97,SLOP98.11,OBIGT/inorganic_aq.csv,"T. M. McCollom and E. L. Shock (1997) Geochim. Cosmochim. Acta 61, 4375-4391",E. L. Shock et al. (1998) slop98.dat computer data file
+NaCl,NaCl,aq,-388.735,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+PbCl+,PbCl+,aq,-163.385,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+PbCl2,PbCl2,aq,-297.901,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+PbCl3-,PbCl3-,aq,-427.396,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+NiCl+,NiCl+,aq,-171.209,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+FeCl+,FeCl+,aq,-221.878,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+MgCl+,MgCl+,aq,-584.505,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+MgF+,MgF+,aq,-743.455,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+CaF+,CaF+,aq,-838.432,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+Fe(Ac)+,FeCH3COO+,aq,-468.190,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+Fe(Ac)2,Fe(CH3COO)2,aq,-844.331,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+CaSO4,CaSO4,aq,-1309.299,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+HSiO3-,HSiO3-,aq,-1015.879,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+LiCl,LiCl,aq,-415.262,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+KCl,KCl,aq,-399.279,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+RbCl,RbCl,aq,-409.488,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+CsCl,CsCl,aq,-422.166,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+NaF,NaF,aq,-537.937,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+RbF,RbF,aq,-570.907,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+NaBr,NaBr,aq,-358.192,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+KBr,KBr,aq,-376.602,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+RbBr,RbBr,aq,-380.786,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+CsBr,CsBr,aq,-395.848,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+NaI,NaI,aq,-305.014,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+KI,KI,aq,-325.264,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+RbI,RbI,aq,-330.118,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+CsI,CsI,aq,-349.197,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+Ag(CO3)-,Ag(CO3)-,aq,-466.223,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+Ag(CO3)2-3,Ag(CO3)2-3,aq,-991.148,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+MgCO3,MgCO3,aq,-998.972,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+CaCO3,CaCO3,aq,-1099.764,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+SrCO3,SrCO3,aq,-1108.174,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+BaCO3,BaCO3,aq,-1103.865,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+NaHSiO3,NaHSiO3,aq,-1288.212,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+SrF+,SrF+,aq,-846.381,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+BaF+,BaF+,aq,-844.360,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+CaCl+,CaCl+,aq,-682.410,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+CaCl2,CaCl2,aq,-811.696,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+SrCl+,SrCl+,aq,-693.707,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+BaCl+,BaCl+,aq,-689.230,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+FeCl2,FeCl2,aq,-307.440,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+MnCl+,MnCl+,aq,-361.037,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+PbCl4-2,PbCl4-2,aq,-557.213,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+AgCl4-3,AgCl4-3,aq,-469.780,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+AgNO3,AgNO3,aq,-32.376,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+MnSO4,MnSO4,aq,-985.918,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+BeCl+,BeCl+,aq,-482.482,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+BeCl2,BeCl2,aq,-608.860,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+FeCl+2,FeCl+2,aq,-156.975,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+TlCl,TlCl,aq,-166.586,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+TlCl+2,TlCl+2,aq,39.225,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+HgCl+,HgCl+,aq,-9.017,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+HgCl2,HgCl2,aq,-179.234,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+HgCl3-,HgCl3-,aq,-311.725,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+HgCl4-2,HgCl4-2,aq,-447.638,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+BeF+,BeF+,aq,-663.135,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+BeF2,BeF2,aq,-968.119,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+BeF3-1,BeF3-,aq,-1265.794,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+BeF4-2,BeF4-2,aq,-1550.971,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+MnF+,MnF+,aq,-517.314,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+FeF+,FeF+,aq,-381.401,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+FeF+2,FeF+2,aq,-333.235,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+CoF+,CoF+,aq,-341.967,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+NiF+,NiF+,aq,-333.749,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+CuF+,CuF+,aq,-224.844,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+ZnF+,ZnF+,aq,-435.592,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+AgF,AgF,aq,-206.936,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+CdF+,CdF+,aq,-365.569,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+CdF2,CdF2,aq,-649.206,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+TlF,TlF,aq,-314.704,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+HgF+,HgF+,aq,-126.374,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+PbF+,PbF+,aq,-317.398,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+PbF2,PbF2,aq,-606.914,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+Pb(HS)2,Pb(HS)2,aq,-83.923,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+Pb(HS)3-,Pb(HS)3-,aq,-79.375,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+MgHSiO3+,Mg(HSiO3)+,aq,-1477.057,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+CaHSiO3+,Ca(HSiO3)+,aq,-1574.435,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+CuCl+,CuCl+,aq,-67.990,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+CuCl2,CuCl2,aq,-193.058,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+CuCl3-,CuCl3-,aq,-315.214,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+CuCl4-2,CuCl4-2,aq,-433.375,,SSH97,,OBIGT/inorganic_aq.csv,"D. A. Sverjensky, E. L. Shock and H. C. Helgeson (1997) Geochim. Cosmochim. Acta 61, 1359-1412",
+ClO4-,ClO4-,aq,-8.535,,SSWS97,SH88.1,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950","E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036"
+ReO4-,ReO4-,aq,-694.544,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+TcO4-,TcO4-,aq,-632.202,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+CrO4-2,CrO4-2,aq,-731.363,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HCrO4-,HCrO4-,aq,-768.601,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+MnO4-,MnO4-,aq,-450.198,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Cr2O7-2,Cr2O7-2,aq,-1309.466,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+MoO4-2,MoO4-2,aq,-838.474,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+WO4-2,WO4-2,aq,-914.204,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HWO4-,HWO4-,aq,-934.706,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+PO4-3,PO4-3,aq,-1018.804,,SSWS97,SH88.1,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950","E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036"
+Ga+3,Ga+3,aq,-158.992,,SSWS97,SH88.1,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950","E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036"
+Pr+3,Pr+3,aq,-680.318,,SSWS97,SH88.1,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950","E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036"
+Tb+3,Tb+3,aq,-667.348,,SSWS97,SH88.1,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950","E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036"
+Mn+2,Mn+2,aq,-230.538,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Co+2,Co+2,aq,-54.392,,SSWS97,SH88.1,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950","E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036"
+Cr+3,Cr+3,aq,-206.271,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+UO2+2,UO2+2,aq,-952.613,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Fr+,Fr+,aq,-294.972,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Be+2,Be+2,aq,-378.861,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Ra+2,Ra+2,aq,-561.493,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+In+3,In+3,aq,-97.906,,SSWS97,SH88.5,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950","E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036"
+Tl+,Tl+,aq,-32.384,,SSWS97,SH88.1,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950","E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036"
+Tl+3,Tl+3,aq,214.639,,SSWS97,SH88.1,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950","E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036"
+CN-,CN-,aq,172.381,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+OCN-,OCN-,aq,-97.404,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+SCN-,SCN-,aq,92.717,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+SeCN-,SeCN-,aq,81.588,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HNO2,HNO2,aq,-50.626,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HNO3,HNO3,aq,-103.470,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+N2O2-2,N2O2-2,aq,138.909,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HN2O2-,HN2O2-,aq,76.149,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+H2N2O2,H2N2O2,aq,35.982,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+N2H5+,N2H5+,aq,82.425,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+N2H6+2,N2H6+2,aq,88.282,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+P2O7-4,P2O7-4,aq,-1919.201,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HP2O7-3,HP2O7-3,aq,-1972.338,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+H2P2O7-2,H2P2O7-2,aq,-2009.994,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+H3P2O7-,H3P2O7-,aq,-2023.382,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+H4P2O7,H4P2O7,aq,-2032.169,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HPO3-2,HPO3-2,aq,-811.696,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+H2PO3-,H2PO3-,aq,-846.632,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+H3PO3,H3PO3,aq,-856.883,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+H2PO2-,H2PO2-,aq,-512.122,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+H3PO2,H3PO2,aq,-523.418,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+SbO2-,SbO2-,aq,-344.762,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HSbO2,HSbO2,aq,-407.522,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Bi+3,Bi+3,aq,95.730,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HO2-,HO2-,aq,-67.321,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+H2O2,H2O2,aq,-134.014,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+SO3-2,SO3-2,aq,-486.599,,SSWS97,SH88.1,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950","E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036"
+HSO5-,HSO5-,aq,-637.516,,SSWS97,SH88.1,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950","E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036"
+HS2O3-,HS2O3-,aq,-532.205,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+H2S2O3,H2S2O3,aq,-535.552,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+S2O4-2,S2O4-2,aq,-600.404,,SSWS97,SH88.1,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950","E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036"
+HS2O4-,HS2O4-,aq,-614.630,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+H2S2O4,H2S2O4,aq,-616.722,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+S2O5-2,S2O5-2,aq,-790.776,,SSWS97,SH88.1,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950","E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036"
+S2O6-2,S2O6-2,aq,-966.504,,SSWS97,SH88.1,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950","E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036"
+S3O6-2,S3O6-2,aq,-958.136,,SSWS97,SH88.1,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950","E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036"
+S4O6-2,S4O6-2,aq,-1040.561,,SSWS97,SH88.1,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950","E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036"
+S5O6-2,S5O6-2,aq,-958.136,,SSWS97,SH88.1,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950","E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036"
+HSe-,HSe-,aq,43.932,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+SeO3-2,SeO3-2,aq,-369.866,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HSeO3-,HSeO3-,aq,-411.455,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+H2SeO3,H2SeO3,aq,-426.140,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+SeO4-2,SeO4-2,aq,-441.412,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HSeO4-,HSeO4-,aq,-452.290,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+ClO-,ClO-,aq,-36.819,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HClO,HClO,aq,-79.914,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+ClO2-,ClO2-,aq,17.154,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HClO2,HClO2,aq,5.858,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+BrO-,BrO-,aq,-33.472,,SSWS97,SH88.1,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950","E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036"
+HBrO,HBrO,aq,-82.425,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+BrO4-,BrO4-,aq,117.989,,SSWS97,SH88.1,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950","E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036"
+IO-,IO-,aq,-38.493,,SSWS97,SH88.1,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950","E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036"
+HIO,HIO,aq,-99.161,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HIO3,HIO3,aq,-132.633,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+IO4-,IO4-,aq,-58.576,,SSWS97,SH88.1,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950","E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036"
+Sc+3,Sc+3,aq,-586.597,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+V+2,V+2,aq,-217.568,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+V+3,V+3,aq,-242.254,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+VO+2,VO+2,aq,-446.433,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+VO2+,VO2+,aq,-587.015,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+VO4-3,VO4-3,aq,-899.142,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HVO4-2,HVO4-2,aq,-974.872,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+H2VO4-,H2VO4-,aq,-1020.854,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+H3VO4,H3VO4,aq,-1042.653,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Cr+2,Cr+2,aq,-164.850,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Mn+3,Mn+3,aq,-84.935,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+MnO4-2,MnO4-2,aq,-503.754,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Fe+2,Fe+2,aq,-91.504,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Fe+3,Fe+3,aq,-17.238,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Co+3,Co+3,aq,133.888,,SSWS97,SH88.1,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950","E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036"
+Y+3,Y+3,aq,-685.339,,SSWS97,SH88.1,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950","E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036"
+Zr+4,Zr+4,aq,-557.602,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HMoO4-,HMoO4-,aq,-863.578,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+RuO4-2,RuO4-2,aq,-299.574,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Ce+3,Ce+3,aq,-676.134,,SSWS97,SH88.1,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950","E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036"
+Pm+3,Pm+3,aq,-661.072,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Hf+4,Hf+4,aq,-554.798,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Au+3,Au+3,aq,433.462,,SSWS97,SH88.1,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950","E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036"
+Hg2+2,Hg2+2,aq,153.595,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+U+3,U+3,aq,-475.093,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+U+4,U+4,aq,-529.904,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+UO2+,UO2+,aq,-961.023,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+La+2,La+2,aq,-325.097,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Ce+2,Ce+2,aq,-313.382,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Pr+2,Pr+2,aq,-387.857,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Nd+2,Nd+2,aq,-419.237,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Pm+2,Pm+2,aq,-387.857,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Sm+2,Sm+2,aq,-514.632,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Eu+2,Eu+2,aq,-540.573,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Gd+2,Gd+2,aq,-295.390,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Tb+2,Tb+2,aq,-332.210,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Dy+2,Dy+2,aq,-430.115,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Ho+2,Ho+2,aq,-405.430,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Er+2,Er+2,aq,-383.254,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Tm+2,Tm+2,aq,-450.198,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Yb+2,Yb+2,aq,-537.644,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Ce+4,Ce+4,aq,-507.519,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Pr+4,Pr+4,aq,-304.177,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Nd+4,Nd+4,aq,-196.648,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Pm+4,Pm+4,aq,-143.093,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Sm+4,Sm+4,aq,-166.942,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Eu+4,Eu+4,aq,20.920,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Gd+4,Gd+4,aq,52.718,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Tb+4,Tb+4,aq,-369.029,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Dy+4,Dy+4,aq,-233.049,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Ho+4,Ho+4,aq,-127.612,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Er+4,Er+4,aq,-117.570,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Tm+4,Tm+4,aq,-125.938,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Yb+4,Yb+4,aq,15.899,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Lu+4,Lu+4,aq,112.968,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+LiOH,LiOH,aq,-451.872,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+NaOH,NaOH,aq,-417.982,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+KOH,KOH,aq,-437.228,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+RbOH,RbOH,aq,-439.738,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+CsOH,CsOH,aq,-439.320,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+BeOH+,BeOH+,aq,-585.342,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+BeO,BeO,aq,-538.062,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HBeO2-,HBeO2-,aq,-720.485,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+BeO2-2,BeO2-2,aq,-639.734,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+MgOH+,MgOH+,aq,-624.483,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+CaOH+,CaOH+,aq,-716.719,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+SrOH+,SrOH+,aq,-725.087,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+BaOH+,BaOH+,aq,-720.903,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+SnOH+,SnOH+,aq,-245.182,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+SnO,SnO,aq,-224.262,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HSnO2-,HSnO2-,aq,-407.103,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+PbOH+,PbOH+,aq,-225.727,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+PbO,PbO,aq,-164.640,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HPbO2-,HPbO2-,aq,-338.904,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+BiOH+2,BiOH+2,aq,-135.143,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+BiO+,BiO+,aq,-122.591,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HBiO2,HBiO2,aq,-331.791,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+BiO2-,BiO2-,aq,-258.153,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+InOH+2,InOH+2,aq,-312.126,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+InO+,InO+,aq,-290.370,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HInO2,HInO2,aq,-501.243,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+InO2-,InO2-,aq,-446.433,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+TlOH,TlOH,aq,-274.261,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+TlOH+2,TlOH+2,aq,-18.828,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+TlO+,TlO+,aq,-13.389,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HTlO2,HTlO2,aq,-240.998,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+TlO2-,TlO2-,aq,-174.054,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+ScOH+2,ScOH+2,aq,-799.144,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+ScO+,ScO+,aq,-768.182,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HScO2,HScO2,aq,-969.014,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+ScO2-,ScO2-,aq,-912.530,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+VOH+,VOH+,aq,-417.563,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+VOH+2,VOH+2,aq,-466.516,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+VO+,VO+,aq,-443.922,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+VOOH+,VOOH+,aq,-651.449,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+CrOH+2,CrOH+2,aq,-420.492,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+CrO+,CrO+,aq,-388.275,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HCrO2,HCrO2,aq,-577.810,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+CrO2-,CrO2-,aq,-524.255,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+MnOH+,MnOH+,aq,-407.103,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+MnO,MnO,aq,-340.996,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HMnO2-,HMnO2-,aq,-506.264,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+MnO2-2,MnO2-2,aq,-429.278,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+FeOH+,FeOH+,aq,-275.516,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+FeO,FeO,aq,-212.212,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HFeO2-,HFeO2-,aq,-399.154,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+FeOH+2,FeOH+2,aq,-241.835,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+FeO+,FeO+,aq,-222.170,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HFeO2,HFeO2,aq,-423.002,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+FeO2-,FeO2-,aq,-368.192,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+CoOH+,CoOH+,aq,-234.409,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+CoO,CoO,aq,-184.096,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HCoO2-,HCoO2-,aq,-348.946,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+CoO2-2,CoO2-2,aq,-264.429,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+CoOH+2,CoOH+2,aq,-96.232,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+NiOH+,NiOH+,aq,-221.124,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+NiO,NiO,aq,-164.599,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HNiO2-,HNiO2-,aq,-343.004,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+NiO2-2,NiO2-2,aq,-268.613,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+CuOH+,CuOH+,aq,-126.357,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+CuO,CuO,aq,-87.027,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HCuO2-,HCuO2-,aq,-251.458,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+CuO2-2,CuO2-2,aq,-172.381,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+YOH+2,YOH+2,aq,-878.640,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+YO+,YO+,aq,-828.850,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HYO2,HYO2,aq,-1011.273,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+YO2-,YO2-,aq,-951.442,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+ZrOH+3,ZrOH+3,aq,-796.634,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+ZrO+2,ZrO+2,aq,-784.918,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HZrO2+,HZrO2+,aq,-1002.905,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+ZrO2,ZrO2,aq,-976.546,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HZrO3-,HZrO3-,aq,-1177.796,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+CdOH+,CdOH+,aq,-257.316,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+CdO,CdO,aq,-198.740,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HCdO2-,HCdO2-,aq,-361.916,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+CdO2-2,CdO2-2,aq,-281.583,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HfOH+3,HfOH+3,aq,-790.776,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HfO+2,HfO+2,aq,-778.224,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HHfO2+,HHfO2+,aq,-994.955,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HfO2,HfO2,aq,-968.178,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HHfO3-,HHfO3-,aq,-1168.173,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HgOH+,HgOH+,aq,-53.137,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HgO,HgO,aq,-37.238,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+HHgO2-,HHgO2-,aq,-189.117,,SSWS97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",
+Ru+2,Ru+2,aq,150.206,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+Ru+3,Ru+3,aq,173.385,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+Rh+2,Rh+2,aq,115.897,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+Rh+3,Rh+3,aq,219.451,,SSWS97,SS98a.2,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950","D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671"
+RuCl+,RuCl+,aq,21.799,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+RuCl2,RuCl2,aq,-104.851,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+RuCl3-,RuCl3-,aq,-227.526,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+RuCl4-2,RuCl4-2,aq,-351.038,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+RuSO4,Ru(SO4),aq,-607.517,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+Ru(SO4)2-2,Ru(SO4)2-2,aq,-1361.474,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+Ru(SO4)3-4,Ru(SO4)3-4,aq,-2112.083,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+RuOH+,Ru(OH)+,aq,-43.806,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+RuO,RuO,aq,0.962,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+RuCl+2,RuCl+2,aq,29.706,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+RuCl2+,RuCl2+,aq,-110.625,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+RuCl3,RuCl3,aq,-245.015,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+RuCl4-,RuCl4-,aq,-375.430,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+RuCl5-2,RuCl5-2,aq,-505.009,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+RuCl6-3,RuCl6-3,aq,-634.043,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+RuSO4+,Ru(SO4)+,aq,-582.413,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+Ru(SO4)2-,Ru(SO4)2-,aq,-1330.094,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+Ru(SO4)3-3,Ru(SO4)3-3,aq,-2071.917,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+RuOH+2,Ru(OH)+2,aq,-51.003,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+RuO+,RuO+,aq,-43.723,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+RhCl+,RhCl+,aq,-14.142,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+RhCl2,RhCl2,aq,-142.130,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+RhCl3-,RhCl3-,aq,-265.810,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+RhCl4-2,RhCl4-2,aq,-390.158,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+RhSO4,Rh(SO4),aq,-642.244,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+Rh(SO4)2-2,Rh(SO4)2-2,aq,-1397.874,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+Rh(SO4)3-4,Rh(SO4)3-4,aq,-2150.994,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+RhOH+,Rh(OH)+,aq,-76.525,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+RhO,RhO,aq,-30.208,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+RhCl+2,RhCl+2,aq,76.693,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+RhCl2+,RhCl2+,aq,-61.840,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+RhCl3,RhCl3,aq,-193.259,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+RhCl4-,RhCl4-,aq,-324.260,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+RhSO4+,Rh(SO4)+,aq,-533.460,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+Rh(SO4)2-,Rh(SO4)2-,aq,-1280.722,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+Rh(SO4)3-3,Rh(SO4)3-3,aq,-2023.801,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+RhOH+2,Rh(OH)+2,aq,-3.431,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+RhO+,RhO+,aq,13.138,,SS98a,,OBIGT/inorganic_aq.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+Ar,Ar,aq,16.276,,PS01.1,,OBIGT/inorganic_aq.csv,"A. V. Plyasunov and E. L. Shock (2001) Geochim. Cosmochim. Acta 65, 3879-3900",
+Xe,Xe,aq,13.452,,PS01.1,,OBIGT/inorganic_aq.csv,"A. V. Plyasunov and E. L. Shock (2001) Geochim. Cosmochim. Acta 65, 3879-3900",
+CO2,CO2,aq,-385.974,,PS01.1,,OBIGT/inorganic_aq.csv,"A. V. Plyasunov and E. L. Shock (2001) Geochim. Cosmochim. Acta 65, 3879-3900",
+CF4,CF4,aq,-848.097,,SSW01,,OBIGT/inorganic_aq.csv,"M. D. Schulte, E. L. Shock and R. H. Wood (2001) Geochim. Cosmochim. Acta 65, 3919-3930",
+SF6,SF6,aq,-1084.660,,SSW01,,OBIGT/inorganic_aq.csv,"M. D. Schulte, E. L. Shock and R. H. Wood (2001) Geochim. Cosmochim. Acta 65, 3919-3930",
+NF3,NF3,aq,-65.521,,SSW01,,OBIGT/inorganic_aq.csv,"M. D. Schulte, E. L. Shock and R. H. Wood (2001) Geochim. Cosmochim. Acta 65, 3919-3930",
+N2O,N2O,aq,113.386,,SSW01,,OBIGT/inorganic_aq.csv,"M. D. Schulte, E. L. Shock and R. H. Wood (2001) Geochim. Cosmochim. Acta 65, 3919-3930",
+NO,NO,aq,102.048,,SSW01,,OBIGT/inorganic_aq.csv,"M. D. Schulte, E. L. Shock and R. H. Wood (2001) Geochim. Cosmochim. Acta 65, 3919-3930",
+ClO2,ClO2,aq,120.081,,SSW01,,OBIGT/inorganic_aq.csv,"M. D. Schulte, E. L. Shock and R. H. Wood (2001) Geochim. Cosmochim. Acta 65, 3919-3930",
+PH3,PH3,aq,25.355,,SSW01,,OBIGT/inorganic_aq.csv,"M. D. Schulte, E. L. Shock and R. H. Wood (2001) Geochim. Cosmochim. Acta 65, 3919-3930",
+AsH3,AsH3,aq,80.626,,SSW01,,OBIGT/inorganic_aq.csv,"M. D. Schulte, E. L. Shock and R. H. Wood (2001) Geochim. Cosmochim. Acta 65, 3919-3930",
+CH3F,CH3F,aq,-216.062,,SSW01,,OBIGT/inorganic_aq.csv,"M. D. Schulte, E. L. Shock and R. H. Wood (2001) Geochim. Cosmochim. Acta 65, 3919-3930",
+Cl2,Cl2,aq,6.945,,SSW01,,OBIGT/inorganic_aq.csv,"M. D. Schulte, E. L. Shock and R. H. Wood (2001) Geochim. Cosmochim. Acta 65, 3919-3930",
+Am+3,Am+3,aq,-597.894,,MS99,,OBIGT/inorganic_aq.csv,"W. M. Murphy and E. L. Shock (1999) Rev. Mineral. Geochem. 38, 221-253",
+AmOH+2,AmOH+2,aq,-798.495,,MS99,,OBIGT/inorganic_aq.csv,"W. M. Murphy and E. L. Shock (1999) Rev. Mineral. Geochem. 38, 221-253",
+AmO+,AmO+,aq,-754.543,,MS99,,OBIGT/inorganic_aq.csv,"W. M. Murphy and E. L. Shock (1999) Rev. Mineral. Geochem. 38, 221-253",
+HAmO2,HAmO2,aq,-925.459,,MS99,,OBIGT/inorganic_aq.csv,"W. M. Murphy and E. L. Shock (1999) Rev. Mineral. Geochem. 38, 221-253",
+AmF+2,AmF+2,aq,-899.058,,MS99,,OBIGT/inorganic_aq.csv,"W. M. Murphy and E. L. Shock (1999) Rev. Mineral. Geochem. 38, 221-253",
+AmF2+,AmF2+,aq,-1194.490,,MS99,,OBIGT/inorganic_aq.csv,"W. M. Murphy and E. L. Shock (1999) Rev. Mineral. Geochem. 38, 221-253",
+AmF3,AmF3,aq,-1485.446,,MS99,,OBIGT/inorganic_aq.csv,"W. M. Murphy and E. L. Shock (1999) Rev. Mineral. Geochem. 38, 221-253",
+AmF4-,AmF4-,aq,-1769.916,,MS99,,OBIGT/inorganic_aq.csv,"W. M. Murphy and E. L. Shock (1999) Rev. Mineral. Geochem. 38, 221-253",
+AmCl+2,AmCl+2,aq,-735.171,,MS99,,OBIGT/inorganic_aq.csv,"W. M. Murphy and E. L. Shock (1999) Rev. Mineral. Geochem. 38, 221-253",
+AmCl2+,AmCl2+,aq,-869.142,,MS99,,OBIGT/inorganic_aq.csv,"W. M. Murphy and E. L. Shock (1999) Rev. Mineral. Geochem. 38, 221-253",
+AmCl3,AmCl3,aq,-994.620,,MS99,,OBIGT/inorganic_aq.csv,"W. M. Murphy and E. L. Shock (1999) Rev. Mineral. Geochem. 38, 221-253",
+AmCl4-,AmCl4-,aq,-1122.274,,MS99,,OBIGT/inorganic_aq.csv,"W. M. Murphy and E. L. Shock (1999) Rev. Mineral. Geochem. 38, 221-253",
+AmNO3+2,AmNO3+2,aq,-716.384,,MS99,,OBIGT/inorganic_aq.csv,"W. M. Murphy and E. L. Shock (1999) Rev. Mineral. Geochem. 38, 221-253",
+Am(NO3)2+,Am(NO3)2+,aq,-829.813,,MS99,,OBIGT/inorganic_aq.csv,"W. M. Murphy and E. L. Shock (1999) Rev. Mineral. Geochem. 38, 221-253",
+AmNO2+2,AmNO2+2,aq,-642.118,,MS99,,OBIGT/inorganic_aq.csv,"W. M. Murphy and E. L. Shock (1999) Rev. Mineral. Geochem. 38, 221-253",
+AmH2PO4+2,AmH2PO4+2,aq,-1745.272,,MS99,,OBIGT/inorganic_aq.csv,"W. M. Murphy and E. L. Shock (1999) Rev. Mineral. Geochem. 38, 221-253",
+AmSCN+2,AmSCN+2,aq,-512.582,,MS99,,OBIGT/inorganic_aq.csv,"W. M. Murphy and E. L. Shock (1999) Rev. Mineral. Geochem. 38, 221-253",
+Am(SCN)2+,Am(SCN)2+,aq,-420.157,,MS99,,OBIGT/inorganic_aq.csv,"W. M. Murphy and E. L. Shock (1999) Rev. Mineral. Geochem. 38, 221-253",
+Am(SCN)3,Am(SCN)3,aq,-328.360,,MS99,,OBIGT/inorganic_aq.csv,"W. M. Murphy and E. L. Shock (1999) Rev. Mineral. Geochem. 38, 221-253",
+Am(HCO3)+2,Am(HCO3)+2,aq,-1198.549,,MS99,,OBIGT/inorganic_aq.csv,"W. M. Murphy and E. L. Shock (1999) Rev. Mineral. Geochem. 38, 221-253",
+Am(ClO4)+2,Am(ClO4)+2,aq,-616.805,,MS99,,OBIGT/inorganic_aq.csv,"W. M. Murphy and E. L. Shock (1999) Rev. Mineral. Geochem. 38, 221-253",
+AmCO3+,AmCO3+,aq,-1170.390,,MS99,,OBIGT/inorganic_aq.csv,"W. M. Murphy and E. L. Shock (1999) Rev. Mineral. Geochem. 38, 221-253",
+Am(CO3)2-,Am(CO3)2-,aq,-1724.101,,MS99,,OBIGT/inorganic_aq.csv,"W. M. Murphy and E. L. Shock (1999) Rev. Mineral. Geochem. 38, 221-253",
+AmSO4+,AmSO4+,aq,-1364.319,,MS99,,OBIGT/inorganic_aq.csv,"W. M. Murphy and E. L. Shock (1999) Rev. Mineral. Geochem. 38, 221-253",
+Am(SO4)2-,Am(SO4)2-,aq,-2117.648,,MS99,,OBIGT/inorganic_aq.csv,"W. M. Murphy and E. L. Shock (1999) Rev. Mineral. Geochem. 38, 221-253",
+Am(Ac)+2,AmCH3COO+2,aq,-984.160,,MS99,,OBIGT/inorganic_aq.csv,"W. M. Murphy and E. L. Shock (1999) Rev. Mineral. Geochem. 38, 221-253",
+Am(Ac)2+,Am(CH3COO)2+,aq,-1365.490,,MS99,,OBIGT/inorganic_aq.csv,"W. M. Murphy and E. L. Shock (1999) Rev. Mineral. Geochem. 38, 221-253",
+Am(Ac)3,Am(CH3COO)3,aq,-1743.180,,MS99,,OBIGT/inorganic_aq.csv,"W. M. Murphy and E. L. Shock (1999) Rev. Mineral. Geochem. 38, 221-253",
+Am(Lac)+2,AmCH3CH2OCO2+2,aq,-1126.082,,MS99,,OBIGT/inorganic_aq.csv,"W. M. Murphy and E. L. Shock (1999) Rev. Mineral. Geochem. 38, 221-253",
+Am(Lac)2+,Am(CH3CH2OCO2)2+,aq,-1658.789,,MS99,,OBIGT/inorganic_aq.csv,"W. M. Murphy and E. L. Shock (1999) Rev. Mineral. Geochem. 38, 221-253",
+Am(For)+2,AmCHO2+2,aq,-964.538,,MS99,,OBIGT/inorganic_aq.csv,"W. M. Murphy and E. L. Shock (1999) Rev. Mineral. Geochem. 38, 221-253",
+Am(For)2+,Am(CHO2)2+,aq,-1329.340,,MS99,,OBIGT/inorganic_aq.csv,"W. M. Murphy and E. L. Shock (1999) Rev. Mineral. Geochem. 38, 221-253",
+Am(Prop)+2,AmCH3CH2CO2+2,aq,-976.755,,MS99,,OBIGT/inorganic_aq.csv,"W. M. Murphy and E. L. Shock (1999) Rev. Mineral. Geochem. 38, 221-253",
+Am(Prop)2+,Am(CH3CH2CO2)2+,aq,-1349.256,,MS99,,OBIGT/inorganic_aq.csv,"W. M. Murphy and E. L. Shock (1999) Rev. Mineral. Geochem. 38, 221-253",
+Am(But)+2,AmCH3(CH2)2CO2+2,aq,-967.843,,MS99,,OBIGT/inorganic_aq.csv,"W. M. Murphy and E. L. Shock (1999) Rev. Mineral. Geochem. 38, 221-253",
+Am(But)2+,Am(CH3CH2CH2CO2)2+,aq,-1332.771,,MS99,,OBIGT/inorganic_aq.csv,"W. M. Murphy and E. L. Shock (1999) Rev. Mineral. Geochem. 38, 221-253",
+Am(Glyc)+2,AmCH3OCO2+2,aq,-1120.643,,MS99,,OBIGT/inorganic_aq.csv,"W. M. Murphy and E. L. Shock (1999) Rev. Mineral. Geochem. 38, 221-253",
+Am(Glyc)2+,Am(CH3OCO2)2+,aq,-1637.994,,MS99,,OBIGT/inorganic_aq.csv,"W. M. Murphy and E. L. Shock (1999) Rev. Mineral. Geochem. 38, 221-253",
+Al+3,Al+3,aq,-487.478,,TS01,,OBIGT/inorganic_aq.csv,"B. Tagirov and J. Schott (2001) Geochim. Cosmochim. Acta 65, 3965-3992",
+Al(OH)4-,Al(OH)4-,aq,-1305.772,,TS01,,OBIGT/inorganic_aq.csv,"B. Tagirov and J. Schott (2001) Geochim. Cosmochim. Acta 65, 3965-3992",
+AlOH+2,AlOH+2,aq,-696.322,,TS01,,OBIGT/inorganic_aq.csv,"B. Tagirov and J. Schott (2001) Geochim. Cosmochim. Acta 65, 3965-3992",
+Al(OH)2+,Al(OH)2+,aq,-899.506,,TS01,,OBIGT/inorganic_aq.csv,"B. Tagirov and J. Schott (2001) Geochim. Cosmochim. Acta 65, 3965-3992",
+Al(OH)3,Al(OH)3,aq,-1101.735,,TS01,,OBIGT/inorganic_aq.csv,"B. Tagirov and J. Schott (2001) Geochim. Cosmochim. Acta 65, 3965-3992",
+AlF+2,AlF+2,aq,-809.077,,TS01,,OBIGT/inorganic_aq.csv,"B. Tagirov and J. Schott (2001) Geochim. Cosmochim. Acta 65, 3965-3992",
+AlF2+,AlF2+,aq,-1122.910,,TS01,,OBIGT/inorganic_aq.csv,"B. Tagirov and J. Schott (2001) Geochim. Cosmochim. Acta 65, 3965-3992",
+AlF3,AlF3,aq,-1427.782,,TS01,,OBIGT/inorganic_aq.csv,"B. Tagirov and J. Schott (2001) Geochim. Cosmochim. Acta 65, 3965-3992",
+AlF4-,AlF4-,aq,-1723.118,,TS01,,OBIGT/inorganic_aq.csv,"B. Tagirov and J. Schott (2001) Geochim. Cosmochim. Acta 65, 3965-3992",
+Al(OH)2F2-,Al(OH)2F2-,aq,-1513.625,,TS01,,OBIGT/inorganic_aq.csv,"B. Tagirov and J. Schott (2001) Geochim. Cosmochim. Acta 65, 3965-3992",
+Al(OH)2F,Al(OH)2F,aq,-1219.389,,TS01,,OBIGT/inorganic_aq.csv,"B. Tagirov and J. Schott (2001) Geochim. Cosmochim. Acta 65, 3965-3992",
+AlOHF2,AlOHF2,aq,-1289.028,,TS01,,OBIGT/inorganic_aq.csv,"B. Tagirov and J. Schott (2001) Geochim. Cosmochim. Acta 65, 3965-3992",
+AlSO4+,AlSO4+,aq,-1250.008,,TS01,,OBIGT/inorganic_aq.csv,"B. Tagirov and J. Schott (2001) Geochim. Cosmochim. Acta 65, 3965-3992",
+NaAl(OH)3F,NaAl(OH)3F,aq,-1668.964,,TS01,,OBIGT/inorganic_aq.csv,"B. Tagirov and J. Schott (2001) Geochim. Cosmochim. Acta 65, 3965-3992",
+NaAl(OH)2F2,NaAl(OH)2F2,aq,-1688.290,,TS01,,OBIGT/inorganic_aq.csv,"B. Tagirov and J. Schott (2001) Geochim. Cosmochim. Acta 65, 3965-3992",
+NaAl(OH)4,NaAl(OH)4,aq,-1567.372,,TS01,DPS+96,OBIGT/inorganic_aq.csv,"B. Tagirov and J. Schott (2001) Geochim. Cosmochim. Acta 65, 3965-3992","I. Diakonov, G. Pokrovski et al. (1996) Geochim. Cosmochim. Acta 60, 197-211"
+AlH3SiO4+2,AlH3SiO4+2,aq,-1781.798,,TS01,,OBIGT/inorganic_aq.csv,"B. Tagirov and J. Schott (2001) Geochim. Cosmochim. Acta 65, 3965-3992",
+LaF+2,LaF+2,aq,-988.637,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+CeF+2,CeF+2,aq,-979.851,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+PrF+2,PrF+2,aq,-984.077,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+SmF+2,SmF+2,aq,-971.065,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+EuF+2,EuF+2,aq,-880.523,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+GdF+2,GdF+2,aq,-969.475,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+TbF+2,TbF+2,aq,-973.993,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+DyF+2,DyF+2,aq,-970.814,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+HoF+2,HoF+2,aq,-981.483,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+ErF+2,ErF+2,aq,-975.123,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+TmF+2,TmF+2,aq,-975.207,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+YbF+2,YbF+2,aq,-946.839,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+LuF+2,LuF+2,aq,-972.906,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+LaCl+2,LaCl+2,aq,-821.696,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+CeCl+2,CeCl+2,aq,-811.319,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+PrCl+2,PrCl+2,aq,-815.671,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+SmCl+2,SmCl+2,aq,-800.776,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+EuCl+2,EuCl+2,aq,-709.690,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+GdCl+2,GdCl+2,aq,-798.935,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+TbCl+2,TbCl+2,aq,-802.449,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+DyCl+2,DyCl+2,aq,-799.270,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+HoCl+2,HoCl+2,aq,-810.650,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+ErCl+2,ErCl+2,aq,-804.290,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+TmCl+2,TmCl+2,aq,-804.374,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+YbCl+2,YbCl+2,aq,-775.379,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+LuCl+2,LuCl+2,aq,-802.031,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+LaCl2+,LaCl2+,aq,-951.651,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+CeCl2+,CeCl2+,aq,-941.358,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+PrCl2+,PrCl2+,aq,-945.458,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+SmCl2+,SmCl2+,aq,-930.647,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+EuCl2+,EuCl2+,aq,-839.561,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+GdCl2+,GdCl2+,aq,-928.806,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+TbCl2+,TbCl2+,aq,-932.363,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+DyCl2+,DyCl2+,aq,-929.057,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+HoCl2+,HoCl2+,aq,-940.438,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+ErCl2+,ErCl2+,aq,-934.162,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+TmCl2+,TmCl2+,aq,-934.245,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+YbCl2+,YbCl2+,aq,-905.250,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+LuCl2+,LuCl2+,aq,-931.986,,MWW09,,OBIGT/inorganic_aq.csv,"A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109",
+H2AsO4-,H2AsO4-,aq,-753.650,,NA03.1,,OBIGT/inorganic_aq.csv,"D. K. Nordstrom and D. G. Archer (2003) Arsenic thermodynamic data and environmental geochemistry. In Arsenic in Groundwater, eds. Welch and Stollenwerk, Kluwer",
+HAsO4-2,HAsO4-2,aq,-713.730,,NA03.1,,OBIGT/inorganic_aq.csv,"D. K. Nordstrom and D. G. Archer (2003) Arsenic thermodynamic data and environmental geochemistry. In Arsenic in Groundwater, eds. Welch and Stollenwerk, Kluwer",
+AsO4-3,AsO4-3,aq,-646.360,,NA03.1,,OBIGT/inorganic_aq.csv,"D. K. Nordstrom and D. G. Archer (2003) Arsenic thermodynamic data and environmental geochemistry. In Arsenic in Groundwater, eds. Welch and Stollenwerk, Kluwer",
+H2AsO3-,H2AsO3-,aq,-587.660,,NA03.1,,OBIGT/inorganic_aq.csv,"D. K. Nordstrom and D. G. Archer (2003) Arsenic thermodynamic data and environmental geochemistry. In Arsenic in Groundwater, eds. Welch and Stollenwerk, Kluwer",
+HAsO3-2,HAsO3-2,aq,-507.400,,NA03.1,,OBIGT/inorganic_aq.csv,"D. K. Nordstrom and D. G. Archer (2003) Arsenic thermodynamic data and environmental geochemistry. In Arsenic in Groundwater, eds. Welch and Stollenwerk, Kluwer",
+AsO3-3,AsO3-3,aq,-421.800,,NA03.1,,OBIGT/inorganic_aq.csv,"D. K. Nordstrom and D. G. Archer (2003) Arsenic thermodynamic data and environmental geochemistry. In Arsenic in Groundwater, eds. Welch and Stollenwerk, Kluwer",
+As3S4(HS)2-,As3S4(HS)2-,aq,-125.600,,NA03.1,,OBIGT/inorganic_aq.csv,"D. K. Nordstrom and D. G. Archer (2003) Arsenic thermodynamic data and environmental geochemistry. In Arsenic in Groundwater, eds. Welch and Stollenwerk, Kluwer",
+AsS(OH)HS-,AsS(OH)HS-,aq,-244.400,,NA03.1,,OBIGT/inorganic_aq.csv,"D. K. Nordstrom and D. G. Archer (2003) Arsenic thermodynamic data and environmental geochemistry. In Arsenic in Groundwater, eds. Welch and Stollenwerk, Kluwer",
+Au+,Au+,aq,163.176,,AZ01,,OBIGT/inorganic_aq.csv,"N. N. Akinfiev and A. V. Zotov (2001) Geochem. Int. 39, 990-1006",
+Au(OH)2-,Au(OH)2-,aq,-278.458,,AZ01,,OBIGT/inorganic_aq.csv,"N. N. Akinfiev and A. V. Zotov (2001) Geochem. Int. 39, 990-1006",
+Ag+,Ag+,aq,77.099,,AZ01,,OBIGT/inorganic_aq.csv,"N. N. Akinfiev and A. V. Zotov (2001) Geochem. Int. 39, 990-1006",
+AgOH,AgOH,aq,-92.127,,AZ01,,OBIGT/inorganic_aq.csv,"N. N. Akinfiev and A. V. Zotov (2001) Geochem. Int. 39, 990-1006",
+Ag(OH)2-,Ag(OH)2-,aq,-258.994,,AZ01,,OBIGT/inorganic_aq.csv,"N. N. Akinfiev and A. V. Zotov (2001) Geochem. Int. 39, 990-1006",
+AgHS,AgHS,aq,9.682,,AZ10,,OBIGT/inorganic_aq.csv,"N. N. Akinfiev and A. V. Zotov (2010) Geochem. Int. 48, 714-720",
+Ag(HS)2-,Ag(HS)2-,aq,1.201,,AZ10,,OBIGT/inorganic_aq.csv,"N. N. Akinfiev and A. V. Zotov (2010) Geochem. Int. 48, 714-720",
+AgCl,AgCl,aq,-72.797,,AZ01,,OBIGT/inorganic_aq.csv,"N. N. Akinfiev and A. V. Zotov (2001) Geochem. Int. 39, 990-1006",
+AgCl2-,AgCl2-,aq,-214.848,,AZ01,,OBIGT/inorganic_aq.csv,"N. N. Akinfiev and A. V. Zotov (2001) Geochem. Int. 39, 990-1006",
+AgCl3-2,AgCl3-2,aq,-345.766,,AVZP06,,OBIGT/inorganic_aq.csv,"N. N. Akinfiev et al. (2006) Geochem. Int. 44, 867-878",
+Zn+2,Zn+2,aq,-147.277,,AT14,,OBIGT/inorganic_aq.csv,"N. N. Akinfiev and B. R. Tagirov (2014) Geochem. Int. 52, 197-214",
+ZnOH+,ZnOH+,aq,-334.904,,AT14,,OBIGT/inorganic_aq.csv,"N. N. Akinfiev and B. R. Tagirov (2014) Geochem. Int. 52, 197-214",
+ZnO,ZnO,aq,-274.972,,AT14,,OBIGT/inorganic_aq.csv,"N. N. Akinfiev and B. R. Tagirov (2014) Geochem. Int. 52, 197-214",
+HZnO2-,HZnO2-,aq,-460.893,,AT14,,OBIGT/inorganic_aq.csv,"N. N. Akinfiev and B. R. Tagirov (2014) Geochem. Int. 52, 197-214",
+ZnO2-2,ZnO2-2,aq,-390.325,,AT14,,OBIGT/inorganic_aq.csv,"N. N. Akinfiev and B. R. Tagirov (2014) Geochem. Int. 52, 197-214",
+Zn(HS)2,Zn(HS)2,aq,-179.042,,AT14,,OBIGT/inorganic_aq.csv,"N. N. Akinfiev and B. R. Tagirov (2014) Geochem. Int. 52, 197-214",
+Zn(HS)2OH-,Zn(HS)2OH-,aq,-379.577,,AT14,,OBIGT/inorganic_aq.csv,"N. N. Akinfiev and B. R. Tagirov (2014) Geochem. Int. 52, 197-214",
+Zn(HS)3-,Zn(HS)3-,aq,-187.192,,AT14,,OBIGT/inorganic_aq.csv,"N. N. Akinfiev and B. R. Tagirov (2014) Geochem. Int. 52, 197-214",
+Zn(HS)4-2,Zn(HS)4-2,aq,-181.573,,AT14,,OBIGT/inorganic_aq.csv,"N. N. Akinfiev and B. R. Tagirov (2014) Geochem. Int. 52, 197-214",
+ZnCl+,ZnCl+,aq,-280.721,,AT14,,OBIGT/inorganic_aq.csv,"N. N. Akinfiev and B. R. Tagirov (2014) Geochem. Int. 52, 197-214",
+ZnCl2,ZnCl2,aq,-412.413,,AT14,,OBIGT/inorganic_aq.csv,"N. N. Akinfiev and B. R. Tagirov (2014) Geochem. Int. 52, 197-214",
+ZnCl3-,ZnCl3-,aq,-544.046,,AT14,,OBIGT/inorganic_aq.csv,"N. N. Akinfiev and B. R. Tagirov (2014) Geochem. Int. 52, 197-214",
+ZnCl4-2,ZnCl4-2,aq,-670.034,,AT14,,OBIGT/inorganic_aq.csv,"N. N. Akinfiev and B. R. Tagirov (2014) Geochem. Int. 52, 197-214",
+HCl,HCl,aq,-127.240,,TZA97,,OBIGT/inorganic_aq.csv,"B. R. Tagirov, A. V. Zotov and N. N. Akinfiev (2007) Geochim. Cosmochim. Acta 61, 4267-4280",
+Pd+2,Pd+2,aq,189.134,,TBZ+13,,OBIGT/inorganic_aq.csv,"B. R. Tagirov et al. (2013) Geochim. Cosmochim. Acta 117, 348-373",
+PdOH+,PdOH+,aq,-43.723,,TBZ+13,,OBIGT/inorganic_aq.csv,"B. R. Tagirov et al. (2013) Geochim. Cosmochim. Acta 117, 348-373",
+PdOH(HS)3-2,PdOH(HS)3-2,aq,-268.286,,TBZ+13,,OBIGT/inorganic_aq.csv,"B. R. Tagirov et al. (2013) Geochim. Cosmochim. Acta 117, 348-373",
+PdO,PdO,aq,-24.137,,TBZ+13,,OBIGT/inorganic_aq.csv,"B. R. Tagirov et al. (2013) Geochim. Cosmochim. Acta 117, 348-373",
+HPdO2-,HPdO2-,aq,-199.552,,TBZ+13,,OBIGT/inorganic_aq.csv,"B. R. Tagirov et al. (2013) Geochim. Cosmochim. Acta 117, 348-373",
+Pd(HS)2,Pd(HS)2,aq,-67.977,,TBZ+13,,OBIGT/inorganic_aq.csv,"B. R. Tagirov et al. (2013) Geochim. Cosmochim. Acta 117, 348-373",
+Pd(HS)3-,Pd(HS)3-,aq,-75.253,,TBZ+13,,OBIGT/inorganic_aq.csv,"B. R. Tagirov et al. (2013) Geochim. Cosmochim. Acta 117, 348-373",
+PdCl+,PdCl+,aq,29.179,,TBZ+13,,OBIGT/inorganic_aq.csv,"B. R. Tagirov et al. (2013) Geochim. Cosmochim. Acta 117, 348-373",
+PdCl2,PdCl2,aq,-121.733,,TBZ+13,,OBIGT/inorganic_aq.csv,"B. R. Tagirov et al. (2013) Geochim. Cosmochim. Acta 117, 348-373",
+PdCl3-,PdCl3-,aq,-264.893,,TBZ+13,,OBIGT/inorganic_aq.csv,"B. R. Tagirov et al. (2013) Geochim. Cosmochim. Acta 117, 348-373",
+PdCl4-2,PdCl4-2,aq,-401.170,,TBZ+13,,OBIGT/inorganic_aq.csv,"B. R. Tagirov et al. (2013) Geochim. Cosmochim. Acta 117, 348-373",
+Pt+2,Pt+2,aq,225.392,,TBB15,,OBIGT/inorganic_aq.csv,"B. R. Tagirov et al. (2015) Geochem. Int. 53, 327-340",
+PtCl+,PtCl+,aq,61.120,,TBB15,,OBIGT/inorganic_aq.csv,"B. R. Tagirov et al. (2015) Geochem. Int. 53, 327-340",
+PtCl2,PtCl2,aq,-94.964,,TBB15,,OBIGT/inorganic_aq.csv,"B. R. Tagirov et al. (2015) Geochem. Int. 53, 327-340",
+PtCl3-,PtCl3-,aq,-243.576,,TBB15,,OBIGT/inorganic_aq.csv,"B. R. Tagirov et al. (2015) Geochem. Int. 53, 327-340",
+PtCl4-2,PtCl4-2,aq,-383.526,,TBB15,,OBIGT/inorganic_aq.csv,"B. R. Tagirov et al. (2015) Geochem. Int. 53, 327-340",
+S3-,S3-,aq,55.061,,PD15,,OBIGT/inorganic_aq.csv,"G. S. Pokrovski and J. Dubessy (2015) Earth Planet. Sci. Lett. 411, 298-309",
+As(OH)3,As(OH)3,aq,-639.800,,PPB+08.1,,OBIGT/inorganic_aq.csv,"E. Perfetti et al. (2008) Geochim. Cosmochim. Acta 72, 713-731",
+AsO(OH)3,AsO(OH)3,aq,-766.300,,PPB+08.1,,OBIGT/inorganic_aq.csv,"E. Perfetti et al. (2008) Geochim. Cosmochim. Acta 72, 713-731",
+CoCl+,CoCl+,aq,-188.731,,LBT+11,,OBIGT/inorganic_aq.csv,"W. Liu et al. (2011) Geochim. Cosmochim. Acta 75, 1227-1248",
+CoCl2(oct),CoCl2,aq,-317.071,,LBT+11,,OBIGT/inorganic_aq.csv,"W. Liu et al. (2011) Geochim. Cosmochim. Acta 75, 1227-1248",
+CoCl2(tet),CoCl2,aq,-307.188,,LBT+11,,OBIGT/inorganic_aq.csv,"W. Liu et al. (2011) Geochim. Cosmochim. Acta 75, 1227-1248",
+CoCl4-2,CoCl4-2,aq,-561.284,,LBT+11,,OBIGT/inorganic_aq.csv,"W. Liu et al. (2011) Geochim. Cosmochim. Acta 75, 1227-1248",
+FeCO3,FeCO3,aq,-650.369,,SPD+19,,OBIGT/inorganic_aq.csv,"B. St Clair et al. (2019) ACS Earth Space Chem 3, 905-921",
+MnCO3,MnCO3,aq,-785.349,,SPD+19,,OBIGT/inorganic_aq.csv,"B. St Clair et al. (2019) ACS Earth Space Chem 3, 905-921",
+ZnCO3,ZnCO3,aq,-702.376,,SPD+19,,OBIGT/inorganic_aq.csv,"B. St Clair et al. (2019) ACS Earth Space Chem 3, 905-921",
+CuCO3,CuCO3,aq,-500.929,,SPD+19,,OBIGT/inorganic_aq.csv,"B. St Clair et al. (2019) ACS Earth Space Chem 3, 905-921",
+CdCO3,CdCO3,aq,-630.755,,SPD+19,,OBIGT/inorganic_aq.csv,"B. St Clair et al. (2019) ACS Earth Space Chem 3, 905-921",
+PbCO3,PbCO3,aq,-588.693,,SPD+19,,OBIGT/inorganic_aq.csv,"B. St Clair et al. (2019) ACS Earth Space Chem 3, 905-921",
+CoCO3,CoCO3,aq,-607.550,,SPD+19,,OBIGT/inorganic_aq.csv,"B. St Clair et al. (2019) ACS Earth Space Chem 3, 905-921",
+NiCO3,NiCO3,aq,-601.161,,SPD+19,,OBIGT/inorganic_aq.csv,"B. St Clair et al. (2019) ACS Earth Space Chem 3, 905-921",
+Fe(CO3)2-2,Fe(CO3)2-2,aq,-1188.001,,SPD+19,,OBIGT/inorganic_aq.csv,"B. St Clair et al. (2019) ACS Earth Space Chem 3, 905-921",
+Zn(CO3)2-2,Zn(CO3)2-2,aq,-1234.071,,SPD+19,,OBIGT/inorganic_aq.csv,"B. St Clair et al. (2019) ACS Earth Space Chem 3, 905-921",
+Cu(CO3)2-2,Cu(CO3)2-2,aq,-1049.180,,SPD+19,,OBIGT/inorganic_aq.csv,"B. St Clair et al. (2019) ACS Earth Space Chem 3, 905-921",
+Pb(CO3)2-2,Pb(CO3)2-2,aq,-1137.684,,SPD+19,,OBIGT/inorganic_aq.csv,"B. St Clair et al. (2019) ACS Earth Space Chem 3, 905-921",
+NaCO3-,NaCO3-,aq,-793.148,,SPD+19,,OBIGT/inorganic_aq.csv,"B. St Clair et al. (2019) ACS Earth Space Chem 3, 905-921",
+KCO3-,KCO3-,aq,-812.750,,SPD+19,,OBIGT/inorganic_aq.csv,"B. St Clair et al. (2019) ACS Earth Space Chem 3, 905-921",
+LiCO3-,LiCO3-,aq,-822.784,,SPD+19,,OBIGT/inorganic_aq.csv,"B. St Clair et al. (2019) ACS Earth Space Chem 3, 905-921",
+RbCO3-,RbCO3-,aq,-813.934,,SPD+19,,OBIGT/inorganic_aq.csv,"B. St Clair et al. (2019) ACS Earth Space Chem 3, 905-921",
+NH4CO3-,NH4CO3-,aq,-610.554,,SPD+19,,OBIGT/inorganic_aq.csv,"B. St Clair et al. (2019) ACS Earth Space Chem 3, 905-921",
+FeHCO3+,FeHCO3+,aq,-686.837,,SPD+19,,OBIGT/inorganic_aq.csv,"B. St Clair et al. (2019) ACS Earth Space Chem 3, 905-921",
+MnHCO3+,MnHCO3+,aq,-828.725,,SPD+19,,OBIGT/inorganic_aq.csv,"B. St Clair et al. (2019) ACS Earth Space Chem 3, 905-921",
+ZnHCO3+,ZnHCO3+,aq,-743.463,,SPD+19,,OBIGT/inorganic_aq.csv,"B. St Clair et al. (2019) ACS Earth Space Chem 3, 905-921",
+CuHCO3+,CuHCO3+,aq,-531.858,,SPD+19,,OBIGT/inorganic_aq.csv,"B. St Clair et al. (2019) ACS Earth Space Chem 3, 905-921",
+CdHCO3+,CdHCO3+,aq,-676.013,,SPD+19,,OBIGT/inorganic_aq.csv,"B. St Clair et al. (2019) ACS Earth Space Chem 3, 905-921",
+PbHCO3+,PbHCO3+,aq,-624.475,,SPD+19,,OBIGT/inorganic_aq.csv,"B. St Clair et al. (2019) ACS Earth Space Chem 3, 905-921",
+CoHCO3+,CoHCO3+,aq,-653.892,,SPD+19,,OBIGT/inorganic_aq.csv,"B. St Clair et al. (2019) ACS Earth Space Chem 3, 905-921",
+NiHCO3+,NiHCO3+,aq,-645.219,,SPD+19,,OBIGT/inorganic_aq.csv,"B. St Clair et al. (2019) ACS Earth Space Chem 3, 905-921",
+NaHCO3,NaHCO3,aq,-849.741,,SPD+19,,OBIGT/inorganic_aq.csv,"B. St Clair et al. (2019) ACS Earth Space Chem 3, 905-921",
+KHCO3,KHCO3,aq,-866.519,,SPD+19,,OBIGT/inorganic_aq.csv,"B. St Clair et al. (2019) ACS Earth Space Chem 3, 905-921",
+FeSO4,FeSO4,aq,-849.892,,SPD+19,,OBIGT/inorganic_aq.csv,"B. St Clair et al. (2019) ACS Earth Space Chem 3, 905-921",
+HNbO3,HNbO3,aq,-947.839,,AKK+20,,OBIGT/inorganic_aq.csv,"N. N. Akinfiev et al. (2020) Geochim. Cosmochim. Acta 280, 102-115",
+HTaO3,HTaO3,aq,-1016.013,,AKK+20,,OBIGT/inorganic_aq.csv,"N. N. Akinfiev et al. (2020) Geochim. Cosmochim. Acta 280, 102-115",
+NbO2+,NbO2+,aq,-721.430,,AKK+20,,OBIGT/inorganic_aq.csv,"N. N. Akinfiev et al. (2020) Geochim. Cosmochim. Acta 280, 102-115",
+NbO3-,NbO3-,aq,-919.995,,AKK+20,,OBIGT/inorganic_aq.csv,"N. N. Akinfiev et al. (2020) Geochim. Cosmochim. Acta 280, 102-115",
+TaO2+,TaO2+,aq,-779.835,,AKK+20,,OBIGT/inorganic_aq.csv,"N. N. Akinfiev et al. (2020) Geochim. Cosmochim. Acta 280, 102-115",
+TaO3-,TaO3-,aq,-975.855,,AKK+20,,OBIGT/inorganic_aq.csv,"N. N. Akinfiev et al. (2020) Geochim. Cosmochim. Acta 280, 102-115",
+NbOF3,NbOF3,aq,-1426.338,,AKK+20,,OBIGT/inorganic_aq.csv,"N. N. Akinfiev et al. (2020) Geochim. Cosmochim. Acta 280, 102-115",
+TaOF3,TaOF3,aq,-1479.174,,AKK+20,,OBIGT/inorganic_aq.csv,"N. N. Akinfiev et al. (2020) Geochim. Cosmochim. Acta 280, 102-115",
+HNbO3F-,HNbO3F-,aq,-1246.418,,AKK+20,,OBIGT/inorganic_aq.csv,"N. N. Akinfiev et al. (2020) Geochim. Cosmochim. Acta 280, 102-115",
+HTaO3F-,HTaO3F-,aq,-1241.958,,AKK+20,,OBIGT/inorganic_aq.csv,"N. N. Akinfiev et al. (2020) Geochim. Cosmochim. Acta 280, 102-115",
+H2WO4,H2WO4,aq,-973.420,,LXW21,,OBIGT/inorganic_aq.csv,"X. Liu, C. Xiao and Y. Wang (2021) Chem. Geol. 584, 120488",
+UO2OH+,UO2OH+,aq,-1159.755,,MBA+25,,OBIGT/inorganic_aq.csv,"A. Migdisov, E. Bastrakov et al. (2025) Geochim. Cosmochim. Acta 406, 326-339",
+UO3,UO3,aq,-1119.885,,MBA+25,NEA20.1,OBIGT/inorganic_aq.csv,"A. Migdisov, E. Bastrakov et al. (2025) Geochim. Cosmochim. Acta 406, 326-339","Grenthe et al. (2020) Second Update on the Chemical Thermodynamics of Uranium, Neptunium, Plutonium, Americium and Technetium"
+HUO4-,HUO4-,aq,-1317.123,,SSB97,,OBIGT/inorganic_aq.csv,"E. L. Shock, D. C. Sassani and H. Betz (1997) Geochim. Cosmochim. Acta 61, 4245-4266",
+UO2Cl+,UO2Cl+,aq,-1085.087,,MBA+25,,OBIGT/inorganic_aq.csv,"A. Migdisov, E. Bastrakov et al. (2025) Geochim. Cosmochim. Acta 406, 326-339",
+UO2Cl2,UO2Cl2,aq,-1212.783,,MBA+25,,OBIGT/inorganic_aq.csv,"A. Migdisov, E. Bastrakov et al. (2025) Geochim. Cosmochim. Acta 406, 326-339",
+UO2SO4,UO2SO4,aq,-1716.201,,MBA+25,,OBIGT/inorganic_aq.csv,"A. Migdisov, E. Bastrakov et al. (2025) Geochim. Cosmochim. Acta 406, 326-339",
+UO2(SO4)2-2,UO2(SO4)2-2,aq,-2466.305,,MBA+25,,OBIGT/inorganic_aq.csv,"A. Migdisov, E. Bastrakov et al. (2025) Geochim. Cosmochim. Acta 406, 326-339",
+UO2CO3,UO2CO3,aq,-1536.658,,MBA+25,,OBIGT/inorganic_aq.csv,"A. Migdisov, E. Bastrakov et al. (2025) Geochim. Cosmochim. Acta 406, 326-339",
+UO2(CO3)2-2,UO2(CO3)2-2,aq,-2103.820,,MBA+25,,OBIGT/inorganic_aq.csv,"A. Migdisov, E. Bastrakov et al. (2025) Geochim. Cosmochim. Acta 406, 326-339",
+UO2(CO3)3-4,UO2(CO3)3-4,aq,-2660.597,,MBA+25,,OBIGT/inorganic_aq.csv,"A. Migdisov, E. Bastrakov et al. (2025) Geochim. Cosmochim. Acta 406, 326-339",
+Ta(OH)3F3-,Ta(OH)3F3-,aq,-1944.698,,HET+24,,OBIGT/inorganic_aq.csv,"B. Hu, B. Etschmann et al. (2024) Geochim. Cosmochim. Acta",
+TaF7-2,TaF7-2,aq,-2449.535,,HET+24,,OBIGT/inorganic_aq.csv,"B. Hu, B. Etschmann et al. (2024) Geochim. Cosmochim. Acta",
+Sn+4,Sn+4,aq,2.510,,LYX23,,OBIGT/inorganic_aq.csv,"X. Liu, P. Yu and C. Xiao (2023) Geosci. Front. 14, 101624",
+Th+4,Th+4,aq,-705.004,,LYX23,SSWS97.6,OBIGT/inorganic_aq.csv,"X. Liu, P. Yu and C. Xiao (2023) Geosci. Front. 14, 101624","E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950"
+Sn+2,Sn+2,aq,-27.489,,LYX23,SSWS97.6,OBIGT/inorganic_aq.csv,"X. Liu, P. Yu and C. Xiao (2023) Geosci. Front. 14, 101624","E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950"
+SnCl+,SnCl+,aq,-167.201,,LYX23,,OBIGT/inorganic_aq.csv,"X. Liu, P. Yu and C. Xiao (2023) Geosci. Front. 14, 101624",
+SnCl2,SnCl2,aq,-302.219,,LYX23,,OBIGT/inorganic_aq.csv,"X. Liu, P. Yu and C. Xiao (2023) Geosci. Front. 14, 101624",
+SnCl3-,SnCl3-,aq,-433.241,,LYX23,,OBIGT/inorganic_aq.csv,"X. Liu, P. Yu and C. Xiao (2023) Geosci. Front. 14, 101624",
+Pd(HS)4-2,Pd(HS)4-2,aq,-49.053,,LBP25,,OBIGT/inorganic_aq.csv,"C. Laksar et al. (2025) Geochim. Cosmochim. Acta 406, 134-147",
+Pt(HS)4-2,Pt(HS)4-2,aq,-62.676,,LBP25,,OBIGT/inorganic_aq.csv,"C. Laksar et al. (2025) Geochim. Cosmochim. Acta 406, 134-147",
+YF+2,YF+2,aq,-992.528,,LMW+13,,OBIGT/inorganic_aq.csv,"A. Loges, A. A. Migdisov et al. (2013) Geochim. Cosmochim. Acta 123, 403-415",
+YF2+,YF2+,aq,-1290.638,,LMW+13,,OBIGT/inorganic_aq.csv,"A. Loges, A. A. Migdisov et al. (2013) Geochim. Cosmochim. Acta 123, 403-415",
+CdCl+,CdCl+,aq,-220.200,,HB24,BZA10,OBIGT/inorganic_aq.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155","E. F. Bazarkina, A. V. Zotov and N. N. Akinfiev (2010) Geol. Ore Deposits 52, 167-178"
+CdCl2,CdCl2,aq,-355.150,,HB24,BZA10,OBIGT/inorganic_aq.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155","E. F. Bazarkina, A. V. Zotov and N. N. Akinfiev (2010) Geol. Ore Deposits 52, 167-178"
+CdCl3-,CdCl3-,aq,-482.829,,HB24,BZA10,OBIGT/inorganic_aq.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155","E. F. Bazarkina, A. V. Zotov and N. N. Akinfiev (2010) Geol. Ore Deposits 52, 167-178"
+CdCl4-2,CdCl4-2,aq,-609.119,,HB24,BZA10,OBIGT/inorganic_aq.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155","E. F. Bazarkina, A. V. Zotov and N. N. Akinfiev (2010) Geol. Ore Deposits 52, 167-178"
+GaOH+2,GaOH+2,aq,-383.045,,HB24,Bla17.1,OBIGT/inorganic_aq.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155",P. Blanc (2017) Thermoddem: Update for the 2017 version
+Ga(OH)2+,Ga(OH)2+,aq,-594.881,,HB24,Bla17.1,OBIGT/inorganic_aq.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155",P. Blanc (2017) Thermoddem: Update for the 2017 version
+Ga(OH)3,Ga(OH)3,aq,-805.462,,HB24,Bla17.1,OBIGT/inorganic_aq.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155",P. Blanc (2017) Thermoddem: Update for the 2017 version
+Ga(OH)4-,Ga(OH)4-,aq,-1021.440,,HB24,Bla17.1,OBIGT/inorganic_aq.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155",P. Blanc (2017) Thermoddem: Update for the 2017 version
+GaSO4+,GaSO4+,aq,-919.434,,HB24,HB24.1,OBIGT/inorganic_aq.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155","D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155"
+Ga(SO4)2-,Ga(SO4)2-,aq,-1677.023,,HB24,HB24.1,OBIGT/inorganic_aq.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155","D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155"
+Ge(OH)4,Ge(OH)4,aq,-967.341,,HB24,PS98.1,OBIGT/inorganic_aq.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155","G. S. Pokrovski and J. Schott (1998) Geochim. Cosmochim. Acta 62, 1631-1642"
+GeO(OH)3-,GeO(OH)3-,aq,-914.204,,HB24,PS98.1,OBIGT/inorganic_aq.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155","G. S. Pokrovski and J. Schott (1998) Geochim. Cosmochim. Acta 62, 1631-1642"
+InCl+2,InCl+2,aq,-244.892,,HB24,BS23,OBIGT/inorganic_aq.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155",G. Boyer and E. Shock (2023) The Complicator (prototype) (v0.0.2)
+InCl2+,InCl2+,aq,-385.429,,HB24,BS23,OBIGT/inorganic_aq.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155",G. Boyer and E. Shock (2023) The Complicator (prototype) (v0.0.2)
+InCl3,InCl3,aq,-520.315,,HB24,BS23,OBIGT/inorganic_aq.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155",G. Boyer and E. Shock (2023) The Complicator (prototype) (v0.0.2)
+InF+2,InF+2,aq,-407.625,,HB24,BS23,OBIGT/inorganic_aq.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155",G. Boyer and E. Shock (2023) The Complicator (prototype) (v0.0.2)
+InF2+,InF2+,aq,-709.354,,HB24,BS23,OBIGT/inorganic_aq.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155",G. Boyer and E. Shock (2023) The Complicator (prototype) (v0.0.2)
+InF3,InF3,aq,-1005.945,,HB24,BS23,OBIGT/inorganic_aq.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155",G. Boyer and E. Shock (2023) The Complicator (prototype) (v0.0.2)
+InF4-,InF4-,aq,-1290.550,,HB24,BS23,OBIGT/inorganic_aq.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155",G. Boyer and E. Shock (2023) The Complicator (prototype) (v0.0.2)
+InSO4+,InSO4+,aq,-859.490,,HB24,HB24.2,OBIGT/inorganic_aq.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155","D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155"
+In(SO4)2-,In(SO4)2-,aq,-1615.363,,HB24,HB24.2,OBIGT/inorganic_aq.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155","D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155"
+InHS+2,InHS+2,aq,-145.873,,HB24,BS23,OBIGT/inorganic_aq.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155",G. Boyer and E. Shock (2023) The Complicator (prototype) (v0.0.2)
+In(HS)2+,In(HS)2+,aq,-171.580,,HB24,BS23,OBIGT/inorganic_aq.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155",G. Boyer and E. Shock (2023) The Complicator (prototype) (v0.0.2)
+KHSO4,KHSO4,aq,-1031.569,,TAT+25,,OBIGT/inorganic_aq.csv,"B. R. Tagirov, N. N. Akinfiev et al. (2025) Geochim. Cosmochim. Acta 406, 285-304",
+KSO4-,KSO4-,aq,-1031.925,,TAT+25,,OBIGT/inorganic_aq.csv,"B. R. Tagirov, N. N. Akinfiev et al. (2025) Geochim. Cosmochim. Acta 406, 285-304",
+H2SO4,H2SO4,aq,-745.635,,TAT+25,,OBIGT/inorganic_aq.csv,"B. R. Tagirov, N. N. Akinfiev et al. (2025) Geochim. Cosmochim. Acta 406, 285-304",
+AuHS,AuHS,aq,34.342,,TAT+25,,OBIGT/inorganic_aq.csv,"B. R. Tagirov, N. N. Akinfiev et al. (2025) Geochim. Cosmochim. Acta 406, 285-304",
+Au(HS)2-,Au(HS)2-,aq,14.778,,TAT+25,,OBIGT/inorganic_aq.csv,"B. R. Tagirov, N. N. Akinfiev et al. (2025) Geochim. Cosmochim. Acta 406, 285-304",
+Au2S2-2,Au2S2-2,aq,117.378,,TAT+25,,OBIGT/inorganic_aq.csv,"B. R. Tagirov, N. N. Akinfiev et al. (2025) Geochim. Cosmochim. Acta 406, 285-304",
+AuOH,AuOH,aq,-108.562,,TAZ24,,OBIGT/inorganic_aq.csv,"B. R. Tagirov, N. N. Akinfiev and A. V. Zotov (2024) Geol. Ore Deposits 66, 581-597",
+AuCl,AuCl,aq,-7.950,,TAZ24,,OBIGT/inorganic_aq.csv,"B. R. Tagirov, N. N. Akinfiev and A. V. Zotov (2024) Geol. Ore Deposits 66, 581-597",
+AuCl2-,AuCl2-,aq,-153.017,,TAZ24,,OBIGT/inorganic_aq.csv,"B. R. Tagirov, N. N. Akinfiev and A. V. Zotov (2024) Geol. Ore Deposits 66, 581-597",
+Cu+,Cu+,aq,49.978,,AZ23,,OBIGT/inorganic_aq.csv,"N. N. Akinfiev and A. V. Zotov (2023) Geol. Ore Deposits 65, 1-10",
+CuO-,CuO-,aq,-81.898,,AZ23,,OBIGT/inorganic_aq.csv,"N. N. Akinfiev and A. V. Zotov (2023) Geol. Ore Deposits 65, 1-10",
+CuHS,CuHS,aq,-12.422,,TTA+23,,OBIGT/inorganic_aq.csv,"N. D. Trofimov, B. R. Tagirov et al. (2023) Chem. Geol. 625, 121413",
+Cu(HS)2-,Cu(HS)2-,aq,-23.702,,TTA+23,,OBIGT/inorganic_aq.csv,"N. D. Trofimov, B. R. Tagirov et al. (2023) Chem. Geol. 625, 121413",
+CuCl,CuCl,aq,-97.738,,TTA+23,,OBIGT/inorganic_aq.csv,"N. D. Trofimov, B. R. Tagirov et al. (2023) Chem. Geol. 625, 121413",
+CuCl2-,CuCl2-,aq,-242.781,,TTA+23,,OBIGT/inorganic_aq.csv,"N. D. Trofimov, B. R. Tagirov et al. (2023) Chem. Geol. 625, 121413",
+Nd+3,Nd+3,aq,-679.699,,FG25,SH88.6,OBIGT/inorganic_aq.csv,"Y. Figueroa Penarrieta and A. P. Gysi (2025) Geochim. Cosmochim. Acta 406, 227-242","E. L. Shock and H. C. Helgeson (1988) Geochim. Cosmochim. Acta 52, 2009-2036"
+NdCl+2,NdCl+2,aq,-815.399,,FG25,MWW09.1,OBIGT/inorganic_aq.csv,"Y. Figueroa Penarrieta and A. P. Gysi (2025) Geochim. Cosmochim. Acta 406, 227-242","A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109"
+NdCl2+,NdCl2+,aq,-945.299,,FG25,MWW09.1,OBIGT/inorganic_aq.csv,"Y. Figueroa Penarrieta and A. P. Gysi (2025) Geochim. Cosmochim. Acta 406, 227-242","A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109"
+NdF+2,NdF+2,aq,-983.600,,FG25,MWW09.1,OBIGT/inorganic_aq.csv,"Y. Figueroa Penarrieta and A. P. Gysi (2025) Geochim. Cosmochim. Acta 406, 227-242","A. A. Migdisov, A. E. Williams-Jones and T. Wagner (2009) Geochim. Cosmochim. Acta 73, 7087-7109"
+AuHS(H2S)3,AuHS(H2S)3,aq,-10.351,,RTC+26,,OBIGT/inorganic_aq.csv,"E. A. Rubtsova, B. R. Tagirov et al. (2026) Geol. Ore Deposits 68, 280-293",
+CuCl3-2,CuCl3-2,aq,-371.016,,BEL+07,,OBIGT/inorganic_aq.csv,"J. Brugger et al. (2007) Geochim. Cosmochim. Acta 71, 4920-4941",
+akermanite,Ca2MgSi2O7,cr,-3663.786,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+albite,NaAlSi3O8,cr,-3718.518,,Ber88,SHD91,Berman/SHD91_1991.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522","D. A. Sverjensky, J. J. Hemley and W. M. D'Angelo (1991) Geochim. Cosmochim. Acta 55, 989-1004"
+"albite,high",NaAlSi3O8,cr,-3710.096,,Ber88,SHD91,Berman/SHD91_1991.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522","D. A. Sverjensky, J. J. Hemley and W. M. D'Angelo (1991) Geochim. Cosmochim. Acta 55, 989-1004"
+"albite,low",NaAlSi3O8,cr,-3718.518,,Ber88,SHD91,Berman/SHD91_1991.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522","D. A. Sverjensky, J. J. Hemley and W. M. D'Angelo (1991) Geochim. Cosmochim. Acta 55, 989-1004"
+almandine,Si3Fe3Al2O12,cr,-4943.492,,Ber88,Ber90.1,Berman/Ber90_1990.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522","R. G. Berman (1990) Am. Mineral. 75, 328-344"
+andalusite,Al2SiO5,cr,-2441.806,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+anorthite,Al2CaSi2O8,cr,-4003.221,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+anthophyllite,Mg7Si8O24H2,cr,-11342.582,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+antigorite,Mg48Si34O99H62O48,cr,-66076.529,,Ber88,BDat17.1,Berman/BDat17_2017.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",D. A. Sverjensky et al. (2017) berman.dat file in SUPCRT92b.zip on the DEW website
+brucite,MgO2H2,cr,-834.868,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+Ca-Al-pyroxene,CaAl2SiO6,cr,-3122.310,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+calcite,CaCO3,cr,-1128.295,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+chrysotile,Mg3Si2O9H4,cr,-4035.373,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+clinochlore,Mg5Al2Si3O18H8,cr,-8250.546,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+coesite,SiO2,cr,-852.585,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+cordierite,Mg2Al4Si5O18,cr,-8651.517,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+corundum,Al2O3,cr,-1582.199,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+"cristobalite,alpha",SiO2,cr,-853.918,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+"cristobalite,beta",SiO2,cr,-853.327,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+diaspore,AlO2H,cr,-920.806,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+diopside,MgCaSi2O6,cr,-3026.202,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+dolomite,MgCaC2O6,cr,-2162.354,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+"enstatite,clino",MgSiO3,cr,-1458.601,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+enstatite,MgSiO3,cr,-1458.181,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+"enstatite,proto",MgSiO3,cr,-1456.965,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+fayalite,Fe2SiO4,cr,-1380.154,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+ferrosilite,SiFeO3,cr,-1117.472,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+forsterite,Mg2SiO4,cr,-2055.023,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+gehlenite,Al2Ca2SiO7,cr,-3785.954,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+grossular,Ca3Al2Si3O12,cr,-6270.974,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+hematite,Fe2O3,cr,-743.681,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+ilmenite,FeTiO3,cr,-1155.794,,Ber88,Ber90.1,Berman/Ber90_1990.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522","R. G. Berman (1990) Am. Mineral. 75, 328-344"
+jadeite,NaAlSi2O6,cr,-2853.285,,Ber88,SHD91,Berman/SHD91_1991.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522","D. A. Sverjensky, J. J. Hemley and W. M. D'Angelo (1991) Geochim. Cosmochim. Acta 55, 989-1004"
+kaolinite,Al2Si2O9H4,cr,-3799.770,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+kyanite,Al2SiO5,cr,-2443.370,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+lawsonite,CaAl2Si2O10H4,cr,-4509.709,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+lime,CaO,cr,-603.350,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+magnesite,MgCO3,cr,-1029.875,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+magnetite,Fe3O4,cr,-1014.235,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+margarite,CaAl4Si2O12H2,cr,-5852.244,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+meionite,Ca4Al6Si6O27C,cr,-13105.915,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+merwinite,Ca3MgSi2O8,cr,-4309.707,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+monticellite,CaMgSiO4,cr,-2132.222,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+muscovite,KAl3Si3O12H2,cr,-5603.417,,Ber88,SHD91,Berman/SHD91_1991.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522","D. A. Sverjensky, J. J. Hemley and W. M. D'Angelo (1991) Geochim. Cosmochim. Acta 55, 989-1004"
+paragonite,NaAl3Si3O12H2,cr,-5570.375,,Ber88,SHD91,Berman/SHD91_1991.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522","D. A. Sverjensky, J. J. Hemley and W. M. D'Angelo (1991) Geochim. Cosmochim. Acta 55, 989-1004"
+periclase,MgO,cr,-569.209,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+phlogopite,KMg3AlSi3O12H2,cr,-5837.044,,Ber88,SHD91.1,Berman/SHD91_1991.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522","D. A. Sverjensky, J. J. Hemley and W. M. D'Angelo (1991) Geochim. Cosmochim. Acta 55, 989-1004"
+K-feldspar,KAlSi3O8,cr,-3752.109,,Ber88,SHD91,Berman/SHD91_1991.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522","D. A. Sverjensky, J. J. Hemley and W. M. D'Angelo (1991) Geochim. Cosmochim. Acta 55, 989-1004"
+"K-feldspar,high",KAlSi3O8,cr,-3745.498,,Ber88,SHD91,Berman/SHD91_1991.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522","D. A. Sverjensky, J. J. Hemley and W. M. D'Angelo (1991) Geochim. Cosmochim. Acta 55, 989-1004"
+"K-feldspar,low",KAlSi3O8,cr,-3752.109,,Ber88,SHD91,Berman/SHD91_1991.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522","D. A. Sverjensky, J. J. Hemley and W. M. D'Angelo (1991) Geochim. Cosmochim. Acta 55, 989-1004"
+prehnite,Ca2Al2Si3O12H2,cr,-5820.154,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+pyrope,Mg3Al2Si3O12,cr,-5936.009,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+pyrophyllite,Al2Si4O12H2,cr,-5266.865,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+quartz,SiO2,cr,-856.288,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+"quartz,beta",SiO2,cr,-855.033,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+rutile,TiO2,cr,-889.497,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+sillimanite,Al2SiO5,cr,-2439.265,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+sphene,CaTiSiO5,cr,-2455.134,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+spinel,MgAl2O4,cr,-2176.537,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+talc,Mg3Si4O12H2,cr,-5517.657,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+tremolite,Ca2Mg5Si8O24H2,cr,-11578.548,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+"tridymite,high",SiO2,cr,-853.844,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+"tridymite,low",SiO2,cr,-854.026,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+wollastonite,CaSiO3,cr,-1546.123,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+pseudowollastonite,CaSiO3,cr,-1543.085,,Ber88,,Berman/Ber88_1988.csv,"R. G. Berman (1988) J. Petrol. 29, 445-522",
+annite,Si3Fe3AlKH2O12,cr,-4799.809,,Ber90,SHD91.2,Berman/SHD91_1991.csv,"R. G. Berman (1990) Am. Mineral. 75, 328-344","D. A. Sverjensky, J. J. Hemley and W. M. D'Angelo (1991) Geochim. Cosmochim. Acta 55, 989-1004"
+fluormuscovite,KAl3Si3O10F2,cr,-5772.803,,ZS92,,Berman/ZS92_1992.csv,"C. Zhu and D. A. Sverjensky (1982) Geochim. Cosmochim. Acta 56, 3435-3467",
+fluorphlogopite,KMg3AlSi3O10F2,cr,-6063.382,,ZS92,,Berman/ZS92_1992.csv,"C. Zhu and D. A. Sverjensky (1982) Geochim. Cosmochim. Acta 56, 3435-3467",
+fluorannite,Si3Fe3AlKO10F2,cr,-4983.910,,ZS92,,Berman/ZS92_1992.csv,"C. Zhu and D. A. Sverjensky (1982) Geochim. Cosmochim. Acta 56, 3435-3467",
+fluortremolite,Ca2Mg5Si8O22F2,cr,-11782.144,,ZS92,,Berman/ZS92_1992.csv,"C. Zhu and D. A. Sverjensky (1982) Geochim. Cosmochim. Acta 56, 3435-3467",
+fluorapatite,Ca5P3O12F,cr,-6443.050,,ZS92,,Berman/ZS92_1992.csv,"C. Zhu and D. A. Sverjensky (1982) Geochim. Cosmochim. Acta 56, 3435-3467",
+hydroxyapatite,Ca5P3O13H,cr,-6297.702,,ZS92,,Berman/ZS92_1992.csv,"C. Zhu and D. A. Sverjensky (1982) Geochim. Cosmochim. Acta 56, 3435-3467",
+chlorapatite,Ca5P3O12Cl,cr,-6217.424,,ZS92,,Berman/ZS92_1992.csv,"C. Zhu and D. A. Sverjensky (1982) Geochim. Cosmochim. Acta 56, 3435-3467",
+fluortalc,Mg3Si4O10F2,cr,-5717.018,,ZS92,,Berman/ZS92_1992.csv,"C. Zhu and D. A. Sverjensky (1982) Geochim. Cosmochim. Acta 56, 3435-3467",
+chlorphlogopite,KMg3AlSi3O10Cl2,cr,-5600.840,,ZS92,,Berman/ZS92_1992.csv,"C. Zhu and D. A. Sverjensky (1982) Geochim. Cosmochim. Acta 56, 3435-3467",
+chlorannite,Si3Fe3AlKO10Cl2,cr,-4582.036,,ZS92,,Berman/ZS92_1992.csv,"C. Zhu and D. A. Sverjensky (1982) Geochim. Cosmochim. Acta 56, 3435-3467",
+glaucophane,Na2Al2Mg3Si8O24H2,cr,-11225.858,,Eva90,JUN92,Berman/JUN92_1992.csv,"B. W. Evans (1990) Lithos 25, 3-23",C. de Capitani (1992) JUN92.bs database supplied with Theriak/Domino software
+pumpellyite,Ca4Al5MgSi6O28H7,cr,-13448.936,,Eva90,JUN92,Berman/JUN92_1992.csv,"B. W. Evans (1990) Lithos 25, 3-23",C. de Capitani (1992) JUN92.bs database supplied with Theriak/Domino software
+aragonite,CaCO3,cr,-1128.354,,FDM+14.1,,Berman/FDM+14_2014.csv,"S. Facq et al. (2014) Geochim. Cosmochim. Acta 132, 375-390",
+hedenbergite,CaFeSi2O6,cr,-2674.300,,DS10,,Berman/DS10_2010.csv,"J. Delgado Martin and A. Soler i Gil (2010) Eur. J. Mineral. 22, 363-380",
+andradite,Ca3Fe2Si3O12,cr,-5419.000,,DS10,,Berman/DS10_2010.csv,"J. Delgado Martin and A. Soler i Gil (2010) Eur. J. Mineral. 22, 363-380",
+ferro-actinolite,Ca2Fe5Si8O22(OH)2,cr,-9839.000,,DS10,,Berman/DS10_2010.csv,"J. Delgado Martin and A. Soler i Gil (2010) Eur. J. Mineral. 22, 363-380",
+grunerite,Fe7Si8O22(OH)2,cr,-8964.807,,DS10,,Berman/DS10_2010.csv,"J. Delgado Martin and A. Soler i Gil (2010) Eur. J. Mineral. 22, 363-380",
+ilvaite,CaFe2FeSi2O7O(OH),cr,-3440.000,,DS10,,Berman/DS10_2010.csv,"J. Delgado Martin and A. Soler i Gil (2010) Eur. J. Mineral. 22, 363-380",
+acanthite,Ag2S,cr,-39.522,,HDNB78,,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",
+alabandite,MnS,cr,-218.313,,HDNB78,,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",
+alunite,KAl3(OH)6(SO4)2,cr,-4659.302,,HDNB78,,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",
+anglesite,PbSO4,cr,-813.173,,HDNB78,,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",
+anhydrite,CaSO4,cr,-1321.830,,HDNB78,RH95.7,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",R. A. Robie and B. S. Hemingway (1995) U. S. Geological Survey Bull. 2131
+artinite,Mg2(OH)2(CO3)*3H2O,cr,-2568.620,,HDNB78,,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",
+azurite,Cu3(OH)2(CO3)2,cr,-1399.201,,HDNB78,,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",
+barite,BaSO4,cr,-1362.156,,HDNB78,,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",
+bornite,Cu5FeS4,cr,-362.770,,HDNB78,PK70,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",L. B. Pankratz and E. G. King (1970) U. S. Bureau of Mines Report of Investigations 7435
+bunsenite,NiO,cr,-211.597,,HDNB78,,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",
+bromellite,BeO,cr,-580.099,,HDNB78,RH95.6,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",R. A. Robie and B. S. Hemingway (1995) U. S. Geological Survey Bull. 2131
+celestite,SrSO4,cr,-1346.147,,RA87,HDNB78.2,OBIGT/inorganic_cr.csv,"E. J. Reardon and D. K. Armstrong (1987) Geochim. Cosmochim. Acta 51, 63-72","H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229"
+cerussite,PbCO3,cr,-629.148,,HDNB78,,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",
+chalcocite,Cu2S,cr,-86.299,,HDNB78,,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",
+chalcopyrite,CuFeS2,cr,-187.862,,HDNB78,PK70,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",L. B. Pankratz and E. G. King (1970) U. S. Bureau of Mines Report of Investigations 7435
+chlorargyrite,AgCl,cr,-109.817,,RHF78,Pan70,OBIGT/inorganic_cr.csv,"R. A. Robie, B. S. Hemingway and J. R. Fisher (1978) U. S. Geological Survey Bull. 1452",L. B. Pankratz (1970) U. S. Bureau of Mines Report of Investigations 7430
+cinnabar,HgS,cr,-45.773,,HDNB78,,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",
+copper,Cu,cr,0.000,,HDNB78,,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",
+covellite,CuS,cr,-52.769,,HDNB78,RH95.7,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",R. A. Robie and B. S. Hemingway (1995) U. S. Geological Survey Bull. 2131
+cuprite,Cu2O,cr,-148.047,,HDNB78,RH95.7,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",R. A. Robie and B. S. Hemingway (1995) U. S. Geological Survey Bull. 2131
+ferrous-oxide,FeO,cr,-251.446,,HDNB78,,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",
+fluorite,CaF2,cr,-1173.583,,HDNB78,,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",
+galena,PbS,cr,-96.713,,HDNB78,RH95.7,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",R. A. Robie and B. S. Hemingway (1995) U. S. Geological Survey Bull. 2131
+gold,Au,cr,0.000,,HDNB78,RH95.7,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",R. A. Robie and B. S. Hemingway (1995) U. S. Geological Survey Bull. 2131
+graphite,C,cr,0.000,,HDNB78,,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",
+halite,NaCl,cr,-384.120,,HDNB78,RH95.7,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",R. A. Robie and B. S. Hemingway (1995) U. S. Geological Survey Bull. 2131
+huntite,CaMg3(CO3)4,cr,-4203.707,,HDNB78,,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",
+hydromagnesite,Mg5(OH)2(CO3)4*4H2O,cr,-5864.658,,HDNB78,,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",
+iron,Fe,cr,0.000,,RHF78.2,Kel60.2,OBIGT/inorganic_cr.csv,"R. A. Robie, B. S. Hemingway and J. R. Fisher (1978) U. S. Geological Survey Bull. 1452",K. K. Kelley (1960) U. S. Bureau of Mines Bull. 584
+malachite,Cu2(OH)2(CO3),cr,-896.230,,HDNB78,,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",
+metacinnabar,HgS,cr,-43.668,,HDNB78,,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",
+nesquehonite,MgCO3*3H2O,cr,-1723.954,,HDNB78,RH72,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229","R. A. Robie and B. S. Hemingway (1972) Am. Mineral. 57, 1768-1781"
+nickel,Ni,cr,0.000,,HDNB78,,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",
+potassium oxide,K2O,cr,-322.402,,HDNB78,,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",
+pyrite,FeS2,cr,-160.218,,HDNB78,RH95.7,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",R. A. Robie and B. S. Hemingway (1995) U. S. Geological Survey Bull. 2131
+pyrrhotite,FeS,cr,-100.767,,HDNB78,,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",
+rhodochrosite,MnCO3,cr,-816.068,,HDNB78,,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",
+quicksilver,Hg,cr,0.000,,HDNB78,,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",
+siderite,FeCO3,cr,-679.540,,HDNB78,Hel85,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229","H. C. Helgeson (1985) Am. J. Sci. 285, 845-855"
+silver,Ag,cr,0.000,,HDNB78,RH95.7,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",R. A. Robie and B. S. Hemingway (1995) U. S. Geological Survey Bull. 2131
+smithsonite,ZnCO3,cr,-731.572,,HDNB78,,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",
+sodium oxide,Na2O,cr,-376.070,,HDNB78,RH95.7,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",R. A. Robie and B. S. Hemingway (1995) U. S. Geological Survey Bull. 2131
+sphalerite,ZnS,cr,-200.610,,HDNB78,,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",
+strontianite,SrCO3,cr,-1152.566,,HDNB78,,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",
+sylvite,KCl,cr,-408.923,,HDNB78,,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",
+tenorite,CuO,cr,-127.897,,HDNB78,,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",
+wurtzite,ZnS,cr,-187.485,,HDNB78,,OBIGT/inorganic_cr.csv,"H. C. Helgeson, J. M. Delany et al. (1978) Am. J. Sci. 278A, 1-229",
+berndtite,SnS2,cr,-145.394,,JH85,,OBIGT/inorganic_cr.csv,"K. J. Jackson and H. C. Helgeson (1985) Econ. Geol. 80, 1365-1378",
+romarchite,SnO,cr,-257.144,,JH85,,OBIGT/inorganic_cr.csv,"K. J. Jackson and H. C. Helgeson (1985) Econ. Geol. 80, 1365-1378",
+tin,Sn,cr,0.000,,JH85,,OBIGT/inorganic_cr.csv,"K. J. Jackson and H. C. Helgeson (1985) Econ. Geol. 80, 1365-1378",
+ruthenium,Ru,cr,0.000,,SS98a.1,,OBIGT/inorganic_cr.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+rhodium,Rh,cr,0.000,,SS98a.1,,OBIGT/inorganic_cr.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+palladium,Pd,cr,0.000,,SS98a.1,,OBIGT/inorganic_cr.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+platinum,Pt,cr,0.000,,SS98a.1,,OBIGT/inorganic_cr.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+RuO2,RuO2,cr,-253.090,,SS98a.1,,OBIGT/inorganic_cr.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+Rh2O3,Rh2O3,cr,-202.087,,SS98a.1,,OBIGT/inorganic_cr.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+PdO,PdO,cr,-59.957,,SS98a.1,,OBIGT/inorganic_cr.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+Pd(OH)2,Pd(OH)2,cr,-301.248,,SS98a.1,,OBIGT/inorganic_cr.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+laurite,RuS2,cr,-188.406,,SS98a.1,,OBIGT/inorganic_cr.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+Pd4S,Pd4S,cr,-68.199,,SS98a.1,,OBIGT/inorganic_cr.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+vysotskite,PdS,cr,-66.944,,SS98a.1,,OBIGT/inorganic_cr.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+PdS2,PdS2,cr,-74.057,,SS98a.1,,OBIGT/inorganic_cr.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+cooperite,PtS,cr,-77.822,,SS98a.1,,OBIGT/inorganic_cr.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+PtS2,PtS2,cr,-101.253,,SS98a.1,,OBIGT/inorganic_cr.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+Rh2O,Rh2O,cr,-79.914,,SS98a.1,,OBIGT/inorganic_cr.csv,"D. C. Sassani and E. L. Shock (1998) Geochim. Cosmochim. Acta 62, 2643-2671",
+zincite,ZnO,cr,-320.478,,SSWS97.1,RH95.7,OBIGT/inorganic_cr.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",R. A. Robie and B. S. Hemingway (1995) U. S. Geological Survey Bull. 2131
+litharge,PbO,cr,-189.200,,SSWS97.1,SLOP98.1,OBIGT/inorganic_cr.csv,"E. L. Shock, D. C. Sassani et al. (1997) Geochim. Cosmochim. Acta 61, 907-950",E. L. Shock et al. (1998) slop98.dat computer data file
+sulfur,S,cr,0.000,,MS97.1,SLOP98.11,OBIGT/inorganic_cr.csv,"T. M. McCollom and E. L. Shock (1997) Geochim. Cosmochim. Acta 61, 4375-4391",E. L. Shock et al. (1998) slop98.dat computer data file
+molybdenite,MoS2,cr,-262.956,,AS01.1,,OBIGT/inorganic_cr.csv,"J. P. Amend and E. L. Shock (2001) FEMS Microbiol. Rev. 25, 175-243",
+selenium,Se,cr,0.000,,AS01.1,,OBIGT/inorganic_cr.csv,"J. P. Amend and E. L. Shock (2001) FEMS Microbiol. Rev. 25, 175-243",
+ice,H2O,cr,-236.591,,MVT01,,OBIGT/inorganic_cr.csv,"L. Mercury, P. Vieillard. and Y. Tardy (2001) Appl. Geochem. 16, 161-181",
+hydronium jarosite,(H3O)Fe3(SO4)2(OH)6,cr,-3226.400,,MSB+04,,OBIGT/inorganic_cr.csv,"J. Majzlan, R. Stevens et al. (2004) Phys. Chem. Mineral. 31, 518-531",
+coquimbite,Fe1.47Al0.53(SO4)3(H2O)9.65,cr,-4845.600,,MNM+06,,OBIGT/inorganic_cr.csv,"J. Majzlan, A. Navrotsky et al. (2006) Eur. J. Mineral. 18, 175-186",
+ferricopiapite,Fe4.78(SO4)6(OH)2.34(H2O)20.71,cr,-10089.800,,MNM+06,,OBIGT/inorganic_cr.csv,"J. Majzlan, A. Navrotsky et al. (2006) Eur. J. Mineral. 18, 175-186",
+rhomboclase,(H3O)1.34Fe(SO4)2.17(H2O)3.06,cr,-2688.000,,MNM+06,,OBIGT/inorganic_cr.csv,"J. Majzlan, A. Navrotsky et al. (2006) Eur. J. Mineral. 18, 175-186",
+goethite,FeOOH,cr,-489.800,,MGN03,MLS+03,OBIGT/inorganic_cr.csv,"J. Majzlan, K.-D. Grevel and A. Navrotsky (2003) Am. Mineral. 88, 855-859","J. Majzlan, B. E. Lang et al. (2003) Am. Mineral. 88, 846-854"
+lepidocrocite,FeOOH,cr,-480.100,,MGN03,MLS+03,OBIGT/inorganic_cr.csv,"J. Majzlan, K.-D. Grevel and A. Navrotsky (2003) Am. Mineral. 88, 855-859","J. Majzlan, B. E. Lang et al. (2003) Am. Mineral. 88, 846-854"
+maghemite,Fe2O3,cr,-727.900,,MGN03,MLS+03,OBIGT/inorganic_cr.csv,"J. Majzlan, K.-D. Grevel and A. Navrotsky (2003) Am. Mineral. 88, 855-859","J. Majzlan, B. E. Lang et al. (2003) Am. Mineral. 88, 846-854"
+kieserite,MgSO4.H2O,cr,-1437.915,,GM09,,OBIGT/inorganic_cr.csv,"K.-D. Grevel and J. Majzlan (2009) Geochim. Cosmochim. Acta 73, 6805-6815",
+starkeyite,MgSO4*4H2O,cr,-2153.798,,GM09,,OBIGT/inorganic_cr.csv,"K.-D. Grevel and J. Majzlan (2009) Geochim. Cosmochim. Acta 73, 6805-6815",
+hexahydrite,MgSO4*6H2O,cr,-2632.280,,GM09,,OBIGT/inorganic_cr.csv,"K.-D. Grevel and J. Majzlan (2009) Geochim. Cosmochim. Acta 73, 6805-6815",
+epsomite,MgSO4*7H2O,cr,-2871.019,,GM09,,OBIGT/inorganic_cr.csv,"K.-D. Grevel and J. Majzlan (2009) Geochim. Cosmochim. Acta 73, 6805-6815",
+natroalunite,NaAl3(SO4)2(OH)6,cr,-4622.400,,SAJ00,,OBIGT/inorganic_cr.csv,"R. E. Stoffregen, C. N. Alpers and J. L. Jambor (2000) Rev. Mineral. Geochem. 40, 453-479",
+jarosite,KFe3(SO4)2(OH)6,cr,-3309.800,,SAJ00,,OBIGT/inorganic_cr.csv,"R. E. Stoffregen, C. N. Alpers and J. L. Jambor (2000) Rev. Mineral. Geochem. 40, 453-479",
+natrojarosite,NaFe3(SO4)2(OH)6,cr,-3256.700,,SAJ00,,OBIGT/inorganic_cr.csv,"R. E. Stoffregen, C. N. Alpers and J. L. Jambor (2000) Rev. Mineral. Geochem. 40, 453-479",
+melanterite,FeSO4*7H2O,cr,-2507.750,,PK95,,OBIGT/inorganic_cr.csv,"V. B. Parker and I. L. Khodakovskii (1995) J. Phys. Chem. Ref. Data 24, 1699-1745",
+gypsum,CaSO4*2H2O,cr,-1796.999,,RH95,Kel60.3,OBIGT/inorganic_cr.csv,R. A. Robie and B. S. Hemingway (1995) U. S. Geological Survey Bull. 2131,K. K. Kelley (1960) U. S. Bureau of Mines Bull. 584
+MgSO4,MgSO4,cr,-1170.600,,WEP+82.1,,OBIGT/inorganic_cr.csv,"D. D. Wagman, W. H. Evans et al. (1982) J. Phys. Chem. Ref. Data 11, Suppl. 2, 1-392",
+"arsenic,alpha",As,cr,0.000,,NA03,ZZL+16.1,OBIGT/inorganic_cr.csv,"D. K. Nordstrom and D. G. Archer (2003) Arsenic thermodynamic data and environmental geochemistry. In Arsenic in Groundwater, eds. Welch and Stollenwerk, Kluwer","K. Zimmer et al. (2016) Comp. Geosci. 90, 97-111"
+arsenolite,As2O3,cr,-576.340,,NA03,,OBIGT/inorganic_cr.csv,"D. K. Nordstrom and D. G. Archer (2003) Arsenic thermodynamic data and environmental geochemistry. In Arsenic in Groundwater, eds. Welch and Stollenwerk, Kluwer",
+claudetite,As2O3,cr,-576.530,,NA03,,OBIGT/inorganic_cr.csv,"D. K. Nordstrom and D. G. Archer (2003) Arsenic thermodynamic data and environmental geochemistry. In Arsenic in Groundwater, eds. Welch and Stollenwerk, Kluwer",
+As2O5,As2O5,cr,-774.760,,NA03,,OBIGT/inorganic_cr.csv,"D. K. Nordstrom and D. G. Archer (2003) Arsenic thermodynamic data and environmental geochemistry. In Arsenic in Groundwater, eds. Welch and Stollenwerk, Kluwer",
+"realgar,alpha",AsS,cr,-31.300,,NA03,,OBIGT/inorganic_cr.csv,"D. K. Nordstrom and D. G. Archer (2003) Arsenic thermodynamic data and environmental geochemistry. In Arsenic in Groundwater, eds. Welch and Stollenwerk, Kluwer",
+"realgar,beta",AsS,cr,-30.900,,NA03,,OBIGT/inorganic_cr.csv,"D. K. Nordstrom and D. G. Archer (2003) Arsenic thermodynamic data and environmental geochemistry. In Arsenic in Groundwater, eds. Welch and Stollenwerk, Kluwer",
+orpiment,As2S3,cr,-84.000,,NA03,,OBIGT/inorganic_cr.csv,"D. K. Nordstrom and D. G. Archer (2003) Arsenic thermodynamic data and environmental geochemistry. In Arsenic in Groundwater, eds. Welch and Stollenwerk, Kluwer",
+"orpiment,amorphous",As2S3,cr,-76.800,,NA03,,OBIGT/inorganic_cr.csv,"D. K. Nordstrom and D. G. Archer (2003) Arsenic thermodynamic data and environmental geochemistry. In Arsenic in Groundwater, eds. Welch and Stollenwerk, Kluwer",
+scorodite,FeAsO4*2H2O,cr,-1287.080,,LMR06,ZZL+16,OBIGT/inorganic_cr.csv,"D. Langmuir et al. (2006) Geochim. Cosmochim. Acta 70, 2942-2956","K. Zimmer et al. (2016) Comp. Geosci. 90, 97-111"
+"ferric arsenate,amorphous",FeAsO4*2H2O,cr,-1270.980,,LMR06,ZZL+16,OBIGT/inorganic_cr.csv,"D. Langmuir et al. (2006) Geochim. Cosmochim. Acta 70, 2942-2956","K. Zimmer et al. (2016) Comp. Geosci. 90, 97-111"
+barium arsenate,Ba3(AsO4)2,cr,-3095.110,,ZZX+05,ZZL+16,OBIGT/inorganic_cr.csv,"Y. Zhu et al. (2005) J. Hazard. Mater. A120, 37-44","K. Zimmer et al. (2016) Comp. Geosci. 90, 97-111"
+barium hydrogen arsenate,BaHAsO4*H2O,cr,-1538.650,,ZZX+05,ZZL+16,OBIGT/inorganic_cr.csv,"Y. Zhu et al. (2005) J. Hazard. Mater. A120, 37-44","K. Zimmer et al. (2016) Comp. Geosci. 90, 97-111"
+boehmite,AlO(OH),cr,-918.400,,HRA91,ZZL+16.2,OBIGT/inorganic_cr.csv,"B. S. Hemingway et al. (1991) Am. Mineral. 76, 445-457","K. Zimmer et al. (2016) Comp. Geosci. 90, 97-111"
+gibbsite,Al(OH)3,cr,-1154.889,,RHF78.3,ZZL+16.2,OBIGT/inorganic_cr.csv,"R. A. Robie, B. S. Hemingway and J. R. Fisher (1978) U. S. Geological Survey Bull. 1452","K. Zimmer et al. (2016) Comp. Geosci. 90, 97-111"
+dawsonite,NaAlCO3(OH)2,cr,-1782.300,,ZZL+16.3,RH95.2,OBIGT/inorganic_cr.csv,"K. Zimmer et al. (2016) Comp. Geosci. 90, 97-111",R. A. Robie and B. S. Hemingway (1995) U. S. Geological Survey Bull. 2131
+scheelite,CaWO4,cr,-1538.361,,WS00,LXW21.1,OBIGT/inorganic_cr.csv,"S. A. Wood and I. M. Samson (2000) Econ. Geol. 95, 143-182","X. Liu, C. Xiao and Y. Wang (2021) Chem. Geol. 584, 120488"
+ferberite,FeWO4,cr,-1085.200,,WS00,Pol90,OBIGT/inorganic_cr.csv,"S. A. Wood and I. M. Samson (2000) Econ. Geol. 95, 143-182","D. A. Polya (1990) Trans. Inst. Min. Metall. 99, B120-B124"
+arsenopyrite,FeAsS,cr,-136.450,,PPB+08,,OBIGT/inorganic_cr.csv,"E. Perfetti et al. (2008) Geochim. Cosmochim. Acta 72, 713-731",
+loellingite,FeAs2,cr,-80.230,,PPB+08,,OBIGT/inorganic_cr.csv,"E. Perfetti et al. (2008) Geochim. Cosmochim. Acta 72, 713-731",
+westerveldite,FeAs,cr,-43.360,,PPB+08,,OBIGT/inorganic_cr.csv,"E. Perfetti et al. (2008) Geochim. Cosmochim. Acta 72, 713-731",
+manganosite,MnO,cr,-362.900,,RH95,,OBIGT/inorganic_cr.csv,R. A. Robie and B. S. Hemingway (1995) U. S. Geological Survey Bull. 2131,
+pyrolusite,MnO2,cr,-465.000,,RH95,,OBIGT/inorganic_cr.csv,R. A. Robie and B. S. Hemingway (1995) U. S. Geological Survey Bull. 2131,
+bixbyite,Mn2O3,cr,-882.100,,RH95,,OBIGT/inorganic_cr.csv,R. A. Robie and B. S. Hemingway (1995) U. S. Geological Survey Bull. 2131,
+hausmannite,Mn3O4,cr,-1282.500,,RH95,,OBIGT/inorganic_cr.csv,R. A. Robie and B. S. Hemingway (1995) U. S. Geological Survey Bull. 2131,
+manganese,Mn,cr,0.000,,RH95,,OBIGT/inorganic_cr.csv,R. A. Robie and B. S. Hemingway (1995) U. S. Geological Survey Bull. 2131,
+Mn(OH)2,Mn(OH)2,cr,-615.000,,WEP+82.1,SUF+98,OBIGT/inorganic_cr.csv,"D. D. Wagman, W. H. Evans et al. (1982) J. Phys. Chem. Ref. Data 11, Suppl. 2, 1-392","H. Senoh et al. (1998) J. Alloys Compd. 280, 114-124"
+huebnerite,MnWO4,cr,-1235.400,,RH95,LX20,OBIGT/inorganic_cr.csv,R. A. Robie and B. S. Hemingway (1995) U. S. Geological Survey Bull. 2131,"X. Liu and C. Xiao (2020) Ore Geol. Rev. 117, 103289"
+cobalt,Co,cr,0.000,,RH95,,OBIGT/inorganic_cr.csv,R. A. Robie and B. S. Hemingway (1995) U. S. Geological Survey Bull. 2131,
+wustite,Fe0.947O,cr,-244.900,,RH95,,OBIGT/inorganic_cr.csv,R. A. Robie and B. S. Hemingway (1995) U. S. Geological Survey Bull. 2131,
+willemite,Zn2SiO4,cr,-1523.100,,RH95,BKK77.1,OBIGT/inorganic_cr.csv,R. A. Robie and B. S. Hemingway (1995) U. S. Geological Survey Bull. 2131,"I. Barin, O. Knacke and O. Kubaschewski (1977) Thermochemical Properties of Inorganic Substances: Supplement"
+guite,Co3O4,cr,-802.200,,RH95,,OBIGT/inorganic_cr.csv,R. A. Robie and B. S. Hemingway (1995) U. S. Geological Survey Bull. 2131,
+cobalt monoxide,CoO,cr,-214.100,,RH95,,OBIGT/inorganic_cr.csv,R. A. Robie and B. S. Hemingway (1995) U. S. Geological Survey Bull. 2131,
+zinc,Zn,cr,0.000,,RH95,,OBIGT/inorganic_cr.csv,R. A. Robie and B. S. Hemingway (1995) U. S. Geological Survey Bull. 2131,
+Co-pentlandite,Co9S8,cr,-816.330,,WV22,PMW87,OBIGT/inorganic_cr.csv,"A. E. Williams-Jones and O. V. Vasyukova (2022) Econ. Geol. 117, 513-528","L. B. Pankratz, A. D. Mah and S. W. Watson (1987) Thermodynamic Properties of Sulfides (U.S. Bureau of Mines Bull. 689)"
+linnaeite,Co3S4,cr,-346.347,,WV22,PMW87,OBIGT/inorganic_cr.csv,"A. E. Williams-Jones and O. V. Vasyukova (2022) Econ. Geol. 117, 513-528","L. B. Pankratz, A. D. Mah and S. W. Watson (1987) Thermodynamic Properties of Sulfides (U.S. Bureau of Mines Bull. 689)"
+cattierite,CoS2,cr,-147.365,,WV22,PMW87,OBIGT/inorganic_cr.csv,"A. E. Williams-Jones and O. V. Vasyukova (2022) Econ. Geol. 117, 513-528","L. B. Pankratz, A. D. Mah and S. W. Watson (1987) Thermodynamic Properties of Sulfides (U.S. Bureau of Mines Bull. 689)"
+carrollite,Cu0.92Co2.07S4,cr,-331.140,,HDR+24,,OBIGT/inorganic_cr.csv,"B. P. von der Heyden et al. (2024) Can. J. Mineral. Petrol. 62, 77-93",
+rutherfordine,UO2CO3,cr,-1564.701,,NEA20,Hem82,OBIGT/inorganic_cr.csv,"Grenthe et al. (2020) Second Update on the Chemical Thermodynamics of Uranium, Neptunium, Plutonium, Americium and Technetium",B. S. Hemingway (1982) U. S. Geological Survey Open-File Report 82-619
+beta-UO2(OH)2,UO2(OH)2,cr,-1398.683,,NEA20,,OBIGT/inorganic_cr.csv,"Grenthe et al. (2020) Second Update on the Chemical Thermodynamics of Uranium, Neptunium, Plutonium, Americium and Technetium",
+Na2U2O7,Na2U2O7,cr,-3011.454,,NEA20,,OBIGT/inorganic_cr.csv,"Grenthe et al. (2020) Second Update on the Chemical Thermodynamics of Uranium, Neptunium, Plutonium, Americium and Technetium",
+chromite,FeCr2O4,cr,-1344.500,,RH95,,OBIGT/inorganic_cr.csv,R. A. Robie and B. S. Hemingway (1995) U. S. Geological Survey Bull. 2131,
+cassiterite,SnO2,cr,-515.800,,RH95,,OBIGT/inorganic_cr.csv,R. A. Robie and B. S. Hemingway (1995) U. S. Geological Survey Bull. 2131,
+aluminum,Al,cr,0.000,,RH95,,OBIGT/inorganic_cr.csv,R. A. Robie and B. S. Hemingway (1995) U. S. Geological Survey Bull. 2131,
+EuO,EuO,cr,-564.358,,MWBC16,KBK+14.1,OBIGT/inorganic_cr.csv,"A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42","R. J. M. Konings et al. (2014) J. Phys. Chem. Ref. Data 43, Article 013101"
+LaPO4,LaPO4,cr,-1850.500,,MWBC16,PK06,OBIGT/inorganic_cr.csv,"A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42","K. Popa and R. J. M. Konings (2006) Thermochim. Acta 445, 49-52"
+CePO4,CePO4,cr,-1849.900,,MWBC16,PK06,OBIGT/inorganic_cr.csv,"A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42","K. Popa and R. J. M. Konings (2006) Thermochim. Acta 445, 49-52"
+PrPO4,PrPO4,cr,-1841.900,,MWBC16,PK06,OBIGT/inorganic_cr.csv,"A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42","K. Popa and R. J. M. Konings (2006) Thermochim. Acta 445, 49-52"
+NdPO4,NdPO4,cr,-1848.400,,MWBC16,PK06,OBIGT/inorganic_cr.csv,"A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42","K. Popa and R. J. M. Konings (2006) Thermochim. Acta 445, 49-52"
+SmPO4,SmPO4,cr,-1847.000,,MWBC16,PK06,OBIGT/inorganic_cr.csv,"A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42","K. Popa and R. J. M. Konings (2006) Thermochim. Acta 445, 49-52"
+EuPO4,EuPO4,cr,-1741.600,,MWBC16,PK06,OBIGT/inorganic_cr.csv,"A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42","K. Popa and R. J. M. Konings (2006) Thermochim. Acta 445, 49-52"
+GdPO4,GdPO4,cr,-1840.800,,MWBC16,PK06,OBIGT/inorganic_cr.csv,"A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42","K. Popa and R. J. M. Konings (2006) Thermochim. Acta 445, 49-52"
+TbPO4,TbPO4,cr,-1855.900,,MWBC16,NLM+15,OBIGT/inorganic_cr.csv,"A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42",A. Navrotsky et al. (2015) J. Chem. Thermodyn.
+DyPO4,DyPO4,cr,-1829.100,,MWBC16,GHFW16,OBIGT/inorganic_cr.csv,"A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42","A. P. Gysi et al. (2016) Thermochim. Acta 627-629, 61-67"
+HoPO4,HoPO4,cr,-1857.000,,MWBC16,NLM+15,OBIGT/inorganic_cr.csv,"A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42",A. Navrotsky et al. (2015) J. Chem. Thermodyn.
+ErPO4,ErPO4,cr,-1832.500,,MWBC16,GHFW16,OBIGT/inorganic_cr.csv,"A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42","A. P. Gysi et al. (2016) Thermochim. Acta 627-629, 61-67"
+TmPO4,TmPO4,cr,-1849.300,,MWBC16,NLM+15,OBIGT/inorganic_cr.csv,"A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42",A. Navrotsky et al. (2015) J. Chem. Thermodyn.
+YbPO4,YbPO4,cr,-1817.000,,MWBC16,NLM+15,OBIGT/inorganic_cr.csv,"A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42",A. Navrotsky et al. (2015) J. Chem. Thermodyn.
+LuPO4,LuPO4,cr,-1840.600,,MWBC16,NLM+15,OBIGT/inorganic_cr.csv,"A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42",A. Navrotsky et al. (2015) J. Chem. Thermodyn.
+YPO4,YPO4,cr,-1872.400,,MWBC16,NLM+15,OBIGT/inorganic_cr.csv,"A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42",A. Navrotsky et al. (2015) J. Chem. Thermodyn.
+beta-Ta2O5,Ta2O5,cr,-1904.040,,JSW09,AKK+20.1,OBIGT/inorganic_cr.csv,"K. T. Jacob et al. (2009) J. Chem. Thermodynamics 41, 748-753","N. N. Akinfiev et al. (2020) Geochim. Cosmochim. Acta 280, 102-115"
+beta-Nb2O5,Nb2O5,cr,-1763.974,,NRK74,AKK+20.2,OBIGT/inorganic_cr.csv,"Naumov, G. B., Ryzhenko, B. N., & Khodakovsky, I. L. (1974) Handbook of Thermodynamic Data (U.S. Geol. Surv.)","N. N. Akinfiev et al. (2020) Geochim. Cosmochim. Acta 280, 102-115"
+cadmium,Cd,cr,0.000,,HB24,RH95.9,OBIGT/inorganic_cr.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155",R. A. Robie and B. S. Hemingway (1995) U. S. Geological Survey Bull. 2131
+monteponite,CdO,cr,-228.661,,HB24,Bla17,OBIGT/inorganic_cr.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155",P. Blanc (2017) Thermoddem: Update for the 2017 version
+Cd(OH)2,Cd(OH)2,cr,-472.900,,HB24,Bla17,OBIGT/inorganic_cr.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155",P. Blanc (2017) Thermoddem: Update for the 2017 version
+greenockite,CdS,cr,-146.100,,HB24,RH95.9,OBIGT/inorganic_cr.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155",R. A. Robie and B. S. Hemingway (1995) U. S. Geological Survey Bull. 2131
+CdSO4,CdSO4,cr,-822.631,,HB24,Bla17,OBIGT/inorganic_cr.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155",P. Blanc (2017) Thermoddem: Update for the 2017 version
+otavite,CdCO3,cr,-674.698,,HB24,Bla17,OBIGT/inorganic_cr.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155",P. Blanc (2017) Thermoddem: Update for the 2017 version
+gallium,Ga,cr,0.000,,HB24,Pan82,OBIGT/inorganic_cr.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155",L. B. Pankratz (1987) Thermodynamic Properties of Elements and Oxides (U.S. Bureau of Mines Bull. 672)
+Ga2O3,Ga2O3,cr,-998.386,,HB24,Pan82,OBIGT/inorganic_cr.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155",L. B. Pankratz (1987) Thermodynamic Properties of Elements and Oxides (U.S. Bureau of Mines Bull. 672)
+GaOOH,GaOOH,cr,-627.893,,HB24,Bla17,OBIGT/inorganic_cr.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155",P. Blanc (2017) Thermoddem: Update for the 2017 version
+GaS,GaS,cr,-204.711,,HB24,PMW87.1,OBIGT/inorganic_cr.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155","L. B. Pankratz, A. D. Mah and S. W. Watson (1987) Thermodynamic Properties of Sulfides (U.S. Bureau of Mines Bull. 689)"
+germanium,Ge,cr,0.000,,HB24,RH95.9,OBIGT/inorganic_cr.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155",R. A. Robie and B. S. Hemingway (1995) U. S. Geological Survey Bull. 2131
+GeO2 (hex),GeO2,cr,-500.825,,HB24,PS98,OBIGT/inorganic_cr.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155","G. S. Pokrovski and J. Schott (1998) Geochim. Cosmochim. Acta 62, 1631-1642"
+argutite,GeO2,cr,-521.326,,HB24,PS98,OBIGT/inorganic_cr.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155","G. S. Pokrovski and J. Schott (1998) Geochim. Cosmochim. Acta 62, 1631-1642"
+GeS,GeS,cr,-62.276,,HB24,OC95,OBIGT/inorganic_cr.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155","P. A. G. O'Hare and L. A. Curtiss (1995) J. Chem. Thermodynamics 27, 643-662"
+GeS2,GeS2,cr,-187.443,,HB24,NRK74.1,OBIGT/inorganic_cr.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155","Naumov, G. B., Ryzhenko, B. N., & Khodakovsky, I. L. (1974) Handbook of Thermodynamic Data (U.S. Geol. Surv.)"
+indium,In,cr,0.000,,HB24,Pan82,OBIGT/inorganic_cr.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155",L. B. Pankratz (1987) Thermodynamic Properties of Elements and Oxides (U.S. Bureau of Mines Bull. 672)
+In2O3,In2O3,cr,-830.679,,HB24,Pan82,OBIGT/inorganic_cr.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155",L. B. Pankratz (1987) Thermodynamic Properties of Elements and Oxides (U.S. Bureau of Mines Bull. 672)
+InS,InS,cr,-128.248,,HB24,PMW87.1,OBIGT/inorganic_cr.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155","L. B. Pankratz, A. D. Mah and S. W. Watson (1987) Thermodynamic Properties of Sulfides (U.S. Bureau of Mines Bull. 689)"
+In2S3,In2S3,cr,-341.264,,HB24,PMW87.1,OBIGT/inorganic_cr.csv,"D. L. Huston and E. Bastrakov (2024) Aust. J. Earth Sci. 71, 1125-1155","L. B. Pankratz, A. D. Mah and S. W. Watson (1987) Thermodynamic Properties of Sulfides (U.S. Bureau of Mines Bull. 689)"
+Co(OH)2,Co(OH)2,cr,-455.661,,SB99,Shv08,OBIGT/inorganic_cr.csv,Y. V. Shvarov and E. N. Bastrakov (1999) HCh: a software package for geochemical equilibrium modelling,"Y. V. Shvarov (2008) Geochem. Int. 46, 834-839"
+CoSO4,CoSO4,cr,-783.705,,NRK74,,OBIGT/inorganic_cr.csv,"Naumov, G. B., Ryzhenko, B. N., & Khodakovsky, I. L. (1974) Handbook of Thermodynamic Data (U.S. Geol. Surv.)",
+ferrous hydroxide,Fe(OH)2,cr,-492.582,,LS20,,OBIGT/inorganic_cr.csv,"J. A. M. Leong and E. L. Shock (2020) Am. J. Sci. 320, 185-235",
+ferrotremolite,Ca2Fe5Si8O22(OH)2,cr,-9828.634,,LS20,,OBIGT/inorganic_cr.csv,"J. A. M. Leong and E. L. Shock (2020) Am. J. Sci. 320, 185-235",
+greenalite,Fe3Si2O5(OH)4,cr,-2997.962,,LS20,,OBIGT/inorganic_cr.csv,"J. A. M. Leong and E. L. Shock (2020) Am. J. Sci. 320, 185-235",
+minnesotaite,Fe3Si4O10(OH)2,cr,-4477.131,,LS20,,OBIGT/inorganic_cr.csv,"J. A. M. Leong and E. L. Shock (2020) Am. J. Sci. 320, 185-235",
+Mg-cronstedtite,(Mg2Fe)(FeSi)O5(OH)4,cr,-3301.176,,LS20,,OBIGT/inorganic_cr.csv,"J. A. M. Leong and E. L. Shock (2020) Am. J. Sci. 320, 185-235",
+hisingerite,Fe2Si2O5(OH)4,cr,-2943.151,,LS20,,OBIGT/inorganic_cr.csv,"J. A. M. Leong and E. L. Shock (2020) Am. J. Sci. 320, 185-235",
+uranium,U,cr,0.000,,NEA20,,OBIGT/inorganic_cr.csv,"Grenthe et al. (2020) Second Update on the Chemical Thermodynamics of Uranium, Neptunium, Plutonium, Americium and Technetium",
+uraninite,UO2,cr,-1031.833,,NEA20,,OBIGT/inorganic_cr.csv,"Grenthe et al. (2020) Second Update on the Chemical Thermodynamics of Uranium, Neptunium, Plutonium, Americium and Technetium",
+beta-UO2.25,UO2.25,cr,-1069.083,,NEA20,,OBIGT/inorganic_cr.csv,"Grenthe et al. (2020) Second Update on the Chemical Thermodynamics of Uranium, Neptunium, Plutonium, Americium and Technetium",
+UO2.25,UO2.25,cr,-1069.125,,NEA20,,OBIGT/inorganic_cr.csv,"Grenthe et al. (2020) Second Update on the Chemical Thermodynamics of Uranium, Neptunium, Plutonium, Americium and Technetium",
+beta-UO2.3333,UO2.3333,cr,-1079.572,,NEA20,,OBIGT/inorganic_cr.csv,"Grenthe et al. (2020) Second Update on the Chemical Thermodynamics of Uranium, Neptunium, Plutonium, Americium and Technetium",
+UO2.6667,UO2.6667,cr,-1123.157,,NEA20,,OBIGT/inorganic_cr.csv,"Grenthe et al. (2020) Second Update on the Chemical Thermodynamics of Uranium, Neptunium, Plutonium, Americium and Technetium",
+gamma-UO3,UO3,cr,-1145.739,,NEA20,,OBIGT/inorganic_cr.csv,"Grenthe et al. (2020) Second Update on the Chemical Thermodynamics of Uranium, Neptunium, Plutonium, Americium and Technetium",
+stibnite,Sb2S3,cr,-149.800,,RH95,,OBIGT/inorganic_cr.csv,R. A. Robie and B. S. Hemingway (1995) U. S. Geological Survey Bull. 2131,
+skutterudite,CoAs2.92,cr,-79.900,,MKL+22,,OBIGT/inorganic_cr.csv,"J. Majzlan et al. (2022) Am. Mineral. 107, 2219-2225",
+heazlewoodite,Ni3S2,cr,-210.000,,MKL+22,,OBIGT/inorganic_cr.csv,"J. Majzlan et al. (2022) Am. Mineral. 107, 2219-2225",
+eucryptite,LiAlSiO4,cr,-2027.240,,BVCN07,PW67,OBIGT/inorganic_cr.csv,"I. Bobos et al. (2007) Clay Clay Min. 55, 295-310",L. B. Pankratz and W. W. Weller (1967) U. S. Bureau of Mines Report of Investigations 7001
+spodumene,LiAlSi2O6,cr,-2879.930,,BVCN07,PW67,OBIGT/inorganic_cr.csv,"I. Bobos et al. (2007) Clay Clay Min. 55, 295-310",L. B. Pankratz and W. W. Weller (1967) U. S. Bureau of Mines Report of Investigations 7001
+cookeite,LiAl4(Si3Al)O10(OH)8,cr,-7888.670,,BVCN07,,OBIGT/inorganic_cr.csv,"I. Bobos et al. (2007) Clay Clay Min. 55, 295-310",
+petalite,LiAlSi4O10,cr,-4591.250,,BVCN07,RH95.10,OBIGT/inorganic_cr.csv,"I. Bobos et al. (2007) Clay Clay Min. 55, 295-310",R. A. Robie and B. S. Hemingway (1995) U. S. Geological Survey Bull. 2131
+La2O3-A,La2O3,cr,-1704.060,,PGM+26,KBK+14,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","R. J. M. Konings et al. (2014) J. Phys. Chem. Ref. Data 43, Article 013101"
+Ce2O3-A,Ce2O3,cr,-1710.650,,PGM+26,KBK+14,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","R. J. M. Konings et al. (2014) J. Phys. Chem. Ref. Data 43, Article 013101"
+Pr2O3-A,Pr2O3,cr,-1719.710,,PGM+26,KBK+14,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","R. J. M. Konings et al. (2014) J. Phys. Chem. Ref. Data 43, Article 013101"
+Nd2O3-A,Nd2O3,cr,-1719.300,,PGM+26,KBK+14,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","R. J. M. Konings et al. (2014) J. Phys. Chem. Ref. Data 43, Article 013101"
+Pm2O3-B,Pm2O3,cr,-1724.020,,PGM+26,KBK+14,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","R. J. M. Konings et al. (2014) J. Phys. Chem. Ref. Data 43, Article 013101"
+Sm2O3-B,Sm2O3,cr,-1734.650,,PGM+26,KBK+14,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","R. J. M. Konings et al. (2014) J. Phys. Chem. Ref. Data 43, Article 013101"
+Eu2O3-B,Eu2O3,cr,-1553.580,,PGM+26,KBK+14,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","R. J. M. Konings et al. (2014) J. Phys. Chem. Ref. Data 43, Article 013101"
+Gd2O3-B,Gd2O3,cr,-1734.210,,PGM+26,KBK+14,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","R. J. M. Konings et al. (2014) J. Phys. Chem. Ref. Data 43, Article 013101"
+Cm2O3-B,Cm2O3,cr,-1599.820,,PGM+26,KBK+14,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","R. J. M. Konings et al. (2014) J. Phys. Chem. Ref. Data 43, Article 013101"
+Pm2O3-C,Pm2O3,cr,-1753.500,,PGM+26,KBK+14,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","R. J. M. Konings et al. (2014) J. Phys. Chem. Ref. Data 43, Article 013101"
+Sm2O3-C,Sm2O3,cr,-1757.600,,PGM+26,KBK+14,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","R. J. M. Konings et al. (2014) J. Phys. Chem. Ref. Data 43, Article 013101"
+Eu2O3-C,Eu2O3,cr,-1564.720,,PGM+26,KBK+14,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","R. J. M. Konings et al. (2014) J. Phys. Chem. Ref. Data 43, Article 013101"
+Gd2O3-C,Gd2O3,cr,-1766.570,,PGM+26,KBK+14,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","R. J. M. Konings et al. (2014) J. Phys. Chem. Ref. Data 43, Article 013101"
+Cm2O3-C,Cm2O3,cr,-1609.000,,PGM+26,KBK+14,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","R. J. M. Konings et al. (2014) J. Phys. Chem. Ref. Data 43, Article 013101"
+Tb2O3-C,Tb2O3,cr,-1777.840,,PGM+26,KBK+14,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","R. J. M. Konings et al. (2014) J. Phys. Chem. Ref. Data 43, Article 013101"
+Dy2O3-C,Dy2O3,cr,-1769.920,,PGM+26,KBK+14,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","R. J. M. Konings et al. (2014) J. Phys. Chem. Ref. Data 43, Article 013101"
+Ho2O3-C,Ho2O3,cr,-1793.340,,PGM+26,KBK+14,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","R. J. M. Konings et al. (2014) J. Phys. Chem. Ref. Data 43, Article 013101"
+Er2O3-C,Er2O3,cr,-1786.710,,PGM+26,KBK+14,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","R. J. M. Konings et al. (2014) J. Phys. Chem. Ref. Data 43, Article 013101"
+Tm2O3-C,Tm2O3,cr,-1795.520,,PGM+26,KBK+14,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","R. J. M. Konings et al. (2014) J. Phys. Chem. Ref. Data 43, Article 013101"
+Yb2O3-C,Yb2O3,cr,-1726.730,,PGM+26,KBK+14,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","R. J. M. Konings et al. (2014) J. Phys. Chem. Ref. Data 43, Article 013101"
+Lu2O3-C,Lu2O3,cr,-1792.650,,PGM+26,KBK+14,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","R. J. M. Konings et al. (2014) J. Phys. Chem. Ref. Data 43, Article 013101"
+Y2O3-C,Y2O3,cr,-1817.130,,PGM+26,MK04,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","L. R. Morse and R. J. M. Konings (2004) Thermochemistry of binary rare earth oxides, in Binary Rare Earth Oxides"
+CeO2,CeO2,cr,-1027.030,,PGM+26,KBK+14,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","R. J. M. Konings et al. (2014) J. Phys. Chem. Ref. Data 43, Article 013101"
+PrO2,PrO2,cr,-900.040,,PGM+26,KBK+14,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","R. J. M. Konings et al. (2014) J. Phys. Chem. Ref. Data 43, Article 013101"
+TbO2,TbO2,cr,-915.410,,PGM+26,KBK+14,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","R. J. M. Konings et al. (2014) J. Phys. Chem. Ref. Data 43, Article 013101"
+La(OH)3,La(OH)3,cr,-1284.200,,PGM+26,DRT98,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","I. I. Diakonov et al. (1998) Chem. Geol. 151, 327-347"
+Ce(OH)3,Ce(OH)3,cr,-1286.400,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Pr(OH)3,Pr(OH)3,cr,-1284.900,,PGM+26,DRT98,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","I. I. Diakonov et al. (1998) Chem. Geol. 151, 327-347"
+Nd(OH)3,Nd(OH)3,cr,-1283.000,,PGM+26,DRT98,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","I. I. Diakonov et al. (1998) Chem. Geol. 151, 327-347"
+Pm(OH)3,Pm(OH)3,cr,-1276.300,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Sm(OH)3,Sm(OH)3,cr,-1273.300,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Eu(OH)3,Eu(OH)3,cr,-1180.600,,PGM+26,DRT98,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","I. I. Diakonov et al. (1998) Chem. Geol. 151, 327-347"
+Gd(OH)3,Gd(OH)3,cr,-1276.200,,PGM+26,DRT98,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","I. I. Diakonov et al. (1998) Chem. Geol. 151, 327-347"
+Tb(OH)3,Tb(OH)3,cr,-1281.100,,PGM+26,DRT98,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","I. I. Diakonov et al. (1998) Chem. Geol. 151, 327-347"
+Dy(OH)3,Dy(OH)3,cr,-1280.790,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Ho(OH)3,Ho(OH)3,cr,-1297.400,,PGM+26,DRT98,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","I. I. Diakonov et al. (1998) Chem. Geol. 151, 327-347"
+Er(OH)3,Er(OH)3,cr,-1288.140,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Tm(OH)3,Tm(OH)3,cr,-1286.600,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Yb(OH)3,Yb(OH)3,cr,-1262.900,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Lu(OH)3,Lu(OH)3,cr,-1288.540,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Y(OH)3,Y(OH)3,cr,-1304.390,,PGM+26,DRT98,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","I. I. Diakonov et al. (1998) Chem. Geol. 151, 327-347"
+LaCl3,LaCl3,cr,-995.890,,PGM+26,MWBC16.1,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42"
+CeCl3,CeCl3,cr,-983.610,,PGM+26,MWBC16.1,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42"
+PrCl3,PrCl3,cr,-982.720,,PGM+26,MWBC16.1,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42"
+NdCl3,NdCl3,cr,-965.560,,PGM+26,MWBC16.1,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42"
+PmCl3,PmCl3,cr,-954.940,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+SmCl3,SmCl3,cr,-949.550,,PGM+26,MWBC16.1,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42"
+EuCl3,EuCl3,cr,-855.390,,PGM+26,MWBC16.1,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42"
+GdCl3,GdCl3,cr,-943.280,,PGM+26,MWBC16.1,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42"
+TbCl3,TbCl3,cr,-1010.600,,PGM+26,MWBC16.1,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42"
+DyCl3,DyCl3,cr,-923.340,,PGM+26,MWBC16.1,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42"
+HoCl3,HoCl3,cr,-928.290,,PGM+26,MWBC16.1,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42"
+ErCl3,ErCl3,cr,-925.020,,PGM+26,MWBC16.1,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42"
+TmCl3,TmCl3,cr,-926.200,,PGM+26,MWBC16.1,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42"
+YbCl3,YbCl3,cr,-892.360,,PGM+26,MWBC16.1,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42"
+LuCl3,LuCl3,cr,-917.760,,PGM+26,MWBC16.1,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42"
+YCl3,YCl3,cr,-941.660,,PGM+26,Pan84,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",L. B. Pankratz (1984) Thermodynamic Properties of Halides (U.S. Bureau of Mines Bull. 674)
+LaCl3*7H2O,LaCl3*7H2O,cr,-2715.400,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+CeCl3*7H2O,CeCl3*7H2O,cr,-2708.640,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+PrCl3*7H2O,PrCl3*7H2O,cr,-2711.220,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+LaCl3*6H2O,LaCl3*6H2O,cr,-2473.800,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+CeCl3*6H2O,CeCl3*6H2O,cr,-2463.620,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+PrCl3*6H2O,PrCl3*6H2O,cr,-2468.280,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+NdCl3*6H2O,NdCl3*6H2O,cr,-2458.000,,PGM+26,FG26,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","Y. Figueroa Penarrieta and A. P. Gysi (2026) Chem. Geol. 701, 123192"
+PmCl3*6H2O,PmCl3*6H2O,cr,-2454.100,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+SmCl3*6H2O,SmCl3*6H2O,cr,-2455.200,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+EuCl3*6H2O,EuCl3*6H2O,cr,-2365.500,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+GdCl3*6H2O,GdCl3*6H2O,cr,-2451.940,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+TbCl3*6H2O,TbCl3*6H2O,cr,-2456.400,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+DyCl3*6H2O,DyCl3*6H2O,cr,-2453.400,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+HoCl3*6H2O,HoCl3*6H2O,cr,-2461.200,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+ErCl3*6H2O,ErCl3*6H2O,cr,-2458.800,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+TmCl3*6H2O,TmCl3*6H2O,cr,-2460.300,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+YbCl3*6H2O,YbCl3*6H2O,cr,-2426.700,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+LuCl3*6H2O,LuCl3*6H2O,cr,-2449.600,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+YCl3*6H2O,YCl3*6H2O,cr,-2473.110,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+LaF3,LaF3,cr,-1656.370,,PGM+26,MWBC16.1,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42"
+CeF3,CeF3,cr,-1641.370,,PGM+26,MWBC16.1,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42"
+PrF3,PrF3,cr,-1641.370,,PGM+26,MWBC16.1,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42"
+NdF3,NdF3,cr,-1634.370,,PGM+26,MWBC16.1,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42"
+SmF3,SmF3,cr,-1624.370,,PGM+26,MWBC16.1,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42"
+EuF3,EuF3,cr,-1529.680,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+GdF3,GdF3,cr,-1621.370,,PGM+26,MWBC16.1,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42"
+TbF3,TbF3,cr,-1618.370,,PGM+26,MWBC16.1,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42"
+DyF3,DyF3,cr,-1616.870,,PGM+26,MWBC16.1,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42"
+HoF3,HoF3,cr,-1624.370,,PGM+26,MWBC16.1,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42"
+ErF3,ErF3,cr,-1614.370,,PGM+26,MWBC16.1,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42"
+TmF3,TmF3,cr,-1614.370,,PGM+26,MWBC16.1,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42"
+YbF3,YbF3,cr,-1587.370,,PGM+26,MWBC16.1,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42"
+LuF3,LuF3,cr,-1610.370,,PGM+26,MWBC16.1,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471","A. A. Migdisov et al. (2016) Chem. Geol. 439, 13-42"
+YF3,YF3,cr,-1635.470,,PGM+26,Pan84,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",L. B. Pankratz (1984) Thermodynamic Properties of Halides (U.S. Bureau of Mines Bull. 674)
+La2(CO3)3,La2(CO3)3,cr,-3141.770,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Ce2(CO3)3,Ce2(CO3)3,cr,-3117.330,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Pr2(CO3)3,Pr2(CO3)3,cr,-3127.280,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Nd2(CO3)3,Nd2(CO3)3,cr,-3102.020,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Pm2(CO3)3,Pm2(CO3)3,cr,-3099.030,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Sm2(CO3)3,Sm2(CO3)3,cr,-3102.020,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Eu2(CO3)3,Eu2(CO3)3,cr,-2910.600,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Gd2(CO3)3,Gd2(CO3)3,cr,-3096.460,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Tb2(CO3)3,Tb2(CO3)3,cr,-3104.740,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Dy2(CO3)3,Dy2(CO3)3,cr,-3093.230,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Ho2(CO3)3,Ho2(CO3)3,cr,-3121.970,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Er2(CO3)3,Er2(CO3)3,cr,-3109.150,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Tm2(CO3)3,Tm2(CO3)3,cr,-3109.340,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Yb2(CO3)3,Yb2(CO3)3,cr,-3050.550,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Lu2(CO3)3,Lu2(CO3)3,cr,-3105.230,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Y2(CO3)3,Y2(CO3)3,cr,-3148.040,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+La2(CO3)3*8H2O,La2(CO3)3*8H2O,cr,-4958.880,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Ce2(CO3)3*8H2O,Ce2(CO3)3*8H2O,cr,-4958.040,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Pr2(CO3)3*8H2O,Pr2(CO3)3*8H2O,cr,-4947.160,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Nd2(CO3)3*8H2O,Nd2(CO3)3*8H2O,cr,-4931.260,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Sm2(CO3)3*3H2O,Sm2(CO3)3*3H2O,cr,-3739.240,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Eu2(CO3)3*3H2O,Eu2(CO3)3*3H2O,cr,-3553.890,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Gd2(CO3)3*3H2O,Gd2(CO3)3*3H2O,cr,-3728.780,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Tb2(CO3)3*3H2O,Tb2(CO3)3*3H2O,cr,-3738.380,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Dy2(CO3)3*3H2O,Dy2(CO3)3*3H2O,cr,-3732.130,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Ho2(CO3)3*3H2O,Ho2(CO3)3*3H2O,cr,-3748.030,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Er2(CO3)3*3H2O,Er2(CO3)3*3H2O,cr,-3736.310,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Tm2(CO3)3*3H2O,Tm2(CO3)3*3H2O,cr,-3719.580,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Yb2(CO3)3.6H2O,Yb2(CO3)3.6H2O,cr,-4389.020,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Lu2(CO3)3.6H2O,Lu2(CO3)3.6H2O,cr,-4356.380,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Y2(CO3)3*3H2O,Y2(CO3)3*3H2O,cr,-3783.590,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+LaFeO3,LaFeO3,cr,-1277.800,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+CeFeO3,CeFeO3,cr,-1274.590,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+PrFeO3,PrFeO3,cr,-1282.000,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+NdFeO3,NdFeO3,cr,-1277.400,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+SmFeO3,SmFeO3,cr,-1284.100,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+EuFeO3,EuFeO3,cr,-1194.500,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+GdFeO3,GdFeO3,cr,-1269.800,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+TbFeO3,TbFeO3,cr,-1282.190,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+DyFeO3,DyFeO3,cr,-1285.300,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+HoFeO3,HoFeO3,cr,-1289.100,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+ErFeO3,ErFeO3,cr,-1287.800,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+TmFeO3,TmFeO3,cr,-1286.960,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+YbFeO3,YbFeO3,cr,-1261.200,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+YFeO3,YFeO3,cr,-1296.400,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+La2Zr2O7,La2Zr2O7,cr,-3936.880,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Ce2Zr2O7,Ce2Zr2O7,cr,-3923.200,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Nd2Zr2O7,Nd2Zr2O7,cr,-3905.200,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Sm2Zr2O7,Sm2Zr2O7,cr,-3891.600,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Eu2Zr2O7,Eu2Zr2O7,cr,-3718.400,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+Gd2Zr2O7,Gd2Zr2O7,cr,-3873.500,,PGM+26,,OBIGT/inorganic_cr.csv,"R. Pan, A. P. Gysi et al. (2026) Chem. Geol. 715, 123471",
+bastnäsite-(Ce),Ce0.5La0.25Nd0.20Pr0.05CO3F,cr,-1709.700,,GW15,,OBIGT/inorganic_cr.csv,"A. P. Gysi and A. E. Williams-Jones (2015) Chem. Geol. 392, 87-101",
+parisite-(Ce),CaCe0.95La0.6Nd0.35Pr0.10(CO3)3F2,cr,-4571.500,,GW15,,OBIGT/inorganic_cr.csv,"A. P. Gysi and A. E. Williams-Jones (2015) Chem. Geol. 392, 87-101",
+argon,Ar,gas,0.000,,WEP+82,Kel60,OBIGT/inorganic_gas.csv,"D. D. Wagman, W. H. Evans et al. (1982) J. Phys. Chem. Ref. Data 11, Suppl. 2, 1-392",K. K. Kelley (1960) U. S. Bureau of Mines Bull. 584
+carbon dioxide,CO2,gas,-394.359,,WEP+82,Kel60,OBIGT/inorganic_gas.csv,"D. D. Wagman, W. H. Evans et al. (1982) J. Phys. Chem. Ref. Data 11, Suppl. 2, 1-392",K. K. Kelley (1960) U. S. Bureau of Mines Bull. 584
+hydrogen,H2,gas,0.000,,WEP+82,Kel60,OBIGT/inorganic_gas.csv,"D. D. Wagman, W. H. Evans et al. (1982) J. Phys. Chem. Ref. Data 11, Suppl. 2, 1-392",K. K. Kelley (1960) U. S. Bureau of Mines Bull. 584
+hydrogen sulfide,H2S,gas,-33.560,,WEP+82,Kel60,OBIGT/inorganic_gas.csv,"D. D. Wagman, W. H. Evans et al. (1982) J. Phys. Chem. Ref. Data 11, Suppl. 2, 1-392",K. K. Kelley (1960) U. S. Bureau of Mines Bull. 584
+helium,He,gas,0.000,,WEP+82,Kel60,OBIGT/inorganic_gas.csv,"D. D. Wagman, W. H. Evans et al. (1982) J. Phys. Chem. Ref. Data 11, Suppl. 2, 1-392",K. K. Kelley (1960) U. S. Bureau of Mines Bull. 584
+krypton,Kr,gas,0.000,,WEP+82,Kel60,OBIGT/inorganic_gas.csv,"D. D. Wagman, W. H. Evans et al. (1982) J. Phys. Chem. Ref. Data 11, Suppl. 2, 1-392",K. K. Kelley (1960) U. S. Bureau of Mines Bull. 584
+nitrogen,N2,gas,0.000,,WEP+82,Kel60,OBIGT/inorganic_gas.csv,"D. D. Wagman, W. H. Evans et al. (1982) J. Phys. Chem. Ref. Data 11, Suppl. 2, 1-392",K. K. Kelley (1960) U. S. Bureau of Mines Bull. 584
+neon,Ne,gas,0.000,,WEP+82,Kel60,OBIGT/inorganic_gas.csv,"D. D. Wagman, W. H. Evans et al. (1982) J. Phys. Chem. Ref. Data 11, Suppl. 2, 1-392",K. K. Kelley (1960) U. S. Bureau of Mines Bull. 584
+ammonia,NH3,gas,-16.451,,WEP+82,Kel60,OBIGT/inorganic_gas.csv,"D. D. Wagman, W. H. Evans et al. (1982) J. Phys. Chem. Ref. Data 11, Suppl. 2, 1-392",K. K. Kelley (1960) U. S. Bureau of Mines Bull. 584
+oxygen,O2,gas,0.000,,WEP+82,Kel60,OBIGT/inorganic_gas.csv,"D. D. Wagman, W. H. Evans et al. (1982) J. Phys. Chem. Ref. Data 11, Suppl. 2, 1-392",K. K. Kelley (1960) U. S. Bureau of Mines Bull. 584
+radon,Rn,gas,0.000,,WEP+82,Kel60,OBIGT/inorganic_gas.csv,"D. D. Wagman, W. H. Evans et al. (1982) J. Phys. Chem. Ref. Data 11, Suppl. 2, 1-392",K. K. Kelley (1960) U. S. Bureau of Mines Bull. 584
+sulfur,S2,gas,79.299,,WEP+82,Kel60,OBIGT/inorganic_gas.csv,"D. D. Wagman, W. H. Evans et al. (1982) J. Phys. Chem. Ref. Data 11, Suppl. 2, 1-392",K. K. Kelley (1960) U. S. Bureau of Mines Bull. 584
+sulfur dioxide,SO2,gas,-300.194,,WEP+82,Kel60,OBIGT/inorganic_gas.csv,"D. D. Wagman, W. H. Evans et al. (1982) J. Phys. Chem. Ref. Data 11, Suppl. 2, 1-392",K. K. Kelley (1960) U. S. Bureau of Mines Bull. 584
+xenon,Xe,gas,0.000,,WEP+82,Kel60,OBIGT/inorganic_gas.csv,"D. D. Wagman, W. H. Evans et al. (1982) J. Phys. Chem. Ref. Data 11, Suppl. 2, 1-392",K. K. Kelley (1960) U. S. Bureau of Mines Bull. 584
+steam,H2O,gas,-228.132,,Joh92,,OBIGT/inorganic_gas.csv,J. W. Johnson (1992) Personal calculation,
+nitric oxide,NO,gas,86.567,,WEP+82,AS01,OBIGT/inorganic_gas.csv,"D. D. Wagman, W. H. Evans et al. (1982) J. Phys. Chem. Ref. Data 11, Suppl. 2, 1-392","J. P. Amend and E. L. Shock (2001) FEMS Microbiol. Rev. 25, 175-243"
+nitrous oxide,N2O,gas,104.194,,WEP+82,AS01,OBIGT/inorganic_gas.csv,"D. D. Wagman, W. H. Evans et al. (1982) J. Phys. Chem. Ref. Data 11, Suppl. 2, 1-392","J. P. Amend and E. L. Shock (2001) FEMS Microbiol. Rev. 25, 175-243"
+hydrogen chloride,HCl,gas,-95.300,,RH95.1,,OBIGT/inorganic_gas.csv,R. A. Robie and B. S. Hemingway (1995) U. S. Geological Survey Bull. 2131,
+hydrogen fluoride,HF,gas,-275.400,,RH95.1,,OBIGT/inorganic_gas.csv,R. A. Robie and B. S. Hemingway (1995) U. S. Geological Survey Bull. 2131,
+S_liq,S,cr,0.432,,JANAF98.2,OBIGT26.1,OBIGT/inorganic_liq.csv,NIST (1998) NIST-JANAF Thermochemical Tables,OBIGT (2026) OBIGT database in CHNOSZ
+CH4,CH4,aq,-34.058,,PS01,,OBIGT/organic_aq.csv,"A. V. Plyasunov and E. L. Shock (2001) Geochim. Cosmochim. Acta 65, 3879-3900",
+formate,HCO2-,aq,-350.879,partner,Sho95,,OBIGT/organic_aq.csv,"E. L. Shock (1995) Am. J. Sci. 295, 496-580",
+acetate,C2H3O2-,aq,-369.322,partner,Sho95,,OBIGT/organic_aq.csv,"E. L. Shock (1995) Am. J. Sci. 295, 496-580",
+lactate,C3H5O3-,aq,-512.666,partner,Sho95,,OBIGT/organic_aq.csv,"E. L. Shock (1995) Am. J. Sci. 295, 496-580",
+methane,CH4,gas,-50.720,,WEP+82,Kel60,OBIGT/organic_gas.csv,"D. D. Wagman, W. H. Evans et al. (1982) J. Phys. Chem. Ref. Data 11, Suppl. 2, 1-392",K. K. Kelley (1960) U. S. Bureau of Mines Bull. 584
+guanine,C5H5N5O,cr,47.706,,LH06a,,OBIGT/organic_cr.csv,"D. E. LaRowe and H. C. Helgeson (2006) Geochim. Cosmochim. Acta 70, 4680-4724",
+acetamide,C2H5NO,cr,-188.539,,LH06b,,OBIGT/organic_cr.csv,"D. E. LaRowe and H. C. Helgeson (2006) Thermochim. Acta 448, 82-106",
+evenkite,C23H48,cr,81.312,,HOKR98,,OBIGT/organic_cr.csv,"H. C. Helgeson, C. E. Owens et al. (1998) Geochim. Cosmochim. Acta 62, 985-1081 (n-tricosane)",
+ravatite,C14H10,cr,270.935,,RH98,,OBIGT/organic_cr.csv,"L. Richard and H. C. Helgeson (1998) Geochim. Cosmochim. Acta 62, 3591-3636 (phenanthrene)",
+# Added to the reaction database (not from OBIGT) so that tellurium has an oxidized form to go to; without it native tellurium and the tellurides could not be oxidized.
+TeO2,TeO2,cr,-265.997,,HERACLES,,measured_library.csv,"HERACLES database (ACSEPT 2009), an older compilation",
+# Oxalate, from the same OBIGT files as the rest (organic_aq.csv), so that oxalate minerals have a dissolved form to go to.
+oxalate-2,C2O4-2,aq,-674.042,,Sho95,,OBIGT/organic_aq.csv,"E. L. Shock (1995) Am. J. Sci. 295, 496-580",
+H-oxalate,C2HO4-,aq,-698.339,,Sho95,,OBIGT/organic_aq.csv,"E. L. Shock (1995) Am. J. Sci. 295, 496-580",
+oxalic acid,C2H2O4,aq,-705.590,,Sho95,,OBIGT/organic_aq.csv,"E. L. Shock (1995) Am. J. Sci. 295, 496-580",
+# Tellurium in water and tellurate, from the critical review of Filella and May (2019). Their constants are turned into formation energies starting
+# from native tellurium; the review's own TeO2 comes out at -266.7, against the -266.0 already used here. Script: added_species.py.
+telluric acid,H6TeO6,aq,-1018.382,,FM19,,added_species.py,"M. Filella and P. M. May (2019) Environ. Chem. 16, 289-295 (critically selected constants; converted to formation energies from native tellurium)",
+H5TeO6-,H5TeO6-,aq,-974.454,,FM19,,added_species.py,"M. Filella and P. M. May (2019) Environ. Chem. 16, 289-295 (critically selected constants; converted to formation energies from native tellurium)",
+H4TeO6-2,H4TeO6-2,aq,-912.636,,FM19,,added_species.py,"M. Filella and P. M. May (2019) Environ. Chem. 16, 289-295 (critically selected constants; converted to formation energies from native tellurium)",
+tellurous acid,H2TeO3,aq,-477.001,,FM19,,added_species.py,"M. Filella and P. M. May (2019) Environ. Chem. 16, 289-295 (critically selected constants; converted to formation energies from native tellurium)",
+HTeO3-,HTeO3-,aq,-440.213,,FM19,,added_species.py,"M. Filella and P. M. May (2019) Environ. Chem. 16, 289-295 (critically selected constants; converted to formation energies from native tellurium)",
+TeO3-2,TeO3-2,aq,-383.544,,FM19,,added_species.py,"M. Filella and P. M. May (2019) Environ. Chem. 16, 289-295 (critically selected constants; converted to formation energies from native tellurium)",
+H3TeO3+,H3TeO3+,aq,-490.786,,FM19,,added_species.py,"M. Filella and P. M. May (2019) Environ. Chem. 16, 289-295 (critically selected constants; converted to formation energies from native tellurium)",
+H2Te,H2Te,aq,137.814,,FM19,,added_species.py,"M. Filella and P. M. May (2019) Environ. Chem. 16, 289-295 (critically selected constants; converted to formation energies from native tellurium)",
+HTe-,HTe-,aq,151.947,,FM19,,added_species.py,"M. Filella and P. M. May (2019) Environ. Chem. 16, 289-295 (critically selected constants; converted to formation energies from native tellurium)",
+Te-2,Te-2,aq,219.359,,FM19,,added_species.py,"M. Filella and P. M. May (2019) Environ. Chem. 16, 289-295 (critically selected constants; converted to formation energies from native tellurium)",
+# Osmium and iridium oxides, so that their minerals have an oxidized form to go to. Script: added_species.py.
+OsO4,OsO4,cr,-304.900,,WEP+82,,added_species.py,"D. D. Wagman, W. H. Evans et al. (1982) J. Phys. Chem. Ref. Data 11, Suppl. 2, 1-392 (as listed in the CRC Handbook)",
+OsO2,OsO2,cr,-239.922,,JMW00,,added_species.py,"K. T. Jacob, S. Mishra and Y. Waseda (2000) J. Am. Ceram. Soc. 83, 1745-1752 (enthalpy -295.96 kJ/mol and entropy 49.8 J/K/mol at 25 C)",
+IrO2,IrO2,cr,-187.892,,JOUW99,,added_species.py,"K. T. Jacob, T. H. Okabe, T. Uda and Y. Waseda (1999) J. Electrochem. Soc. 146, 1854-1861 (emf equation for 940 to 1350 K, taken down to 25 C; good to about 6 kJ/mol)",

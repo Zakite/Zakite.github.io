@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mineral Redox Calculator · Zak Jibrin</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#10161E">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400..600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: one sentence of controls, one large voltage readout, then the evidence in tables.
+   Azurite blue is the only accent; green, amber and red are reserved for the verdict. */
+:root {
+  --bg: #edf0f4;
+  --surface: #fbfcfd;
+  --ink: #131a26;
+  --muted: #55607a;
+  --line: #cdd4e0;
+  --accent: #1f47a8;
+  --accent-soft: #dfe7fb;
+  --yes: #1c7c43;      --yes-soft: #dcf1e3;
+  --marginal: #96590a; --marginal-soft: #f8ead0;
+  --no: #b3261e;       --no-soft: #f9dedb;
+  --display: "Newsreader", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f131b; --surface: #171d29; --ink: #e8ecf4; --muted: #9aa5bd; --line: #2b3447;
+    --accent: #8eacff; --accent-soft: #1f2b4a;
+    --yes: #63d28d; --yes-soft: #15331f; --marginal: #f0b454; --marginal-soft: #3a2a0c;
+    --no: #ff8f85; --no-soft: #3d1815;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f131b; --surface: #171d29; --ink: #e8ecf4; --muted: #9aa5bd; --line: #2b3447;
+  --accent: #8eacff; --accent-soft: #1f2b4a;
+  --yes: #63d28d; --yes-soft: #15331f; --marginal: #f0b454; --marginal-soft: #3a2a0c;
+  --no: #ff8f85; --no-soft: #3d1815;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 16px/1.5 var(--body); }
+main { max-width: 1080px; margin: 0 auto; padding: 28px 20px 64px; display: flex; flex-direction: column; gap: 28px; }
+h1, h2, h3 { font-family: var(--display); font-weight: 600; text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+h1 { font-size: 2.3rem; line-height: 1.1; }
+h2 { font-size: 1.5rem; line-height: 1.2; }
+h3 { font-size: 1.1rem; font-family: var(--body); font-weight: 600; letter-spacing: 0; }
+p { margin: 0; }
+a { color: var(--accent); }
+.lede { color: var(--muted); max-width: 66ch; margin-top: 8px; }
+.mono, .num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+sub, sup { font-size: 0.72em; line-height: 0; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 20px; }
+.stack { display: flex; flex-direction: column; gap: 14px; }
+.hint { color: var(--muted); font-size: 0.875rem; }
+
+/* controls */
+.ask { display: flex; flex-wrap: wrap; gap: 12px 14px; align-items: flex-end; }
+.field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.field label { font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.field.grow { flex: 1 1 220px; }
+input[type="text"], input[type="number"], select, textarea {
+  font: 500 1rem var(--body); color: var(--ink); background: var(--bg); border: 1px solid var(--line);
+  border-radius: 7px; padding: 9px 11px; width: 100%; min-width: 0;
+}
+textarea { font: 400 0.9rem/1.45 var(--mono); resize: vertical; }
+input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible, .chip:focus-visible, tr[tabindex]:focus-visible, summary:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 2px;
+}
+#ph { width: 5.5rem; }
+button { font: 600 0.95rem var(--body); border-radius: 7px; padding: 9px 14px; cursor: pointer; border: 1px solid var(--accent); background: var(--accent); color: var(--surface); }
+button.quiet { background: transparent; color: var(--accent); }
+button.small { font-size: 0.82rem; padding: 4px 10px; }
+button:disabled { opacity: 0.5; cursor: default; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: 500 0.85rem var(--body); background: transparent; color: var(--ink); border: 1px solid var(--line); border-radius: 999px; padding: 4px 11px; cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+
+/* verdict */
+.verdict { display: grid; grid-template-columns: minmax(0, auto) minmax(0, 1fr); gap: 8px 28px; align-items: center; border-left: 6px solid var(--line); }
+.verdict[data-v="yes"] { border-left-color: var(--yes); }
+.verdict[data-v="marginal"] { border-left-color: var(--marginal); }
+.verdict[data-v="no"], .verdict[data-v="no reaction"] { border-left-color: var(--no); }
+.volts { font: 600 clamp(2.6rem, 9vw, 4.4rem)/1 var(--mono); letter-spacing: -0.03em; white-space: nowrap; }
+.volts small { font-size: 0.38em; font-weight: 500; color: var(--muted); letter-spacing: 0; margin-left: 0.15em; }
+.answer { font-family: var(--display); font-size: 1.45rem; line-height: 1.25; font-weight: 600; }
+.pill { display: inline-block; font: 600 0.78rem var(--body); letter-spacing: 0.04em; text-transform: uppercase; border-radius: 999px; padding: 2px 10px; white-space: nowrap; }
+.pill[data-v="yes"] { background: var(--yes-soft); color: var(--yes); }
+.pill[data-v="marginal"] { background: var(--marginal-soft); color: var(--marginal); }
+.pill[data-v="no"], .pill[data-v="no reaction"] { background: var(--no-soft); color: var(--no); }
+.pill[data-v="role"] { background: var(--accent-soft); color: var(--accent); }
+.facts { display: flex; flex-wrap: wrap; gap: 6px 22px; color: var(--muted); font-size: 0.95rem; }
+.facts b { color: var(--ink); font-family: var(--mono); font-weight: 500; }
+.rxn { font: 400 0.98rem/1.6 var(--mono); overflow-x: auto; white-space: nowrap; padding: 10px 12px; background: var(--bg); border-radius: 7px; }
+.fine { color: var(--muted); font-size: 0.85rem; max-width: 80ch; }
+.sum { font-size: 0.95rem; }
+.sum b { font-family: var(--mono); font-weight: 500; }
+@media (max-width: 620px) { .verdict { grid-template-columns: 1fr; } h1 { font-size: 1.8rem; } }
+
+/* tables */
+.scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+th { text-align: left; font: 600 0.74rem var(--body); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); padding: 6px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+td { padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+td.num, th.num { text-align: right; white-space: nowrap; }
+td small { display: block; color: var(--muted); font-size: 0.8rem; }
+tbody tr:last-child td { border-bottom: 0; }
+.pick tbody tr { cursor: pointer; }
+.pick tbody tr:hover { background: var(--bg); }
+.pick tbody tr[aria-selected="true"] { background: var(--accent-soft); }
+.track { position: relative; height: 16px; min-width: 130px; }
+.track::before { content: ""; position: absolute; left: 0; right: 0; top: 7px; height: 2px; background: var(--line); }
+.track i { position: absolute; top: 3px; height: 10px; border-radius: 5px; }
+.track i.gap[data-v="yes"] { background: var(--yes); opacity: 0.55; }
+.track i.gap[data-v="marginal"] { background: var(--marginal); opacity: 0.7; }
+.track i.dot { width: 10px; margin-left: -5px; background: var(--ink); }
+.track i.min { width: 3px; margin-left: -1.5px; top: 0; height: 16px; border-radius: 1px; background: var(--accent); }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 0.82rem; color: var(--muted); }
+.legend span::before { content: ""; display: inline-block; vertical-align: middle; margin-right: 6px; }
+.legend .l-dot::before { width: 10px; height: 10px; border-radius: 5px; background: var(--ink); }
+.legend .l-min::before { width: 3px; height: 14px; background: var(--accent); }
+.headline { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
+.headline .bignum { font: 600 2.6rem/1 var(--mono); letter-spacing: -0.02em; }
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.tile { border: 1px solid var(--line); border-radius: 8px; padding: 14px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.tile .big { font: 600 1.7rem/1.1 var(--mono); }
+.tile .big small { font-size: 0.5em; font-weight: 500; color: var(--muted); }
+.pm { color: var(--muted); font-weight: 400; font-size: 0.85em; }
+.note { background: var(--marginal-soft); color: var(--ink); border-radius: 7px; padding: 9px 12px; font-size: 0.9rem; }
+/* the working and the code */
+.fn { font: 500 0.82rem var(--mono); background: var(--accent-soft); color: var(--accent); border: 0; border-radius: 5px; padding: 1px 6px; cursor: pointer; white-space: nowrap; }
+.fn:hover { text-decoration: underline; }
+details.working > summary { font-size: 0.98rem; }
+.working ol { margin: 0; padding-left: 1.3rem; display: flex; flex-direction: column; gap: 14px; }
+.working li > b:first-child { display: block; margin-bottom: 3px; }
+.working .calc { font: 400 0.88rem/1.7 var(--mono); background: var(--bg); border-radius: 7px; padding: 8px 12px; overflow-x: auto; white-space: nowrap; margin-top: 5px; }
+.working table { font-size: 0.84rem; margin-top: 6px; }
+.working td, .working th { padding: 4px 8px; }
+.working th { text-transform: none; letter-spacing: 0; font-size: 0.8rem; }
+.working .by { color: var(--muted); font-size: 0.86rem; margin-top: 4px; }
+.codebox { position: relative; border: 1px solid #1c2330; border-radius: 8px; height: 62vh; min-height: 320px; overflow: auto; background: #05070a; color: #dfe6ee; scrollbar-color: #2b3545 #05070a; }
+.codebox pre { margin: 0; padding: 10px 0; font: 400 0.8rem/1.5 var(--mono); tab-size: 2; counter-reset: ln; min-width: max-content; }
+.codebox .l { display: block; padding: 0 14px 0 0; white-space: pre; }
+.codebox .l::before { counter-increment: ln; content: counter(ln); display: inline-block; width: 3.6em; margin-right: 12px; padding-right: 8px; text-align: right; color: #55607a; border-right: 1px solid #1c2330; user-select: none; }
+.codebox .l.hit { background: #10243a; }
+.codebox .l.head { color: #05070a; background: #3FD9CB; font-weight: 600; margin: 6px 0 2px; }
+.codebox .l.head::before { color: #05070a; border-right-color: #05070a; }
+.codebox .c { color: #6e7b8f; font-style: italic; }
+.codebox .k { color: #ff7b93; }
+.codebox .s { color: #a8e08a; }
+.codebox .n { color: #f2b866; }
+.codebox .f { color: #7cc7ff; }
+.codebox .wait { color: #3FD9CB; font-style: normal; margin-left: 14px; }
+.spin { display: inline-block; width: 0.85em; height: 0.85em; margin-right: 7px; vertical-align: -0.1em; border: 2px solid #3FD9CB; border-right-color: transparent; border-radius: 50%; animation: spin 0.7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.coderun { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; margin: 18px 4px; }
+.batch-out.empty { min-height: 150px; display: flex; align-items: center; justify-content: center; padding: 16px; text-align: center; }
+.codehead { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: baseline; }
+/* the print-out: a new result is calculated in view, then printed block by block */
+.calclog { position: absolute; left: 0; top: 0; font: 400 0.9rem/1.75 var(--mono); color: var(--muted); white-space: nowrap; }
+.calclog div::before { content: "> "; color: var(--accent); }
+.calclog div:last-child::after { content: "\2588"; color: var(--accent); margin-left: 3px; animation: blink 0.5s steps(1) infinite; }
+.verdict > .stack { position: relative; }
+#result.calc .verdict > .stack > :not(.calclog), #result.calc > :not(.verdict) { visibility: hidden; }
+#result.calc .val { color: var(--muted); }
+#result.printing .p-in { animation: printIn 340ms cubic-bezier(0.2, 0.7, 0.2, 1) both; animation-delay: calc(var(--i) * 75ms); }
+@keyframes printIn { from { clip-path: inset(0 100% 0 0); opacity: 0.15; } to { clip-path: inset(0 0 0 0); opacity: 1; } }
+@keyframes blink { 50% { opacity: 0; } }
+.error { background: var(--no-soft); color: var(--ink); border-radius: 7px; padding: 10px 12px; }
+details > summary { cursor: pointer; font-weight: 600; }
+details[open] > summary { margin-bottom: 8px; }
+details.missing { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; font-size: 0.9rem; }
+details.missing p { color: var(--muted); }
+details.missing p + p { margin-top: 6px; }
+.sources td { font-size: 0.85rem; }
+.batch-out { max-height: 460px; overflow: auto; border: 1px solid var(--line); border-radius: 8px; }
+.batch-out th { position: sticky; top: 0; background: var(--surface); z-index: 1; white-space: normal; }
+.batch-out table { table-layout: fixed; min-width: 720px; }
+.batch-out td { overflow-wrap: anywhere; }
+.batch-out th:nth-child(1) { width: 21%; }
+.batch-out th:nth-child(2) { width: 31%; }
+.batch-out th:nth-child(3) { width: 18%; }
+.batch-out th:nth-child(4) { width: 12%; }
+.batch-out th:nth-child(5) { width: 18%; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.check { display: flex; gap: 8px; align-items: flex-start; }
+.check input { margin-top: 3px; }
+#csvbox { display: none; height: 140px; }
+#csvbox.show { display: block; }
+.how { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 8px; max-width: 78ch; }
+ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 8px; max-width: 78ch; }
+@media (prefers-reduced-motion: no-preference) { .verdict { transition: border-color 160ms ease; } }
+/* The homepage's palette and type: slate ground, pale ink, one cyan accent. */
+:root[data-theme="dark"] {
+  --bg: #10161E; --surface: #161E29; --ink: #DCE8F0; --muted: #8FA5B8; --line: #26323F;
+  --accent: #3FD9CB; --accent-soft: #14343A;
+  --yes: #63d28d; --yes-soft: #15331f; --marginal: #E9B872; --marginal-soft: #3a2a0c;
+  --no: #ff8f85; --no-soft: #3d1815;
+  --display: 'Newsreader', Georgia, serif;
+  --body: 'Inter', system-ui, -apple-system, sans-serif;
+  --mono: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
+  color-scheme: dark;
+}
+.pill[data-v="no"], .pill[data-v="no reaction"] { background: transparent; color: var(--muted); box-shadow: inset 0 0 0 1px var(--line); }
+.verdict[data-v="no"], .verdict[data-v="no reaction"] { border-left-color: var(--line); }
+.pill[data-z="green"] { background: var(--yes-soft); color: var(--yes); }
+.pill[data-z="yellow"] { background: #3a3410; color: #F2D45C; }
+.pill[data-z="red"] { background: var(--no-soft); color: var(--no); }
+.verdict[data-z="green"] { border-left-color: var(--yes); }
+.verdict[data-z="yellow"] { border-left-color: #F2D45C; }
+.verdict[data-z="red"] { border-left-color: var(--no); }
+.ladder { width: 100%; max-width: 760px; height: auto; display: block; }
+.ladder text { font: 12.5px var(--body); fill: var(--muted); }
+.ladder .on { fill: var(--ink); font-weight: 600; }
+.ladder .me { fill: var(--accent); font-weight: 600; }
+.ladder .key { fill: var(--ink); font: 700 15px var(--body); }
+.score { margin: 6px 0 0; }
+.volts .per { display: block; font: 500 0.82rem var(--body); color: var(--muted); letter-spacing: 0; margin-top: 6px; white-space: nowrap; }
+.zones { display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: center; font-size: 0.85rem; color: var(--muted); }
+.back { display: inline-block; margin: 0 0 1.2rem; color: var(--accent); text-decoration: none; font-size: 0.92rem; }
+.back:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<main>
+  <a class="back" href="/">← back to the homepage</a>
+  <header>
+    <h1>Mineral Redox Calculator</h1>
+    <p class="lede">Pick a mineral and a partner. Get the voltage between them, and whether a microbe could live on it.</p>
+  </header>
+
+  <section class="panel stack" aria-labelledby="ask-h">
+    <h2 id="ask-h" hidden>Question</h2>
+    <form class="ask" id="ask" autocomplete="off">
+      <div class="field grow">
+        <label for="mineral">Mineral name or formula</label>
+        <input type="text" id="mineral" list="mineral-list" value="pyrite" spellcheck="false">
+        <datalist id="mineral-list"></datalist>
+      </div>
+      <div class="field grow">
+        <label for="partner">Paired with</label>
+        <select id="partner"></select>
+      </div>
+      <div class="field">
+        <label for="ph">pH</label>
+        <input type="number" id="ph" min="0" max="14" step="0.5" value="7">
+      </div>
+      <div class="field">
+        <label for="solutes">Dissolved species</label>
+        <select id="solutes">
+          <option value="1">1 M (standard state)</option>
+          <option value="0.001">1 mM</option>
+          <option value="0.000001">1 &micro;M</option>
+        </select>
+      </div>
+    </form>
+    <div class="chips" id="examples" aria-label="Examples"></div>
+    <div id="polymorphs"></div>
+    <p class="hint">25 &deg;C. Every gas (O<sub>2</sub>, H<sub>2</sub>, CH<sub>4</sub>, CO<sub>2</sub>, N<sub>2</sub>) is at 1 bar, and everything dissolved is at the concentration chosen above.</p>
+  </section>
+
+  <section id="result" class="stack" aria-live="polite">
+    <div class="panel">Loading the thermodynamic database&hellip;</div>
+  </section>
+
+  <section class="panel stack" aria-labelledby="all-h">
+    <div>
+      <h2 id="all-h">Redox ladder</h2>
+      <p class="hint">The scale runs from H<sub>2</sub> at the bottom to O<sub>2</sub> at the top. Energy for life is the gap between two rungs, in kJ per mole of electrons. Rungs are placed in volts on the hydrogen scale (SHE).</p>
+    </div>
+    <div id="partners-out"></div>
+  </section>
+
+  <section class="panel stack" aria-labelledby="num-h">
+    <div>
+      <h2 id="num-h">Redox rank against O<sub>2</sub></h2>
+      <p class="hint">For ranking minerals from reduced to oxidized. kJ per mole of electrons, O<sub>2</sub> = 0. Positive: O<sub>2</sub> can oxidize it. Negative: it can only be reduced. Zero: inert.</p>
+    </div>
+    <div id="numbers-out"></div>
+  </section>
+
+  <section class="panel stack" aria-labelledby="src-h">
+    <h2 id="src-h">Numbers used in this answer</h2>
+    <div id="sources-out"></div>
+  </section>
+
+  <section class="panel stack" aria-labelledby="how-h">
+    <h2 id="how-h">How it works</h2>
+    <ul class="how">
+      <li><b>Input.</b> The mineral&rsquo;s Gibbs energy of formation, measured, from twelve published databases. Every IMA mineral can be looked up by name. If it has no measured value, the energy is estimated from its IMA formula and flagged. The &plusmn; shows how far the value could be off.</li>
+      <li><b>Reaction.</b> At the redox potential the partner sets, energy minimization finds the most stable products in water at your pH.</li>
+      <li><b>Answer.</b> The gap between the mineral and the partner on the redox ladder, in volts and in kJ per mole of electrons. YES is colored by the energy per mole of partner reaction (at least two electrons): green at 20 kJ or more (the cost of moving one ion across a membrane, Schink 1997), yellow from 10 to 20 (the lowest microbes are seen living on, Hoehler et al. 2001), red under 10.</li>
+      <li><b>Electrons only.</b> Energy a mineral releases just by sitting in water (dissolving, hydrating, turning into a more stable form), with every element keeping its oxidation state, is not redox energy. It is reported on its own and left out of every value here.</li>
+      <li><b>Rank.</b> The same calculation against O<sub>2</sub> only. Size: how far the mineral&rsquo;s redox boundary sits below O<sub>2</sub>, in kJ per mole of electrons (96.485 &times; the gap in volts). Sign: positive if the mineral is the reduced side of that boundary (O<sub>2</sub> oxidizes it), negative if it is the oxidized side. A metal and its oxide share one boundary and get opposite signs.</li>
+      <li><b>Limit.</b> Thermodynamics only. It does not say an organism has the enzymes, or that the reaction is fast.</li>
+    </ul>
+    <p class="fine" id="db-info"></p>
+    <div id="user-info" class="fine"></div>
+  </section>
+  <section class="panel stack" aria-labelledby="list-h" id="all-list">
+    <h2 id="list-h">Every IMA mineral</h2>
+    <div id="batch-status" class="hint" aria-live="polite"></div>
+    <div id="batch-out"><div class="batch-out empty"><p class="hint">Empty for now. Press the button below: when the run is complete, every mineral is listed here with its redox value.</p></div></div>
+    <div class="row" id="batch-actions" hidden>
+      <button type="button" id="dl-csv" hidden>Download CSV</button>
+      <button type="button" id="copy-csv" class="quiet">Copy CSV</button>
+      <span id="csv-status" class="hint"></span>
+    </div>
+    <p class="hint" id="csv-hint" hidden>The CSV has one signed redox value per mineral against O<sub>2</sub>, the same value in volts, its &plusmn;, and where it came from.</p>
+    <label for="csvbox" class="hint" id="csvbox-label" hidden>CSV text, ready to select and copy</label>
+    <textarea id="csvbox" readonly></textarea>
+  </section>
+
+  <div class="coderun"><button type="button" id="run-all">Run every IMA mineral</button><span class="hint" id="code-run-status">Runs the code below on every IMA mineral. The code prints out while it works, then the list above fills in.</span></div>
+
+  <section class="panel stack" aria-labelledby="code-h" id="code">
+    <h2 id="code-h">The code behind the numbers</h2>
+    <p class="fine">Every value on this page comes from the three files below, which run in your browser: one computes the redox value of a species, one estimates formation energies that were never measured, and one decides which formation energy a mineral gets. The listing is loaded from the files the page is running, so it is always the current code.</p>
+    <div class="chips" id="code-files"></div>
+    <div class="codehead"><span class="hint" id="code-what"></span></div>
+    <div class="chips" id="code-fns"></div>
+    <div class="codebox" id="code-box" tabindex="0" aria-label="Code listing"><pre id="code-pre"></pre></div>
+    <p class="fine" id="code-data"></p>
+  </section>
+  <a class="back" href="/" style="margin-top:1.4rem">← back to the homepage</a>
+</main>
+
+<script src="redox/engine.js"></script>
+<script src="redox/estimator.js"></script>
+<script src="redox/minerals.js"></script>
+<script src="redox/partners.js"></script>
+<script>
+(function () {
+  "use strict";
+  var MR = window.MineralRedox, MD = window.MineralData;
+  var $ = function (id) { return document.getElementById(id); };
+  // The calculation lives in three files: engine.js (the redox value), estimator.js (formation energies never measured) and
+  // minerals.js (which formation energy a mineral gets). This script only draws the page. S is the shared state: the data
+  // and conditions belong to minerals.js, and the page keeps its own settings on the same object.
+  var S = MD.S;
+  S.pick = null; S.batch = null; S.downloads = null; S.asked = false; S.partner = "O2"; S.named = Object.create(null);
+  var plain = MD.plain, norm = MD.norm, count = MD.count, cond = MD.cond, loadLibrary = MD.loadLibrary, loadIma = MD.loadIma, loadCross = MD.loadCross, crossOf = MD.crossOf, imaFind = MD.imaFind, lookup = MD.lookup, sameCompound = MD.sameCompound, imaHits = MD.imaHits, apart = MD.apart, oneFor = MD.oneFor, fallback = MD.fallback, placeholder = MD.placeholder, shifted = MD.shifted, scoreOf = MD.scoreOf, rangeOf = MD.rangeOf, uEff = MD.uEff;
+  var EXAMPLES = ["pyrite", "pyrrhotite", "mackinawite", "magnetite", "hematite", "goethite", "pyrolusite", "siderite",
+                  "vivianite", "fayalite", "chalcopyrite", "uraninite", "quartz"];
+  var STORE_USER = "mineral-redox-user-species", STORE_STATE = "mineral-redox-state";
+  var SHOW_MISSING = 300;
+
+  // ------------------------------------------------------------------ helpers
+  function esc(t) {
+    return String(t).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function fmtFormula(f) {
+    if (f === "e-") return "e<sup>−</sup>";
+    var hyd = /^(.+?)[.*·](\d*)H2O$/.exec(f);
+    if (hyd) return fmtFormula(hyd[1]) + "·" + hyd[2] + "H<sub>2</sub>O";
+    var m = /([+-])(\d*)$/.exec(f), charge = "";
+    if (m) {
+      charge = "<sup>" + (m[2] && m[2] !== "1" ? m[2] : "") + (m[1] === "+" ? "+" : "−") + "</sup>";
+      f = f.slice(0, m.index);
+    }
+    return esc(f).replace(/\*/g, "·").replace(/([A-Za-z)\]])(\d+(?:\.\d+)?)/g, "$1<sub>$2</sub>") + charge;
+  }
+  // Partner labels are plain text such as "SO4-2 → H2S". Each word that is a formula gets its subscripts and its charge.
+  function isFormula(w) { return /^[A-Z]/.test(w); }
+  function fmtLabel(t) {
+    return t.split(" ").map(function (w) { return isFormula(w) ? fmtFormula(w) : esc(w); }).join(" ");
+  }
+  function plainLabel(t) {  // the same, for places that cannot hold markup: a menu, a drawing
+    var SUB = "₀₁₂₃₄₅₆₇₈₉", SUP = "⁰¹²³⁴⁵⁶⁷⁸⁹";
+    return t.split(" ").map(function (w) {
+      if (!isFormula(w)) return w;
+      var m = /([+-])(\d*)$/.exec(w), charge = "";
+      if (m) { charge = m[2].replace(/\d/g, function (d) { return SUP[+d]; }) + (m[1] === "+" ? "⁺" : "⁻"); w = w.slice(0, m.index); }
+      return w.replace(/\d/g, function (d) { return SUB[+d]; }) + charge;
+    }).join(" ");
+  }
+  function meets(p) { return p.label.split(" → ")[0]; }            // what the mineral meets: O2 of "O2 → H2O"
+  function coupleOf(p) {            // the couple as a redox tower writes it, oxidized form first: "CO2 / CH4"
+    var q = p.label.split(" → ");
+    return q.length < 2 ? q[0] : p.role === "acceptor" ? q[0] + " / " + q[1] : q[1] + " / " + q[0];
+  }
+  function num(v, d) { return (v < 0 ? "−" : "") + Math.abs(v).toFixed(d); }
+  function signed(v, d) {
+    var t = Math.abs(v).toFixed(d);
+    return (Number(t) === 0 ? "" : v < 0 ? "−" : "+") + t;
+  }
+  function round1(v) { return Math.round(v * 10) / 10; }
+  function plural(n, word) { return n + " " + word + (n === 1 ? "" : "s"); }
+  function sideHtml(terms) {
+    return terms.map(function (t) {
+      return (Math.abs(t[1] - 1) < 1e-9 ? "" : MR.g4(t[1]) + "\u2009") + fmtFormula(t[0]);
+    }).join(" + ");
+  }
+  function eqHtml(a) { return sideHtml(a.left) + " → " + sideHtml(a.right); }
+  function solidsOf(eq) {
+    return eq.products.filter(function (p) { return p[0].state === "cr"; }).map(function (p) { return p[0].name; });
+  }
+  function partnerById(id) { return MR.PARTNERS.filter(function (p) { return p.id === id; })[0]; }
+  function partnerNumber(pr, c) {   // the partner couple on the same O2 = 0 scale as the mineral numbers
+    return (pr.partner.role === "acceptor" ? pr.E_partner - c.E_O2 : c.E_O2 - pr.E_partner) * MR.F;
+  }
+  function solutesText() { return S.solutes === 1 ? "1 M" : S.solutes === 0.001 ? "1 mM" : "1 µM"; }
+  function readStore(key, fallback) {
+    try { var v = JSON.parse(localStorage.getItem(key)); return v === null || v === undefined ? fallback : v; }
+    catch (e) { return fallback; }
+  }
+  function writeStore(key, value) {
+    try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { /* storage unavailable */ }
+  }
+
+
+
+  // ------------------------------------------------- database plus added values
+  function rebuild() {
+    MD.index();
+    var solids = S.db.filter(function (s) { return s.state === "cr" && !/_liq$/.test(s.name); })
+      .sort(function (a, b) { return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1; });
+    S.imaExtra = S.imaList.filter(function (e) { var k = norm(e.name); return !S.byName[k] && !S.libByName[k]; });
+    $("mineral-list").innerHTML = solids.concat(S.lib).map(function (s) {
+      return '<option value="' + esc(s.name) + '">' + esc(s.formula) + "</option>";
+    }).join("") + S.imaExtra.map(function (e) {
+      return '<option value="' + esc(e.name) + '">' + esc(e.ima) + "</option>";
+    }).join("");
+    var mine = S.user.length;
+    $("run-all").textContent = "Run every IMA mineral (" + S.imaList.filter(function (e) { return !e.older; }).length.toLocaleString("en-US") + ")" + (mine ? " + " + mine + " added by hand" : "");
+    $("user-info").innerHTML = mine ? "<b>Added by hand in this browser:</b> " +
+      S.user.map(function (u) { return esc(u.sp.name) + " (" + num(u.sp.G, 1) + " kJ/mol)"; }).join(", ") +
+      '. They are labelled wherever they are used. <button type="button" class="quiet small" id="forget">Remove them</button>' : "";
+  }
+  function addUser(name, formula, G, source, saved, quiet) {
+    var sp = MR.makeSpecies(name, formula, "cr", G, "user", source || "no source given", "");
+    var key = norm(name);
+    S.user = S.user.filter(function (u) { return norm(u.sp.name) !== key; });
+    S.user.push({ sp: sp, saved: !!saved, formula: formula, source: source || "" });
+    if (saved) persistUser();
+    if (!quiet) rebuild();
+    return sp;
+  }
+  function persistUser() {
+    writeStore(STORE_USER, S.user.filter(function (u) { return u.saved; }).map(function (u) {
+      return { name: u.sp.name, formula: u.formula, G: u.sp.G, source: u.source };
+    }));
+  }
+
+
+
+
+
+  function addForm(name, formula, collapsed) {
+    var form = '<form class="ask" id="add-form"><div class="field grow"><label for="add-name">Name</label><input type="text" id="add-name" value="' + esc(name) +
+      '"></div><div class="field grow"><label for="add-formula">Formula</label><input type="text" id="add-formula" value="' + esc(formula) +
+      '" spellcheck="false"></div><div class="field"><label for="add-g">Measured &Delta;<sub>f</sub>G, kJ/mol (optional)</label><input type="number" id="add-g" step="any"></div>' +
+      '<div class="field grow"><label for="add-src">Source</label><input type="text" id="add-src" placeholder="author, year"></div>' +
+      '<button type="submit">Calculate</button></form><p class="hint">Your value stays in this browser.</p>';
+    return collapsed ? '<details class="missing"><summary>Have a measured formation energy for it? Add it here.</summary>' + form + "</details>" : form;
+  }
+
+  // ------------------------------------------------------------------- render
+  function readControls() {
+    S.pH = Math.min(14, Math.max(0, parseFloat($("ph").value)));
+    if (!isFinite(S.pH)) S.pH = 7;
+    S.solutes = parseFloat($("solutes").value);
+    S.partner = $("partner").value;
+  }
+
+  function saveState() {
+    writeStore(STORE_STATE, { mineral: $("mineral").value.trim(), partner: $("partner").value, ph: $("ph").value,
+                              solutes: $("solutes").value });
+  }
+
+  function render(typing) {            // typing: called while the name is still being typed
+    var text = $("mineral").value.trim();
+    readControls();
+    document.querySelectorAll("#examples .chip").forEach(function (c) {
+      c.setAttribute("aria-pressed", c.dataset.name === text.toLowerCase() ? "true" : "false");
+    });
+    saveState();
+    $("polymorphs").innerHTML = "";
+    if (!text) { blank("Type a mineral name or formula, or pick one of the examples."); return; }
+    var r = lookup(text), sp, info = null, other = imaHits(text, r);
+    if (!r.hits.length) {
+      var ima = imaFind(text);
+      if (ima && !ima.formula) {
+        $("result").innerHTML = '<div class="panel stack"><div class="note"><b>' + esc(ima.name) + "</b> is on the IMA list but has no value here: " +
+          esc(ima.note || "its formula could not be read into a composition") + (ima.ima ? " (IMA formula: " + esc(ima.ima) + ")" : "") +
+          ". Enter one specific formula below.</div>" + addForm(ima.name, "", false) + "</div>";
+        $("partners-out").innerHTML = $("numbers-out").innerHTML = $("sources-out").innerHTML = '<p class="hint">Nothing to show yet.</p>';
+        return;
+      }
+      var formula = ima ? ima.formula : r.readable ? text : S.named[norm(text)];
+      if (!formula) { missing(text, r, null); return; }
+      info = fallback(ima ? ima.name : r.readable ? "" : text, formula, ima ? ima.states : null);
+      if (ima && ima.note) info.flags = (info.flags || []).concat(["IMA formula " + ima.ima + ": " + ima.note]);
+      if (other && other.length) info.flags = (info.flags || []).concat(["the databases list " + other[0].name + " as " + other[0].formula + ", which is not the IMA mineral, so that value was not used"]);
+      if (!info.sp) { missing(ima ? ima.name : text, r, info); return; }
+      sp = info.sp;
+    } else sp = r.hits[0];
+    var e1 = r.hits.length && r.by !== "formula" ? imaFind(text) : null, one = e1 && e1.formula ? oneFor(e1, r.hits) : null, flags1 = [];
+    if (one) {                                   // an IMA mineral: one value, for its ideal formula
+      sp = one.sp; flags1 = one.flags || [];
+      if (one.basis === "moved") info = { basis: "moved", how: one.how, u: one.u, flags: flags1, formula: e1.formula, from: one.from };
+      else if (one.fb) { info = one.fb; info.flags = flags1; }
+      if (e1.note && r.hits.indexOf(sp) < 0) info.flags = info.flags.concat(["IMA formula " + e1.ima + ": " + e1.note]);
+    }
+    if (r.hits.length > 1 || one && r.hits.indexOf(one.sp) < 0) {
+      var keep = r.hits.filter(function (h) { return h.name === S.pick; })[0];
+      if (keep) { sp = keep; info = null; flags1 = []; }
+      $("polymorphs").innerHTML = '<div class="row"><span class="hint">' + (one ? "Database entries under this name:" : "Several entries match:") + '</span><div class="chips">' +
+        r.hits.map(function (h) {
+          return '<button type="button" class="chip" data-pick="' + esc(h.name) + '" aria-pressed="' + (h === sp) + '">' + esc(h.name) + "</button>";
+        }).join("") + "</div></div>";
+    } else if (r.hits.length && r.by !== "formula" && sp.name.toLowerCase() !== text.toLowerCase()) {
+      $("polymorphs").innerHTML = '<p class="hint">The database lists this as <b>' + esc(sp.name) + "</b>.</p>";
+    }
+    if (sp.lib) info = { basis: "library", u: sp.lib.u, flags: flags1, formula: sp.formula, lib: sp.lib };
+    else if (!info && crossOf(sp)) info = { basis: "measured", u: crossOf(sp).u, flags: flags1, formula: sp.formula, cross: crossOf(sp) };
+    var c = cond(), res, pairs;
+    try {
+      res = MR.analyze(sp, c);
+      pairs = MR.PARTNERS.map(function (p) {
+        try { return MR.pair(sp, p, c); } catch (e) { return null; }
+      });
+    } catch (err) {
+      blank("No end state could be found for " + esc(sp.name) + ": " + esc(err.message) + ".");
+      return;
+    }
+    var chosen = pairs.filter(function (p) { return p && p.partner.id === S.partner; })[0];
+    if (info) info.range = rangeOf(sp, info.u, res, c);
+    renderVerdict(sp, chosen, res, c, info);
+    try { $("result").insertAdjacentHTML("beforeend", working(sp, res, c, info)); } catch (err) { /* the panel is an extra: never let it break the answer */ }
+    renderPartners(pairs, c, sp, res);
+    renderNumbers(sp, res, info);
+    renderSources(sp, res, chosen);
+    if (info && info.basis !== "library" && info.basis !== "measured") $("result").insertAdjacentHTML("beforeend", addForm(r.readable ? "" : text, info.formula, true));
+    printOut(sp, res, c, [sp.name, sp.formula, sp.G, S.pH, S.solutes, S.partner].join("|"), typing === true ? (r.by === "formula" ? "never" : "new") : "always");
+  }
+
+  // ------------------------------------------------------- show the working
+  // The numbers the engine just used, laid out step by step. Each step names the function that did it; pressing the name
+  // opens that function in the code listing at the foot of the page. The last step checks the steps against the engine's answer.
+  function fnLink(file, name) {
+    return '<button type="button" class="fn" data-file="' + file + '" data-fn="' + name + '" title="Show this function in the code">' + name + "()</button>";
+  }
+  function working(sp, res, c, info) {
+    var F = MR.F, k = MR.RT * MR.LN10, W = c.water.G;
+    var e3 = function (v) { return num(v, 3); }, v4 = function (v) { return signed(v, 4); }, cf = function (v) { return MR.g4(v).replace("-", "\u2212"); };
+    var mode = res.fuel ? "fuel" : res.oxidant ? "oxidant" : res.deep ? "deep" : "none";
+    var eq = mode === "fuel" ? res.O2 : mode === "oxidant" ? res.H2 : mode === "deep" ? res.deep.eq : null;
+    var basis = sp.ref === "user" ? "user" : info ? info.basis : "measured", steps = [], est = info && info.est;
+    // 1. the input
+    var from = basis === "estimate" ? "It has no measured value. It was estimated from the formula by " + fnLink("estimator", "estimate") + ", called from " + fnLink("minerals", "fallback") + "."
+      : basis === "proxy" ? "It is the measured value of a mineral with the same formula, found by " + fnLink("minerals", "fallback") + "."
+      : basis === "moved" ? "It is a measured value brought to the ideal formula by " + fnLink("minerals", "oneFor") + "."
+      : basis === "element" ? "An element in its reference state: zero by definition."
+      : basis === "user" ? "You entered it on this page."
+      : "It is a measured value, found in the databases by " + fnLink("minerals", "lookup") + " (one entry per mineral is chosen by " + fnLink("minerals", "oneFor") + ").";
+    var blocksText = "";
+    if (basis === "estimate" && est && est.blocks && Object.keys(est.blocks).length) {
+      blocksText = '<div class="by">' + fnLink("estimator", "blocks") + " split the formula into building blocks: " +
+        Object.keys(est.blocks).map(function (x) { return cf(est.blocks[x]) + " " + esc(x.replace("|", " as ")); }).join(", ") +
+        (est.family ? " (family: " + esc(est.family) + ")" : "") + ". " + fnLink("estimator", "core") + " added up their fitted energies" +
+        (est.dH !== null && est.S !== null && Math.abs(est.dG - sp.G) < 0.01 ? ": Δ<sub>f</sub>H " + num(est.dH, 1) + " kJ/mol and entropy " + num(est.S, 1) + " J/mol/K, which give the Δ<sub>f</sub>G above" : "") + ".</div>";
+    }
+    steps.push("<b>The mineral and its formation energy</b>" + fmtFormula(sp.formula) + ", Δ<sub>f</sub>G = " + e3(sp.G) + " kJ/mol. " + from + blocksText +
+      '<div class="by">' + fnLink("engine", "parseFormula") + " reads the formula into atoms; " + fnLink("engine", "makeSpecies") + " stores them with the charge and ω, the summed oxidation numbers of everything except O and H (ω = charge + 2 × O − H).</div>");
+    // 2. conditions
+    steps.push("<b>Conditions</b>25 °C, pH " + S.pH + ", dissolved species at " + solutesText() + ". Constants: Δ<sub>f</sub>G of water " + e3(W) + " kJ/mol, F = " + F +
+      " kJ per volt per mole of electrons, RT ln 10 = " + num(k, 4) + " kJ/mol." +
+      '<div class="calc">E(H<sub>2</sub>) = −(RT ln 10 / F) × pH = −(' + num(k, 4) + " / " + F + ") × " + S.pH + " = " + v4(c.E_H2) + " V<br>" +
+      "E(O<sub>2</sub>) = −Δ<sub>f</sub>G(H<sub>2</sub>O) / (2F) + E(H<sub>2</sub>) = " + num(-W, 3) + " / " + num(2 * F, 2) + " " + (c.E_H2 < 0 ? "− " + num(-c.E_H2, 4) : "+ " + num(c.E_H2, 4)) + " = " + v4(c.E_O2) + " V</div>" +
+      '<div class="by">' + fnLink("engine", "Conditions") + "</div>");
+    if (!eq) {
+      steps.push("<b>Result</b>No potential tried moves electrons to or from this mineral, so its value is 0." + '<div class="by">' + fnLink("engine", "analyze") + "</div>");
+      return wrap(steps, true);
+    }
+    // 3. energies at the potential
+    var Eh = eq.Eh, muH = -F * Eh - k * S.pH, muO = W - 2 * muH, muQ = F * Eh;
+    var where = mode === "fuel" ? "the potential of O<sub>2</sub>" : mode === "oxidant" ? "the potential of H<sub>2</sub>"
+      : "the potential where electrons first move (see step 7)";
+    var row = function (s, amount) {
+      return "<tr><td>" + esc(s.name) + " <small>" + fmtFormula(s.formula) + "</small></td><td class=\"num\">" + amount + '</td><td class="num">' + e3(s.G) + '</td><td class="num">' +
+        num(MR.RT * Math.log(c.activity(s)), 3) + '</td><td class="num">' + cf(s.nO) + '</td><td class="num">' + cf(s.nH) + '</td><td class="num">' + cf(s.charge) +
+        '</td><td class="num">' + cf(s.omega) + '</td><td class="num"><b>' + e3(c.gprime(s, Eh)) + "</b></td></tr>";
+    };
+    steps.push("<b>Energy of every species at " + where + "</b>At Eh = " + v4(Eh) + " V each species is put on one footing with water, H<sup>+</sup> and electrons:" +
+      '<div class="calc">g′ = Δ<sub>f</sub>G + RT ln a − O × μ<sub>O</sub> − H × μ<sub>H</sub> − charge × μ<sub>Q</sub><br>' +
+      "μ<sub>H</sub> = −F × Eh − RT ln 10 × pH = " + e3(muH) + "<br>μ<sub>O</sub> = Δ<sub>f</sub>G(H<sub>2</sub>O) − 2 μ<sub>H</sub> = " + e3(muO) +
+      "<br>μ<sub>Q</sub> = F × Eh = " + e3(muQ) + "</div>" +
+      '<div class="scroll"><table><thead><tr><th>Species</th><th class="num">Amount</th><th class="num">Δ<sub>f</sub>G</th><th class="num">RT ln a</th><th class="num">O</th><th class="num">H</th><th class="num">Charge</th><th class="num">ω</th><th class="num">g′</th></tr></thead><tbody>' +
+      row(sp, "1 (start)") + eq.products.map(function (q) { return row(q[0], cf(q[1])); }).join("") + "</tbody></table></div>" +
+      '<div class="by">' + fnLink("engine", "gprime") + "</div>");
+    // 4. products and energy
+    var g0 = c.gprime(sp, Eh), sum = 0, nsum = 0;
+    eq.products.forEach(function (q) { sum += q[1] * c.gprime(q[0], Eh); nsum += q[1] * q[0].omega; });
+    var nCand = sp.heavy.length ? c.candidates(sp).length : 0;
+    steps.push("<b>The products</b>" + (eq.products.length
+      ? "The products in the table are the mix with the lowest total g′ that holds the same atoms as the mineral. It is picked from " + nCand +
+        " species (every one in the database made only of this mineral’s elements, plus the mineral itself) by linear programming."
+      : "It holds only oxygen and hydrogen, so it ends as water.") +
+      '<div class="calc">ΔG = ' + (eq.products.length ? eq.products.map(function (q) { return cf(q[1]) + " × (" + e3(c.gprime(q[0], Eh)) + ")"; }).join(" + ") : "0") +
+      " − (" + e3(g0) + ") = " + e3(eq.dG) + " kJ per mole of mineral</div>" +
+      '<div class="by">' + fnLink("engine", "candidates") + " " + fnLink("engine", "lowest") + " " + fnLink("engine", "lpMin") + " " + fnLink("engine", "equilibrate") + "</div>");
+    // 5. electrons
+    var n = eq.n, took = n < 0;
+    steps.push("<b>Electrons</b>Counted from ω before and after." +
+      '<div class="calc">n = ' + (eq.products.length ? eq.products.map(function (q) { return cf(q[1]) + " × (" + cf(q[0].omega) + ")"; }).join(" + ") : "0") +
+      " − (" + cf(sp.omega) + ") = " + cf(n) + "</div>" + (took ? "Negative: the mineral takes " + cf(-n) + " electrons per formula unit." : "The mineral gives up " + cf(n) + " electrons per formula unit.") +
+      '<div class="by">' + fnLink("engine", "equilibrate") + "</div>");
+    // 6. change in water with no electrons
+    var B = res.breakdown.dG;
+    steps.push("<b>Energy that is not redox energy</b>" + (B < -1e-9
+      ? "With every element kept at its oxidation state, the mineral on its own in water turns into " + esc(res.breakdown.products.map(function (q) { return q[0].name; }).join(", ")) +
+        ". That is found the same way as step 4, with the oxidation states held fixed, and it is taken out of the redox energy."
+      : "With every element kept at its oxidation state, the mineral does not change in water.") +
+      '<div class="calc">B = ' + e3(B) + " kJ per mole of mineral</div>" + '<div class="by">' + fnLink("engine", "valence") + " " + fnLink("engine", "breakdown") + "</div>");
+    // 7. the value
+    var value, line, win = c.window;
+    if (mode === "fuel") {
+      value = -(eq.dG - B) / n;
+      line = "value = −(ΔG − B) / n = −(" + e3(eq.dG) + " − (" + e3(B) + ")) / " + cf(n) + " = " + signed(value, 4) + " kJ per mol e<sup>−</sup>";
+    } else if (mode === "oxidant") {
+      value = -(eq.dG - B) / -n - win;
+      line = "against H<sub>2</sub>: −(ΔG − B) / n = −(" + e3(eq.dG) + " − (" + e3(B) + ")) / " + cf(-n) + " = " + signed(-(eq.dG - B) / -n, 4) +
+        "<br>H<sub>2</sub> sits F × (E(O<sub>2</sub>) − E(H<sub>2</sub>)) = " + num(win, 4) + " below O<sub>2</sub><br>value = " + signed(-(eq.dG - B) / -n, 4) + " − " + num(win, 4) + " = " + signed(value, 4) + " kJ per mol e<sup>−</sup>";
+    } else {
+      var d = res.deep, E = d.up ? Eh + (eq.dG - B) / (d.n * F) : Eh - (eq.dG - B) / (d.n * F);
+      value = d.up ? (c.E_O2 - E) * F : (E - c.E_O2) * F;
+      line = "E = Eh " + (d.up ? "+" : "−") + " (ΔG − B) / (n × F) = " + v4(Eh) + " " + (d.up ? "+" : "−") + " (" + e3(eq.dG - B) + ") / (" + cf(d.n) + " × " + F + ") = " + v4(E) + " V<br>" +
+        "value = " + (d.up ? "(E(O<sub>2</sub>) − E)" : "(E − E(O<sub>2</sub>))") + " × F = " + signed(value, 4) + " kJ per mol e<sup>−</sup>";
+    }
+    var ok = Math.abs(value - scoreOf(res)) < 1e-6;
+    steps.push("<b>The redox value against O<sub>2</sub></b>" + (mode === "fuel" ? "O<sub>2</sub> takes electrons from the mineral, so it is the reduced side and the value is positive."
+      : mode === "oxidant" ? "O<sub>2</sub> does nothing to it, and H<sub>2</sub> gives it electrons. The energy against H<sub>2</sub> is moved onto the O<sub>2</sub> scale."
+      : "Neither O<sub>2</sub> nor H<sub>2</sub> moves electrons. " + fnLink("engine", "firstMove") + " steps the potential " + (res.deep.up ? "above O<sub>2</sub>" : "below H<sub>2</sub>") +
+        " until electrons first move, then narrows it down by halving. Steps 3 to 5 are shown at that potential. E is where that reaction is exactly balanced.") +
+      '<div class="calc">' + line + "<br>in volts: " + signed(value, 4) + " / " + F + " = " + signed(value / F, 4) + " V</div>" +
+      '<div class="by">' + fnLink("engine", "analyze") + (ok ? " returned " + signed(scoreOf(res), 4) + ": the steps above reproduce it." : " returned " + signed(scoreOf(res), 4) + ", which these steps do not reproduce. Please report this mineral.") + "</div>");
+    // 8. the plus-or-minus
+    if (info && info.range && info.u > 0) {
+      steps.push("<b>The ±</b>The whole calculation is run twice more with Δ<sub>f</sub>G moved by its uncertainty, " + Math.round(info.u * 10) / 10 + " kJ/mol, down and up." +
+        '<div class="calc">lower: ' + signed(info.range.lo, 4) + "<br>higher: " + signed(info.range.hi, 4) + "<br>± = the larger change = " + num(info.range.pm, 4) + " kJ per mol e<sup>−</sup></div>" +
+        '<div class="by">' + fnLink("minerals", "rangeOf") + "</div>");
+    }
+    return wrap(steps, ok);
+    function wrap(list, good) {
+      return '<details class="panel working" data-check="' + (good ? "ok" : "off") + '"><summary>Show the calculation, step by step</summary><ol>' +
+        list.map(function (t) { return "<li>" + t + "</li>"; }).join("") + '</ol><p class="fine">For a partner other than O<sub>2</sub>, steps 3 to 7 are repeated at that partner’s potential. Energies are in kJ/mol.</p></details>';
+    }
+  }
+
+  // ------------------------------------------------------------ the code
+  // The chemistry, shown to the reader: the three files every value comes from. The listing is read from the same addresses
+  // the script tags load, so nothing is copied by hand and it cannot fall behind the code. The code that only draws the page
+  // (partners.js and this script) is not listed.
+  var CODE = {
+    engine: { label: "engine.js", what: "the redox value of one species: formula, lowest-energy products, electrons", src: "redox/engine.js",
+      fns: [["parseFormula", "reads a formula into atoms"], ["makeSpecies", "one species: atoms, charge, electron count"], ["Conditions", "pH and the potentials of H2 and O2"],
+            ["gprime", "energy of a species at a potential and pH"], ["candidates", "species made of the mineral's elements"], ["lpMin", "linear programming"], ["lowest", "the lowest-energy mix with the same atoms"],
+            ["equilibrate", "products, energy and electrons at one potential"], ["valence", "oxidation states"], ["breakdown", "change in water with no electrons moving"],
+            ["analyze", "the redox value against O2"], ["firstMove", "minerals that neither O2 nor H2 changes"]] },
+    estimator: { label: "estimator.js", what: "the formation energy of a mineral that was never measured", src: "redox/estimator.js",
+      fns: [["blocks", "splits a formula into building blocks"], ["core", "adds up the fitted block energies"], ["estimate0", "blocks to a formation energy"], ["estimate", "the estimate, with organic and halide cases"]] },
+    minerals: { label: "minerals.js", what: "which formation energy a mineral gets", src: "redox/minerals.js",
+      fns: [["lookup", "finds a name or formula in the databases"], ["sameCompound", "is a database entry this mineral?"], ["oneFor", "one entry per mineral, for its ideal formula"],
+            ["fallback", "when nothing is measured under the name"], ["resolve", "a list of names to a list of species"], ["evaluate", "runs the engine on the list"], ["rangeOf", "the plus-or-minus"]] } };
+  var codeText = {}, codeShown = null;
+  function codeLoad(id) {
+    if (codeText[id] !== undefined) return Promise.resolve(codeText[id]);
+    return fetch(CODE[id].src).then(function (r) { if (!r.ok) throw new Error("not found"); return r.text(); }).then(function (t) { codeText[id] = t.replace(/\r\n/g, "\n").replace(/\s+$/, ""); return codeText[id]; });
+  }
+  // Colours one line of JavaScript: comments, strings, numbers, keywords and function names. st.block carries an open
+  // /* comment */ from one line to the next. Only for display: the text itself is never changed.
+  var WORDS = /^(?:var|let|const|function|return|if|else|for|while|do|break|continue|new|typeof|in|of|try|catch|throw|this|null|undefined|true|false|delete|instanceof)$/;
+  function paint(line, st) {
+    var out = "", i = 0, n = line.length, prev = "op", j, m, w;
+    var put = function (cls, text) { out += cls ? '<span class="' + cls + '">' + esc(text) + "</span>" : esc(text); };
+    while (i < n) {
+      var ch = line[i], two = line.substr(i, 2), rest;
+      if (st.block) { j = line.indexOf("*/", i); put("c", line.slice(i, j < 0 ? n : j + 2)); i = j < 0 ? n : j + 2; st.block = j < 0; continue; }
+      if (two === "//") { put("c", line.slice(i)); break; }
+      if (two === "/*") { st.block = true; continue; }
+      if (ch === '"' || ch === "'" || ch === "`") {
+        for (j = i + 1; j < n && line[j] !== ch; j++) if (line[j] === "\\") j++;
+        put("s", line.slice(i, j + 1)); i = j + 1; prev = "v"; continue;
+      }
+      if (ch === "/" && prev === "op") {            // a regular expression, not a division
+        var cls = false;
+        for (j = i + 1; j < n; j++) {
+          if (line[j] === "\\") { j++; continue; }
+          if (line[j] === "[") cls = true; else if (line[j] === "]") cls = false; else if (line[j] === "/" && !cls) break;
+        }
+        for (j++; j < n && /[a-z]/.test(line[j]); j++) { /* flags */ }
+        put("s", line.slice(i, j)); i = j; prev = "v"; continue;
+      }
+      rest = line.slice(i);
+      if ((m = /^[A-Za-z_$][\w$]*/.exec(rest))) {
+        w = m[0];
+        put(WORDS.test(w) ? "k" : /^\s*\(/.test(rest.slice(w.length)) ? "f" : "", w);
+        i += w.length; prev = /^(?:return|typeof|in|of|new|delete|throw|else|do)$/.test(w) ? "op" : "v"; continue;
+      }
+      if ((m = /^(?:0x[\da-f]+|\d+\.?\d*(?:e[+-]?\d+)?|\.\d+)/i.exec(rest))) { put("n", m[0]); i += m[0].length; prev = "v"; continue; }
+      out += esc(ch); i++;
+      if (!/\s/.test(ch)) prev = ch === ")" || ch === "]" || ch === "}" ? "v" : "op";
+    }
+    return out || " ";
+  }
+  function codeLines(text) {
+    var st = { block: false };
+    return text.split("\n").map(function (line) { return '<span class="l">' + paint(line, st) + "</span>"; }).join("");
+  }
+  function codeFind(text, name) {            // first and last line (from 0) of a function in a listing
+    var lines = text.split("\n"), re = new RegExp("^(\\s*)(?:function " + name + "\\(|Conditions\\.prototype\\." + name + " = function)"), i, j, m;
+    for (i = 0; i < lines.length; i++) {
+      m = re.exec(lines[i]);
+      if (!m) continue;
+      for (j = i + 1; j < lines.length; j++) if (lines[j] === m[1] + "}" || lines[j] === m[1] + "};") return [i, j];
+      return [i, i];
+    }
+    return null;
+  }
+  function codeShow(id, fn, jump) {
+    return codeLoad(id).then(function (text) {
+      var pre = $("code-pre"), box = $("code-box"), F = CODE[id];
+      if (reveal.on) reveal.on = false;            // reading a file takes over from the print-out; the calculation carries on
+      if (codeShown !== id) { pre.innerHTML = codeLines(text); codeShown = id; box.scrollTop = 0; }
+      $("code-what").innerHTML = "<b>" + esc(F.label) + "</b>: " + esc(F.what) + ". " + text.split("\n").length + " lines of JavaScript." +
+        ' <a href="' + F.src + '" download="' + esc(F.label) + '">Download ' + esc(F.label) + "</a>";
+      document.querySelectorAll("#code-files .chip").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.file === id ? "true" : "false"); });
+      $("code-fns").innerHTML = F.fns.map(function (f) {
+        return '<button type="button" class="chip" data-file="' + id + '" data-fn="' + f[0] + '" title="' + esc(f[1]) + '" aria-pressed="' + (f[0] === fn) + '">' + f[0] + "</button>";
+      }).join("");
+      pre.querySelectorAll(".l.hit").forEach(function (l) { l.classList.remove("hit"); });
+      var span = fn ? codeFind(text, fn) : null;
+      if (span) {
+        var ls = pre.children, i;
+        for (i = span[0]; i <= span[1]; i++) ls[i].classList.add("hit");
+        var doc = F.fns.filter(function (f) { return f[0] === fn; })[0];
+        $("code-what").innerHTML += " Showing <b>" + esc(fn) + "</b>" + (doc ? ": " + esc(doc[1]) : "") + ", lines " + (span[0] + 1) + " to " + (span[1] + 1) + ".";
+        box.scrollTop = Math.max(0, ls[span[0]].offsetTop - 28);
+      }
+      if (jump) $("code").scrollIntoView({ behavior: "smooth", block: "start" });
+    }).catch(function () { $("code-what").textContent = "The file could not be loaded."; });
+  }
+  function codeSetup() {
+    $("code-files").innerHTML = Object.keys(CODE).map(function (id) {
+      return '<button type="button" class="chip" data-file="' + id + '" aria-pressed="false" title="' + esc(CODE[id].what) + '">' + esc(CODE[id].label) + "</button>";
+    }).join("");
+    $("code-data").innerHTML = "Data files the page reads: " + [["redox/obigt_thermo.csv", "the reaction database"], ["redox/measured_library.csv", "measured values from the other databases"],
+      ["redox/base_crosscheck.csv", "how far the databases agree"], ["redox/ima_minerals.csv", "the IMA list with the formula used for each mineral"],
+      ["redox/estimator_model.json", "the fitted numbers of the estimate"]].map(function (f) {
+        return '<a href="' + f[0] + '" target="_blank" rel="noopener">' + f[0].replace("redox/", "") + "</a> (" + f[1] + ")";
+      }).join(", ") + '. All of it is in the <a href="https://github.com/zakite/zakite.github.io/tree/main/redox" target="_blank" rel="noopener">public repository</a>.';
+    document.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-file]");
+      if (!b) return;
+      codeShow(b.dataset.file, b.dataset.fn || null, !b.closest("#code"));
+    });
+    codeShow("engine", null, false);
+  }
+
+  // The loading animation of "Run every IMA mineral": the three files print out line by line while the minerals are computed.
+  // It is a delayed reveal of the listing, paced by the real progress of the calculation: the print-out stops at each
+  // for or while loop, with a spinner, until the calculation has got as far through the list as the print-out is through
+  // the code. The lines shown are not being traced one by one; the code that runs is the code shown.
+  var reveal = { on: false };
+  function outputAll() {
+    var btn = $("run-all"), status = $("code-run-status"), pre = $("code-pre"), box = $("code-box");
+    var still = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var prog = { frac: 0, count: 0, total: S.imaList.length, done: false }, t0 = Date.now(), fmt = function (v) { return v.toLocaleString("en-US"); };
+    if (btn.disabled) return;
+    btn.disabled = true;
+    Promise.all(Object.keys(CODE).map(codeLoad)).then(function (texts) {
+      var lines = [], st;
+      Object.keys(CODE).forEach(function (id, k) {
+        st = { block: false };
+        lines.push({ html: "// " + esc(CODE[id].label) + ": " + esc(CODE[id].what), head: true });
+        texts[k].split("\n").forEach(function (t) { lines.push({ html: paint(t, st), loop: /^\s*(?:for|while)\s*\(|\bdo\s*\{/.test(t) }); });
+      });
+      var i = 0, gate = null, gateAt = 0, gone = 0, KEEP = 150;      // only the last KEEP lines stay in the page while it prints: cheap to draw
+      var finish = function () {
+        if (reveal.on) {                         // the whole listing, once, at the end
+          pre.style.counterReset = "";
+          pre.innerHTML = lines.map(function (L) { return '<span class="l' + (L.head ? " head" : "") + '">' + L.html + "</span>"; }).join("");
+          box.scrollTop = box.scrollHeight;
+          $("code-what").innerHTML = "<b>Done.</b> This is all of the code that was run. Pick a file above to read or download it.";
+        }
+        reveal.on = false; btn.disabled = false;
+        status.innerHTML = "<b>" + fmt(prog.total) + "</b> minerals computed in " + ((Date.now() - t0) / 1000).toFixed(1) + " s. The list above is filled in.";
+        $("all-list").scrollIntoView({ behavior: still ? "auto" : "smooth", block: "start" });
+      };
+      var label = function () { return '<span class="spin"></span>' + fmt(prog.count) + " of " + fmt(prog.total) + " minerals"; };
+      if (still) { status.innerHTML = label(); }
+      else {
+        reveal.on = true; codeShown = null; pre.innerHTML = ""; $("code-fns").innerHTML = "";
+        document.querySelectorAll("#code-files .chip").forEach(function (b) { b.setAttribute("aria-pressed", "false"); });
+        $("code-what").innerHTML = "<b>Running.</b> The three files print out while every mineral is computed.";
+      }
+      var tick = function () {
+        if (!reveal.on) { if (prog.done) finish(); else { status.innerHTML = label(); setTimeout(tick, 120); } return; }
+        var target = prog.done ? lines.length : Math.floor(prog.frac * lines.length), now = Date.now(), n = 0, el;
+        status.innerHTML = label();
+        if (gate) {                              // waiting at a loop
+          if (now - gateAt < (prog.done ? 20 : 130) || (!prog.done && target <= i)) { gate.lastChild.innerHTML = label(); setTimeout(tick, 60); return; }
+          gate.lastChild.remove(); gate = null;
+        }
+        for (; i < lines.length && n < (prog.done ? 90 : target - i > 150 ? 36 : 11) && !gate; i++, n++) {
+          el = document.createElement("span"); el.className = "l" + (lines[i].head ? " head" : ""); el.innerHTML = lines[i].html;
+          if (lines[i].loop) { el.insertAdjacentHTML("beforeend", '<span class="wait">' + label() + "</span>"); gate = el; gateAt = now; }
+          pre.appendChild(el);
+          if (pre.children.length > KEEP) { pre.firstChild.remove(); gone++; }
+        }
+        pre.style.counterReset = "ln " + gone;
+        if (i >= lines.length && !gate) {
+          if (prog.done) { finish(); return; }
+          el = document.createElement("span"); el.className = "l"; el.innerHTML = '<span class="wait" style="margin-left:0">' + label() + "</span>"; pre.appendChild(el); gate = el; gateAt = now;
+        }
+        box.scrollTop = box.scrollHeight;
+        setTimeout(tick, 45);
+      };
+      batchAll({ progress: function (frac, count, total) { prog.frac = frac; prog.count = count; prog.total = total; }, done: function () { prog.done = true; if (still) finish(); } });
+      if (!still) tick(); else setTimeout(function wait() { if (!prog.done) { status.innerHTML = label(); setTimeout(wait, 150); } }, 150);
+    }).catch(function () { btn.disabled = false; status.textContent = "The code could not be loaded, so nothing was run."; });
+  }
+
+  // ----------------------------------------------------------- the print-out
+  // A short calculating effect when a new result appears: the headline number runs through digits while the steps of the
+  // calculation are named, then the card prints out block by block. Display only. The answer is computed before it starts,
+  // the region is marked busy for screen readers until it ends, and it is skipped where the system asks for less motion.
+  var printing = { key: "", timers: [] };
+  function printOut(sp, res, c, key, when) {   // when: "always" (asked for), "new" (typed: only for a new result), "never" (a formula half typed)
+    var box = $("result"), card = box.querySelector(".verdict"), val = card && card.querySelector(".val");
+    printing.timers.forEach(clearTimeout); printing.timers = [];
+    box.classList.remove("calc", "printing"); box.removeAttribute("aria-busy");
+    var same = key === printing.key;
+    printing.key = key;
+    if (!val || when === "never" || (same && when !== "always") || (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches)) return;
+    var eq = res.fuel ? res.O2 : res.oxidant ? res.H2 : res.deep ? res.deep.eq : null, final = val.textContent;
+    var lines = ["reading " + sp.formula, (sp.heavy.length ? c.candidates(sp).length : 1) + " species share its elements", "finding the lowest-energy mix",
+                 eq && eq.n ? MR.g4(Math.abs(eq.n)) + " electrons per formula unit" : "no electrons move"];
+    var log = document.createElement("div"), STEP = 115, CALC = STEP * lines.length + 60;
+    var at = function (ms, f) { printing.timers.push(setTimeout(f, ms)); };
+    log.className = "calclog"; log.setAttribute("aria-hidden", "true");
+    card.querySelector(".stack").prepend(log);
+    box.classList.add("calc"); box.setAttribute("aria-busy", "true");
+    lines.forEach(function (t, i) { at(i * STEP, function () { var d = document.createElement("div"); d.textContent = t; log.appendChild(d); }); });
+    var spin = function () {            // digits run, the sign and the decimal point stay where they are
+      val.textContent = final.replace(/\d/g, function () { return String(Math.floor(Math.random() * 10)); });
+      at(45, spin);
+    };
+    if (/\d/.test(final)) spin();
+    at(CALC, function () {
+      printing.timers.forEach(clearTimeout); printing.timers = [];
+      val.textContent = final; log.remove();
+      var blocks = Array.prototype.slice.call(card.querySelector(".stack").children).concat(Array.prototype.slice.call(box.children).filter(function (x) { return x !== card; }));
+      blocks.forEach(function (x, i) { x.classList.add("p-in"); x.style.setProperty("--i", i); });
+      box.classList.remove("calc"); box.classList.add("printing"); box.removeAttribute("aria-busy");
+      at(340 + 75 * blocks.length + 80, function () {
+        box.classList.remove("printing");
+        blocks.forEach(function (x) { x.classList.remove("p-in"); x.style.removeProperty("--i"); });
+      });
+    });
+  }
+
+  function blank(html) {
+    $("result").innerHTML = '<div class="panel">' + html + "</div>";
+    $("partners-out").innerHTML = $("numbers-out").innerHTML = $("sources-out").innerHTML = '<p class="hint">Nothing to show yet.</p>';
+  }
+
+  function missing(text, r, fb) {
+    var msg, calm = fb && fb.shape && fb.shape.inert;
+    if (calm) {
+      msg = "<b>" + esc(text) + "</b> has no measured formation energy and cannot be estimated (" + esc(fb.reason) +
+        "). Its number is 0 all the same: none of its elements gains or loses electrons in water, so no formation energy is needed.";
+    } else if (fb) {
+      msg = "<b>" + esc(text) + "</b> has no measured formation energy and cannot be estimated (" + esc(fb.reason) + ")." +
+        (fb.shape ? " From its formula it would be " + (fb.shape.fuel ? "a fuel that gives up " + count(fb.shape.fuel) : "an oxidant that takes " + count(fb.shape.oxidant)) +
+          " electrons per formula unit, but the number itself needs a formation energy." : "");
+    } else {
+      msg = "<b>" + esc(text) + "</b> is not in the database. Give its formula and the calculator will work from a measured mineral of the same formula, or from an estimate. If you typed a formula, check the capitals: FeS2, not fes2.";
+    }
+    $("result").innerHTML = '<div class="panel stack"><div class="' + (calm ? "note" : "error") + '">' + msg + "</div>" +
+      addForm(r.readable ? "" : text, r.readable ? text : "", false) + "</div>";
+    $("partners-out").innerHTML = $("numbers-out").innerHTML = $("sources-out").innerHTML = '<p class="hint">Nothing to show yet.</p>';
+  }
+
+  function renderVerdict(sp, pr, res, c, info) {
+    var el = $("result");
+    if (!pr) { el.innerHTML = '<div class="panel">This partner needs a species that is not in the database.</div>'; return; }
+    var p = pr.partner, v = pr.verdict, name = esc(sp.name), label = fmtLabel(meets(p)), full = fmtLabel(p.label);
+    var head, body = "", facts = "", rxn = "", sum = "";
+    var mine = p.role === "acceptor" ? res.fuel : res.oxidant;
+    var pn = partnerNumber(pr, c), total = mine ? round1(round1(mine.number) + round1(pn)) : null;
+    var terms = mine ? name + " <b>" + signed(mine.number, 1) + "</b> plus " + label + " <b>" + signed(pn, 1) + "</b>" : "";
+    if (pr.volts !== null) {
+      var z = pr.zone, per = num(pr.kJ_per_partner, 1) + " kJ per mole of partner reaction";
+      head = z === "green" ? "Yes. There is energy here." : z === "yellow" ? "Yes, but near the limit." : "Yes on paper, but under the limit for life.";
+      body = (p.role === "acceptor" ? name + " gives electrons to " + label : label + " gives electrons to " + name) + ": " + per +
+        (z === "green" ? ", above the 20 kJ it costs to move one ion across a membrane."
+          : z === "yellow" ? ", in the 10 to 20 kJ range, the lowest microbes are seen living on."
+          : ", under the 10 kJ that the hardiest known microbes need.");
+      facts = '<div class="facts"><span><b>' + num(pr.kJ_per_e, 1) + "</b> kJ per mole of electrons</span><span><b>" +
+        count(pr.electrons) + "</b> electrons per formula unit</span><span><b>" + Math.round(pr.total).toLocaleString("en-US") +
+        "</b> kJ per mole of " + name + "</span><span>on the hydrogen scale (SHE): partner <b>" + signed(pr.E_partner, 3) + " V</b>, mineral <b>" +
+        signed(p.role === "acceptor" ? pr.E_partner - pr.volts : pr.E_partner + pr.volts, 3) + " V</b></span></div>";
+      var solids = solidsOf(pr.eq);
+      rxn = '<div class="rxn">' + eqHtml(MR.pairTerms(sp, pr)) + "</div>" +
+        (solids.length ? '<p class="hint">Solid products: ' + esc(solids.join(", ")) + ".</p>" : "");
+    } else if (pr.reverse) {
+      head = "No, not in this direction.";
+      body = p.role === "acceptor"
+        ? "Both are oxidants here, so no electrons move. Try an electron donor such as H<sub>2</sub> or acetate."
+        : "Both are reductants here, so no electrons move. Try an electron acceptor such as O<sub>2</sub> or nitrate.";
+    } else {
+      head = "No. Nothing to gain.";
+      body = "No electrons move between " + name + " and this partner (" + signed(pr.E_partner, 3) + " V vs SHE).";
+    }
+    var banner = "";
+    if (info) {
+      var ue = uEff(info.u, res), held = info.u > 0 && ue === 0;
+      var uV = pr.volts !== null ? ue / pr.electrons / MR.F : null;
+      var uG = (info.u < 10 ? info.u.toFixed(1) : Math.round(info.u)) + " kJ/mol";
+      // the give-or-take of this reaction, per electron: the formation energy's own uncertainty shared among the electrons that move
+      var pmE = uV !== null ? "\u00b1" + (uV * MR.F).toFixed(1) + " kJ per mol e<sup>\u2212</sup> (\u00b1" + uV.toFixed(3) + " V)" : "";
+      var pm = held ? "That does not reach the value, which is set by what the mineral turns into in water"
+        : uV !== null ? "On this reaction that comes to " + pmE : "\u00b1" + uG;
+      var open = uV !== null && uV >= pr.volts;
+      var L = info.lib, X = info.cross, text;
+      if (X) text = pr.volts === null || held ? "" : pmE + (X.ind > 1 ? ": the spread between " + X.n + " databases." : ": the usual gap between databases.");
+      else if (L) text = "Measured: \u0394<sub>f</sub>G " + num(sp.G, 1) + " kJ/mol from " + esc(L.db) +
+        (L.n > 1 ? " (" + L.n + " databases list it)" : "") + (L.evaluated ? "" : ", an older compilation") + ". " + pm + ".";
+      else if (info.basis === "moved" && info.how === "water") text = "Measured by solubility as " + esc(info.from.name) + ", " + fmtFormula(info.from.formula) + " (" + esc(info.from.lib.db) +
+        "). A solubility does not depend on how much water the formula is written with, so the water of the ideal formula is counted as liquid water: \u0394<sub>f</sub>G " +
+        num(sp.G, 1) + " kJ/mol. " + (uV !== null || held ? pm + "." : "");
+      else if (info.basis === "moved") text = "Measured at a nearby composition: " + esc(info.from.name) + ", " + fmtFormula(info.from.formula) + ", \u0394<sub>f</sub>G " + num(info.from.G, 1) +
+        " kJ/mol. Moved to the ideal formula with the formula model: \u0394<sub>f</sub>G " + num(sp.G, 1) + " \u00b1 " + Math.round(info.u) + " kJ/mol. " + (uV !== null || held ? pm + "." : "");
+      else if (info.basis === "element") text = "Native element: its formation energy is zero by definition.";
+      else text = (info.basis === "proxy" ? "<b>No measurement under this name.</b> " : "<b>No measured formation energy.</b> ") + (info.basis === "proxy"
+          ? "Using " + esc(info.twin) + ", which has the same formula. " + pm + "."
+          : "Estimated from the formula: \u0394<sub>f</sub>G " + (info.u >= 5 ? num(Math.round(sp.G), 0) : num(sp.G, 1)) + " \u00b1 " +
+            (info.u >= 5 ? Math.round(info.u) : info.u.toFixed(1)) + " kJ/mol. " + (uV !== null || held ? pm + "." : "")) +
+        (pr.volts === null && !held && info.range && info.range.flip ? " A better value could change this answer." : "") +
+        info.flags.map(function (f) { return " " + esc(f.charAt(0).toUpperCase() + f.slice(1)) + "."; }).join("");
+      banner = text ? '<div class="' + (open || !X ? "note" : "fine") + '">' + text + (open ? " <b>That is as large as the gap, so the answer is open.</b>" : "") + "</div>" : "";
+    }
+    var zAttr = pr.zone ? ' data-z="' + pr.zone + '"' : "";
+    var sd = res.fuel || res.oxidant || res.deep, sE = sd ? sd.E : null;
+    var blind = !sd ? res.notes.filter(function (n) { return /^no data for /.test(n); })[0] : null;
+    var score = sd ? signed(res.number, 1) : blind ? "no value" : "0";
+    var side = !sd ? "" : res.fuel ? " Reduced side: O<sub>2</sub> oxidizes it."
+      : res.deep && res.deep.up ? " O<sub>2</sub> cannot oxidize it: that only starts above O<sub>2</sub>."
+      : res.number > 0 ? " A stronger oxidant than O<sub>2</sub>: it can take electrons from water."
+      : " Oxidized side: O<sub>2</sub> does nothing to it.";
+    var spm = sd && info && info.range && info.range.pm >= 0.05 ? info.range.pm : 0;      // give-or-take of the redox value itself
+    var scoreLine = (blind ? '<p class="score">No redox value: there is ' + esc(blind.replace(/, so .*$/, "")) + ".</p>"
+      : '<p class="score">Redox value against O<sub>2</sub>: <b>' + score + "</b>" + (spm ? " \u00b1 " + spm.toFixed(1) : "") + " kJ per mol e<sup>−</sup>" +
+        (sd ? " = <b>" + signed(res.number / MR.F, 3) + "</b>" + (spm ? " \u00b1 " + (spm / MR.F).toFixed(3) : "") + " <b>V</b>." : ".") + side + "</p>") +
+      (info && info.range && info.range.flip ? '<p class="score"><b>The sign is not settled.</b> Within the uncertainty of its formation energy the value runs from ' +
+        signed(Math.min(info.range.lo, info.range.hi), 1) + " to " + signed(Math.max(info.range.lo, info.range.hi), 1) + ".</p>" : "") +
+      (res.breakdown && res.breakdown.dG < -1 ? '<p class="score">Left on its own in water it turns into ' + esc(res.breakdown.products.map(function (q) { return q[0].name; }).join(", ")) +
+        (info && placeholder(info.flags) ? " with no electrons moving. That is not a redox change, so its energy is not counted."
+          : ", releasing <b>" + num(-res.breakdown.dG, 1) + "</b> kJ/mol with no electrons moving. That is not redox energy and is not counted." +
+            (sd && -res.breakdown.dG / sd.n < 100 && (res.number - res.breakdown.dG / sd.n) * res.number > 0 ? " (Counted, the value would be " + signed(res.number - res.breakdown.dG / sd.n, 1) + ".)" : "")) + "</p>" : "");
+    el.innerHTML = '<div class="panel stack verdict" data-v="' + v + '"' + zAttr + ">" +
+      '<div class="volts">' + (pr.volts !== null ? '<span class="val">' + num(pr.volts, 2) + "</span><small>V</small>" + '<span class="per">' + num(pr.kJ_per_e, 1) + " kJ per mol e<sup>−</sup></span>" : '<span class="val">' + score + "</span>" + (blind ? "" : '<span class="per">kJ per mol e<sup>−</sup> against O<sub>2</sub></span>')) + "</div>" +
+      '<div class="stack"><div class="row"><span class="pill" data-v="' + v + '"' + zAttr + ">" + (v === "no reaction" ? "no" : v) + "</span>" +
+      '<span class="hint">' + name + " with " + full + ", pH " + S.pH + ", dissolved species " + solutesText() + "</span></div>" +
+      '<div class="answer">' + head + "</div><p>" + body + "</p>" + scoreLine + "</div></div>" + banner +
+      (facts || rxn || sum ? '<div class="panel stack">' + facts + rxn + sum + "</div>" : "");
+  }
+
+  // The redox ladder. The scale is fixed and ends at its two ends: H2 at the bottom, O2 at the top, with CO2 / CH4 marked
+  // between them, the three couples most readers know. The other partner couples are the thinner rungs on the left; the
+  // mineral is on the right. Nothing is drawn outside the scale: water itself reacts there, so a rung below H2 or above O2
+  // would not be a place anything in water can sit. A mineral or partner that falls outside is named in a line under the drawing.
+  function ladderSvg(pairs, sp, res, c) {
+    var all = pairs.filter(Boolean), rungs = [], KEY = { "O2 / H2O": "O₂", "H+ / H2": "H₂", "CO2 / CH4": "CO₂ / CH₄" };
+    all.forEach(function (pr) {
+      var cp = coupleOf(pr.partner), name = KEY[cp] || plainLabel(cp), hit = rungs.filter(function (r) { return Math.abs(r.E - pr.E_partner) < 0.0005; })[0];
+      if (hit) {                                 // the same rung: the same couple run the other way, or two couples at one potential
+        hit.ids.push(pr.partner.id);
+        if (hit.names.indexOf(name) < 0) { hit.names.push(name); hit.label = hit.names.join(", "); }
+        return;
+      }
+      rungs.push({ E: pr.E_partner, names: [name], label: name, key: cp in KEY, ids: [pr.partner.id] });
+    });
+    var mine = [];
+    if (res.fuel) mine.push({ E: res.fuel.E, label: sp.name + " as fuel" });
+    if (res.oxidant) mine.push({ E: res.oxidant.E, label: sp.name + " as oxidant" });
+    var sel = all.filter(function (pr) { return pr.partner.id === S.partner; })[0];
+    var gap = sel && sel.volts !== null && sel.zone ? { a: sel.E_partner, b: sel.partner.role === "acceptor" ? sel.E_partner - sel.volts : sel.E_partner + sel.volts } : null;
+    var hi = c.E_O2, lo = c.E_H2, inside = function (r) { return r.E <= hi + 1e-6 && r.E >= lo - 1e-6; }, notes = [];
+    var W = 760, top = 30, bottom = 30, X = 330, H = 500;
+    var y = function (E) { return top + (hi - Math.min(hi, Math.max(lo, E))) / (hi - lo) * (H - top - bottom); };
+    mine.forEach(function (r) {
+      if (r.E < lo - 1e-6) notes.push(esc(sp.name) + " is not on this scale: it sits below H<sub>2</sub>, so it gives its electrons to water itself, releasing H<sub>2</sub>.");
+      else if (r.E > hi + 1e-6) notes.push(esc(sp.name) + " is not on this scale: it sits above O<sub>2</sub>, so it takes electrons from water itself, releasing O<sub>2</sub>.");
+    });
+    if (!mine.length) notes.push(esc(sp.name) + " is not on this scale: neither O<sub>2</sub> nor H<sub>2</sub> moves electrons to or from it.");
+    rungs.forEach(function (r) {
+      if (!inside(r) && sel && r.ids.indexOf(sel.partner.id) >= 0) notes.push(fmtLabel(coupleOf(sel.partner)) + " falls just outside the scale at these concentrations and is not drawn.");
+    });
+    rungs = rungs.filter(inside); mine = mine.filter(inside);
+    function spread(items, gapPx) {                 // keep labels apart
+      items.sort(function (a, b) { return a.y - b.y || b.E - a.E; });
+      var i;
+      for (i = 0; i < items.length; i++) items[i].ly = i ? Math.max(items[i].y, items[i - 1].ly + gapPx(items[i - 1], items[i])) : items[i].y;
+      for (i = items.length - 1; i >= 0; i--) items[i].ly = Math.min(items[i].ly, i === items.length - 1 ? items[i].y : items[i + 1].ly - gapPx(items[i], items[i + 1]));
+      return items;
+    }
+    rungs.forEach(function (r) { r.y = y(r.E); }); mine.forEach(function (r) { r.y = y(r.E); });
+    var color = gap ? (sel.zone === "green" ? "var(--yes)" : sel.zone === "yellow" ? "#F2D45C" : "var(--no)") : "";
+    var yO = y(c.E_O2), yH = y(c.E_H2);
+    var g = '<line x1="' + X + '" y1="' + yO.toFixed(1) + '" x2="' + X + '" y2="' + yH.toFixed(1) + '" stroke="var(--muted)" stroke-width="3"/>';
+    spread(rungs, function (a, b) { return a.key || b.key ? 19 : 15; }).forEach(function (r) {
+      var on = sel && r.ids.indexOf(sel.partner.id) >= 0, w = r.key ? 16 : 7;
+      g += '<line x1="' + (X - w) + '" y1="' + r.y.toFixed(1) + '" x2="' + (r.key ? X + w : X) + '" y2="' + r.y.toFixed(1) + '" stroke="var(--' + (r.key ? "ink" : "muted") + ')" stroke-width="' + (r.key ? 3 : 1.5) + '"/>' +
+        '<line x1="' + (X - 16 - (r.key ? 6 : 0)) + '" y1="' + r.ly.toFixed(1) + '" x2="' + (X - w) + '" y2="' + r.y.toFixed(1) + '" stroke="var(--muted)" stroke-opacity="0.45"/>' +
+        '<text class="' + (r.key ? "key" : on ? "on" : "") + '" x="' + (X - 26) + '" y="' + (r.ly + (r.key ? 5 : 4)).toFixed(1) + '" text-anchor="end">' + esc(r.label) + "  " + signed(r.E, 3) + " V</text>";
+    });
+    spread(mine, function () { return 16; }).forEach(function (r) {
+      g += '<line x1="' + X + '" y1="' + r.y.toFixed(1) + '" x2="' + (X + 22) + '" y2="' + r.y.toFixed(1) + '" stroke="var(--accent)" stroke-width="3"/>' +
+        '<text class="me" x="' + (X + 28) + '" y="' + (r.ly - 6).toFixed(1) + '">' + esc(r.label) + "  " + signed(r.E, 3) + " V</text>";
+    });
+    if (gap) {
+      var ya = y(gap.a), yb = y(gap.b), bx = X + 300, mid = (ya + yb) / 2;
+      g += '<line x1="' + X + '" y1="' + ya.toFixed(1) + '" x2="' + bx + '" y2="' + ya.toFixed(1) + '" stroke="var(--line)" stroke-dasharray="3 4"/>' +
+        '<line x1="' + X + '" y1="' + yb.toFixed(1) + '" x2="' + bx + '" y2="' + yb.toFixed(1) + '" stroke="var(--line)" stroke-dasharray="3 4"/>' +
+        '<line x1="' + bx + '" y1="' + ya.toFixed(1) + '" x2="' + bx + '" y2="' + yb.toFixed(1) + '" stroke="' + color + '" stroke-width="5" stroke-linecap="round"/>' +
+        '<text class="on" x="' + (bx + 12) + '" y="' + (mid - 3).toFixed(1) + '">' + num(sel.kJ_per_e, 1) + " kJ per mol e⁻</text>" +
+        '<text x="' + (bx + 12) + '" y="' + (mid + 13).toFixed(1) + '">gap ' + num(sel.volts, 3) + " V</text>";
+    }
+    return '<svg class="ladder" viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="Redox ladder from H2 at the bottom to O2 at the top: partner couples and ' + esc(sp.name) + ' by potential">' + g + "</svg>" +
+      (notes.length ? '<p class="hint">' + notes.join(" ") + "</p>" : "");
+  }
+
+  function renderPartners(pairs, c, sp, res) {
+    var all = pairs.filter(Boolean), out = $("partners-out");
+    var good = all.filter(function (pr) { return pr.verdict === "yes"; })
+      .sort(function (a, b) { return b.volts - a.volts; });
+    var html = ladderSvg(pairs, sp, res, c) + "<h3>Partners that give energy</h3>";
+    if (good.length) {
+      html += '<div class="scroll"><table class="pick"><thead><tr><th>Partner</th><th>The mineral is the</th><th class="num">Gap</th><th class="num">kJ per mol e<sup>−</sup></th><th>Energy?</th></tr></thead><tbody>' +
+        good.map(function (pr) {
+          var p = pr.partner;
+          return '<tr tabindex="0" data-id="' + esc(p.id) + '" aria-selected="' + (p.id === S.partner) + '"><td>' + fmtLabel(p.label) +
+            "</td><td>" + (p.role === "acceptor" ? "electron donor" : "electron acceptor") + '</td><td class="num">' + num(pr.volts, 3) +
+            ' V</td><td class="num">' + num(pr.kJ_per_e, 1) + '</td><td><span class="pill" data-v="yes" data-z="' + pr.zone + '" title="' +
+            num(pr.kJ_per_partner, 1) + ' kJ per mole of partner reaction">yes</span></td></tr>';
+        }).join("") + "</tbody></table></div>" +
+        '<div class="zones"><span>Color is the energy per mole of partner reaction:</span><span><span class="pill" data-z="green">yes</span> 20 kJ or more</span><span><span class="pill" data-z="yellow">yes</span> 10 to 20</span>' +
+        '<span><span class="pill" data-z="red">yes</span> under 10, below what life is known to use</span></div>' +
+        '<p class="hint">Click a row to see that gap on the ladder.' +
+        (all.length > good.length ? " No energy with the other " + (all.length - good.length) + " partners." : "") + "</p>";
+    } else {
+      html += "<p>None. " + esc(sp.name) + " gives no energy with any of the " + all.length + " partners at these conditions.</p>";
+    }
+    out.innerHTML = '<div class="stack">' + html + "</div>";
+  }
+
+  function renderNumbers(sp, res, info) {
+    var c0 = cond();
+    var solo = !(res.fuel && res.oxidant);
+    function tile(title, d, eq, gas) {
+      var inner;
+      if (!d) return "";
+      {
+        var solids = solidsOf(eq);
+        inner = '<div class="big">' + signed(d.number, 1) + " <small>kJ per mol e<sup>−</sup></small></div>" +
+          '<div class="facts"><span>couple at <b>' + signed(d.E, 3) + " V</b> vs SHE</span><span><b>" + count(d.n) + "</b> electrons</span>" +
+          (d.total ? "<span><b>" + Math.round(d.total).toLocaleString("en-US") + "</b> kJ per mole</span>" : "") + "</div>" +
+          '<div class="rxn">' + eqHtml(MR.arrange.apply(null, MR.gasTerms(sp, eq, gas))) + "</div>" +
+          (solids.length ? '<p class="hint">Solid products: ' + esc(solids.join(", ")) + ".</p>" : "");
+      }
+      return '<div class="tile">' + (solo ? inner.replace(/^<div class="big">.*?<\/div>/, "") : "<h3>" + title + "</h3>" + inner) + "</div>";
+    }
+    var notes = res.notes.map(function (n) { return '<div class="note">' + esc(sp.name) + ": " + esc(n) + ".</div>"; }).join("");
+    var why = res.role === "fuel" ? "O<sub>2</sub> can oxidize it." + (res.oxidant ? " H<sub>2</sub> can also reduce it." : "")
+        : res.role === "oxidant" ? "H<sub>2</sub> can reduce it." : "Neither O<sub>2</sub> nor H<sub>2</sub> changes it.";
+    var rd = res.fuel || res.oxidant || res.deep;
+    if (rd) why += " On the hydrogen scale (SHE) its couple is at " + signed(rd.E, 3) + " V and O<sub>2</sub> at " + signed(c0.E_O2, 3) + " V: " +
+      num(Math.abs(res.number / MR.F), 3) + " V apart" + (res.fuel ? "." : res.number > 0 ? ". Positive because the couple is above O<sub>2</sub>: it is a stronger oxidant than O<sub>2</sub>."
+        : res.deep && res.deep.up ? ". Negative because the couple is above O<sub>2</sub>." : ". Negative because the mineral is the oxidized side.");
+    var tiles = tile("Fuel number (against O<sub>2</sub>)", res.fuel, res.O2, "O2") + tile("Oxidant number (against H<sub>2</sub>)", res.oxidant, res.H2, "H2");
+    $("numbers-out").innerHTML = '<div class="stack"><div class="headline"><span class="bignum">' +
+      (res.role === "inert" && !res.deep ? "0" : signed(res.number, 1)) + '</span><span class="pm">kJ per mol e<sup>−</sup> = ' +
+      (res.role === "inert" && !res.deep ? "0" : signed(res.number / MR.F, 3)) + " V</span>" +
+      (info && info.range && info.range.pm >= 0.05 ? '<span class="pm">\u00b1' + info.range.pm.toFixed(1) + (info.basis === "library" || info.basis === "measured" ? " (spread between databases)" : info.basis === "proxy" ? " (stand-in value)" : " (estimate)") + "</span>" : "") +
+      '<span class="pill" data-v="role">' + res.role + "</span>" +
+      '<span class="hint">' + esc(sp.name) + ", pH " + S.pH + ", dissolved species " + solutesText() + ". " + why + "</span></div>" +
+      (tiles ? '<div class="two">' + tiles + "</div>" : "") + notes + "</div>";
+  }
+
+  function sourceCell(s) {
+    if (s.ref === "user") return "<b>added by hand</b>: " + esc(s.citation);
+    if (s.ref === "estimate") return "<b>estimate, not measured</b>: from the formula";
+    if (s.ref === "stand-in") return "<b>stand-in, not measured for this mineral</b>: " + esc(s.citation);
+    if (s.ref === "moved") return "<b>measured, brought to the ideal formula</b>: " + esc(s.citation);
+    if (s.lib) return "<b>second database</b>: " + esc(s.citation) + (s.lib.n > 1 ? '. <span class="hint">All databases: ' + esc(s.lib.all) + "</span>" : "");
+    return esc(s.citation) + ' <span class="hint">[' + esc(s.ref) + "]</span>";
+  }
+
+  function renderSources(sp, res, pr) {
+    var used = Object.create(null);
+    var add = function (s) { used[s.name + "|" + s.state] = s; };
+    add(sp); add(S.water);
+    [res.O2, res.H2].concat(pr ? [pr.eq] : []).forEach(function (eq) { eq.products.forEach(function (p) { add(p[0]); }); });
+    if (pr) pr.couple.ox.concat(pr.couple.red).forEach(function (p) { add(p[0]); });
+    var rows = Object.keys(used).map(function (k) { return used[k]; })
+      .sort(function (a, b) { return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1; });
+    $("sources-out").innerHTML = '<div class="scroll"><table class="sources"><thead><tr><th>Species</th><th>Formula</th><th class="num">&Delta;<sub>f</sub>G (kJ/mol)</th><th>Source</th></tr></thead><tbody>' +
+      rows.map(function (s) {
+        return "<tr><td>" + esc(s.name) + "</td><td>" + fmtFormula(s.formula) + '</td><td class="num">' + num(s.G, 3) + "</td><td>" + sourceCell(s) + "</td></tr>";
+      }).join("") + "</tbody></table></div>";
+  }
+
+  // -------------------------------------------------------------------- batch
+  function toNumber(text, d) {
+    text = String(text === undefined || text === null ? "" : text).replace(/−/g, "-").trim();
+    if (d !== "," && /^-?\d+,\d+$/.test(text)) text = text.replace(",", ".");
+    return text === "" ? NaN : Number(text);
+  }
+
+  // Turn the pasted text into entries: plain lookups, or values the user supplies.
+  // Work is done in turns of about 40 ms so that the page can draw in between; hop() starts the next turn.
+  var hop = (function () {
+    if (typeof MessageChannel === "undefined") return function (f) { setTimeout(f, 0); };
+    var ch = new MessageChannel(), queue = [];
+    ch.port1.onmessage = function () { var f = queue.shift(); if (f) f(); };
+    return function (f) { queue.push(f); ch.port2.postMessage(0); };
+  })();
+  function runBatch(rows, notes, watch, share) {   // watch: { progress(fraction, count, total), done() }; share: the part of the bar already used
+    readControls();
+    $("batch-status").textContent = "Computing…";
+    $("batch-out").innerHTML = '<div class="batch-out empty"><p class="hint">Computing. The list appears here when the run is complete.</p></div>';
+    $("batch-actions").hidden = true; $("csv-hint").hidden = true;
+    $("csvbox").classList.remove("show"); $("csvbox-label").hidden = true; $("csv-status").textContent = "";
+    setTimeout(function () {
+      var c = cond(), t0 = Date.now(), cache = new Map(), i = 0, from = share || 0;
+      (function turn() {
+        var t = Date.now(), r;
+        while (i < rows.length && Date.now() - t < 40) {
+          r = rows[i++];
+          MD.evaluate([r], c, cache);
+        }
+        if (watch) watch.progress(from + (1 - from) * i / Math.max(1, rows.length), i, rows.length);
+        if (i < rows.length) { hop(turn); return; }
+        S.batch = { rows: rows, partner: partnerById(S.partner), pH: S.pH, solutes: S.solutes, ms: Date.now() - t0 };
+        showBatch(notes || []);
+        if (watch) watch.done();
+      })();
+    }, 30);
+  }
+
+  function showBatch(notes) {
+    var b = S.batch;
+    var done = b.rows.filter(function (r) { return r.status === "computed"; });
+    var none = b.rows.filter(function (r) { return r.status === "no data"; });
+    var failed = b.rows.filter(function (r) { return r.status === "not computed"; });
+    var counts = { fuel: 0, oxidant: 0, inert: 0 }, basis = { measured: 0, library: 0, moved: 0, proxy: 0, estimate: 0, inert: 0, element: 0 };
+    done.forEach(function (r) { counts[r.inertOnly ? "inert" : r.res.role]++; basis[r.basis || "measured"]++; });
+    $("batch-status").innerHTML = "<b>" + done.length + "</b> computed at pH " + b.pH + ", dissolved species " + solutesText() + ": " +
+      plural(counts.fuel, "fuel") + ", " + plural(counts.oxidant, "oxidant") + ", " + counts.inert + " inert. Basis: <b>" + basis.measured + "</b> measured" +
+      (basis.library ? ", <b>" + basis.library + "</b> measured in another database" : "") +
+      (basis.moved ? ", <b>" + basis.moved + "</b> measured at another water content or a nearby composition and brought to the ideal formula" : "") +
+      (basis.proxy ? ", <b>" + basis.proxy + "</b> from a measured mineral of the same formula" : "") +
+      (basis.estimate ? ", <b>" + basis.estimate + "</b> estimated from the formula" : "") +
+      (basis.element ? ", <b>" + basis.element + "</b> native elements" : "") +
+      (basis.inert ? ", <b>" + basis.inert + "</b> inert whatever their formation energy" : "") + "." +
+      (none.length ? " <b>" + none.length + "</b> without a value." : "") +
+      (failed.length ? " <b>" + failed.length + "</b> could not be computed." : "") +
+      notes.map(function (n) { return '<div class="note" style="margin-top:8px">' + n + "</div>"; }).join("");
+    var label = function (r) { return r.ima || (r.sp && r.status === "computed" ? r.sp.name : r.input || ""); };
+    var entry = function (r) { return r.ima && r.sp && !r.sp.ref.match(/^(estimate|stand-in|element|moved)$/) && norm(r.sp.name) !== norm(r.ima) ? r.sp.name : ""; };
+    var all = b.rows.slice().sort(function (x, y) {
+      var a = norm(label(x)), c = norm(label(y));
+      return a < c ? -1 : a > c ? 1 : 0;
+    });
+    var body = all.map(function (r) {
+      if (r.status !== "computed" || r.inertOnly) {
+        return "<tr><td>" + esc(label(r)) + "</td><td>" + (r.formula ? fmtFormula(r.formula) : "") + '</td><td class="num"></td><td class="num"></td><td><small>' + esc(r.reason || "no formation energy yet") + "</small></td></tr>";
+      }
+      var sp = r.sp, res = r.res, d = res.fuel || res.oxidant || res.deep;
+      var E = d ? (res.fuel ? res.fuel.E : res.oxidant ? res.oxidant.E : res.deep.E) : null;
+      var pmv = r.range ? r.range.pm : r.u && d ? uEff(r.u, res) / d.n : 0;
+      var pm = pmv >= 0.05 ? ' <span class="pm">\u00b1' + pmv.toFixed(1) + "</span>" : "";
+      var src = r.basis === "library" ? "measured" : r.basis === "moved" ? (r.how === "water" ? "measured (solubility)" : "measured nearby, moved") : r.basis === "proxy" ? "measured (" + esc(r.twin) + ")"
+        : r.basis === "estimate" ? "<b>estimate</b>" : r.basis === "element" ? "native element" : sp.ref === "user" ? "added by hand" : "measured";
+      return "<tr><td>" + esc(label(r)) + (entry(r) ? " <small>(" + esc(entry(r)) + ")</small>" : "") + "</td><td>" + fmtFormula(r.show || sp.formula) + '</td><td class="num"><b>' + (d ? signed(res.number, 1) : "0") + "</b>" + pm +
+        '</td><td class="num">' + (d ? signed(res.number / MR.F, 3) : "0") + "</td><td>" + src + "</td></tr>";
+    }).join("");
+    var table = all.length ? '<div class="batch-out"><table><thead><tr><th>Mineral</th><th>Formula</th><th class="num">Redox value vs O<sub>2</sub> (kJ/mol e<sup>\u2212</sup>)</th><th class="num">Same value in volts</th><th>Basis</th></tr></thead><tbody>' +
+      body + "</tbody></table></div>" : "";
+    var listOf = function (rows) {
+      return rows.slice(0, SHOW_MISSING).map(function (r) { return esc(r.input) + " (" + esc(r.reason) + ")"; }).join("<br>") +
+        (rows.length > SHOW_MISSING ? "<br>and " + (rows.length - SHOW_MISSING) + " more, all listed in the CSV" : "");
+    };
+    var miss = none.length ? '<details class="missing"' + (none.length <= 12 ? " open" : "") + "><summary>" + none.length +
+      " without a value</summary><p>" + listOf(none) + "</p></details>" : "";
+    var fail = failed.length ? '<details class="missing" open><summary>' + failed.length + " could not be computed</summary><p>" + listOf(failed) + "</p></details>" : "";
+    $("batch-out").innerHTML = '<div class="stack">' + table + miss + fail + "</div>";
+    $("batch-actions").hidden = !b.rows.length;
+    $("csv-hint").hidden = !b.rows.length;
+  }
+
+  function batchAll(watch) {         // every IMA mineral under its IMA name, and any value added by hand on this page
+    var rows = [], used = new Set(), list = S.imaList, i = 0, SHARE = 0.12;      // choosing the entries is about an eighth of the work
+    $("batch-status").textContent = "Computing…";
+    (function turn() {
+      var t = Date.now();
+      while (i < list.length && Date.now() - t < 40) {
+        var e = list[i++];
+        MD.resolve([{ input: e.name, name: e.name }]).forEach(function (r) {
+          r.ima = e.name; r.older = e.older;
+          if (r.sp && (r.basis === "library" || r.basis === "measured")) used.add(r.sp);
+          if (r.from) used.add(r.from);
+          rows.push(r);
+        });
+      }
+      if (watch) watch.progress(SHARE * i / Math.max(1, list.length), 0, list.length);
+      if (i < list.length) { hop(turn); return; }
+      S.user.forEach(function (u) { if (!used.has(u.sp)) rows.push({ input: "", sp: u.sp, by: "added by hand", basis: "measured" }); });
+      runBatch(rows, [], watch, SHARE);
+    })();
+  }
+
+  function unsettled(g) {            // the words for a value whose sign hangs on the uncertainty
+    return "sign not settled: from " + signed(Math.min(g.lo, g.hi), 1) + " to " + signed(Math.max(g.lo, g.hi), 1) + " within the uncertainty of its formation energy";
+  }
+
+  function csvText() {            // the export: one signed redox value per mineral, against O2
+    var b = S.batch, q = function (v) {
+      v = v === null || v === undefined ? "" : String(v);
+      return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v;
+    };
+    var r4 = function (v) { return v === null || v === undefined || !isFinite(v) ? "" : Math.round(v * 10000) / 10000; };
+    var lines = ["# Redox value of each mineral against O2: kJ per mole of electrons, O2 = 0. pH " + b.pH + ", 25 C, 1 bar, dissolved species " +
+      (b.solutes === 1 ? "1 M" : b.solutes === 0.001 ? "1 mM" : "1 uM") + ".",
+      "# Every mineral has a redox boundary. The size of the value is how far that boundary sits from O2; redox_value_V is the same value in volts (kJ = 96.485 x V).",
+      "# Positive: the mineral is the reduced side of its boundary (O2 oxidizes it). Negative: it is the oxidized side (O2 does nothing to it). The few minerals whose couple sits above O2 flip: metals such as gold are negative and permanganate is positive.",
+      "# Only electron transfer is counted. change_in_water_kJ_per_mol is what the mineral releases by dissolving, hydrating or turning into a more stable form with no electrons moving; it is not part of the value.",
+      "# plus_minus_kJ_per_mol_e is how far the value moves when the mineral's own formation energy is shifted by its uncertainty either way. It is 0 where the mineral changes in water by more than that uncertainty: its value then comes from the minerals it turns into.",
+      "# A note starting 'sign not settled' means the value changes sign inside that uncertainty: treat the sign of that mineral as unknown.",
+      "# One row per mineral, computed for its ideal IMA formula (solid solutions as the end member the name stands for). Where the databases measured another water content or a nearby composition, that value is brought to the ideal formula and database_entry names what was measured.",
+      "# mineral_plain is the name without accents or Greek letters, for matching against other lists. ima_mineral says 'older name' for a name the July 2026 IMA list no longer carries.",
+      ["mineral", "formula", "redox_value_kJ_per_mol_e", "redox_value_V", "electrons", "plus_minus_kJ_per_mol_e", "basis", "source", "note", "ima_mineral", "database_entry", "change_in_water_kJ_per_mol", "mineral_plain"].join(",")];
+    var who = function (r) { return r.ima || (r.sp ? r.sp.name : r.input); }, yes = function (r) { return r.ima ? (r.older ? "older name" : "yes") : "no"; };
+    b.rows.forEach(function (r) {
+      if (r.status !== "computed") { lines.push([who(r), "", "", "", "", "", "no formation energy yet", "", r.reason, yes(r), "", "", plain(who(r))].map(q).join(",")); return; }
+      if (r.inertOnly) { lines.push([who(r), r.formula, "", "", "", "", "no formation energy yet", "", "no element changes oxidation state in water", yes(r), "", "", plain(who(r))].map(q).join(",")); return; }
+      var sp = r.sp, res = r.res, d = res.fuel || res.oxidant || res.deep;
+      var basis = r.basis === "library" ? "measured" : r.basis === "moved" ? (r.how === "water" ? "measured by solubility, water of the ideal formula counted as liquid water" : "measured at a nearby composition, moved to the ideal formula")
+        : r.basis === "proxy" ? "measured value of " + r.twin + " (same formula)"
+        : r.basis === "estimate" ? "estimated from the formula" : r.basis === "element" ? "native element" : sp.ref === "user" ? "added by hand" : "measured";
+      var source = r.basis === "library" ? sp.lib.db + (sp.lib.evaluated ? "" : " (older compilation)")
+        : r.basis === "moved" ? (r.from.lib ? r.from.lib.db + (r.from.lib.evaluated ? "" : " (older compilation)") : r.from.ref)
+        : r.basis === "estimate" || r.basis === "proxy" || r.basis === "element" ? "" : sp.ref;
+      var c = b.cond, E = d ? (res.fuel ? res.fuel.E : res.oxidant ? res.oxidant.E : res.deep.E) : null;
+      var real = r.from ? r.from.name + " [" + r.from.formula + "]" : !/^(estimate|stand-in|element)$/.test(sp.ref) && r.ima && norm(sp.name) !== norm(r.ima) ? sp.name : "";
+      lines.push([who(r), r.show || sp.formula, d ? r4(res.number) : 0, d ? r4(res.number / MR.F) : 0, d ? r4(d.n) : "", r.range ? r4(r.range.pm) : r.u && d ? r4(uEff(r.u, res) / d.n) : "", basis, source,
+        (r.range && r.range.flip ? [unsettled(r.range)] : []).concat(res.notes.map(function (t) { return placeholder(r.flags) ? t.replace(/, releasing [\d.]+ kJ\/mol/, "") : t; }), r.flags || []).join("; "), yes(r), real,
+        res.breakdown && res.breakdown.known && !placeholder(r.flags) ? Math.round(-res.breakdown.dG * 10) / 10 : "", plain(who(r))].map(q).join(","));
+    });
+    return lines.join("\n") + "\n";
+  }
+
+  // ------------------------------------------------------------------- wiring
+  function wireDownloads() {            // save the CSV through the browser
+    if (S.downloads) return;
+    S.downloads = { save: function (o) {
+      return new Promise(function (resolve) {
+        var url = URL.createObjectURL(new Blob([o.data], { type: "text/csv;charset=utf-8" }));
+        var a = document.createElement("a");
+        a.href = url; a.download = o.filename; document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
+        resolve();
+      });
+    } };
+    $("dl-csv").hidden = false;
+  }
+
+  function start() {
+    codeSetup();
+    $("partner").innerHTML = ["acceptor", "donor"].map(function (role) {
+      return '<optgroup label="' + (role === "acceptor" ? "Electron acceptors (the mineral is the food)" : "Electron donors (the mineral is breathed)") + '">' +
+        MR.PARTNERS.filter(function (p) { return p.role === role; }).map(function (p) {
+          return '<option value="' + esc(p.id) + '">' + esc(plainLabel(p.label)) + "</option>";
+        }).join("") + "</optgroup>";
+    }).join("");
+    $("examples").innerHTML = EXAMPLES.map(function (n) {
+      return '<button type="button" class="chip" data-name="' + n + '" aria-pressed="false">' + n + "</button>";
+    }).join("");
+    var saved = readStore(STORE_STATE, {}) || {};
+    if (typeof saved.mineral === "string" && saved.mineral) $("mineral").value = saved.mineral;
+    if (partnerById(saved.partner)) $("partner").value = saved.partner;
+    if (isFinite(parseFloat(saved.ph))) $("ph").value = saved.ph;
+    if (["1", "0.001", "0.000001"].indexOf(saved.solutes) >= 0) $("solutes").value = saved.solutes;
+
+    var modelReady = fetch("redox/estimator_model.json").then(function (r) { return r.ok ? r.json() : null; })
+      .catch(function () { return null; });           // without it the calculator still works on measured values
+    var libReady = fetch("redox/measured_library.csv").then(function (r) { return r.ok ? r.text() : ""; })
+      .catch(function () { return ""; });             // without it the calculator still works on the base database
+    var crossReady = fetch("redox/base_crosscheck.csv").then(function (r) { return r.ok ? r.text() : ""; })
+      .catch(function () { return ""; });
+    var imaReady = fetch("redox/ima_minerals.csv").then(function (r) { return r.ok ? r.text() : ""; })
+      .catch(function () { return ""; });             // without it only the measured minerals can be looked up by name
+    fetch("redox/obigt_thermo.csv").then(function (r) {
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.text();
+    }).then(function (text) {
+      return modelReady.then(function (model) { S.model = model; return libReady; })
+        .then(function (lib) { return crossReady.then(function (cross) { return imaReady.then(function (ima) { return [text, lib, cross, ima]; }); }); });
+    }).then(function (both) {
+      var text = both[0], loaded = MR.loadDatabase(text);
+      S.base = loaded.species; S.water = loaded.water;
+      S.elements = MR.elementReferences(S.base);
+      try { loadLibrary(both[1]); } catch (e) { S.lib = []; }
+      try { loadCross(both[2]); } catch (e) { S.cross = Object.create(null); }
+      try { loadIma(both[3]); } catch (e) { S.ima = Object.create(null); S.imaList = []; }
+      (readStore(STORE_USER, []) || []).forEach(function (u) {
+        try { addUser(u.name, u.formula, u.G, u.source, true, true); } catch (e) { /* skip a saved row that no longer reads */ }
+      });
+      rebuild();
+      var solids = S.base.filter(function (s) { return s.state === "cr"; }).length;
+      $("db-info").innerHTML = "Data: OBIGT (CHNOSZ; Dick 2019) and eleven other published databases, " +
+        (solids + S.lib.length).toLocaleString("en-US") + " solids with measured values. The source of each value is listed with the answer." +
+        (S.imaList.length ? " Mineral names and formulas: the IMA-CNMNC master list of July 2026, " + S.imaList.filter(function (e) { return !e.older; }).length.toLocaleString("en-US") +
+          " species (CC BY-SA 3.0). " + S.imaList.filter(function (e) { return e.older; }).length + " older names are kept so they can still be looked up." : "");
+      render();
+    }).catch(function (err) {
+      $("result").innerHTML = '<div class="panel error">The thermodynamic database did not load (' + esc(err.message) + "). Reload the page to try again.</div>";
+    });
+
+    var timer = null;
+    var later = function () { clearTimeout(timer); timer = setTimeout(function () { if (S.water) render(true); }, 180); };
+    $("mineral").addEventListener("input", function () { S.pick = null; later(); });
+    ["partner", "ph", "solutes"].forEach(function (id) { $(id).addEventListener("change", function () { if (S.water) render(); }); });
+    $("ph").addEventListener("input", later);
+    $("ask").addEventListener("submit", function (e) { e.preventDefault(); clearTimeout(timer); if (S.water) render(); });
+    $("examples").addEventListener("click", function (e) {
+      var b = e.target.closest(".chip"); if (!b || !S.water) return;
+      $("mineral").value = b.dataset.name; S.pick = null; render();
+    });
+    $("polymorphs").addEventListener("click", function (e) {
+      var b = e.target.closest("[data-pick]"); if (!b) return;
+      S.pick = b.dataset.pick; render();
+    });
+    var choose = function (e) {
+      var tr = e.target.closest("tr[data-id]"); if (!tr) return;
+      if (e.type === "keydown" && e.key !== "Enter" && e.key !== " ") return;
+      e.preventDefault();
+      $("partner").value = tr.dataset.id; render();
+      $("result").scrollIntoView({ block: "nearest", behavior: "smooth" });
+    };
+    $("partners-out").addEventListener("click", choose);
+    $("partners-out").addEventListener("keydown", choose);
+    $("result").addEventListener("submit", function (e) {
+      if (e.target.id !== "add-form") return;
+      e.preventDefault();
+      var name = $("add-name").value.trim(), formula = $("add-formula").value.trim(), G = toNumber($("add-g").value, ",");
+      if (!formula) { $("add-formula").focus(); return; }
+      if (!name) name = formula;
+      try {
+        MR.parseFormula(formula);
+        var same = norm(name) === norm(formula);
+        if (isFinite(G)) addUser(name, formula, G, $("add-src").value.trim(), true);
+        else if (!same) S.named[norm(name)] = formula;
+        $("mineral").value = same && !isFinite(G) ? formula : name; S.pick = null; render();
+      } catch (err) {
+        $("add-formula").focus();
+        $("add-formula").setCustomValidity("This formula could not be read: " + err.message);
+        $("add-formula").reportValidity();
+        $("add-formula").addEventListener("input", function () { $("add-formula").setCustomValidity(""); }, { once: true });
+      }
+    });
+    $("user-info").addEventListener("click", function (e) {
+      if (e.target.id !== "forget") return;
+      S.user = []; persistUser(); rebuild(); render();
+      S.batch = null; $("batch-out").innerHTML = '<div class="batch-out empty"><p class="hint">Empty for now. Press the button below to fill the list.</p></div>';
+      $("batch-actions").hidden = true; $("csv-hint").hidden = true;
+      $("csvbox").classList.remove("show"); $("csvbox-label").hidden = true;
+      $("batch-status").textContent = "Added values removed.";
+    });
+    $("run-all").addEventListener("click", function () { if (S.water) outputAll(); });
+    $("copy-csv").addEventListener("click", function () {
+      if (!S.batch) return;
+      var text = csvText(), box = $("csvbox");
+      box.value = text; box.classList.add("show"); $("csvbox-label").hidden = false;
+      var done = function (ok) {
+        $("csv-status").textContent = ok ? "Copied " + S.batch.rows.length + " rows to the clipboard."
+          : "Copying was blocked here. The CSV is in the box below: select all and copy.";
+        if (!ok) { box.focus(); box.select(); }
+      };
+      try { navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(false); }); }
+      catch (e) { done(false); }
+    });
+    $("dl-csv").addEventListener("click", function () {
+      if (!S.batch || !S.downloads) return;
+      S.downloads.save({ filename: "mineral_redox_pH" + S.batch.pH + ".csv", data: csvText() }).then(function () {
+        $("csv-status").textContent = "Saved " + S.batch.rows.length + " rows.";
+      }, function (err) {
+        var code = err && err.code;
+        $("csv-status").textContent = code === "declined" ? "Download cancelled."
+          : code === "rate_limited" ? "A download prompt is already open. Answer it, then try again."
+          : "Download is not available here. Use Copy CSV.";
+      });
+    });
+    wireDownloads();
+    window.addEventListener("load", wireDownloads);
+    setTimeout(wireDownloads, 2500);
+  }
+
+  start();
+})();
+</script>
+</body>
+</html>

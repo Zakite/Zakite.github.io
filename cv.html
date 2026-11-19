@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Curriculum Vitae &middot; Zak Jibrin</title>
+<meta name="description" content="Curriculum vitae of Zakaria (Zak) Jibrin, PhD candidate in Earth and Planetary Sciences at Rutgers University.">
+<meta name="theme-color" content="#10161E">
+
+<!--
+  cv.html: a live mirror of the CV Google Doc.
+
+  No Jekyll front matter, exactly like index.html, so Pages copies this through
+  verbatim as a static file.
+
+  How it works: on every page load the browser fetches the document's HTML
+  export straight from Google and re-renders it in this site's own typography.
+  Nothing is cached and nothing is committed, so the page always shows whatever
+  the doc says right now: edit the doc, reload this page, see the change.
+
+  This depends on two things outside the repo:
+    1. The doc staying link-shared ("anyone with the link" -> Viewer).
+    2. Google continuing to send an Access-Control-Allow-Origin header on the
+       export endpoint. It reflects any origin today, but it is undocumented
+       behaviour, not a supported API.
+  If either goes away the fetch fails and the page falls back to a plain link
+  to the document, so the page degrades to useful rather than to blank.
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Lora:ital,wght@0,400..600;1,400..600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  /* Same dark instrument palette as the main page. */
+  --bg: #10161E;
+  --bg-warm: #1A2330;
+  --ink: #DCE8F0;
+  --muted: #9EB2C4;
+  --rule: #26323F;
+  --accent: #3FD9CB;
+
+  --serif: 'Newsreader', Georgia, serif;
+  --sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --mono: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
+
+  --max: 60rem;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 17px; scroll-behavior: smooth; background: #070B11; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  margin-inline: 9vw;
+}
+
+::selection { background: var(--accent); color: var(--bg); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 2rem; }
+
+/* ---------- Nav ---------- */
+nav {
+  padding: 1.4rem 0;
+  border-bottom: 1px solid var(--rule);
+  position: sticky; top: 0; z-index: 20;
+  background: rgba(16, 22, 30, 0.9);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+nav .wrap { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; }
+.brand {
+  font-family: var(--serif);
+  font-variation-settings: "opsz" 36, "SOFT" 20, "wght" 500, "WONK" 0;
+  font-size: 1.05rem; font-weight: 500;
+  color: var(--ink); text-decoration: none;
+}
+.brand .j { font-family: 'Lora', Georgia, serif; font-size: 1.02em; }
+.brand em { font-style: italic; color: var(--accent); font-weight: 400; }
+.nav-links { display: flex; gap: 1.6rem; list-style: none; flex-wrap: wrap; }
+.nav-links a {
+  color: var(--muted); text-decoration: none;
+  font-size: 0.85rem; font-weight: 600;
+  transition: color 0.25s ease;
+}
+.nav-links a:hover, .nav-links a:focus-visible { color: var(--accent); outline: none; }
+
+/* ---------- Head ---------- */
+.cv-head { padding: 3.5rem 0 2rem; border-bottom: 1px solid var(--rule); }
+.cv-head h1 {
+  font-family: var(--serif);
+  font-variation-settings: "opsz" 144, "SOFT" 30, "wght" 400, "WONK" 0;
+  font-size: clamp(2.6rem, 6vw, 4.2rem);
+  font-weight: 400; line-height: 1.05; letter-spacing: -0.02em;
+}
+.cv-head h1 .j { font-family: 'Lora', Georgia, serif; font-size: 1.04em; }
+.cv-head .role {
+  font-family: var(--serif); font-style: italic;
+  font-size: clamp(1.15rem, 2.2vw, 1.45rem);
+  color: var(--muted); margin-top: 0.5rem;
+}
+.cv-contact {
+  display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem;
+  margin-top: 1.4rem;
+  font-family: var(--mono); font-size: 0.78rem;
+  letter-spacing: 0.06em; color: var(--muted);
+}
+.cv-contact a { color: var(--accent); text-decoration: none; }
+.cv-contact a:hover { text-decoration: underline; }
+
+/* ---------- Sync status ---------- */
+.cv-status {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 0.6rem 1rem;
+  margin-top: 1.6rem; padding: 0.75rem 1rem;
+  border: 1px solid var(--rule); background: var(--bg-warm);
+  font-family: var(--mono); font-size: 0.74rem;
+  letter-spacing: 0.05em; color: var(--muted);
+}
+.cv-status .dot {
+  width: 8px; height: 8px; border-radius: 50%; flex: none;
+  background: var(--accent);
+}
+.cv-status.is-error { border-color: #AE3A22; }
+.cv-status.is-error .dot { background: #AE3A22; }
+.cv-status a { color: var(--accent); }
+/* display:flex above would otherwise beat the hidden attribute */
+.cv-status[hidden] { display: none; }
+.cv-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 1.6rem; }
+/* Deliberately quiet: a small hairline chip in the muted tone rather than a
+   full-contrast call to action. Printing is a thing you might do, not the
+   point of the page. */
+.cv-btn {
+  font-family: var(--mono); font-size: 0.6rem; font-weight: 500;
+  letter-spacing: 0.13em; text-transform: uppercase;
+  color: var(--muted); background: transparent;
+  border: 1px solid var(--rule); padding: 0.28rem 0.6rem;
+  cursor: pointer; text-decoration: none; display: inline-block;
+  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+.cv-btn:hover, .cv-btn:focus-visible {
+  color: var(--bg); background: var(--accent); border-color: var(--accent); outline: none;
+}
+
+/* ---------- CV body ---------- */
+#cvBody {
+  padding: 2.5rem 0 4rem;
+  text-align: left;
+  font-family: var(--serif);
+}
+
+.cv-loading {
+  font-family: var(--mono); font-size: 0.82rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--muted); padding: 3rem 0;
+}
+
+/* section heading, e.g. EDUCATION */
+#cvBody h2 {
+  font-family: var(--serif);
+  font-size: 1.1rem; font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 2rem 0 0.8rem;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+#cvBody h2:first-child { margin-top: 0; }
+
+#cvBody p { margin: 0.3rem 0; max-width: none; font-family: var(--serif); }
+#cvBody strong { font-weight: 700; }
+#cvBody em { font-style: italic; }
+
+/* The document can hand us tokens with no break opportunity in them: a
+   slash-joined heading like WORKSHOPS/PROFESSIONAL DEVELOPMENT/COURSES, a
+   chemical name, a bare URL. On a narrow screen one of those pushes the whole
+   page sideways, so let them break instead. */
+#cvBody h2, #cvBody p, #cvBody li, .cv-row .cv-what { overflow-wrap: break-word; }
+
+/* a title line with a right-aligned date */
+.cv-row {
+  display: flex; justify-content: space-between; align-items: baseline;
+  gap: 1.5rem; margin: 0.8rem 0 0.1rem; max-width: none;
+}
+.cv-row .cv-what { font-weight: 700; font-family: var(--serif); }
+.cv-row .cv-when {
+  font-family: var(--serif); font-size: 0.95rem; font-weight: 400;
+  letter-spacing: 0; color: var(--ink);
+  white-space: nowrap; flex: none;
+}
+
+/* bullets */
+#cvBody ul { list-style: none; margin: 0.4rem 0 0.8rem; }
+#cvBody li {
+  position: relative; padding-left: 1.2rem;
+  margin: 0.25rem 0; max-width: none;
+  font-family: var(--serif);
+}
+#cvBody li::before {
+  content: "•";
+  position: absolute; left: 0; top: 0;
+  color: var(--ink); font-size: 0.9em; line-height: 1.5;
+}
+
+/* ---------- Footer ---------- */
+footer {
+  padding: 2.5rem 0 3rem; border-top: 1px solid var(--rule);
+  font-family: var(--mono); font-size: 0.72rem;
+  color: var(--muted); letter-spacing: 0.05em;
+}
+footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+
+@media (max-width: 900px) {
+  body { margin-inline: 4vw; }
+  .wrap { padding: 0 1.5rem; }
+  .cv-head { padding: 2.5rem 0 1.5rem; }
+}
+@media (max-width: 600px) {
+  html { font-size: 17.5px; }
+  body { margin-inline: 3vw; }
+  /* This nav was 184px tall on a phone -- taller than the title, the role and
+     the contact line put together -- and it is sticky, so it sat on a fifth of
+     the screen for the whole page. Same compact treatment the home page uses:
+     less padding, tighter gaps, links centred under the brand. */
+  nav { padding: 0.8rem 0; }
+  /* less side padding here than the text sections get, so the five links fit
+     on one row instead of wrapping onto a second */
+  nav .wrap { flex-direction: column; align-items: center; gap: 0.4rem; padding: 0 0.6rem; }
+  .nav-links { justify-content: center; gap: 0.45rem 1rem; }
+  .nav-links a { font-size: 0.8rem; }
+  .cv-actions { margin-left: 0; margin-top: 1rem; }
+  .cv-row { flex-direction: column; gap: 0.15rem; }
+  .cv-row .cv-when { font-size: 0.72rem; }
+  /* The masthead was sized for a wide screen and never shrank: the clamp on
+     the name floors at 2.6rem, which 6vw never beats on a phone, so the head
+     alone ate the first two thirds of the screen before a line of the CV
+     appeared. Floor it lower and let vw actually do the work. */
+  .cv-head { padding: 1.9rem 0 1.1rem; }
+  .cv-head h1 { font-size: clamp(1.75rem, 8.5vw, 2.6rem); }
+  .cv-head .role { font-size: 1.02rem; margin-top: 0.3rem; }
+  .cv-contact { margin-top: 0.9rem; gap: 0.35rem 1rem; }
+  #cvBody { padding: 1.5rem 0 3rem; text-align: left; }
+  #cvBody h2 { font-size: 0.95rem; margin: 1.6rem 0 0.6rem; }
+}
+
+/* ---------- Print: drop the furniture, keep the document ---------- */
+@media print {
+  @page { margin: 2.54cm; }
+  * { background: transparent !important; color: #000 !important; }
+  html { font-size: 12pt; background: #FFF; }
+  body { margin-inline: 0; margin: 0; padding: 0; background: #FFF; color: #000; font-family: Arial, sans-serif; }
+  nav, .cv-status, footer, .cv-actions { display: none !important; }
+  .wrap { max-width: none; margin: 0; padding: 0; }
+
+  /* Head */
+  .cv-head { margin: 0 0 1rem 0; padding: 0; border: none; }
+  .cv-head h1 { font-size: 18pt; margin: 0 0 0.3rem 0; padding: 0; font-weight: bold; line-height: 1.2; }
+  .cv-head .role { font-size: 11pt; margin: 0.1rem 0 0.4rem 0; color: #000; }
+  .cv-contact { font-size: 9pt; margin: 0; gap: 1em; flex-wrap: wrap; }
+  .cv-contact a { color: #000; text-decoration: underline; }
+
+  /* Body */
+  #cvBody { margin: 0; padding: 0; }
+  #cvBody h2 {
+    font-size: 13pt;
+    font-weight: bold;
+    margin: 0.6rem 0 0.3rem 0;
+    padding: 0.2rem 0 0.2rem 0;
+    border-bottom: 1px solid #000;
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  .cv-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 0.4rem 0 0.1rem 0;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .cv-row .cv-what { font-weight: bold; }
+  .cv-row .cv-when { color: #000; font-weight: normal; white-space: nowrap; }
+
+  #cvBody p {
+    margin: 0.3rem 0;
+    font-size: 11pt;
+    line-height: 1.4;
+  }
+
+  #cvBody ul {
+    margin: 0.2rem 0 0.4rem 0;
+    list-style: none;
+    padding: 0;
+  }
+
+  #cvBody li {
+    margin: 0.2rem 0;
+    padding-left: 1rem;
+    font-size: 11pt;
+    line-height: 1.4;
+    page-break-inside: avoid;
+    break-inside: avoid;
+    position: relative;
+  }
+
+  #cvBody li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #000;
+    font-size: 11pt;
+  }
+
+  a { color: #000; text-decoration: none; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="index.html" class="brand">Zakaria <em><span class="j">J</span>ibrin</em></a>
+    <ul class="nav-links">
+      <li><a href="index.html#about">About</a></li>
+      <li><a href="index.html#research">Research</a></li>
+      <li><a href="index.html#writing">Writing</a></li>
+      <li><a href="index.html#cpa">CPA</a></li>
+      <li><a href="index.html#elsewhere">Elsewhere</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="cv-head">
+  <div class="wrap">
+    <h1>Zak <span class="j">J</span>ibrin</h1>
+    <p class="role">Curriculum vitae</p>
+    <div class="cv-contact">
+      <span>PhD Candidate, Earth &amp; Planetary Sciences</span>
+      <span>Rutgers University, Piscataway, NJ</span>
+      <a href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=zakjibrin@gmail.com"
+         target="_blank" rel="noopener">zakjibrin@gmail.com</a>
+      <a href="https://orcid.org/0000-0002-7922-0959">ORCID</a>
+    </div>
+
+    <div class="cv-actions">
+      <button type="button" class="cv-btn" id="cvPrint">Print</button>
+    </div>
+
+    <!-- Failure only. A successful fetch says nothing at all: the CV being
+         there is the message, and a "synced at 02:02" line is just noise. -->
+    <div class="cv-status" id="cvStatus" hidden>
+      <span class="dot" aria-hidden="true"></span>
+      <span id="cvStatusText"></span>
+    </div>
+  </div>
+</header>
+
+<main id="cvBody">
+  <div class="wrap">
+    <p class="cv-loading" id="cvLoading">Loading curriculum vitae&hellip;</p>
+    <noscript>
+      <p>This page renders the CV live from its source document, which needs
+      JavaScript. You can
+      <a href="https://docs.google.com/document/d/1I3z70OJlcmhBNJrxCd78T6bPl8lMFCMptObqb7TLs2o/view">open the document directly</a>
+      instead.</p>
+    </noscript>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Rutgers University &middot; Piscataway, NJ</span>
+    <span><a href="index.html" style="color:var(--accent);text-decoration:none;">&larr; Back to the site</a></span>
+  </div>
+</footer>
+
+<script src="gdoc.js"></script>
+<script>
+/* --------------------------------------------------------------------------
+   Live CV mirror. The parsing lives in gdoc.js, shared with piece.html, so
+   there is only one copy of the Google Doc reader to keep correct. What is
+   left here is the wiring: fetch this particular document, drop it in, and on
+   failure fall back to a link rather than to an empty page.
+-------------------------------------------------------------------------- */
+(function () {
+  var DOC_ID = '1I3z70OJlcmhBNJrxCd78T6bPl8lMFCMptObqb7TLs2o';
+
+  var mount     = document.querySelector('#cvBody .wrap');
+  var loading   = document.getElementById('cvLoading');
+  var statusBox = document.getElementById('cvStatus');
+  var statusTxt = document.getElementById('cvStatusText');
+  var printBtn  = document.getElementById('cvPrint');
+  if (!mount) return;
+
+  if (printBtn) printBtn.addEventListener('click', function () { window.print(); });
+
+  window.GDoc.load(DOC_ID)
+    .then(function (frag) {
+      if (loading) loading.remove();
+      mount.appendChild(frag);
+    })
+    .catch(function () {
+      if (loading) loading.remove();
+      statusBox.hidden = false;
+      statusBox.classList.add('is-error');
+      statusTxt.textContent = 'Could not reach the source document right now. ';
+      var a = document.createElement('a');
+      a.href = window.GDoc.viewUrl(DOC_ID);
+      a.textContent = 'Open the source document';
+      a.rel = 'noopener noreferrer';
+      statusTxt.appendChild(a);
+    });
+})();
+</script>
+</body>
+</html>
