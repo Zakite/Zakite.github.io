@@ -47,11 +47,13 @@
   function compKey(comp) {
     var els = Object.keys(comp).sort(), n = 0;
     els.forEach(function (e) { n += comp[e]; });
+    // ## atom fraction of each element = n(element) / n(all atoms)
     return els.map(function (e) { return e + (comp[e] / n).toFixed(4); }).join("|");
   }
   function atomsOf(comp) { return Object.keys(comp).reduce(function (a, e) { return a + comp[e]; }, 0); }
   function sortLib(list) {   // critically evaluated sources first, then the most stable per atom
     return list.slice().sort(function (a, b) {
+      // ## most stable = lowest ΔfG per atom
       return (b.lib.evaluated - a.lib.evaluated) || (a.G / atomsOf(a.comp) - b.G / atomsOf(b.comp));
     });
   }
@@ -218,6 +220,7 @@
   var SAME = 0.002, NEAR = 0.05, FAR = 0.2, MOVE_NEAR = 9, MOVE_FAR = 20;
   function apart(a, b) {            // summed difference of atom fractions: 0 for the same formula, 2 for nothing in common
     var na = atomsOf(a), nb = atomsOf(b), d = 0, k;
+    // ## distance = Σ over elements of | fraction in a − fraction in b |
     for (k in a) d += Math.abs(a[k] / na - (b[k] || 0) / nb);
     for (k in b) if (!(k in a)) d += b[k] / nb;
     return d;
@@ -228,9 +231,11 @@
     for (k in from) if (k !== "H" && k !== "O") ha += from[k];
     for (k in to) if (k !== "H" && k !== "O") hb += to[k];
     if (!ha || !hb) return null;
+    // ## scale = (atoms other than O and H in the ideal formula) / (the same in the entry)
     var sc = hb / ha;
     for (k in from) if (k !== "H" && k !== "O" && Math.abs(from[k] * sc - (to[k] || 0)) > 1e-3 * hb) return null;
     for (k in to) if (k !== "H" && k !== "O" && !(k in from)) return null;
+    // ## ΔH = H(ideal) − scale × H(entry),  ΔO likewise.  They differ only in water if ΔH = 2 ΔO; then n(H₂O) = ΔO
     var dH = (to.H || 0) - sc * (from.H || 0), dO = (to.O || 0) - sc * (from.O || 0);
     return Math.abs(dH - 2 * dO) < 1e-3 * hb ? { n: dO, scale: sc } : null;
   }
@@ -250,6 +255,7 @@
       return !!w;
     });
     if (wet) {
+      // ## ΔfG(ideal) = scale × ΔfG(measured) + n(H₂O) × ΔfG(liquid water)
       return { sp: attachStates(MR.makeSpecies(e.name, e.formula, "cr", wfrom.G * wet.scale + wet.n * S.water.G, "moved",
                  "measured solubility of " + wfrom.name + " (" + wfrom.formula + "), with the water of the ideal formula counted as liquid water", ""), hints),
                basis: "moved", how: "water", from: wfrom, u: wfrom.lib.u * wet.scale, flags: [] };
@@ -258,9 +264,11 @@
       var a = null, b = null;
       try { a = M.estimate(best.formula, best.comp, S.model, null); b = M.estimate(e.formula, ideal, S.model, hints); } catch (err) { a = b = null; }
       if (a && b && a.dG !== null && b.dG !== null && a.cls !== "element" && b.cls !== "element") {
+        // ## ΔfG(ideal) = [ΔfG(measured) − model(measured formula)] × atoms(ideal) / atoms(measured) + model(ideal formula)
         var G = (best.G - a.dG) * atomsOf(ideal) / atomsOf(best.comp) + b.dG;
         var own = best.lib ? best.lib.u : crossOf(best) ? crossOf(best).u : 0;
         return { sp: attachStates(MR.makeSpecies(e.name, e.formula, "cr", G, "moved", "measured value of " + was + ", moved to the ideal formula with the formula model", ""), hints),
+                 // ## ± = larger of the entry's own ± and 9 (distance under 0.05) or 20 (up to 0.2)
                  basis: "moved", from: best, u: Math.max(own || 0, bd < NEAR ? MOVE_NEAR : MOVE_FAR), flags: [] };
       }
     }
@@ -337,6 +345,7 @@
     if (!twins.length && S.libByComp[compKey(parsed.comp)]) twins = sortLib(S.libByComp[compKey(parsed.comp)]);
     if (twins.length) {
       var atoms = atomsOf;
+      // ## ΔfG = ΔfG(twin) × atoms(this formula) / atoms(twin formula)
       var G = twins[0].G * atoms(parsed.comp) / atoms(twins[0].comp);
       out.sp = attachStates(MR.makeSpecies(label, formula, "cr", G, "stand-in", "measured value of " + twins[0].name + ", which has the same formula", ""), hints);
       out.basis = "proxy"; out.twin = twins[0].name;
@@ -356,6 +365,7 @@
         if (q[0] === "REST" || bad) return;
         var part = partOf(q[0]);
         if (!part) { bad = "a building block of its recipe was not found: " + q[0]; return; }
+        // ## ΔfG = Σ amount × ΔfG(part)
         sum += q[1] * part.G; said.push((Math.abs(q[1] - 1) < 1e-9 ? "" : MR.g4(q[1]) + " ") + part.name);
         Object.keys(part.comp).forEach(function (e) { left[e] = (left[e] || 0) - q[1] * part.comp[e]; });
       });
@@ -367,6 +377,7 @@
       } else if (!bad && Object.keys(left).length) bad = "its recipe does not add up to the formula (" + Object.keys(left).join(", ") + " left over)";
       if (bad) { out.reason = bad; out.shape = shapeOf(label, formula); return out; }
       out.sp = attachStates(MR.makeSpecies(label, formula, "cr", sum, "estimate", "valued as a sum of measured compounds, not measured", ""), hints);
+      // ## ± = √(±recipe² + ±rest²)
       out.basis = "estimate"; out.u = Math.sqrt(rec.pm * rec.pm + restU * restU);
       out.flags = ["low confidence: no model covers this kind of mineral, so it is valued as the sum of " + said.join(" + ") + ", with nothing added for combining them"];
       return out;
@@ -474,11 +485,15 @@
     var v = scoreOf(res), lo, hi;
     try { lo = scoreOf(MR.analyze(shifted(sp, -u), c)); hi = scoreOf(MR.analyze(shifted(sp, u), c)); } catch (e) { return null; }
     var pos = lo > 1e-9 || v > 1e-9 || hi > 1e-9, neg = lo < -1e-9 || v < -1e-9 || hi < -1e-9;
-    return { pm: Math.max(Math.abs(lo - v), Math.abs(hi - v)), lo: lo, hi: hi, flip: pos && neg };
+    // flip: the two runs land on opposite sides of zero, on two different reactions. The distance between them is then not an
+    // uncertainty to print as a plus-or-minus; other is the value on the far side, shown as the alternative.
+    // ## ± = larger of | value(ΔfG − u) − value | and | value(ΔfG + u) − value |
+    return { pm: Math.max(Math.abs(lo - v), Math.abs(hi - v)), lo: lo, hi: hi, flip: pos && neg, other: Math.abs(lo - v) > Math.abs(hi - v) ? lo : hi };
   }
   function uEff(u, res) {
     if (!(u >= 0)) return u;
     var bd = res && res.breakdown;
+    // ## usable ± = u − (energy the mineral releases by changing in water), never below 0
     return bd && bd.known ? Math.max(0, u - Math.max(0, -bd.dG)) : u;
   }
 

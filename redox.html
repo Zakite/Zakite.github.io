@@ -155,6 +155,7 @@ details.working > summary { font-size: 0.98rem; }
 .codebox .l.head { color: #05070a; background: #3FD9CB; font-weight: 600; margin: 6px 0 2px; }
 .codebox .l.head::before { color: #05070a; border-right-color: #05070a; }
 .codebox .c { color: #6e7b8f; font-style: italic; }
+.codebox .m { color: #ffd866; }
 .codebox .k { color: #ff7b93; }
 .codebox .s { color: #a8e08a; }
 .codebox .n { color: #f2b866; }
@@ -324,7 +325,7 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
 
   <section class="panel stack" aria-labelledby="code-h" id="code">
     <h2 id="code-h">The code behind the numbers</h2>
-    <p class="fine">Every value on this page comes from the three files below, which run in your browser: one computes the redox value of a species, one estimates formation energies that were never measured, and one decides which formation energy a mineral gets. The listing is loaded from the files the page is running, so it is always the current code.</p>
+    <p class="fine">Every value on this page comes from the three files below, which run in your browser: one computes the redox value of a species, one estimates formation energies that were never measured, and one decides which formation energy a mineral gets. The listing is loaded from the files the page is running, so it is always the current code. Wherever a line does arithmetic, the line above it, in yellow and marked ##, gives the same equation in ordinary notation.</p>
     <div class="chips" id="code-files"></div>
     <div class="codehead"><span class="hint" id="code-what"></span></div>
     <div class="chips" id="code-fns"></div>
@@ -649,7 +650,9 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
     // 8. the plus-or-minus
     if (info && info.range && info.u > 0) {
       steps.push("<b>The ±</b>The whole calculation is run twice more with Δ<sub>f</sub>G moved by its uncertainty, " + Math.round(info.u * 10) / 10 + " kJ/mol, down and up." +
-        '<div class="calc">lower: ' + signed(info.range.lo, 4) + "<br>higher: " + signed(info.range.hi, 4) + "<br>± = the larger change = " + num(info.range.pm, 4) + " kJ per mol e<sup>−</sup></div>" +
+        '<div class="calc">lower: ' + signed(info.range.lo, 4) + "<br>higher: " + signed(info.range.hi, 4) + "<br>" +
+        (info.range.flip ? "the two runs end on opposite sides of zero, on different reactions: the sign is not settled, and no ± is given"
+          : "± = the larger change = " + num(info.range.pm, 4) + " kJ per mol e<sup>−</sup>") + "</div>" +
         '<div class="by">' + fnLink("minerals", "rangeOf") + "</div>");
     }
     return wrap(steps, ok);
@@ -679,7 +682,7 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
     if (codeText[id] !== undefined) return Promise.resolve(codeText[id]);
     return fetch(CODE[id].src).then(function (r) { if (!r.ok) throw new Error("not found"); return r.text(); }).then(function (t) { codeText[id] = t.replace(/\r\n/g, "\n").replace(/\s+$/, ""); return codeText[id]; });
   }
-  // Colours one line of JavaScript: comments, strings, numbers, keywords and function names. st.block carries an open
+  // Colours one line of JavaScript: comments, equations written out for the reader, strings, numbers, keywords and function names. st.block carries an open
   // /* comment */ from one line to the next. Only for display: the text itself is never changed.
   var WORDS = /^(?:var|let|const|function|return|if|else|for|while|do|break|continue|new|typeof|in|of|try|catch|throw|this|null|undefined|true|false|delete|instanceof)$/;
   function paint(line, st) {
@@ -688,7 +691,7 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
     while (i < n) {
       var ch = line[i], two = line.substr(i, 2), rest;
       if (st.block) { j = line.indexOf("*/", i); put("c", line.slice(i, j < 0 ? n : j + 2)); i = j < 0 ? n : j + 2; st.block = j < 0; continue; }
-      if (two === "//") { put("c", line.slice(i)); break; }
+      if (two === "//") { put(line.substr(i, 5) === "// ##" ? "m" : "c", line.slice(i)); break; }      // "// ##": an equation in ordinary notation
       if (two === "/*") { st.block = true; continue; }
       if (ch === '"' || ch === "'" || ch === "`") {
         for (j = i + 1; j < n && line[j] !== ch; j++) if (line[j] === "\\") j++;
@@ -961,11 +964,13 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
       : res.deep && res.deep.up ? " O<sub>2</sub> cannot oxidize it: that only starts above O<sub>2</sub>."
       : res.number > 0 ? " A stronger oxidant than O<sub>2</sub>: it can take electrons from water."
       : " Oxidized side: O<sub>2</sub> does nothing to it.";
-    var spm = sd && info && info.range && info.range.pm >= 0.05 ? info.range.pm : 0;      // give-or-take of the redox value itself
+    var unset = !!(info && info.range && info.range.flip);            // sign not settled: two candidate values, not a plus-or-minus
+    var spm = sd && info && info.range && info.range.pm >= 0.05 && !unset ? info.range.pm : 0;      // give-or-take of the redox value itself
+    var alt = unset && sd ? ", or <b>" + signed(info.range.other, 1) + "</b> kJ per mol e<sup>−</sup> = <b>" + signed(info.range.other / MR.F, 3) + "</b> <b>V</b>" : "";
     var scoreLine = (blind ? '<p class="score">No redox value: there is ' + esc(blind.replace(/, so .*$/, "")) + ".</p>"
       : '<p class="score">Redox value against O<sub>2</sub>: <b>' + score + "</b>" + (spm ? " \u00b1 " + spm.toFixed(1) : "") + " kJ per mol e<sup>−</sup>" +
-        (sd ? " = <b>" + signed(res.number / MR.F, 3) + "</b>" + (spm ? " \u00b1 " + (spm / MR.F).toFixed(3) : "") + " <b>V</b>." : ".") + side + "</p>") +
-      (info && info.range && info.range.flip ? '<p class="score"><b>The sign is not settled.</b> Within the uncertainty of its formation energy the value runs from ' +
+        (sd ? " = <b>" + signed(res.number / MR.F, 3) + "</b>" + (spm ? " \u00b1 " + (spm / MR.F).toFixed(3) : "") + " <b>V</b>" + alt + "." : ".") + (unset ? "" : side) + "</p>") +
+      (unset ? '<p class="score"><b>The sign is not settled.</b> These are two different reactions, not a plus-or-minus: which one applies depends on a formation energy that is not known well enough. Within its uncertainty the value runs from ' +
         signed(Math.min(info.range.lo, info.range.hi), 1) + " to " + signed(Math.max(info.range.lo, info.range.hi), 1) + ".</p>" : "") +
       (res.breakdown && res.breakdown.dG < -1 ? '<p class="score">Left on its own in water it turns into ' + esc(res.breakdown.products.map(function (q) { return q[0].name; }).join(", ")) +
         (info && placeholder(info.flags) ? " with no electrons moving. That is not a redox change, so its energy is not counted."
@@ -1095,7 +1100,8 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
     $("numbers-out").innerHTML = '<div class="stack"><div class="headline"><span class="bignum">' +
       (res.role === "inert" && !res.deep ? "0" : signed(res.number, 1)) + '</span><span class="pm">kJ per mol e<sup>−</sup> = ' +
       (res.role === "inert" && !res.deep ? "0" : signed(res.number / MR.F, 3)) + " V</span>" +
-      (info && info.range && info.range.pm >= 0.05 ? '<span class="pm">\u00b1' + info.range.pm.toFixed(1) + (info.basis === "library" || info.basis === "measured" ? " (spread between databases)" : info.basis === "proxy" ? " (stand-in value)" : " (estimate)") + "</span>" : "") +
+      (info && info.range && info.range.flip ? '<span class="pm">or ' + signed(info.range.other, 1) + " (sign not settled)</span>"
+        : info && info.range && info.range.pm >= 0.05 ? '<span class="pm">\u00b1' + info.range.pm.toFixed(1) + (info.basis === "library" || info.basis === "measured" ? " (spread between databases)" : info.basis === "proxy" ? " (stand-in value)" : " (estimate)") + "</span>" : "") +
       '<span class="pill" data-v="role">' + res.role + "</span>" +
       '<span class="hint">' + esc(sp.name) + ", pH " + S.pH + ", dissolved species " + solutesText() + ". " + why + "</span></div>" +
       (tiles ? '<div class="two">' + tiles + "</div>" : "") + notes + "</div>";
@@ -1193,11 +1199,12 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
       var sp = r.sp, res = r.res, d = res.fuel || res.oxidant || res.deep;
       var E = d ? (res.fuel ? res.fuel.E : res.oxidant ? res.oxidant.E : res.deep.E) : null;
       var pmv = r.range ? r.range.pm : r.u && d ? uEff(r.u, res) / d.n : 0;
-      var pm = pmv >= 0.05 ? ' <span class="pm">\u00b1' + pmv.toFixed(1) + "</span>" : "";
+      var open = !!(r.range && r.range.flip);            // sign not settled: show the other candidate, not a plus-or-minus
+      var pm = open ? ' <span class="pm">or ' + signed(r.range.other, 1) + "</span>" : pmv >= 0.05 ? ' <span class="pm">\u00b1' + pmv.toFixed(1) + "</span>" : "";
       var src = r.basis === "library" ? "measured" : r.basis === "moved" ? (r.how === "water" ? "measured (solubility)" : "measured nearby, moved") : r.basis === "proxy" ? "measured (" + esc(r.twin) + ")"
         : r.basis === "estimate" ? "<b>estimate</b>" : r.basis === "element" ? "native element" : sp.ref === "user" ? "added by hand" : "measured";
       return "<tr><td>" + esc(label(r)) + (entry(r) ? " <small>(" + esc(entry(r)) + ")</small>" : "") + "</td><td>" + fmtFormula(r.show || sp.formula) + '</td><td class="num"><b>' + (d ? signed(res.number, 1) : "0") + "</b>" + pm +
-        '</td><td class="num">' + (d ? signed(res.number / MR.F, 3) : "0") + "</td><td>" + src + "</td></tr>";
+        '</td><td class="num">' + (d ? signed(res.number / MR.F, 3) : "0") + "</td><td>" + src + (open ? "<small>sign not settled</small>" : "") + "</td></tr>";
     }).join("");
     var table = all.length ? '<div class="batch-out"><table><thead><tr><th>Mineral</th><th>Formula</th><th class="num">Redox value vs O<sub>2</sub> (kJ/mol e<sup>\u2212</sup>)</th><th class="num">Same value in volts</th><th>Basis</th></tr></thead><tbody>' +
       body + "</tbody></table></div>" : "";
@@ -1249,7 +1256,7 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
       "# Every mineral has a redox boundary. The size of the value is how far that boundary sits from O2; redox_value_V is the same value in volts (kJ = 96.485 x V).",
       "# Positive: the mineral is the reduced side of its boundary (O2 oxidizes it). Negative: it is the oxidized side (O2 does nothing to it). The few minerals whose couple sits above O2 flip: metals such as gold are negative and permanganate is positive.",
       "# Only electron transfer is counted. change_in_water_kJ_per_mol is what the mineral releases by dissolving, hydrating or turning into a more stable form with no electrons moving; it is not part of the value.",
-      "# plus_minus_kJ_per_mol_e is how far the value moves when the mineral's own formation energy is shifted by its uncertainty either way. It is 0 where the mineral changes in water by more than that uncertainty: its value then comes from the minerals it turns into.",
+      "# plus_minus_kJ_per_mol_e is how far the value moves when the mineral's own formation energy is shifted by its uncertainty either way. It is 0 where the mineral changes in water by more than that uncertainty: its value then comes from the minerals it turns into. It is left empty where the note says sign not settled: the two runs then end on different reactions, and the note gives both ends.",
       "# A note starting 'sign not settled' means the value changes sign inside that uncertainty: treat the sign of that mineral as unknown.",
       "# One row per mineral, computed for its ideal IMA formula (solid solutions as the end member the name stands for). Where the databases measured another water content or a nearby composition, that value is brought to the ideal formula and database_entry names what was measured.",
       "# mineral_plain is the name without accents or Greek letters, for matching against other lists. ima_mineral says 'older name' for a name the July 2026 IMA list no longer carries.",
@@ -1267,7 +1274,7 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
         : r.basis === "estimate" || r.basis === "proxy" || r.basis === "element" ? "" : sp.ref;
       var c = b.cond, E = d ? (res.fuel ? res.fuel.E : res.oxidant ? res.oxidant.E : res.deep.E) : null;
       var real = r.from ? r.from.name + " [" + r.from.formula + "]" : !/^(estimate|stand-in|element)$/.test(sp.ref) && r.ima && norm(sp.name) !== norm(r.ima) ? sp.name : "";
-      lines.push([who(r), r.show || sp.formula, d ? r4(res.number) : 0, d ? r4(res.number / MR.F) : 0, d ? r4(d.n) : "", r.range ? r4(r.range.pm) : r.u && d ? r4(uEff(r.u, res) / d.n) : "", basis, source,
+      lines.push([who(r), r.show || sp.formula, d ? r4(res.number) : 0, d ? r4(res.number / MR.F) : 0, d ? r4(d.n) : "", r.range && r.range.flip ? "" : r.range ? r4(r.range.pm) : r.u && d ? r4(uEff(r.u, res) / d.n) : "", basis, source,
         (r.range && r.range.flip ? [unsettled(r.range)] : []).concat(res.notes.map(function (t) { return placeholder(r.flags) ? t.replace(/, releasing [\d.]+ kJ\/mol/, "") : t; }), r.flags || []).join("; "), yes(r), real,
         res.breakdown && res.breakdown.known && !placeholder(r.flags) ? Math.round(-res.breakdown.dG * 10) / 10 : "", plain(who(r))].map(q).join(","));
     });

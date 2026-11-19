@@ -261,11 +261,13 @@
       if (moved.length) { b = b2; names = Object.keys(b); bare = true; flags.push("low confidence: " + moved.join(", ") + " never measured, placed between the nearest measured oxidation states of the element"); }
       unknown = names.filter(function (x) { return !(x in idx) || !(x in m.s); });
       if (unknown.length) return { ok: false, status: "no estimate: building block never seen in the training minerals: " + unknown.join(", ") };
+      // ## S = Σ n(block) × s(block)
       names.forEach(function (x) { S += b[x] * m.s[x]; });
     } else {
       unknown = names.filter(function (x) { return !(x in idx); });
       var known = names.filter(function (x) { return x in idx; });
       if (unknown.length && !known.length) return { ok: false, status: "no estimate: no element of this mineral was seen in a sulfide of the training minerals" };
+      // ## S = Σ n(block) × s(block)
       known.forEach(function (x) { S += b[x] * m.s[idx[x]]; });
       unknown.forEach(function (x) { S += b[x] * el[x.split("|")[0]].S; });      // an unseen element counts as the element itself
       if (unknown.length) {
@@ -276,13 +278,16 @@
     var pick = pickTables(m, b), tab = pick.tab, fam = pick.fam, tidx = {};
     tab.blocks.forEach(function (x, i) { tidx[x] = i; });
     var rare = names.filter(function (x) { return tab.count[tidx[x]] < MIN_SEEN; });
+    // ## ΔfH = Σ n(block) × h(block)
     names.forEach(function (x) { dH += b[x] * tab.h[tidx[x]]; });
     if (cls === "oxygen") {
       var NO = 0, sq = 0, mean = 0;
       names.forEach(function (x) {
+        // ## o = oxygens the block brings = n × charge / 2
         var o = b[x] * blockCharge(x) / 2;
         NO += o; sq += o * tab.a[tidx[x]] * tab.a[tidx[x]]; mean += o * tab.a[tidx[x]];
       });
+      // ## acid-base term: ΔfH = Σ n h − Σ o (a − ā)²,   ā = Σ o a / Σ o      (written here as Σ o a² − (Σ o a)² / Σ o)
       if (NO > 0) dH -= sq - mean * mean / NO;
     }
     var unc = model.uncertainty[cls], err;
@@ -293,6 +298,7 @@
     if (rare.length) flags.push("low confidence: " + rare.map(function (x) { return x.split("|")[0]; }).join(", ") + " seen in fewer than " + MIN_SEEN + " training minerals");
     // Tellurate rests on two measured solids only, and the block fitted to them misses solid telluric acid (from its dissolved
     // energy, Filella and May 2019, and its solubility) by 35 kJ/mol. That is the give-or-take used per tellurium(VI).
+    // ## ± at least 35 × n(Te⁶⁺)
     if (b["Te6+"]) err = Math.max(err, 35 * b["Te6+"]);
     return { ok: true, S: S, dH: dH, err: bare ? err * 2 : err, flags: flags, family: fam ? fam.name : "" };
   }
@@ -304,6 +310,7 @@
     var v = H.binaries[c + "|" + a];
     if (v !== undefined) return { v: v };
     var alt = ["Cl", "F", "Br", "I"].filter(function (x) { return H.binaries[c + "|" + x] !== undefined; })[0];
+    // ## ΔfG(halide of a) = ΔfG(halide of alt) + z × [ΔfG(a⁻, dissolved) − ΔfG(alt⁻, dissolved)]
     return alt ? { v: H.binaries[c + "|" + alt] + parseFloat(c.replace(/\+$/, "").slice(-1)) * (AQ[a] - AQ[alt]), stepped: true } : {};
   }
 
@@ -313,6 +320,7 @@
     var missing = els.filter(function (e) { return !(e in el) || el[e].S === null || el[e].S === undefined; });
     if (missing.length) { out.status = "no element entropy on file for " + missing.join(", "); return out; }
     var Sel = 0;
+    // ## S(elements) = Σ n(element) × S°(element)
     els.forEach(function (e) { Sel += el[e].S * comp[e]; });
     var r = blocks(formula, comp, model, typeof hints === "string" ? parseHints(hints) : hints);
     if (r.cls === null) { out.status = "not covered: " + r.reason; return out; }
@@ -327,11 +335,14 @@
           if (!comp[a]) return;
           var bin = binaryHalide(H, c, a);
           if (bin.stepped) stepped.push(c.replace(/\d\+$/, "") + " with " + a);
+          // ## ΔfG = Σ over cations and halogens of n(cation) × share(halogen) × ΔfG(binary halide)
           if (bin.v === undefined) lack.push(c.replace(/\d\+$/, "") + " with " + a); else g += r.blocks[c] * (comp[a] / nX) * bin.v;
         });
       });
       if (lack.length) { out.status = "no estimate: no measured binary halide for " + lack.join(", "); return out; }
+      // ##       + n(H₂O) × (energy per water) + 203.9 × n(NH₄)
       g += r.water * H.water + NH4_STEP * r.nh4;
+      // ## ± = √(p68² + (5.2 × n(NH₄))²), doubled if a halide had to be stepped
       out.status = "estimated"; out.dG = g; out.uncertainty = Math.sqrt(H.p68 * H.p68 + NH4_SPREAD * NH4_SPREAD * r.nh4 * r.nh4) * (stepped.length ? 2 : 1);
       if (stepped.length) out.flags.push("low confidence: no measured halide of " + stepped.join(", ") + "; stepped from another halide of the same metal by the dissolved ions");
       out.flags.push("halide estimated as the sum of its measured binary halides" + (r.water > 1e-9 ? " plus " + H.water + " kJ per water" : "") +
@@ -341,11 +352,13 @@
     if (r.cls === "elements") {                  // no fitted model: taken as its elements
       var atoms = 0;
       els.forEach(function (e) { atoms += comp[e]; });
+      // ## ΔfG = 0,   ± = 40 × atoms
       out.status = "estimated"; out.dH = 0; out.dG = 0; out.uncertainty = AS_ELEMENTS * atoms;
       out.flags.push("taken as its elements (formation energy zero): there is no fitted model for " + r.why);
       return out;
     }
     var nh4 = r.nh4 || 0;
+    // ## S(elements) of the potassium twin: add n(NH₄) × (S°K − S°N − 4 S°H)
     if (nh4 > 1e-9) Sel += nh4 * (el.K.S - el.N.S - 4 * el.H.S);      // element entropies of the potassium twin
     var c1, c2 = null, dG, err;
     if (r.cls === "mixed") {                     // a sulfide part and an oxide part, each from its own model
@@ -357,18 +370,23 @@
         c1 = core(model, "oxygen", r.blocks, el);
         if (!c1.ok) { out.status = c1.status; return out; }
       } else c1 = { S: 0, dH: 0, err: 0, flags: [], family: "" };
+      // ## ΔfG = [ΔfH − T (S − S(elements)) / 1000] of the oxide part + the same of the sulfide part
       dG = (c1.dH - T * (c1.S - (Sel - SelS)) / 1000) + (c2.dH - T * (c2.S - SelS) / 1000);
+      // ## ± = √(±oxide² + ±sulfide²)
       err = Math.sqrt(c1.err * c1.err + c2.err * c2.err);
       out.S = c1.S + c2.S; out.dH = c1.dH + c2.dH;
       out.flags = c1.flags.concat(c2.flags, ["estimated as a sulfide part plus an oxide part"]);
     } else {
       c1 = core(model, r.cls, r.blocks, el);
       if (!c1.ok) { out.status = c1.status; return out; }
+      // ## ΔfG = ΔfH − T × (S − S(elements)) / 1000        (S in J/K/mol, hence the 1000)
       dG = c1.dH - T * (c1.S - Sel) / 1000; err = c1.err;
       out.S = c1.S; out.dH = c1.dH; out.flags = c1.flags.slice();
     }
     out.family = c1.family;
     if (nh4 > 1e-9) {                            // ammonium: the potassium twin plus a measured step per NH4
+      // ## ΔfG = ΔfG(potassium twin) + 203.9 × n(NH₄)
+      // ## ± = √(±² + (5.2 × n(NH₄))²)
       dG += NH4_STEP * nh4;
       err = Math.sqrt(err * err + NH4_SPREAD * NH4_SPREAD * nh4 * nh4);
       out.flags.push("ammonium estimated as the potassium mineral plus " + NH4_STEP + " kJ per NH4");
@@ -418,9 +436,11 @@
           Object.keys(L.atoms).forEach(function (e) { add(c, e, -q * L.atoms[e]); });
           if (L.twin) {
             Object.keys(L.twin.atoms).forEach(function (e) { add(c, e, q * L.twin.atoms[e]); });
+            // ## step = q × [ΔfG(organic ion, dissolved) − ΔfG(twin ion, dissolved)]
             add(st, L.twin.state, q); step += q * (AQ[L.aq] - AQ[L.twin.aq]);
             (L.checked ? sure : notes).push(L.name + " taken as the " + L.twin.name + " twin" + (L.checked ? " (checked on " + L.checked + ")" : ""));
           } else {
+            // ## step = q × ΔfG(molecule, dissolved)
             step += q * AQ[L.aq];
             notes.push(L.name + (L.cage ? " in the cage counted as the gas" : " counted as the dissolved molecule"));
           }
@@ -458,11 +478,13 @@
     var t = stepped ? estimate0("", c, model, h2) : first;
     if (t.dG === null && /halide-rich/.test(t.status)) t = splitHalide(c, model, h2) || t;
     if (t.dG === null || (first.dG !== null && !stepped)) { if (stepped && first.dG === null) first.status = t.status; return first; }
+    // ## ΔfG = ΔfG(twin mineral) + Σ steps
     t.formula = formula; t.dG += step;
     // One kind of metal, oxalate and water only: this is what the 10 measured oxalates are, and their miss already includes
     // the twin's own error, so the checked spread stands alone here.
     var metals = Object.keys(c).filter(function (e) { return e !== "C" && e !== "O" && e !== "H"; });
     var plain = sure.length === 1 && !notes.length && !n && !extra && metals.length === 1 && !(h.nh4 > 0);
+    // ## ± = √(±twin² + (30 × swapped anions)² + ±organic² + extra)
     t.uncertainty = plain ? orgSpread : Math.sqrt(t.uncertainty * t.uncertainty + SWAP_SPREAD * SWAP_SPREAD * n * n + orgSpread * orgSpread + extra);
     if (sure.length) t.flags.push(sure.join("; ") + ", stepped by the energies of the dissolved ions");
     if (notes.length) t.flags.push("low confidence: " + notes.join("; ") + (n || orgSpread ? ", stepped by the energies of the dissolved ions" : ""));
@@ -489,6 +511,7 @@
     Object.keys(part).forEach(function (x) {
       Object.keys(hal).forEach(function (a) {
         var v = binaryHalide(H, x, a).v;
+        // ## halide part: ΔfG = Σ n(cation) × share(halogen) × ΔfG(binary halide)
         if (v === undefined) bad = true; else g += part[x] * (hal[a] / nX) * v;
       });
     });
@@ -500,6 +523,8 @@
       rest = estimate0("", c2, model, { states: st, water: h.water, nh4: h.nh4, unbalanced: h.unbalanced });
       if (rest.dG === null) return null;
     } else rest = { dG: (h.water || 0) * H.water, uncertainty: 0, flags: [], cls: "halide", blocks: {} };
+    // ## ΔfG = halide part + oxide part
+    // ## ± = 2 √(±oxide² + p68²)
     rest.dG += g; rest.status = "estimated";
     rest.uncertainty = 2 * Math.sqrt(rest.uncertainty * rest.uncertainty + H.p68 * H.p68);
     rest.flags.push("low confidence: estimated as a halide part (measured binary halides) plus an oxide part");

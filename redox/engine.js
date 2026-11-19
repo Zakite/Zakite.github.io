@@ -16,10 +16,12 @@
   const F = 96.485;               // kJ per volt per mole of electrons
   const R = 8.314462618e-3;       // kJ / (mol K)
   const T = 298.15;               // K; the database values are for 25 C
+  // ## RT = 8.314462618 × 10⁻³ kJ/(mol K) × 298.15 K = 2.479 kJ/mol
   const RT = R * T;
   const LN10 = Math.log(10);
   // Electrons per formula unit that are rounding or a trace impurity in the formula, not the mineral's chemistry:
   // under 0.02, or under one for every 200 atoms other than O and H.
+  // ## fewest electrons that count = larger of 0.02 and 0.005 × (atoms other than O and H)
   function noise(sp) { let a = 0; for (const e of sp.heavy) a += sp.comp[e]; return Math.max(0.02, 0.005 * a); }
 
   const ELEMENTS = new Set((
@@ -95,6 +97,7 @@
     return {
       name: name, formula: formula, state: state, G: G, ref: ref || "", citation: citation || "", kind: kind || "",
       comp: p.comp, charge: p.charge, heavy: heavy, heavySet: new Set(heavy), nO: nO, nH: nH,
+      // ## ω = charge + 2 × (O atoms) − (H atoms)
       omega: p.charge + 2 * nO - nH,     // summed oxidation numbers of everything except O and H
     };
   }
@@ -283,8 +286,11 @@
     this.exclude = new Set(exclude || []);
     this.byname = {};
     for (const s of db) if (!(s.name in this.byname)) this.byname[s.name] = s;
+    // ## E(H₂) = −(RT ln 10 / F) × pH
     this.E_H2 = -RT * LN10 * this.pH / F;                   // 2 H+ + 2 e- = H2 (1 bar)
+    // ## E(O₂) = −ΔfG(H₂O) / (2F) + E(H₂)
     this.E_O2 = -water.G / (2 * F) + this.E_H2;             // O2 (1 bar) + 4 H+ + 4 e- = 2 H2O
+    // ## window = F × (E(O₂) − E(H₂))
     this.window = F * (this.E_O2 - this.E_H2);              // 118.6 kJ per mole of electrons
   }
 
@@ -295,9 +301,13 @@
 
   /** Gibbs energy of the species relative to water, H+ and electrons at this pH and Eh. */
   Conditions.prototype.gprime = function (sp, Eh) {
+    // ## μH = −F × Eh − RT ln 10 × pH
     const muH = -F * Eh - RT * LN10 * this.pH;              // H = H+ + e-
+    // ## μO = ΔfG(H₂O) − 2 μH
     const muO = this.water.G - 2 * muH;
+    // ## μQ = F × Eh
     const muQ = F * Eh;                                     // unit positive charge = minus an electron
+    // ## g′ = ΔfG + RT ln a − O × μO − H × μH − charge × μQ
     return sp.G + RT * Math.log(this.activity(sp)) - sp.nO * muO - sp.nH * muH - sp.charge * muQ;
   };
 
@@ -439,7 +449,9 @@
    *  (its atoms, or its atoms held at their oxidation states). Empty when the mineral itself is that mix. */
   Conditions.prototype.lowest = function (sp, cands, row, Eh) {
     const self = this;
+    // ## choose amounts xᵢ ≥ 0 of the candidates so that Σ xᵢ g′ᵢ is as low as it can be, while Σ xᵢ rowᵢ = row(mineral)
     const res = lpMin(cands.map(row), cands.map(function (s) { return self.gprime(s, Eh); }), row(sp));
+    // ## ΔG = Σ xᵢ g′ᵢ − g′(mineral)
     const products = sortProducts(cands, res.sol), dG = res.objective - this.gprime(sp, Eh);
     return (dG > -1e-7 || (products.length === 1 && products[0][0] === sp)) ? { products: [], dG: 0 } : { products: products, dG: dG };
   };
@@ -456,6 +468,7 @@
         const v = valence(s);
         return v && Object.keys(v).every(function (k) { return k in mine; });
       });
+      // ## B = ΔG of the lowest-energy mix when every element keeps its oxidation state
       out = this.lowest(sp, cands, function (s) { const v = valence(s); return keys.map(function (k) { return v[k] || 0; }); }, this.E_H2);   // any Eh: no electrons move
       out.known = true;
     }
@@ -475,12 +488,15 @@
   Conditions.prototype.equilibrate = function (sp, Eh) {
     const elements = sp.heavy;
     if (!elements.length) {
+      // ## only O and H in it: ΔG = −g′,  n = −ω
       return { Eh: Eh, products: [], dG: -this.gprime(sp, Eh), n: -sp.omega, w: -sp.nO, h: sp.nH - 2 * sp.nO };
     }
     const low = this.lowest(sp, this.candidates(sp), function (s) { return elements.map(function (e) { return s.comp[e] || 0; }); }, Eh);
     const products = low.products;
     if (!products.length) return { Eh: Eh, products: [], dG: 0, n: 0, w: 0, h: 0 };      // already the stable state
     let n = 0, w = 0, hh = 0;
+    // ## electrons: n = Σ xᵢ ωᵢ − ω(mineral)
+    // ## water used: w = Σ xᵢ Oᵢ − O(mineral)        H⁺ released: h = H(mineral) + 2w − Σ xᵢ Hᵢ
     for (const p of products) { n += p[1] * p[0].omega; w += p[1] * p[0].nO; hh += p[1] * p[0].nH; }
     n -= sp.omega; w -= sp.nO;
     const h = sp.nH + 2 * w - hh;
@@ -510,6 +526,8 @@
       const mid = (near + far) / 2, e = this.equilibrate(sp, mid);
       if (e.n * s > 0) { far = mid; eq = e; } else near = mid;
     }
+    // ## E = Eh ± (ΔG − B) / (n F)        (+ above O₂, − below H₂)
+    // ## value = ±(E(O₂) − E) × F
     const n = s * eq.n, E = far + s * (eq.dG - this.breakdown(sp).dG) / (n * F);
     return { E: E, n: n, number: s * (this.E_O2 - E) * F, eq: eq, up: up };
   };
@@ -570,12 +588,16 @@
     const blind = sp.heavy.filter(function (e) { return !cond.db.some(function (s) { return s !== sp && s.kind !== "element" && s.heavySet.has(e); }); });
     if (blind.length) out.notes.push("no data for " + blind.join(", ") + " in the reaction database, so " + (blind.length > 1 ? "they are" : "it is") + " treated as unreactive");
     if (ox.n > 0) {
+      // ## fuel number = −(ΔG − B) / n        (ΔG and n at the potential of O₂)
+      // ## E(mineral) = E(O₂) − number / F
       const number = -(ox.dG - B) / ox.n;
       out.fuel = { number: number, n: ox.n, total: -(ox.dG - B), E: cond.E_O2 - number / F };
     } else if (ox.n < 0) {
       out.notes.push("a stronger oxidant than O2 here: it gives off O2 on the way to its stable state");
     }
     if (red.n < 0) {
+      // ## oxidant number = −(ΔG − B) / n − window        (ΔG and n at the potential of H₂)
+      // ## E(mineral) = E(O₂) + number / F
       const number = -(red.dG - B) / -red.n - cond.window;
       out.oxidant = { number: number, n: -red.n, E: cond.E_O2 + number / F };
     } else if (red.n > 0) {
