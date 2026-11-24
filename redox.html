@@ -336,14 +336,14 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
   <a class="back" href="/" style="margin-top:1.4rem">← back to the homepage</a>
 </main>
 
-<script src="redox/engine.js?v=20261124f"></script>
-<script src="redox/estimator.js?v=20261124f"></script>
-<script src="redox/minerals.js?v=20261124f"></script>
-<script src="redox/partners.js?v=20261124f"></script>
+<script src="redox/engine.js?v=20261124g"></script>
+<script src="redox/estimator.js?v=20261124g"></script>
+<script src="redox/minerals.js?v=20261124g"></script>
+<script src="redox/partners.js?v=20261124g"></script>
 <script>
 (function () {
   "use strict";
-  var VER = "20261124f";            // changed with every release, so that a browser never mixes old and new files
+  var VER = "20261124g";            // changed with every release, so that a browser never mixes old and new files
   var MR = window.MineralRedox, MD = window.MineralData;
   var $ = function (id) { return document.getElementById(id); };
   // The calculation lives in three files: engine.js (the redox value), estimator.js (formation energies never measured) and
@@ -761,15 +761,20 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
       if (jump) $("code").scrollIntoView({ behavior: "smooth", block: "start" });
     }).catch(function () { $("code-what").textContent = "The file could not be loaded."; });
   }
-  function codeSetup() {
-    $("code-files").innerHTML = Object.keys(CODE).map(function (id) {
-      return '<button type="button" class="chip" data-file="' + id + '" aria-pressed="false" title="' + esc(CODE[id].what) + '">' + esc(CODE[id].label) + "</button>";
-    }).join("");
+  function codeData() {            // the data files, and the oxides also allowed as products (their formulas are known once the library has loaded)
     $("code-data").innerHTML = "Data files the page reads: " + [["redox/obigt_thermo.csv", "the reaction database"], ["redox/measured_library.csv", "measured values from the other databases"],
       ["redox/base_crosscheck.csv", "how far the databases agree"], ["redox/ima_minerals.csv", "the IMA list with the formula used for each mineral"],
       ["redox/estimator_model.json", "the fitted numbers of the estimate"]].map(function (f) {
         return '<a href="' + f[0] + '" target="_blank" rel="noopener">' + f[0].replace("redox/", "") + "</a> (" + f[1] + ")";
-      }).join(", ") + '. All of it is in the <a href="https://github.com/zakite/zakite.github.io/tree/main/redox" target="_blank" rel="noopener">public repository</a>.';
+      }).join(", ") + ". The reaction database lacks a solid for some oxidation states, so " + MD.EXTRA_PRODUCTS.length + " measured oxides from measured_library.csv are also allowed as products (" +
+      MD.EXTRA_PRODUCTS.map(function (n) { var e = S.lib.filter(function (x) { return x.name === n; })[0]; return e ? fmtFormula(e.formula) : esc(n); }).join(", ") + "); minerals.js lists them with the rule." +
+      ' All of it is in the <a href="https://github.com/zakite/zakite.github.io/tree/main/redox" target="_blank" rel="noopener">public repository</a>.';
+  }
+  function codeSetup() {
+    $("code-files").innerHTML = Object.keys(CODE).map(function (id) {
+      return '<button type="button" class="chip" data-file="' + id + '" aria-pressed="false" title="' + esc(CODE[id].what) + '">' + esc(CODE[id].label) + "</button>";
+    }).join("");
+    codeData();
     document.addEventListener("click", function (e) {
       var b = e.target.closest("[data-file]");
       if (!b) return;
@@ -1347,7 +1352,7 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
       (readStore(STORE_USER, []) || []).forEach(function (u) {
         try { addUser(u.name, u.formula, u.G, u.source, true, true); } catch (e) { /* skip a saved row that no longer reads */ }
       });
-      rebuild();
+      rebuild(); codeData();
       var solids = S.base.filter(function (s) { return s.state === "cr"; }).length;
       $("db-info").innerHTML = "Data: OBIGT (CHNOSZ; Dick 2019) and eleven other published databases, " +
         (solids + S.lib.length).toLocaleString("en-US") + " solids with measured values. The source of each value is listed with the answer." +

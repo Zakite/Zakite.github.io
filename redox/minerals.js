@@ -106,12 +106,26 @@
   }
   function crossOf(sp) { return sp.ref !== "user" && sp.ref !== "moved" && !sp.lib && sp.state === "cr" ? S.cross[sp.name] : null; }
   // The database in use: the base database, with any values added by hand on this page in place of the entries they replace.
-  // Measured solids from the other databases that a reaction may also make. The base database has no species at all for
-  // antimony(V), titanium(III), niobium(IV) or lead(IV), and no solid for vanadium(III), molybdenum(IV) or tungsten(IV).
-  // Without them O2 could not oxidize any antimony or lead(II) mineral, H2 appeared unable to reduce some vanadates,
-  // molybdates and tungstates, and the others came out as weaker oxidants than they are. Each entry is the measured simple
-  // oxide of the missing state. Left out on purpose: Ni3O4, which would make NiO oxidize in air (it does not).
-  var EXTRA_PRODUCTS = ["Karelianite", "MoO2(s)", "WO2", "Sb2O4", "Sb2O5(s)", "Ti2O3", "NbO2", "Plattnerite", "Minium"];
+  // Measured solids from the other databases that a reaction may also make. The base database holds many oxidation states only
+  // as dissolved species, or not at all. A mineral that should turn into bismuth oxide or chromium oxide then had nothing solid to
+  // turn into, and its value came out wrong: O2 could not oxidize any antimony or lead(II) mineral, H2 appeared unable to reduce
+  // some vanadates, molybdates and tungstates, and a zirconium mineral holding iron(II) looked inert.
+  // The rule: for every oxidation state the minerals use, the reaction database gets the most stable measured simple solid (the
+  // element with oxygen and hydrogen only) wherever it had none. Where it already has such a solid nothing is added: the
+  // other databases then differ from it by less than their own error.
+  var EXTRA_PRODUCTS = [
+    "Karelianite", "V2O4", "Shcherbinaite",      // vanadium(III), (IV), (V): V2O3, V2O4, V2O5
+    "MoO2(s)", "WO2",                            // molybdenum(IV), tungsten(IV)
+    "Senarmontite", "Sb2O4", "Sb2O5(s)",         // antimony(III), (IV), (V)
+    "Ti2O3", "NbO2",                             // titanium(III), niobium(IV)
+    "Plattnerite", "Minium",                     // lead(IV): PbO2, Pb3O4
+    "Bi2O3", "HgO(cr)", "Tl2O3", "Ag2O",         // bismuth(III), mercury(II), thallium(III), silver(I)
+    "Eskolaite", "CrO2(s)",                      // chromium(III), (IV): Cr2O3, CrO2
+    "ZrO2(cr)", "Thorianite"                     // zirconium(IV), thorium(IV): ZrO2, ThO2
+  ];
+  // Left out on purpose. Ni3O4: it would make NiO oxidize in air, which it does not. Zr(OH)4(am, aged) and Sb(OH)3: listed as more
+  // stable than the crystalline oxide plus water, which cannot be. Hg2(OH)2: not a known solid. Solid boric acid, manganite and
+  // Ni(OH)2: within 1 to 5 kJ/mol of what the database already holds, and the sources disagree on which side they fall.
   function index() {
     var over = Object.create(null);
     S.user.forEach(function (u) { over[norm(u.sp.name)] = true; });
@@ -543,7 +557,7 @@
     // ## ± = √( (± from the mineral)² + (± from the reference data)² )
     return { v: res.oxidant.vsH2, pm: Math.sqrt(a * a + b * b) };
   }
-  var api = { errOf: errOf, ownErr: ownErr, refErr: refErr, refU: refU, REF_AQ: REF_AQ, withH2: withH2, S: S, DB_NAMES: DB_NAMES, plain: plain, norm: norm, count: count, cond: cond, byG: byG, compKey: compKey, atomsOf: atomsOf, sortLib: sortLib, loadLibrary: loadLibrary, loadIma: loadIma, loadCross: loadCross, crossOf: crossOf, index: index, imaFind: imaFind, lookup: lookup, imaComp: imaComp, sameCompound: sameCompound, imaHits: imaHits, apart: apart, oneFor: oneFor, attachStates: attachStates, recipeOf: recipeOf, fallback: fallback, resolve: resolve, evaluate: evaluate, placeholder: placeholder, shifted: shifted, scoreOf: scoreOf, rangeOf: rangeOf, uEff: uEff };
+  var api = { EXTRA_PRODUCTS: EXTRA_PRODUCTS, errOf: errOf, ownErr: ownErr, refErr: refErr, refU: refU, REF_AQ: REF_AQ, withH2: withH2, S: S, DB_NAMES: DB_NAMES, plain: plain, norm: norm, count: count, cond: cond, byG: byG, compKey: compKey, atomsOf: atomsOf, sortLib: sortLib, loadLibrary: loadLibrary, loadIma: loadIma, loadCross: loadCross, crossOf: crossOf, index: index, imaFind: imaFind, lookup: lookup, imaComp: imaComp, sameCompound: sameCompound, imaHits: imaHits, apart: apart, oneFor: oneFor, attachStates: attachStates, recipeOf: recipeOf, fallback: fallback, resolve: resolve, evaluate: evaluate, placeholder: placeholder, shifted: shifted, scoreOf: scoreOf, rangeOf: rangeOf, uEff: uEff };
   root.MineralData = api;
   if (typeof module !== "undefined" && module.exports) module.exports = api;
 })(typeof window !== "undefined" ? window : globalThis);
