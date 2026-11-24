@@ -13,6 +13,7 @@
 (function (root) {
   "use strict";
 
+  const NEAR_LINE = 10;            // kJ per mol e-: an inert mineral whose first reduction lies this close below the H2 line is marked as a borderline case
   const F = 96.485;               // kJ per volt per mole of electrons
   const R = 8.314462618e-3;       // kJ / (mol K)
   const T = 298.15;               // K; the database values are for 25 C
@@ -607,14 +608,19 @@
     if (out.fuel) { out.role = "fuel"; out.number = out.fuel.number; }
     else if (out.oxidant) { out.role = "oxidant"; out.number = out.oxidant.number; }
     else {
-      out.role = "inert";                       // nothing in water changes it; rank it by its first reduction below the H2 limit
+      out.role = "inert";                       // neither O2 nor H2 changes it in water, so no energy is to be had: the value is 0
       const first = sp.heavy.length ? (cond.firstMove(sp) || cond.firstMove(sp, true)) : null;
-      if (first && first.up) {                  // gold, platinum: nothing reduces them and O2 does not oxidize them, so the value against O2 is 0
-        out.deep = null; out.above = first;
+      out.deep = null; out.outside = first;     // where its first change would be lies outside the stability field of water: a note, not a value
+      if (first && first.up) {                  // gold, platinum: nothing reduces them and O2 does not oxidize them
         // ## how much stronger than O₂ an oxidant must be = E(first oxidation) − E(O₂)
-        out.notes.push("O2 does not oxidize it: that would take an oxidant " + (first.E - cond.E_O2).toFixed(3) + " V stronger than O2 (to " + names(first.eq.products) + ")");
-      } else out.deep = first;
-      out.number = out.deep ? out.deep.number : 0;
+        out.notes.push("O2 does not oxidize it: that would take an oxidant " + (first.E - cond.E_O2).toFixed(3) + " V stronger than O2 (to " + names(first.eq.products.slice(0, 3)) + ")");
+      } else if (first) {                       // quartz, corundum, fluorite: O2 has nothing to oxidize and H2 cannot reduce them
+        // ## how far below the H₂ line its first reduction lies = E(H₂) − E(first reduction)
+        const gap = cond.E_H2 - first.E;
+        out.notes.push("H2 does not reduce it: its first reduction (to " + names(first.eq.products.slice(0, 3)) + ") lies " + gap.toFixed(3) + " V below the H2 line, outside the stability field of water" +
+          (gap * F < NEAR_LINE ? "; that is close to the line, so within the error H2 may reduce it" : ""));
+      }
+      out.number = 0;
     }
     return out;
   }

@@ -336,14 +336,14 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
   <a class="back" href="/" style="margin-top:1.4rem">← back to the homepage</a>
 </main>
 
-<script src="redox/engine.js?v=20261124d"></script>
-<script src="redox/estimator.js?v=20261124d"></script>
-<script src="redox/minerals.js?v=20261124d"></script>
-<script src="redox/partners.js?v=20261124d"></script>
+<script src="redox/engine.js?v=20261124e"></script>
+<script src="redox/estimator.js?v=20261124e"></script>
+<script src="redox/minerals.js?v=20261124e"></script>
+<script src="redox/partners.js?v=20261124e"></script>
 <script>
 (function () {
   "use strict";
-  var VER = "20261124d";            // changed with every release, so that a browser never mixes old and new files
+  var VER = "20261124e";            // changed with every release, so that a browser never mixes old and new files
   var MR = window.MineralRedox, MD = window.MineralData;
   var $ = function (id) { return document.getElementById(id); };
   // The calculation lives in three files: engine.js (the redox value), estimator.js (formation energies never measured) and
@@ -584,7 +584,8 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
       "E(O<sub>2</sub>) = −Δ<sub>f</sub>G(H<sub>2</sub>O) / (2F) + E(H<sub>2</sub>) = " + num(-W, 3) + " / " + num(2 * F, 2) + " " + (c.E_H2 < 0 ? "− " + num(-c.E_H2, 4) : "+ " + num(c.E_H2, 4)) + " = " + v4(c.E_O2) + " V</div>" +
       '<div class="by">' + fnLink("engine", "Conditions") + "</div>");
     if (!eq) {
-      steps.push("<b>Result</b>No potential tried moves electrons to or from this mineral, so its value is 0." + '<div class="by">' + fnLink("engine", "analyze") + "</div>");
+      steps.push("<b>Result</b>Neither O<sub>2</sub> nor H<sub>2</sub> moves electrons to or from this mineral in water, so there is no energy to be had and its value is 0. It is inert in water." +
+        (res.outside ? " Where its first change would be lies outside the stability field of water; that is given as a note, not as a value." : "") + '<div class="by">' + fnLink("engine", "analyze") + "</div>");
       return wrap(steps, true);
     }
     // 3. energies at the potential
@@ -965,7 +966,7 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
     var sd = res.fuel || res.oxidant || res.deep, sE = sd ? sd.E : null;
     var blind = !sd ? res.notes.filter(function (n) { return /^no data for /.test(n); })[0] : null;
     var score = sd ? signed(res.number, 1) : blind ? "no value" : "0";
-    var side = !sd ? "" : res.fuel ? " Reduced side: O<sub>2</sub> oxidizes it."
+    var side = !sd ? (blind ? "" : " Inert in water: neither O<sub>2</sub> nor H<sub>2</sub> changes it.") : res.fuel ? " Reduced side: O<sub>2</sub> oxidizes it."
       : res.deep && res.deep.up ? " O<sub>2</sub> cannot oxidize it: that only starts above O<sub>2</sub>."
       : res.number > 0 ? " A stronger oxidant than O<sub>2</sub>: it can take electrons from water."
       : " Oxidized side: O<sub>2</sub> does nothing to it.";
@@ -976,8 +977,7 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
       : '<p class="score">Redox value against O<sub>2</sub>: <b>' + score + "</b>" + (sd ? " \u00b1 " + pmText(spm) : "") + " kJ per mol e<sup>−</sup>" +
         (sd ? " = <b>" + signed(res.number / MR.F, 3) + "</b>" + " \u00b1 " + (spm / MR.F > 0 && spm / MR.F < 0.0005 ? "<0.001" : (spm / MR.F).toFixed(3)) + " <b>V</b>" + alt + "." : ".") + side + "</p>" +
         (h2 ? '<p class="score">Redox value against H<sub>2</sub>: <b>' + signed(h2.v, 1) + "</b>" + " \u00b1 " + pmText(h2.pm) + " kJ per mol e<sup>−</sup>. H<sub>2</sub> reduces it.</p>" : "")) +
-      (unset ? '<p class="score">Its formation energy is not known well enough to settle which reaction applies: within that error the value against O<sub>2</sub> could lie anywhere from ' +
-        signed(Math.min(info.range.lo, info.range.hi), 1) + " to " + signed(Math.max(info.range.lo, info.range.hi), 1) + ".</p>" : "") +
+      (unset ? '<p class="score">Its formation energy is not known well enough to settle which reaction applies: ' + esc(unsettled(info.range).replace(/^(sign|class) not settled: /, "")) + ".</p>" : "") +
       (res.breakdown && res.breakdown.dG < -1 ? '<p class="score">Left on its own in water it turns into ' + esc(res.breakdown.products.map(function (q) { return q[0].name; }).join(", ")) +
         (info && placeholder(info.flags) ? " with no electrons moving. That is not a redox change, so its energy is not counted."
           : ", releasing <b>" + num(-res.breakdown.dG, 1) + "</b> kJ/mol with no electrons moving. That is not redox energy and is not counted." +
@@ -1209,7 +1209,7 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
       var src = r.basis === "library" ? "measured" : r.basis === "moved" ? (r.how === "water" ? "measured (solubility)" : "measured nearby, moved") : r.basis === "proxy" ? "measured (" + esc(r.twin) + ")"
         : r.basis === "estimate" ? "<b>estimate</b>" : r.basis === "element" ? "native element" : sp.ref === "user" ? "added by hand" : "measured";
       return "<tr><td>" + esc(label(r)) + (entry(r) ? " <small>(" + esc(entry(r)) + ")</small>" : "") + "</td><td>" + fmtFormula(r.show || sp.formula) + '</td><td class="num"><b>' + (d ? signed(res.number, 1) : "0") + "</b>" + pm +
-        '</td><td class="num">' + (d ? signed(res.number / MR.F, 3) + ' <span class="pm">\u00b1' + (pmv / MR.F > 0 && pmv / MR.F < 0.0005 ? "<0.001" : (pmv / MR.F).toFixed(3)) + "</span>" : "0") + '</td><td class="num">' + (h2 ? "<b>" + signed(h2.v, 1) + "</b>" + ' <span class="pm">\u00b1' + pmText(h2.pm) + "</span>" : "") + "</td><td>" + src + "</td></tr>";
+        '</td><td class="num">' + (d ? signed(res.number / MR.F, 3) + ' <span class="pm">\u00b1' + (pmv / MR.F > 0 && pmv / MR.F < 0.0005 ? "<0.001" : (pmv / MR.F).toFixed(3)) + "</span>" : "0") + '</td><td class="num">' + (h2 ? "<b>" + signed(h2.v, 1) + "</b>" + ' <span class="pm">\u00b1' + pmText(h2.pm) + "</span>" : "") + "</td><td>" + src + (res.role === "inert" ? "<small>inert in water</small>" : "") + "</td></tr>";
     }).join("");
     var table = all.length ? '<div class="batch-out"><table><thead><tr><th>Mineral</th><th>Formula</th><th class="num">vs O<sub>2</sub> (kJ/mol e<sup>\u2212</sup>)</th><th class="num">vs O<sub>2</sub> (V)</th><th class="num">vs H<sub>2</sub> (kJ/mol e<sup>\u2212</sup>)</th><th>Basis</th></tr></thead><tbody>' +
       body + "</tbody></table></div>" : "";
@@ -1247,8 +1247,10 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
   }
 
   function pmText(v) { return v > 0 && v < 0.05 ? "<0.1" : v.toFixed(1); }            // a ± too small for one decimal is still shown
-  function unsettled(g) {            // the words for a value whose sign hangs on the uncertainty
-    return "sign not settled: from " + signed(Math.min(g.lo, g.hi), 1) + " to " + signed(Math.max(g.lo, g.hi), 1) + " within the uncertainty of its formation energy";
+  function unsettled(g) {            // the words for a value whose sign or class hangs on the uncertainty
+    var lo = Math.min(g.lo, g.hi), hi = Math.max(g.lo, g.hi);
+    if (Math.abs(lo) < 1e-9 || Math.abs(hi) < 1e-9) return "class not settled: within the uncertainty of its formation energy it could be inert (value 0)";
+    return "sign not settled: from " + signed(lo, 1) + " to " + signed(hi, 1) + " within the uncertainty of its formation energy";
   }
 
   function csvText() {            // the export: one signed redox value per mineral, against O2
@@ -1259,19 +1261,20 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
     var r4 = function (v) { return v === null || v === undefined || !isFinite(v) ? "" : Math.round(v * 10000) / 10000; };
     var lines = ["# Redox value of each mineral against O2: kJ per mole of electrons, O2 = 0. pH " + b.pH + ", 25 C, 1 bar, dissolved species " +
       (b.solutes === 1 ? "1 M" : b.solutes === 0.001 ? "1 mM" : "1 uM") + ".",
-      "# Every mineral has a redox boundary. The size of the value is how far that boundary sits from O2; redox_value_V is the same value in volts (kJ = 96.485 x V).",
-      "# Positive: the mineral is the reduced side of its boundary (O2 oxidizes it). Negative: it is the oxidized side (O2 does nothing to it). The few minerals whose couple sits above O2 flip: metals such as gold are negative and permanganate is positive.",
+      "# class says what happens to the mineral in water: fuel (O2 oxidizes it), oxidant (H2 reduces it, O2 does nothing to it) or inert (neither changes it).",
+      "# Positive value: a fuel; the value is the energy released per mole of electrons when O2 oxidizes it. Negative value: an oxidant; the size is how far its couple sits below O2. redox_value_V is the same value in volts (kJ = 96.485 x V).",
+      "# Inert minerals have the value 0 and no plus_minus: no energy is to be had from O2 or from H2. Where their first reduction or oxidation would be lies outside the stability field of water; the note gives it, and marks the minerals that sit close to the H2 line.",
       "# Only electron transfer is counted. change_in_water_kJ_per_mol is what the mineral releases by dissolving, hydrating or turning into a more stable form with no electrons moving; it is not part of the value.",
       "# plus_minus_kJ_per_mol_e is the error of the value, from two parts added in quadrature. (1) The mineral's own formation energy: how far the value moves when that energy is shifted by its uncertainty either way (0 where the mineral changes in water by more than that uncertainty; where a shifted run ends on a different reaction, noted as sign not settled, the uncertainty divided by the electrons). (2) The reference data: the uncertainty of each species the mineral turns into (the spread between databases for a solid, " + MD.REF_AQ + " kJ/mol assumed for a dissolved species or gas), divided by the electrons.",
       "# redox_value_vs_H2_kJ_per_mol_e is given where H2 reduces the mineral: the energy released per mol of electrons, positive, with its own plus_minus. It is empty where H2 does nothing to the mineral.",
-      "# A note starting 'sign not settled' means the value changes sign inside that uncertainty: treat the sign of that mineral as unknown.",
+      "# A note starting 'sign not settled' means the value changes sign inside that uncertainty: treat the sign of that mineral as unknown. 'class not settled' means that inside that uncertainty the mineral could be inert.",
       "# One row per mineral, computed for its ideal IMA formula (solid solutions as the end member the name stands for). Where the databases measured another water content or a nearby composition, that value is brought to the ideal formula and database_entry names what was measured.",
       "# mineral_plain is the name without accents or Greek letters, for matching against other lists. ima_mineral says 'older name' for a name the July 2026 IMA list no longer carries.",
-      ["mineral", "formula", "redox_value_kJ_per_mol_e", "redox_value_V", "electrons", "plus_minus_kJ_per_mol_e", "plus_minus_V", "redox_value_vs_H2_kJ_per_mol_e", "vs_H2_plus_minus_kJ_per_mol_e", "basis", "source", "note", "ima_mineral", "database_entry", "change_in_water_kJ_per_mol", "mineral_plain"].join(",")];
+      ["mineral", "formula", "class", "redox_value_kJ_per_mol_e", "redox_value_V", "electrons", "plus_minus_kJ_per_mol_e", "plus_minus_V", "redox_value_vs_H2_kJ_per_mol_e", "vs_H2_plus_minus_kJ_per_mol_e", "basis", "source", "note", "ima_mineral", "database_entry", "change_in_water_kJ_per_mol", "mineral_plain"].join(",")];
     var who = function (r) { return r.ima || (r.sp ? r.sp.name : r.input); }, yes = function (r) { return r.ima ? (r.older ? "older name" : "yes") : "no"; };
     b.rows.forEach(function (r) {
-      if (r.status !== "computed") { lines.push([who(r), "", "", "", "", "", "", "", "", "no formation energy yet", "", r.reason, yes(r), "", "", plain(who(r))].map(q).join(",")); return; }
-      if (r.inertOnly) { lines.push([who(r), r.formula, "", "", "", "", "", "", "", "no formation energy yet", "", "no element changes oxidation state in water", yes(r), "", "", plain(who(r))].map(q).join(",")); return; }
+      if (r.status !== "computed") { lines.push([who(r), "", "", "", "", "", "", "", "", "", "no formation energy yet", "", r.reason, yes(r), "", "", plain(who(r))].map(q).join(",")); return; }
+      if (r.inertOnly) { lines.push([who(r), r.formula, "", "", "", "", "", "", "", "", "no formation energy yet", "", "no element changes oxidation state in water", yes(r), "", "", plain(who(r))].map(q).join(",")); return; }
       var sp = r.sp, res = r.res, d = res.fuel || res.oxidant || res.deep;
       var basis = r.basis === "library" ? "measured" : r.basis === "moved" ? (r.how === "water" ? "measured by solubility, water of the ideal formula counted as liquid water" : "measured at a nearby composition, moved to the ideal formula")
         : r.basis === "proxy" ? "measured value of " + r.twin + " (same formula)"
@@ -1281,7 +1284,7 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
         : r.basis === "estimate" || r.basis === "proxy" || r.basis === "element" ? "" : sp.ref;
       var c = b.cond, E = d ? (res.fuel ? res.fuel.E : res.oxidant ? res.oxidant.E : res.deep.E) : null, h2 = withH2(res, r.u, r.range);
       var real = r.from ? r.from.name + " [" + r.from.formula + "]" : !/^(estimate|stand-in|element)$/.test(sp.ref) && r.ima && norm(sp.name) !== norm(r.ima) ? sp.name : "";
-      lines.push([who(r), r.show || sp.formula, d ? r4(res.number) : 0, d ? r4(res.number / MR.F) : 0, d ? r4(d.n) : "", d ? r4(errOf(r.u, res, r.range)) : "", d ? Math.round(errOf(r.u, res, r.range) / MR.F * 1e5) / 1e5 : "", h2 ? r4(h2.v) : "", h2 ? r4(h2.pm) : "", basis, source,
+      lines.push([who(r), r.show || sp.formula, res.role, d ? r4(res.number) : 0, d ? r4(res.number / MR.F) : 0, d ? r4(d.n) : "", d ? r4(errOf(r.u, res, r.range)) : "", d ? Math.round(errOf(r.u, res, r.range) / MR.F * 1e5) / 1e5 : "", h2 ? r4(h2.v) : "", h2 ? r4(h2.pm) : "", basis, source,
         (r.range && r.range.flip ? [unsettled(r.range)] : []).concat(res.notes.map(function (t) { return placeholder(r.flags) ? t.replace(/, releasing [\d.]+ kJ\/mol/, "") : t; }), r.flags || []).join("; "), yes(r), real,
         res.breakdown && res.breakdown.known && !placeholder(r.flags) ? Math.round(-res.breakdown.dG * 10) / 10 : "", plain(who(r))].map(q).join(","));
     });

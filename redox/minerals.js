@@ -106,10 +106,15 @@
   }
   function crossOf(sp) { return sp.ref !== "user" && sp.ref !== "moved" && !sp.lib && sp.state === "cr" ? S.cross[sp.name] : null; }
   // The database in use: the base database, with any values added by hand on this page in place of the entries they replace.
+  // Measured solids from the other databases that a reaction may also make. The base database has no solid of vanadium(III),
+  // molybdenum(IV) or tungsten(IV); without them H2 appeared unable to reduce some vanadates, molybdates and tungstates, and
+  // the others came out as weaker oxidants than they are. V2O3, MoO2 and WO2 are the measured oxides of those states.
+  var EXTRA_PRODUCTS = ["Karelianite", "MoO2(s)", "WO2"];
   function index() {
     var over = Object.create(null);
     S.user.forEach(function (u) { over[norm(u.sp.name)] = true; });
     S.db = S.base.filter(function (s) { return !(s.state === "cr" && over[norm(s.name)]); })
+      .concat(S.lib.filter(function (s) { return EXTRA_PRODUCTS.indexOf(s.name) >= 0; }))
       .concat(S.user.map(function (u) { return u.sp; }));
     S.byName = Object.create(null); S.byBase = Object.create(null);
     S.db.forEach(function (s) {
@@ -489,10 +494,10 @@
     var v = scoreOf(res), lo, hi;
     try { lo = scoreOf(MR.analyze(shifted(sp, -u), c)); hi = scoreOf(MR.analyze(shifted(sp, u), c)); } catch (e) { return null; }
     var pos = lo > 1e-9 || v > 1e-9 || hi > 1e-9, neg = lo < -1e-9 || v < -1e-9 || hi < -1e-9;
-    // flip: the two runs land on opposite sides of zero, on two different reactions. The distance between them is then not an
+    // flip: the two runs land on opposite sides of zero, or one of them on 0 (inert): a different reaction, or none. The distance between them is then not an
     // uncertainty to print as a plus-or-minus; other is the value on the far side, shown as the alternative.
     // ## ± = larger of | value(ΔfG − u) − value | and | value(ΔfG + u) − value |
-    return { pm: Math.max(Math.abs(lo - v), Math.abs(hi - v)), lo: lo, hi: hi, flip: pos && neg, other: Math.abs(lo - v) > Math.abs(hi - v) ? lo : hi };
+    return { pm: Math.max(Math.abs(lo - v), Math.abs(hi - v)), lo: lo, hi: hi, flip: (pos && neg) || (Math.abs(v) > 1e-9 && (Math.abs(lo) < 1e-9 || Math.abs(hi) < 1e-9)), other: Math.abs(lo - v) > Math.abs(hi - v) ? lo : hi };
   }
   function uEff(u, res) {
     if (!(u >= 0)) return u;
