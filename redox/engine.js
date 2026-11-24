@@ -608,7 +608,12 @@
     else if (out.oxidant) { out.role = "oxidant"; out.number = out.oxidant.number; }
     else {
       out.role = "inert";                       // nothing in water changes it; rank it by its first reduction below the H2 limit
-      out.deep = sp.heavy.length ? (cond.firstMove(sp) || cond.firstMove(sp, true)) : null;
+      const first = sp.heavy.length ? (cond.firstMove(sp) || cond.firstMove(sp, true)) : null;
+      if (first && first.up) {                  // gold, platinum: nothing reduces them and O2 does not oxidize them, so the value against O2 is 0
+        out.deep = null; out.above = first;
+        // ## how much stronger than O₂ an oxidant must be = E(first oxidation) − E(O₂)
+        out.notes.push("O2 does not oxidize it: that would take an oxidant " + (first.E - cond.E_O2).toFixed(3) + " V stronger than O2 (to " + names(first.eq.products) + ")");
+      } else out.deep = first;
       out.number = out.deep ? out.deep.number : 0;
     }
     return out;
