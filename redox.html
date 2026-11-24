@@ -185,14 +185,14 @@ details.missing p + p { margin-top: 6px; }
 .sources td { font-size: 0.85rem; }
 .batch-out { max-height: 460px; overflow: auto; border: 1px solid var(--line); border-radius: 8px; }
 .batch-out th { position: sticky; top: 0; background: var(--surface); z-index: 1; white-space: normal; }
-.batch-out table { table-layout: fixed; min-width: 820px; }
+.batch-out table { table-layout: fixed; min-width: 900px; }
 .batch-out td { overflow-wrap: anywhere; }
-.batch-out th:nth-child(1) { width: 19%; }
-.batch-out th:nth-child(2) { width: 27%; }
+.batch-out th:nth-child(1) { width: 17%; }
+.batch-out th:nth-child(2) { width: 25%; }
 .batch-out th:nth-child(3) { width: 15%; }
-.batch-out th:nth-child(4) { width: 10%; }
-.batch-out th:nth-child(5) { width: 14%; }
-.batch-out th:nth-child(6) { width: 15%; }
+.batch-out th:nth-child(4) { width: 15%; }
+.batch-out th:nth-child(5) { width: 15%; }
+.batch-out th:nth-child(6) { width: 13%; }
 .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 .check { display: flex; gap: 8px; align-items: flex-start; }
 .check input { margin-top: 3px; }
@@ -336,13 +336,14 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
   <a class="back" href="/" style="margin-top:1.4rem">← back to the homepage</a>
 </main>
 
-<script src="redox/engine.js"></script>
-<script src="redox/estimator.js"></script>
-<script src="redox/minerals.js"></script>
-<script src="redox/partners.js"></script>
+<script src="redox/engine.js?v=20261124c"></script>
+<script src="redox/estimator.js?v=20261124c"></script>
+<script src="redox/minerals.js?v=20261124c"></script>
+<script src="redox/partners.js?v=20261124c"></script>
 <script>
 (function () {
   "use strict";
+  var VER = "20261124c";            // changed with every release, so that a browser never mixes old and new files
   var MR = window.MineralRedox, MD = window.MineralData;
   var $ = function (id) { return document.getElementById(id); };
   // The calculation lives in three files: engine.js (the redox value), estimator.js (formation energies never measured) and
@@ -684,7 +685,7 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
   var codeText = {}, codeShown = null;
   function codeLoad(id) {
     if (codeText[id] !== undefined) return Promise.resolve(codeText[id]);
-    return fetch(CODE[id].src).then(function (r) { if (!r.ok) throw new Error("not found"); return r.text(); }).then(function (t) { codeText[id] = t.replace(/\r\n/g, "\n").replace(/\s+$/, ""); return codeText[id]; });
+    return fetch(CODE[id].src + "?v=" + VER).then(function (r) { if (!r.ok) throw new Error("not found"); return r.text(); }).then(function (t) { codeText[id] = t.replace(/\r\n/g, "\n").replace(/\s+$/, ""); return codeText[id]; });
   }
   // Colours one line of JavaScript: comments, equations written out for the reader, strings, numbers, keywords and function names. st.block carries an open
   // /* comment */ from one line to the next. Only for display: the text itself is never changed.
@@ -973,7 +974,7 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
     var alt = "", h2 = withH2(res, info ? info.u : 0, info && info.range);
     var scoreLine = (blind ? '<p class="score">No redox value: there is ' + esc(blind.replace(/, so .*$/, "")) + ".</p>"
       : '<p class="score">Redox value against O<sub>2</sub>: <b>' + score + "</b>" + (sd ? " \u00b1 " + pmText(spm) : "") + " kJ per mol e<sup>−</sup>" +
-        (sd ? " = <b>" + signed(res.number / MR.F, 3) + "</b>" + (spm ? " \u00b1 " + (spm / MR.F).toFixed(3) : "") + " <b>V</b>" + alt + "." : ".") + side + "</p>" +
+        (sd ? " = <b>" + signed(res.number / MR.F, 3) + "</b>" + " \u00b1 " + (spm / MR.F > 0 && spm / MR.F < 0.0005 ? "<0.001" : (spm / MR.F).toFixed(3)) + " <b>V</b>" + alt + "." : ".") + side + "</p>" +
         (h2 ? '<p class="score">Redox value against H<sub>2</sub>: <b>' + signed(h2.v, 1) + "</b>" + " \u00b1 " + pmText(h2.pm) + " kJ per mol e<sup>−</sup>. H<sub>2</sub> reduces it.</p>" : "")) +
       (unset ? '<p class="score">Its formation energy is not known well enough to settle which reaction applies: within that error the value against O<sub>2</sub> could lie anywhere from ' +
         signed(Math.min(info.range.lo, info.range.hi), 1) + " to " + signed(Math.max(info.range.lo, info.range.hi), 1) + ".</p>" : "") +
@@ -1208,7 +1209,7 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
       var src = r.basis === "library" ? "measured" : r.basis === "moved" ? (r.how === "water" ? "measured (solubility)" : "measured nearby, moved") : r.basis === "proxy" ? "measured (" + esc(r.twin) + ")"
         : r.basis === "estimate" ? "<b>estimate</b>" : r.basis === "element" ? "native element" : sp.ref === "user" ? "added by hand" : "measured";
       return "<tr><td>" + esc(label(r)) + (entry(r) ? " <small>(" + esc(entry(r)) + ")</small>" : "") + "</td><td>" + fmtFormula(r.show || sp.formula) + '</td><td class="num"><b>' + (d ? signed(res.number, 1) : "0") + "</b>" + pm +
-        '</td><td class="num">' + (d ? signed(res.number / MR.F, 3) : "0") + '</td><td class="num">' + (h2 ? "<b>" + signed(h2.v, 1) + "</b>" + ' <span class="pm">\u00b1' + pmText(h2.pm) + "</span>" : "") + "</td><td>" + src + "</td></tr>";
+        '</td><td class="num">' + (d ? signed(res.number / MR.F, 3) + ' <span class="pm">\u00b1' + (pmv / MR.F > 0 && pmv / MR.F < 0.0005 ? "<0.001" : (pmv / MR.F).toFixed(3)) + "</span>" : "0") + '</td><td class="num">' + (h2 ? "<b>" + signed(h2.v, 1) + "</b>" + ' <span class="pm">\u00b1' + pmText(h2.pm) + "</span>" : "") + "</td><td>" + src + "</td></tr>";
     }).join("");
     var table = all.length ? '<div class="batch-out"><table><thead><tr><th>Mineral</th><th>Formula</th><th class="num">vs O<sub>2</sub> (kJ/mol e<sup>\u2212</sup>)</th><th class="num">vs O<sub>2</sub> (V)</th><th class="num">vs H<sub>2</sub> (kJ/mol e<sup>\u2212</sup>)</th><th>Basis</th></tr></thead><tbody>' +
       body + "</tbody></table></div>" : "";
@@ -1266,11 +1267,11 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
       "# A note starting 'sign not settled' means the value changes sign inside that uncertainty: treat the sign of that mineral as unknown.",
       "# One row per mineral, computed for its ideal IMA formula (solid solutions as the end member the name stands for). Where the databases measured another water content or a nearby composition, that value is brought to the ideal formula and database_entry names what was measured.",
       "# mineral_plain is the name without accents or Greek letters, for matching against other lists. ima_mineral says 'older name' for a name the July 2026 IMA list no longer carries.",
-      ["mineral", "formula", "redox_value_kJ_per_mol_e", "redox_value_V", "electrons", "plus_minus_kJ_per_mol_e", "redox_value_vs_H2_kJ_per_mol_e", "vs_H2_plus_minus_kJ_per_mol_e", "basis", "source", "note", "ima_mineral", "database_entry", "change_in_water_kJ_per_mol", "mineral_plain"].join(",")];
+      ["mineral", "formula", "redox_value_kJ_per_mol_e", "redox_value_V", "electrons", "plus_minus_kJ_per_mol_e", "plus_minus_V", "redox_value_vs_H2_kJ_per_mol_e", "vs_H2_plus_minus_kJ_per_mol_e", "basis", "source", "note", "ima_mineral", "database_entry", "change_in_water_kJ_per_mol", "mineral_plain"].join(",")];
     var who = function (r) { return r.ima || (r.sp ? r.sp.name : r.input); }, yes = function (r) { return r.ima ? (r.older ? "older name" : "yes") : "no"; };
     b.rows.forEach(function (r) {
-      if (r.status !== "computed") { lines.push([who(r), "", "", "", "", "", "", "", "no formation energy yet", "", r.reason, yes(r), "", "", plain(who(r))].map(q).join(",")); return; }
-      if (r.inertOnly) { lines.push([who(r), r.formula, "", "", "", "", "", "", "no formation energy yet", "", "no element changes oxidation state in water", yes(r), "", "", plain(who(r))].map(q).join(",")); return; }
+      if (r.status !== "computed") { lines.push([who(r), "", "", "", "", "", "", "", "", "no formation energy yet", "", r.reason, yes(r), "", "", plain(who(r))].map(q).join(",")); return; }
+      if (r.inertOnly) { lines.push([who(r), r.formula, "", "", "", "", "", "", "", "no formation energy yet", "", "no element changes oxidation state in water", yes(r), "", "", plain(who(r))].map(q).join(",")); return; }
       var sp = r.sp, res = r.res, d = res.fuel || res.oxidant || res.deep;
       var basis = r.basis === "library" ? "measured" : r.basis === "moved" ? (r.how === "water" ? "measured by solubility, water of the ideal formula counted as liquid water" : "measured at a nearby composition, moved to the ideal formula")
         : r.basis === "proxy" ? "measured value of " + r.twin + " (same formula)"
@@ -1280,7 +1281,7 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
         : r.basis === "estimate" || r.basis === "proxy" || r.basis === "element" ? "" : sp.ref;
       var c = b.cond, E = d ? (res.fuel ? res.fuel.E : res.oxidant ? res.oxidant.E : res.deep.E) : null, h2 = withH2(res, r.u, r.range);
       var real = r.from ? r.from.name + " [" + r.from.formula + "]" : !/^(estimate|stand-in|element)$/.test(sp.ref) && r.ima && norm(sp.name) !== norm(r.ima) ? sp.name : "";
-      lines.push([who(r), r.show || sp.formula, d ? r4(res.number) : 0, d ? r4(res.number / MR.F) : 0, d ? r4(d.n) : "", d ? r4(errOf(r.u, res, r.range)) : "", h2 ? r4(h2.v) : "", h2 ? r4(h2.pm) : "", basis, source,
+      lines.push([who(r), r.show || sp.formula, d ? r4(res.number) : 0, d ? r4(res.number / MR.F) : 0, d ? r4(d.n) : "", d ? r4(errOf(r.u, res, r.range)) : "", d ? Math.round(errOf(r.u, res, r.range) / MR.F * 1e5) / 1e5 : "", h2 ? r4(h2.v) : "", h2 ? r4(h2.pm) : "", basis, source,
         (r.range && r.range.flip ? [unsettled(r.range)] : []).concat(res.notes.map(function (t) { return placeholder(r.flags) ? t.replace(/, releasing [\d.]+ kJ\/mol/, "") : t; }), r.flags || []).join("; "), yes(r), real,
         res.breakdown && res.breakdown.known && !placeholder(r.flags) ? Math.round(-res.breakdown.dG * 10) / 10 : "", plain(who(r))].map(q).join(","));
     });
@@ -1319,15 +1320,15 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
     if (isFinite(parseFloat(saved.ph))) $("ph").value = saved.ph;
     if (["1", "0.001", "0.000001"].indexOf(saved.solutes) >= 0) $("solutes").value = saved.solutes;
 
-    var modelReady = fetch("redox/estimator_model.json").then(function (r) { return r.ok ? r.json() : null; })
+    var modelReady = fetch("redox/estimator_model.json?v=" + VER).then(function (r) { return r.ok ? r.json() : null; })
       .catch(function () { return null; });           // without it the calculator still works on measured values
-    var libReady = fetch("redox/measured_library.csv").then(function (r) { return r.ok ? r.text() : ""; })
+    var libReady = fetch("redox/measured_library.csv?v=" + VER).then(function (r) { return r.ok ? r.text() : ""; })
       .catch(function () { return ""; });             // without it the calculator still works on the base database
-    var crossReady = fetch("redox/base_crosscheck.csv").then(function (r) { return r.ok ? r.text() : ""; })
+    var crossReady = fetch("redox/base_crosscheck.csv?v=" + VER).then(function (r) { return r.ok ? r.text() : ""; })
       .catch(function () { return ""; });
-    var imaReady = fetch("redox/ima_minerals.csv").then(function (r) { return r.ok ? r.text() : ""; })
+    var imaReady = fetch("redox/ima_minerals.csv?v=" + VER).then(function (r) { return r.ok ? r.text() : ""; })
       .catch(function () { return ""; });             // without it only the measured minerals can be looked up by name
-    fetch("redox/obigt_thermo.csv").then(function (r) {
+    fetch("redox/obigt_thermo.csv?v=" + VER).then(function (r) {
       if (!r.ok) throw new Error("HTTP " + r.status);
       return r.text();
     }).then(function (text) {
