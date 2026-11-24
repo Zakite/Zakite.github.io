@@ -185,13 +185,14 @@ details.missing p + p { margin-top: 6px; }
 .sources td { font-size: 0.85rem; }
 .batch-out { max-height: 460px; overflow: auto; border: 1px solid var(--line); border-radius: 8px; }
 .batch-out th { position: sticky; top: 0; background: var(--surface); z-index: 1; white-space: normal; }
-.batch-out table { table-layout: fixed; min-width: 720px; }
+.batch-out table { table-layout: fixed; min-width: 820px; }
 .batch-out td { overflow-wrap: anywhere; }
-.batch-out th:nth-child(1) { width: 21%; }
-.batch-out th:nth-child(2) { width: 31%; }
-.batch-out th:nth-child(3) { width: 18%; }
-.batch-out th:nth-child(4) { width: 12%; }
-.batch-out th:nth-child(5) { width: 18%; }
+.batch-out th:nth-child(1) { width: 19%; }
+.batch-out th:nth-child(2) { width: 27%; }
+.batch-out th:nth-child(3) { width: 15%; }
+.batch-out th:nth-child(4) { width: 10%; }
+.batch-out th:nth-child(5) { width: 14%; }
+.batch-out th:nth-child(6) { width: 15%; }
 .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 .check { display: flex; gap: 8px; align-items: flex-start; }
 .check input { margin-top: 3px; }
@@ -316,7 +317,7 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
       <button type="button" id="copy-csv" class="quiet">Copy CSV</button>
       <span id="csv-status" class="hint"></span>
     </div>
-    <p class="hint" id="csv-hint" hidden>The CSV has one signed redox value per mineral against O<sub>2</sub>, the same value in volts, its &plusmn;, and where it came from.</p>
+    <p class="hint" id="csv-hint" hidden>The &plusmn; is the error of the value. The CSV has one signed redox value per mineral against O<sub>2</sub>, the same value in volts, its &plusmn;, the value against H<sub>2</sub> where H<sub>2</sub> reduces the mineral, and where each came from.</p>
     <label for="csvbox" class="hint" id="csvbox-label" hidden>CSV text, ready to select and copy</label>
     <textarea id="csvbox" readonly></textarea>
   </section>
@@ -349,7 +350,7 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
   // and conditions belong to minerals.js, and the page keeps its own settings on the same object.
   var S = MD.S;
   S.pick = null; S.batch = null; S.downloads = null; S.asked = false; S.partner = "O2"; S.named = Object.create(null);
-  var plain = MD.plain, norm = MD.norm, count = MD.count, cond = MD.cond, loadLibrary = MD.loadLibrary, loadIma = MD.loadIma, loadCross = MD.loadCross, crossOf = MD.crossOf, imaFind = MD.imaFind, lookup = MD.lookup, sameCompound = MD.sameCompound, imaHits = MD.imaHits, apart = MD.apart, oneFor = MD.oneFor, fallback = MD.fallback, placeholder = MD.placeholder, shifted = MD.shifted, scoreOf = MD.scoreOf, rangeOf = MD.rangeOf, uEff = MD.uEff;
+  var plain = MD.plain, norm = MD.norm, count = MD.count, cond = MD.cond, loadLibrary = MD.loadLibrary, loadIma = MD.loadIma, loadCross = MD.loadCross, crossOf = MD.crossOf, imaFind = MD.imaFind, lookup = MD.lookup, sameCompound = MD.sameCompound, imaHits = MD.imaHits, apart = MD.apart, oneFor = MD.oneFor, fallback = MD.fallback, placeholder = MD.placeholder, shifted = MD.shifted, scoreOf = MD.scoreOf, rangeOf = MD.rangeOf, uEff = MD.uEff, errOf = MD.errOf, withH2 = MD.withH2;
   var EXAMPLES = ["pyrite", "pyrrhotite", "mackinawite", "magnetite", "hematite", "goethite", "pyrolusite", "siderite",
                   "vivianite", "fayalite", "chalcopyrite", "uraninite", "quartz"];
   var STORE_USER = "mineral-redox-user-species", STORE_STATE = "mineral-redox-state";
@@ -651,9 +652,9 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
     if (info && info.range && info.u > 0) {
       steps.push("<b>The ±</b>The whole calculation is run twice more with Δ<sub>f</sub>G moved by its uncertainty, " + Math.round(info.u * 10) / 10 + " kJ/mol, down and up." +
         '<div class="calc">lower: ' + signed(info.range.lo, 4) + "<br>higher: " + signed(info.range.hi, 4) + "<br>" +
-        (info.range.flip ? "the two runs end on opposite sides of zero, on different reactions: the sign is not settled, and no ± is given"
+        (info.range.flip ? "the two runs end on a different reaction, so the ± is taken on this reaction alone: ± of Δ<sub>f</sub>G ÷ electrons = " + num(errOf(info.u, res, info.range), 4) + " kJ per mol e<sup>−</sup>"
           : "± = the larger change = " + num(info.range.pm, 4) + " kJ per mol e<sup>−</sup>") + "</div>" +
-        '<div class="by">' + fnLink("minerals", "rangeOf") + "</div>");
+        '<div class="by">' + fnLink("minerals", "rangeOf") + " " + fnLink("minerals", "errOf") + "</div>");
     }
     return wrap(steps, ok);
     function wrap(list, good) {
@@ -965,12 +966,14 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
       : res.number > 0 ? " A stronger oxidant than O<sub>2</sub>: it can take electrons from water."
       : " Oxidized side: O<sub>2</sub> does nothing to it.";
     var unset = !!(info && info.range && info.range.flip);            // sign not settled: two candidate values, not a plus-or-minus
-    var spm = sd && info && info.range && info.range.pm >= 0.05 && !unset ? info.range.pm : 0;      // give-or-take of the redox value itself
-    var alt = unset && sd ? ", or <b>" + signed(info.range.other, 1) + "</b> kJ per mol e<sup>−</sup> = <b>" + signed(info.range.other / MR.F, 3) + "</b> <b>V</b>" : "";
+    var spm = sd && info ? errOf(info.u, res, info.range) : 0;      // the error of the redox value itself
+    if (spm < 0.05) spm = 0;
+    var alt = "", h2 = withH2(res, info ? info.u : 0, info && info.range);
     var scoreLine = (blind ? '<p class="score">No redox value: there is ' + esc(blind.replace(/, so .*$/, "")) + ".</p>"
       : '<p class="score">Redox value against O<sub>2</sub>: <b>' + score + "</b>" + (spm ? " \u00b1 " + spm.toFixed(1) : "") + " kJ per mol e<sup>−</sup>" +
-        (sd ? " = <b>" + signed(res.number / MR.F, 3) + "</b>" + (spm ? " \u00b1 " + (spm / MR.F).toFixed(3) : "") + " <b>V</b>" + alt + "." : ".") + (unset ? "" : side) + "</p>") +
-      (unset ? '<p class="score"><b>The sign is not settled.</b> These are two different reactions, not a plus-or-minus: which one applies depends on a formation energy that is not known well enough. Within its uncertainty the value runs from ' +
+        (sd ? " = <b>" + signed(res.number / MR.F, 3) + "</b>" + (spm ? " \u00b1 " + (spm / MR.F).toFixed(3) : "") + " <b>V</b>" + alt + "." : ".") + side + "</p>" +
+        (h2 ? '<p class="score">Redox value against H<sub>2</sub>: <b>' + signed(h2.v, 1) + "</b>" + (h2.pm >= 0.05 ? " \u00b1 " + h2.pm.toFixed(1) : "") + " kJ per mol e<sup>−</sup>. H<sub>2</sub> reduces it.</p>" : "")) +
+      (unset ? '<p class="score">Its formation energy is not known well enough to settle which reaction applies: within that error the value against O<sub>2</sub> could lie anywhere from ' +
         signed(Math.min(info.range.lo, info.range.hi), 1) + " to " + signed(Math.max(info.range.lo, info.range.hi), 1) + ".</p>" : "") +
       (res.breakdown && res.breakdown.dG < -1 ? '<p class="score">Left on its own in water it turns into ' + esc(res.breakdown.products.map(function (q) { return q[0].name; }).join(", ")) +
         (info && placeholder(info.flags) ? " with no electrons moving. That is not a redox change, so its energy is not counted."
@@ -1100,7 +1103,7 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
     $("numbers-out").innerHTML = '<div class="stack"><div class="headline"><span class="bignum">' +
       (res.role === "inert" && !res.deep ? "0" : signed(res.number, 1)) + '</span><span class="pm">kJ per mol e<sup>−</sup> = ' +
       (res.role === "inert" && !res.deep ? "0" : signed(res.number / MR.F, 3)) + " V</span>" +
-      (info && info.range && info.range.flip ? '<span class="pm">or ' + signed(info.range.other, 1) + " (sign not settled)</span>"
+      (info && info.range && info.range.flip ? (errOf(info.u, res, info.range) >= 0.05 ? '<span class="pm">\u00b1' + errOf(info.u, res, info.range).toFixed(1) + "</span>" : "")
         : info && info.range && info.range.pm >= 0.05 ? '<span class="pm">\u00b1' + info.range.pm.toFixed(1) + (info.basis === "library" || info.basis === "measured" ? " (spread between databases)" : info.basis === "proxy" ? " (stand-in value)" : " (estimate)") + "</span>" : "") +
       '<span class="pill" data-v="role">' + res.role + "</span>" +
       '<span class="hint">' + esc(sp.name) + ", pH " + S.pH + ", dissolved species " + solutesText() + ". " + why + "</span></div>" +
@@ -1194,19 +1197,19 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
     });
     var body = all.map(function (r) {
       if (r.status !== "computed" || r.inertOnly) {
-        return "<tr><td>" + esc(label(r)) + "</td><td>" + (r.formula ? fmtFormula(r.formula) : "") + '</td><td class="num"></td><td class="num"></td><td><small>' + esc(r.reason || "no formation energy yet") + "</small></td></tr>";
+        return "<tr><td>" + esc(label(r)) + "</td><td>" + (r.formula ? fmtFormula(r.formula) : "") + '</td><td class="num"></td><td class="num"></td><td class="num"></td><td><small>' + esc(r.reason || "no formation energy yet") + "</small></td></tr>";
       }
       var sp = r.sp, res = r.res, d = res.fuel || res.oxidant || res.deep;
       var E = d ? (res.fuel ? res.fuel.E : res.oxidant ? res.oxidant.E : res.deep.E) : null;
-      var pmv = r.range ? r.range.pm : r.u && d ? uEff(r.u, res) / d.n : 0;
-      var open = !!(r.range && r.range.flip);            // sign not settled: show the other candidate, not a plus-or-minus
-      var pm = open ? ' <span class="pm">or ' + signed(r.range.other, 1) + "</span>" : pmv >= 0.05 ? ' <span class="pm">\u00b1' + pmv.toFixed(1) + "</span>" : "";
+      var pmv = errOf(r.u, res, r.range);            // the ± is an error and nothing else
+      var pm = pmv >= 0.05 ? ' <span class="pm">\u00b1' + pmv.toFixed(1) + "</span>" : "";
+      var h2 = withH2(res, r.u, r.range);            // the reaction with H2 has its own column
       var src = r.basis === "library" ? "measured" : r.basis === "moved" ? (r.how === "water" ? "measured (solubility)" : "measured nearby, moved") : r.basis === "proxy" ? "measured (" + esc(r.twin) + ")"
         : r.basis === "estimate" ? "<b>estimate</b>" : r.basis === "element" ? "native element" : sp.ref === "user" ? "added by hand" : "measured";
       return "<tr><td>" + esc(label(r)) + (entry(r) ? " <small>(" + esc(entry(r)) + ")</small>" : "") + "</td><td>" + fmtFormula(r.show || sp.formula) + '</td><td class="num"><b>' + (d ? signed(res.number, 1) : "0") + "</b>" + pm +
-        '</td><td class="num">' + (d ? signed(res.number / MR.F, 3) : "0") + "</td><td>" + src + (open ? "<small>sign not settled</small>" : "") + "</td></tr>";
+        '</td><td class="num">' + (d ? signed(res.number / MR.F, 3) : "0") + '</td><td class="num">' + (h2 ? "<b>" + signed(h2.v, 1) + "</b>" + (h2.pm >= 0.05 ? ' <span class="pm">\u00b1' + h2.pm.toFixed(1) + "</span>" : "") : "") + "</td><td>" + src + "</td></tr>";
     }).join("");
-    var table = all.length ? '<div class="batch-out"><table><thead><tr><th>Mineral</th><th>Formula</th><th class="num">Redox value vs O<sub>2</sub> (kJ/mol e<sup>\u2212</sup>)</th><th class="num">Same value in volts</th><th>Basis</th></tr></thead><tbody>' +
+    var table = all.length ? '<div class="batch-out"><table><thead><tr><th>Mineral</th><th>Formula</th><th class="num">vs O<sub>2</sub> (kJ/mol e<sup>\u2212</sup>)</th><th class="num">vs O<sub>2</sub> (V)</th><th class="num">vs H<sub>2</sub> (kJ/mol e<sup>\u2212</sup>)</th><th>Basis</th></tr></thead><tbody>' +
       body + "</tbody></table></div>" : "";
     var listOf = function (rows) {
       return rows.slice(0, SHOW_MISSING).map(function (r) { return esc(r.input) + " (" + esc(r.reason) + ")"; }).join("<br>") +
@@ -1256,15 +1259,16 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
       "# Every mineral has a redox boundary. The size of the value is how far that boundary sits from O2; redox_value_V is the same value in volts (kJ = 96.485 x V).",
       "# Positive: the mineral is the reduced side of its boundary (O2 oxidizes it). Negative: it is the oxidized side (O2 does nothing to it). The few minerals whose couple sits above O2 flip: metals such as gold are negative and permanganate is positive.",
       "# Only electron transfer is counted. change_in_water_kJ_per_mol is what the mineral releases by dissolving, hydrating or turning into a more stable form with no electrons moving; it is not part of the value.",
-      "# plus_minus_kJ_per_mol_e is how far the value moves when the mineral's own formation energy is shifted by its uncertainty either way. It is 0 where the mineral changes in water by more than that uncertainty: its value then comes from the minerals it turns into. It is left empty where the note says sign not settled: the two runs then end on different reactions, and the note gives both ends.",
+      "# plus_minus_kJ_per_mol_e is how far the value moves when the mineral's own formation energy is shifted by its uncertainty either way. It is 0 where the mineral changes in water by more than that uncertainty: its value then comes from the minerals it turns into. Where a shifted run ends on a different reaction (the note says sign not settled) it is the error on this reaction alone: the uncertainty of the formation energy divided by the electrons.",
+      "# redox_value_vs_H2_kJ_per_mol_e is given where H2 reduces the mineral: the energy released per mol of electrons, positive, with its own plus_minus. It is empty where H2 does nothing to the mineral.",
       "# A note starting 'sign not settled' means the value changes sign inside that uncertainty: treat the sign of that mineral as unknown.",
       "# One row per mineral, computed for its ideal IMA formula (solid solutions as the end member the name stands for). Where the databases measured another water content or a nearby composition, that value is brought to the ideal formula and database_entry names what was measured.",
       "# mineral_plain is the name without accents or Greek letters, for matching against other lists. ima_mineral says 'older name' for a name the July 2026 IMA list no longer carries.",
-      ["mineral", "formula", "redox_value_kJ_per_mol_e", "redox_value_V", "electrons", "plus_minus_kJ_per_mol_e", "basis", "source", "note", "ima_mineral", "database_entry", "change_in_water_kJ_per_mol", "mineral_plain"].join(",")];
+      ["mineral", "formula", "redox_value_kJ_per_mol_e", "redox_value_V", "electrons", "plus_minus_kJ_per_mol_e", "redox_value_vs_H2_kJ_per_mol_e", "vs_H2_plus_minus_kJ_per_mol_e", "basis", "source", "note", "ima_mineral", "database_entry", "change_in_water_kJ_per_mol", "mineral_plain"].join(",")];
     var who = function (r) { return r.ima || (r.sp ? r.sp.name : r.input); }, yes = function (r) { return r.ima ? (r.older ? "older name" : "yes") : "no"; };
     b.rows.forEach(function (r) {
-      if (r.status !== "computed") { lines.push([who(r), "", "", "", "", "", "no formation energy yet", "", r.reason, yes(r), "", "", plain(who(r))].map(q).join(",")); return; }
-      if (r.inertOnly) { lines.push([who(r), r.formula, "", "", "", "", "no formation energy yet", "", "no element changes oxidation state in water", yes(r), "", "", plain(who(r))].map(q).join(",")); return; }
+      if (r.status !== "computed") { lines.push([who(r), "", "", "", "", "", "", "", "no formation energy yet", "", r.reason, yes(r), "", "", plain(who(r))].map(q).join(",")); return; }
+      if (r.inertOnly) { lines.push([who(r), r.formula, "", "", "", "", "", "", "no formation energy yet", "", "no element changes oxidation state in water", yes(r), "", "", plain(who(r))].map(q).join(",")); return; }
       var sp = r.sp, res = r.res, d = res.fuel || res.oxidant || res.deep;
       var basis = r.basis === "library" ? "measured" : r.basis === "moved" ? (r.how === "water" ? "measured by solubility, water of the ideal formula counted as liquid water" : "measured at a nearby composition, moved to the ideal formula")
         : r.basis === "proxy" ? "measured value of " + r.twin + " (same formula)"
@@ -1272,9 +1276,9 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
       var source = r.basis === "library" ? sp.lib.db + (sp.lib.evaluated ? "" : " (older compilation)")
         : r.basis === "moved" ? (r.from.lib ? r.from.lib.db + (r.from.lib.evaluated ? "" : " (older compilation)") : r.from.ref)
         : r.basis === "estimate" || r.basis === "proxy" || r.basis === "element" ? "" : sp.ref;
-      var c = b.cond, E = d ? (res.fuel ? res.fuel.E : res.oxidant ? res.oxidant.E : res.deep.E) : null;
+      var c = b.cond, E = d ? (res.fuel ? res.fuel.E : res.oxidant ? res.oxidant.E : res.deep.E) : null, h2 = withH2(res, r.u, r.range);
       var real = r.from ? r.from.name + " [" + r.from.formula + "]" : !/^(estimate|stand-in|element)$/.test(sp.ref) && r.ima && norm(sp.name) !== norm(r.ima) ? sp.name : "";
-      lines.push([who(r), r.show || sp.formula, d ? r4(res.number) : 0, d ? r4(res.number / MR.F) : 0, d ? r4(d.n) : "", r.range && r.range.flip ? "" : r.range ? r4(r.range.pm) : r.u && d ? r4(uEff(r.u, res) / d.n) : "", basis, source,
+      lines.push([who(r), r.show || sp.formula, d ? r4(res.number) : 0, d ? r4(res.number / MR.F) : 0, d ? r4(d.n) : "", r.range || (r.u && d) ? r4(errOf(r.u, res, r.range)) : "", h2 ? r4(h2.v) : "", h2 ? r4(h2.pm) : "", basis, source,
         (r.range && r.range.flip ? [unsettled(r.range)] : []).concat(res.notes.map(function (t) { return placeholder(r.flags) ? t.replace(/, releasing [\d.]+ kJ\/mol/, "") : t; }), r.flags || []).join("; "), yes(r), real,
         res.breakdown && res.breakdown.known && !placeholder(r.flags) ? Math.round(-res.breakdown.dG * 10) / 10 : "", plain(who(r))].map(q).join(","));
     });

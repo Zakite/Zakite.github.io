@@ -497,7 +497,21 @@
     return bd && bd.known ? Math.max(0, u - Math.max(0, -bd.dG)) : u;
   }
 
-  var api = { S: S, DB_NAMES: DB_NAMES, plain: plain, norm: norm, count: count, cond: cond, byG: byG, compKey: compKey, atomsOf: atomsOf, sortLib: sortLib, loadLibrary: loadLibrary, loadIma: loadIma, loadCross: loadCross, crossOf: crossOf, index: index, imaFind: imaFind, lookup: lookup, imaComp: imaComp, sameCompound: sameCompound, imaHits: imaHits, apart: apart, oneFor: oneFor, attachStates: attachStates, recipeOf: recipeOf, fallback: fallback, resolve: resolve, evaluate: evaluate, placeholder: placeholder, shifted: shifted, scoreOf: scoreOf, rangeOf: rangeOf, uEff: uEff };
+  // The ± of the value: an error only. Where shifting the formation energy lands on another reaction (flip), the error is
+  // taken on this reaction alone.
+  function errOf(u, res, range) {
+    var d = res && (res.fuel || res.oxidant || res.deep);
+    if (range && !range.flip) return range.pm;
+    // ## ± = usable ± of ΔfG / electrons
+    return u > 0 && d ? uEff(u, res) / Math.abs(d.n) : 0;
+  }
+  // The value against H2, where H2 reduces the mineral: the energy released per electron, with its own ±.
+  function withH2(res, u, range) {
+    if (!res || !res.oxidant) return null;
+    // ## ± = usable ± of ΔfG / electrons
+    return { v: res.oxidant.vsH2, pm: res.fuel ? (u > 0 ? uEff(u, res) / Math.abs(res.oxidant.n) : 0) : errOf(u, res, range) };
+  }
+  var api = { errOf: errOf, withH2: withH2, S: S, DB_NAMES: DB_NAMES, plain: plain, norm: norm, count: count, cond: cond, byG: byG, compKey: compKey, atomsOf: atomsOf, sortLib: sortLib, loadLibrary: loadLibrary, loadIma: loadIma, loadCross: loadCross, crossOf: crossOf, index: index, imaFind: imaFind, lookup: lookup, imaComp: imaComp, sameCompound: sameCompound, imaHits: imaHits, apart: apart, oneFor: oneFor, attachStates: attachStates, recipeOf: recipeOf, fallback: fallback, resolve: resolve, evaluate: evaluate, placeholder: placeholder, shifted: shifted, scoreOf: scoreOf, rangeOf: rangeOf, uEff: uEff };
   root.MineralData = api;
   if (typeof module !== "undefined" && module.exports) module.exports = api;
 })(typeof window !== "undefined" ? window : globalThis);

@@ -599,7 +599,8 @@
       // ## oxidant number = −(ΔG − B) / n − window        (ΔG and n at the potential of H₂)
       // ## E(mineral) = E(O₂) + number / F
       const number = -(red.dG - B) / -red.n - cond.window;
-      out.oxidant = { number: number, n: -red.n, E: cond.E_O2 + number / F };
+      // ## value against H₂ = oxidant number + window = −(ΔG − B) / n
+      out.oxidant = { number: number, n: -red.n, E: cond.E_O2 + number / F, vsH2: number + cond.window };
     } else if (red.n > 0) {
       out.notes.push("it reduces water: " + g3(red.n / 2) + " H2 per formula unit can be released");
     }
