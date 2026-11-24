@@ -99,6 +99,10 @@
       S.cross[f.mineral] = { u: u, n: parseInt(f.databases_listing_it, 10), ind: parseInt(f.independent_values, 10),
                              shift: parseFloat(f.that_value_minus_base_kJ), from: f.from_database };
     });
+    // the typical spread between databases, used for a solid of the base database that only one database lists
+    var us = Object.keys(S.cross).map(function (k) { return S.cross[k].u; }).sort(function (a, b) { return a - b; });
+    // ## typical ± of a solid = median of the spreads between databases
+    S.refSolid = us.length ? us[Math.floor(us.length / 2)] : REF_AQ;
   }
   function crossOf(sp) { return sp.ref !== "user" && sp.ref !== "moved" && !sp.lib && sp.state === "cr" ? S.cross[sp.name] : null; }
   // The database in use: the base database, with any values added by hand on this page in place of the entries they replace.
@@ -497,21 +501,42 @@
     return bd && bd.known ? Math.max(0, u - Math.max(0, -bd.dG)) : u;
   }
 
-  // The ± of the value: an error only. Where shifting the formation energy lands on another reaction (flip), the error is
-  // taken on this reaction alone.
-  function errOf(u, res, range) {
+  // The ± of the value has two parts: the mineral's own formation energy, and the reference data of the species it turns into.
+  var REF_AQ = 2;            // kJ/mol taken for a dissolved species or a gas: no database gives a spread for those
+  function refU(s) {            // the ± of one species of the reaction database
+    if (s.lib && s.lib.u >= 0) return s.lib.u;                              // the spread between the databases that list it
+    if (s.state === "cr" && S.cross[s.name]) return S.cross[s.name].u;
+    return s.state === "cr" ? (S.refSolid || REF_AQ) : REF_AQ;
+  }
+  function refErr(res, which) {            // which reaction: "fuel" (with O2), "oxidant" (with H2) or "deep"
+    var eq = which === "fuel" ? res.O2 : which === "oxidant" ? res.H2 : res.deep && res.deep.eq, d = res && res[which];
+    if (!eq || !d || !d.n) return 0;
+    var net = {}, v = 0;
+    var put = function (ps, sign) { (ps || []).forEach(function (p) { if (p[0] === res.species) return; (net[p[0].name] = net[p[0].name] || { s: p[0], c: 0 }).c += sign * p[1]; }); };
+    put(eq.products, 1); put(res.breakdown && res.breakdown.products, -1);
+    Object.keys(net).forEach(function (k) { var w = net[k].c * refU(net[k].s); v += w * w; });
+    // ## ± from the reference data = √( Σ [(amount made in the redox reaction − amount made in water alone) × ± of that species]² ) / electrons
+    return Math.sqrt(v) / Math.abs(d.n);
+  }
+  function ownErr(u, res, range) {            // the part that comes from the mineral's own formation energy
     var d = res && (res.fuel || res.oxidant || res.deep);
-    if (range && !range.flip) return range.pm;
-    // ## ± = usable ± of ΔfG / electrons
+    if (range && !range.flip) return range.pm;      // where shifting the formation energy lands on another reaction (flip), it is taken on this reaction alone
+    // ## ± from the mineral = usable ± of ΔfG / electrons
     return u > 0 && d ? uEff(u, res) / Math.abs(d.n) : 0;
+  }
+  function errOf(u, res, range) {
+    var a = ownErr(u, res, range), b = refErr(res, res.fuel ? "fuel" : res.oxidant ? "oxidant" : "deep");
+    // ## ± = √( (± from the mineral)² + (± from the reference data)² )
+    return Math.sqrt(a * a + b * b);
   }
   // The value against H2, where H2 reduces the mineral: the energy released per electron, with its own ±.
   function withH2(res, u, range) {
     if (!res || !res.oxidant) return null;
-    // ## ± = usable ± of ΔfG / electrons
-    return { v: res.oxidant.vsH2, pm: res.fuel ? (u > 0 ? uEff(u, res) / Math.abs(res.oxidant.n) : 0) : errOf(u, res, range) };
+    var a = res.fuel ? (u > 0 ? uEff(u, res) / Math.abs(res.oxidant.n) : 0) : ownErr(u, res, range), b = refErr(res, "oxidant");
+    // ## ± = √( (± from the mineral)² + (± from the reference data)² )
+    return { v: res.oxidant.vsH2, pm: Math.sqrt(a * a + b * b) };
   }
-  var api = { errOf: errOf, withH2: withH2, S: S, DB_NAMES: DB_NAMES, plain: plain, norm: norm, count: count, cond: cond, byG: byG, compKey: compKey, atomsOf: atomsOf, sortLib: sortLib, loadLibrary: loadLibrary, loadIma: loadIma, loadCross: loadCross, crossOf: crossOf, index: index, imaFind: imaFind, lookup: lookup, imaComp: imaComp, sameCompound: sameCompound, imaHits: imaHits, apart: apart, oneFor: oneFor, attachStates: attachStates, recipeOf: recipeOf, fallback: fallback, resolve: resolve, evaluate: evaluate, placeholder: placeholder, shifted: shifted, scoreOf: scoreOf, rangeOf: rangeOf, uEff: uEff };
+  var api = { errOf: errOf, ownErr: ownErr, refErr: refErr, refU: refU, REF_AQ: REF_AQ, withH2: withH2, S: S, DB_NAMES: DB_NAMES, plain: plain, norm: norm, count: count, cond: cond, byG: byG, compKey: compKey, atomsOf: atomsOf, sortLib: sortLib, loadLibrary: loadLibrary, loadIma: loadIma, loadCross: loadCross, crossOf: crossOf, index: index, imaFind: imaFind, lookup: lookup, imaComp: imaComp, sameCompound: sameCompound, imaHits: imaHits, apart: apart, oneFor: oneFor, attachStates: attachStates, recipeOf: recipeOf, fallback: fallback, resolve: resolve, evaluate: evaluate, placeholder: placeholder, shifted: shifted, scoreOf: scoreOf, rangeOf: rangeOf, uEff: uEff };
   root.MineralData = api;
   if (typeof module !== "undefined" && module.exports) module.exports = api;
 })(typeof window !== "undefined" ? window : globalThis);
