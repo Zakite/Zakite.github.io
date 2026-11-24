@@ -106,10 +106,12 @@
   }
   function crossOf(sp) { return sp.ref !== "user" && sp.ref !== "moved" && !sp.lib && sp.state === "cr" ? S.cross[sp.name] : null; }
   // The database in use: the base database, with any values added by hand on this page in place of the entries they replace.
-  // Measured solids from the other databases that a reaction may also make. The base database has no solid of vanadium(III),
-  // molybdenum(IV) or tungsten(IV); without them H2 appeared unable to reduce some vanadates, molybdates and tungstates, and
-  // the others came out as weaker oxidants than they are. V2O3, MoO2 and WO2 are the measured oxides of those states.
-  var EXTRA_PRODUCTS = ["Karelianite", "MoO2(s)", "WO2"];
+  // Measured solids from the other databases that a reaction may also make. The base database has no species at all for
+  // antimony(V), titanium(III), niobium(IV) or lead(IV), and no solid for vanadium(III), molybdenum(IV) or tungsten(IV).
+  // Without them O2 could not oxidize any antimony or lead(II) mineral, H2 appeared unable to reduce some vanadates,
+  // molybdates and tungstates, and the others came out as weaker oxidants than they are. Each entry is the measured simple
+  // oxide of the missing state. Left out on purpose: Ni3O4, which would make NiO oxidize in air (it does not).
+  var EXTRA_PRODUCTS = ["Karelianite", "MoO2(s)", "WO2", "Sb2O4", "Sb2O5(s)", "Ti2O3", "NbO2", "Plattnerite", "Minium"];
   function index() {
     var over = Object.create(null);
     S.user.forEach(function (u) { over[norm(u.sp.name)] = true; });
