@@ -107,8 +107,8 @@
     // ## typical ± of a solid = median of the spreads between databases
     S.refSolid = us.length ? us[Math.floor(us.length / 2)] : REF_AQ;
   }
-  // computed_energies.csv: formation energies computed by density functional theory (the OQMD database), for minerals without
-  // oxygen that have no measured value. build_computed.py (with the build scripts) makes the file and tests the method blind against measured solids;
+  // computed_energies.csv: formation energies computed by density functional theory (the OQMD and Materials Project databases),
+  // for minerals without oxygen that have no measured value. build_computed.py (with the build scripts) makes the file and tests the method blind against measured solids;
   // a mineral is on the list only where the computed value's error is smaller than the formula model's.
   function loadComputed(text) {
     S.computed = Object.create(null); S.computedByComp = Object.create(null);
@@ -117,8 +117,9 @@
       try { comp = MR.parseFormula(f.formula).comp; } catch (e) { return; }
       if (!isFinite(G)) return;
       var c = { name: f.mineral, formula: f.formula, key: compKey(comp), G: G, u: parseFloat(f.uncertainty_kJ_mol), table: f.table,
-                E: parseFloat(f.formation_energy_eV_per_atom), above: parseFloat(f.above_hull_kJ_per_mol_atoms), atoms: parseFloat(f.atoms),
-                fix: parseFloat(f.correction_kJ_mol), entropy: parseFloat(f.entropy_term_kJ_mol), cls: f["class"], other: f.other_table,
+                E: parseFloat(f.energy_eV_per_atom), above: parseFloat(f.above_hull_kJ_per_mol_atoms), atoms: parseFloat(f.atoms),
+                fix: parseFloat(f.correction_kJ_mol), entropy: parseFloat(f.entropy_term_kJ_mol), cls: f["class"], tables: f.tables,
+                match: f.structure_match, mpId: f.materials_project_id, mpGroup: f.materials_project_space_group,
                 flags: f.note ? f.note.split("; ") : [] };
       S.computed[norm(c.name)] = c;
       if (!S.computedByComp[c.key]) S.computedByComp[c.key] = c;
@@ -429,10 +430,10 @@
       return out;
     }
     // A computed energy, where one is listed for this mineral (or for this very composition, when a formula was typed).
-    // ## ΔfG = (E(OQMD) × 96.485 − height above the hull) × atoms + correction per element + entropy term      (worked out in build_computed.py)
+    // ## ΔfG = E × 96.485 × atoms + correction per element + entropy term      (E: computed energy per atom, not above the hull; build_computed.py)
     var cKey = compKey(parsed.comp), cp = name && S.computed[norm(name)] || S.computedByComp[cKey];
     if (cp && cp.key === cKey) {
-      out.sp = attachStates(MR.makeSpecies(label, formula, "cr", cp.G, "dft", "computed by density functional theory (" + cp.table + " database), corrected against measured solids; not measured", ""), hints);
+      out.sp = attachStates(MR.makeSpecies(label, formula, "cr", cp.G, "dft", "computed by density functional theory (" + cp.table + "), corrected against measured solids; not measured", ""), hints);
       out.basis = "dft"; out.u = cp.u; out.flags = cp.flags.slice(); out.dft = cp;
       return out;
     }
