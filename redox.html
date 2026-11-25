@@ -360,14 +360,14 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
   <a class="back" href="/" style="margin-top:1.4rem">← back to the homepage</a>
 </main>
 
-<script src="redox/engine.js?v=20261125d"></script>
-<script src="redox/estimator.js?v=20261125d"></script>
-<script src="redox/minerals.js?v=20261125d"></script>
-<script src="redox/partners.js?v=20261125d"></script>
+<script src="redox/engine.js?v=20261125e"></script>
+<script src="redox/estimator.js?v=20261125e"></script>
+<script src="redox/minerals.js?v=20261125e"></script>
+<script src="redox/partners.js?v=20261125e"></script>
 <script>
 (function () {
   "use strict";
-  var VER = "20261125d";            // changed with every release, so that a browser never mixes old and new files
+  var VER = "20261125e";            // changed with every release, so that a browser never mixes old and new files
   var MR = window.MineralRedox, MD = window.MineralData;
   var $ = function (id) { return document.getElementById(id); };
   // The calculation lives in three files: engine.js (the redox value), estimator.js (formation energies never measured) and
@@ -1102,9 +1102,10 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
     var all = pairs.filter(Boolean), out = $("partners-out");
     var good = all.filter(function (pr) { return pr.verdict === "yes"; })
       .sort(function (a, b) { return b.volts - a.volts; });
-    var html = ladderSvg(pairs, sp, res, c) + "<h3>Partners that give energy</h3>";
+    var was = out.querySelector("details.more.partners"), keep = !!(was && was.open);      // stays open if it was open
+    var html = ladderSvg(pairs, sp, res, c);
     if (good.length) {
-      html += '<div class="scroll"><table class="pick"><thead><tr><th>Partner</th><th>The mineral is the</th><th class="num">Gap</th><th class="num">kJ per mol e<sup>−</sup></th><th>Energy?</th></tr></thead><tbody>' +
+      html += '<details class="more partners"' + (keep ? " open" : "") + "><summary>Partners that give energy (" + good.length + ")</summary>" + '<div class="stack"><div class="scroll"><table class="pick"><thead><tr><th>Partner</th><th>The mineral is the</th><th class="num">Gap</th><th class="num">kJ per mol e<sup>−</sup></th><th>Energy?</th></tr></thead><tbody>' +
         good.map(function (pr) {
           var p = pr.partner;
           return '<tr tabindex="0" data-id="' + esc(p.id) + '" aria-selected="' + (p.id === S.partner) + '"><td>' + fmtLabel(p.label) +
@@ -1115,7 +1116,7 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
         '<div class="zones"><span>Color is the energy per mole of partner reaction:</span><span><span class="pill" data-z="green">yes</span> 20 kJ or more</span><span><span class="pill" data-z="yellow">yes</span> 10 to 20</span>' +
         '<span><span class="pill" data-z="red">yes</span> under 10, below what life is known to use</span></div>' +
         '<p class="hint">Click a row to see that gap on the ladder.' +
-        (all.length > good.length ? " No energy with the other " + (all.length - good.length) + " partners." : "") + "</p>";
+        (all.length > good.length ? " No energy with the other " + (all.length - good.length) + " partners." : "") + "</p></div></details>";
     } else {
       html += "<p>None. " + esc(sp.name) + " gives no energy with any of the " + all.length + " partners at these conditions.</p>";
     }
@@ -1166,6 +1167,23 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
     return esc(s.citation) + ' <span class="hint">[' + esc(s.ref) + "]</span>";
   }
 
+  // Where a number comes from, in two parts: the database it was taken from, and the publication behind it.
+  function sourceParts(s) {
+    var c = s.citation || "";
+    if (s.ref === "user") return ["added by hand", esc(c)];
+    if (s.ref === "estimate") return ["none: estimated from the formula", "not measured"];
+    if (s.ref === "dft") {
+      var t = (/\(([^)]*(?:OQMD|Materials Project)[^)]*)\)/.exec(c) || [])[1] || "OQMD and Materials Project";
+      return [esc(t) + "<small>computed, corrected against measured solids</small>",
+        (/OQMD/.test(t) ? "OQMD: Saal et al. (2013) JOM 65, 1501; Kirklin et al. (2015) npj Comput. Mater. 1, 15010" : "") +
+        (/OQMD/.test(t) && /Materials Project/.test(t) ? "<br>" : "") + (/Materials Project/.test(t) ? "Materials Project: Jain et al. (2013) APL Mater. 1, 011002" : "")];
+    }
+    if (s.ref === "stand-in") return ["stand-in, not measured for this mineral", esc(c)];
+    if (s.ref === "moved") return ["measured, brought to the ideal formula", esc(c)];
+    if (s.lib) return [esc(s.lib.db) + (s.lib.n > 1 ? "<small>also in: " + esc(s.lib.all) + "</small>" : ""), esc((MD.DB_NAMES || {})[s.lib.db] || c)];
+    return ["OBIGT (CHNOSZ; Dick 2019)", esc(c) + ' <span class="hint">[' + esc(s.ref) + "]</span>"];
+  }
+
   function renderSources(sp, res, pr) {
     var used = Object.create(null);
     var add = function (s) { used[s.name + "|" + s.state] = s; };
@@ -1174,9 +1192,9 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
     if (pr) pr.couple.ox.concat(pr.couple.red).forEach(function (p) { add(p[0]); });
     var rows = Object.keys(used).map(function (k) { return used[k]; })
       .sort(function (a, b) { return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1; });
-    $("sources-out").innerHTML = '<div class="scroll"><table class="sources"><thead><tr><th>Species</th><th>Formula</th><th class="num">&Delta;<sub>f</sub>G (kJ/mol)</th><th>Source</th></tr></thead><tbody>' +
+    $("sources-out").innerHTML = '<div class="scroll"><table class="sources"><thead><tr><th>Species</th><th>Formula</th><th class="num">&Delta;<sub>f</sub>G (kJ/mol)</th><th>Source</th><th>Publication</th></tr></thead><tbody>' +
       rows.map(function (s) {
-        return "<tr><td>" + esc(s.name) + "</td><td>" + fmtFormula(s.formula) + '</td><td class="num">' + num(s.G, 3) + "</td><td>" + sourceCell(s) + "</td></tr>";
+        return "<tr><td>" + esc(s.name) + "</td><td>" + fmtFormula(s.formula) + '</td><td class="num">' + num(s.G, 3) + "</td><td>" + sourceParts(s).join("</td><td>") + "</td></tr>";
       }).join("") + "</tbody></table></div>";
   }
 
