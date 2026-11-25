@@ -61,12 +61,12 @@ a { color: var(--accent); }
 sub, sup { font-size: 0.72em; line-height: 0; }
 .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 20px; }
 .stack { display: flex; flex-direction: column; gap: 14px; }
-.hint { color: var(--muted); font-size: 0.875rem; }
+.hint { color: var(--muted); font-size: 0.95rem; }
 
 /* controls */
 .ask { display: flex; flex-wrap: wrap; gap: 12px 14px; align-items: flex-end; }
 .field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
-.field label { font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.field label { font-size: 0.84rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
 .field.grow { flex: 1 1 220px; }
 input[type="text"], input[type="number"], select, textarea {
   font: 500 1rem var(--body); color: var(--ink); background: var(--bg); border: 1px solid var(--line);
@@ -82,7 +82,7 @@ button.quiet { background: transparent; color: var(--accent); }
 button.small { font-size: 0.82rem; padding: 4px 10px; }
 button:disabled { opacity: 0.5; cursor: default; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
-.chip { font: 500 0.85rem var(--body); background: transparent; color: var(--ink); border: 1px solid var(--line); border-radius: 999px; padding: 4px 11px; cursor: pointer; }
+.chip { font: 500 0.92rem var(--body); background: transparent; color: var(--ink); border: 1px solid var(--line); border-radius: 999px; padding: 4px 11px; cursor: pointer; }
 .chip[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
 
 /* verdict */
@@ -93,26 +93,26 @@ button:disabled { opacity: 0.5; cursor: default; }
 .volts { font: 600 clamp(2.6rem, 9vw, 4.4rem)/1 var(--mono); letter-spacing: -0.03em; white-space: nowrap; }
 .volts small { font-size: 0.38em; font-weight: 500; color: var(--muted); letter-spacing: 0; margin-left: 0.15em; }
 .answer { font-family: var(--display); font-size: 1.45rem; line-height: 1.25; font-weight: 600; }
-.pill { display: inline-block; font: 600 0.78rem var(--body); letter-spacing: 0.04em; text-transform: uppercase; border-radius: 999px; padding: 2px 10px; white-space: nowrap; }
+.pill { display: inline-block; font: 600 0.84rem var(--body); letter-spacing: 0.04em; text-transform: uppercase; border-radius: 999px; padding: 2px 10px; white-space: nowrap; }
 .pill[data-v="yes"] { background: var(--yes-soft); color: var(--yes); }
 .pill[data-v="marginal"] { background: var(--marginal-soft); color: var(--marginal); }
 .pill[data-v="no"], .pill[data-v="no reaction"] { background: var(--no-soft); color: var(--no); }
 .pill[data-v="role"] { background: var(--accent-soft); color: var(--accent); }
-.facts { display: flex; flex-wrap: wrap; gap: 6px 22px; color: var(--muted); font-size: 0.95rem; }
+.facts { display: flex; flex-wrap: wrap; gap: 6px 22px; color: var(--muted); font-size: 1rem; }
 .facts b { color: var(--ink); font-family: var(--mono); font-weight: 500; }
 .rxn { font: 400 0.98rem/1.6 var(--mono); overflow-x: auto; white-space: nowrap; padding: 10px 12px; background: var(--bg); border-radius: 7px; }
-.fine { color: var(--muted); font-size: 0.85rem; max-width: 80ch; }
-.sum { font-size: 0.95rem; }
+.fine { color: var(--muted); font-size: 0.95rem; max-width: 80ch; }
+.sum { font-size: 1rem; }
 .sum b { font-family: var(--mono); font-weight: 500; }
 @media (max-width: 620px) { .verdict { grid-template-columns: 1fr; } h1 { font-size: 1.8rem; } }
 
 /* tables */
 .scroll { overflow-x: auto; }
-table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
-th { text-align: left; font: 600 0.74rem var(--body); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); padding: 6px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+table { border-collapse: collapse; width: 100%; font-size: 1rem; }
+th { text-align: left; font: 600 0.82rem var(--body); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); padding: 6px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
 td { padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; }
 td.num, th.num { text-align: right; white-space: nowrap; }
-td small { display: block; color: var(--muted); font-size: 0.8rem; }
+td small { display: block; color: var(--muted); font-size: 0.9rem; }
 tbody tr:last-child td { border-bottom: 0; }
 .pick tbody tr { cursor: pointer; }
 .pick tbody tr:hover { background: var(--bg); }
@@ -124,7 +124,7 @@ tbody tr:last-child td { border-bottom: 0; }
 .track i.gap[data-v="marginal"] { background: var(--marginal); opacity: 0.7; }
 .track i.dot { width: 10px; margin-left: -5px; background: var(--ink); }
 .track i.min { width: 3px; margin-left: -1.5px; top: 0; height: 16px; border-radius: 1px; background: var(--accent); }
-.legend { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 0.82rem; color: var(--muted); }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 0.92rem; color: var(--muted); }
 .legend span::before { content: ""; display: inline-block; vertical-align: middle; margin-right: 6px; }
 .legend .l-dot::before { width: 10px; height: 10px; border-radius: 5px; background: var(--ink); }
 .legend .l-min::before { width: 3px; height: 14px; background: var(--accent); }
@@ -135,20 +135,19 @@ tbody tr:last-child td { border-bottom: 0; }
 .tile .big { font: 600 1.7rem/1.1 var(--mono); }
 .tile .big small { font-size: 0.5em; font-weight: 500; color: var(--muted); }
 .pm { color: var(--muted); font-weight: 400; font-size: 0.85em; }
-.note { background: var(--marginal-soft); color: var(--ink); border-radius: 7px; padding: 9px 12px; font-size: 0.9rem; }
+.note { background: var(--marginal-soft); color: var(--ink); border-radius: 7px; padding: 9px 12px; font-size: 1rem; }
 /* the working and the code */
-.fn { font: 500 0.82rem var(--mono); background: var(--accent-soft); color: var(--accent); border: 0; border-radius: 5px; padding: 1px 6px; cursor: pointer; white-space: nowrap; }
+.fn { font: 500 0.9rem var(--mono); background: var(--accent-soft); color: var(--accent); border: 0; border-radius: 5px; padding: 1px 6px; cursor: pointer; white-space: nowrap; }
 .fn:hover { text-decoration: underline; }
-details.working > summary { font-size: 0.98rem; }
 .working ol { margin: 0; padding-left: 1.3rem; display: flex; flex-direction: column; gap: 14px; }
 .working li > b:first-child { display: block; margin-bottom: 3px; }
-.working .calc { font: 400 0.88rem/1.7 var(--mono); background: var(--bg); border-radius: 7px; padding: 8px 12px; overflow-x: auto; white-space: nowrap; margin-top: 5px; }
-.working table { font-size: 0.84rem; margin-top: 6px; }
+.working .calc { font: 400 0.95rem/1.7 var(--mono); background: var(--bg); border-radius: 7px; padding: 8px 12px; overflow-x: auto; white-space: nowrap; margin-top: 5px; }
+.working table { font-size: 0.95rem; margin-top: 6px; }
 .working td, .working th { padding: 4px 8px; }
-.working th { text-transform: none; letter-spacing: 0; font-size: 0.8rem; }
-.working .by { color: var(--muted); font-size: 0.86rem; margin-top: 4px; }
+.working th { text-transform: none; letter-spacing: 0; font-size: 0.88rem; }
+.working .by { color: var(--muted); font-size: 0.95rem; margin-top: 4px; }
 .codebox { position: relative; border: 1px solid #1c2330; border-radius: 8px; height: 62vh; min-height: 320px; overflow: auto; background: #05070a; color: #dfe6ee; scrollbar-color: #2b3545 #05070a; }
-.codebox pre { margin: 0; padding: 10px 0; font: 400 0.8rem/1.5 var(--mono); tab-size: 2; counter-reset: ln; min-width: max-content; }
+.codebox pre { margin: 0; padding: 10px 0; font: 400 0.86rem/1.5 var(--mono); tab-size: 2; counter-reset: ln; min-width: max-content; }
 .codebox .l { display: block; padding: 0 14px 0 0; white-space: pre; }
 .codebox .l::before { counter-increment: ln; content: counter(ln); display: inline-block; width: 3.6em; margin-right: 12px; padding-right: 8px; text-align: right; color: #55607a; border-right: 1px solid #1c2330; user-select: none; }
 .codebox .l.hit { background: #10243a; }
@@ -163,8 +162,8 @@ details.working > summary { font-size: 0.98rem; }
 .codebox .wait { color: #3FD9CB; font-style: normal; margin-left: 14px; }
 .spin { display: inline-block; width: 0.85em; height: 0.85em; margin-right: 7px; vertical-align: -0.1em; border: 2px solid #3FD9CB; border-right-color: transparent; border-radius: 50%; animation: spin 0.7s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.coderun { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; margin: 18px 4px; }
-.batch-out.empty { min-height: 150px; display: flex; align-items: center; justify-content: center; padding: 16px; text-align: center; }
+.coderun { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; }
+.batch-out.empty { border: 0; }
 .codehead { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: baseline; }
 /* the print-out: a new result is calculated in view, then printed block by block */
 .calclog { position: absolute; left: 0; top: 0; font: 400 0.9rem/1.75 var(--mono); color: var(--muted); white-space: nowrap; }
@@ -177,12 +176,37 @@ details.working > summary { font-size: 0.98rem; }
 @keyframes printIn { from { clip-path: inset(0 100% 0 0); opacity: 0.15; } to { clip-path: inset(0 0 0 0); opacity: 1; } }
 @keyframes blink { 50% { opacity: 0; } }
 .error { background: var(--no-soft); color: var(--ink); border-radius: 7px; padding: 10px 12px; }
-details > summary { cursor: pointer; font-weight: 600; }
+/* Dropdowns. Everything that folds away opens with the same blue-green arrow. */
+details > summary { cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 10px; list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+details > summary::before { content: ""; flex: none; width: 22px; height: 22px; border-radius: 50%; transition: transform 140ms ease;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M4.3 2.2 8.1 6 4.3 9.8' fill='none' stroke='%2306202a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 12px no-repeat, linear-gradient(100deg, #4AA3F0, #3FD9CB); }
+details[open] > summary::before { transform: rotate(90deg); }
 details[open] > summary { margin-bottom: 8px; }
-details.missing { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; font-size: 0.9rem; }
+/* a whole section that folds: the bar is the heading */
+.folds { display: flex; flex-direction: column; gap: 10px; }
+details.fold { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+details.fold > summary { padding: 14px 20px; gap: 14px; border-radius: 10px; }
+details.fold > summary::before { width: 28px; height: 28px; background-size: 14px, auto; }
+details.fold > summary h2 { font-size: 1.3rem; }
+details.fold > summary:hover h2 { color: var(--accent); }
+details.fold > summary .tag { margin-left: auto; font: 500 1rem var(--mono); color: var(--muted); white-space: nowrap; }
+details.fold[open] > summary { margin-bottom: 0; border-bottom: 1px solid var(--line); border-radius: 10px 10px 0 0; }
+.fold-body { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 14px; }
+/* a short explanation that folds, inside a section */
+details.more > summary { display: inline-flex; gap: 8px; font: 500 0.95rem var(--body); color: var(--accent); }
+details.more > summary::before { width: 18px; height: 18px; background-size: 10px, auto; }
+/* the calculation: a button of its own, outside the cards */
+details.working > summary { display: inline-flex; gap: 12px; padding: 11px 22px 11px 12px; border-radius: 999px; font: 600 1.08rem var(--body);
+  color: #06202a; background: linear-gradient(100deg, #4AA3F0, #3FD9CB); box-shadow: 0 2px 10px rgba(63, 217, 203, 0.22); }
+details.working > summary::before { width: 28px; height: 28px; background-size: 14px, auto; background-color: rgba(6, 32, 42, 0.16);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M4.3 2.2 8.1 6 4.3 9.8' fill='none' stroke='%2306202a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"), none; }
+details.working > summary:hover { filter: brightness(1.08); }
+details.working[open] > summary { margin-bottom: 12px; }
+details.missing { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; font-size: 1rem; }
 details.missing p { color: var(--muted); }
 details.missing p + p { margin-top: 6px; }
-.sources td { font-size: 0.85rem; }
+.sources td { font-size: 0.95rem; }
 .batch-out { max-height: 460px; overflow: auto; border: 1px solid var(--line); border-radius: 8px; }
 .batch-out th { position: sticky; top: 0; background: var(--surface); z-index: 1; white-space: normal; }
 .batch-out table { table-layout: fixed; min-width: 900px; }
@@ -221,14 +245,14 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
 .verdict[data-z="yellow"] { border-left-color: #F2D45C; }
 .verdict[data-z="red"] { border-left-color: var(--no); }
 .ladder { width: 100%; max-width: 760px; height: auto; display: block; }
-.ladder text { font: 12.5px var(--body); fill: var(--muted); }
+.ladder text { font: 13.5px var(--body); fill: var(--muted); }
 .ladder .on { fill: var(--ink); font-weight: 600; }
 .ladder .me { fill: var(--accent); font-weight: 600; }
 .ladder .key { fill: var(--ink); font: 700 15px var(--body); }
 .score { margin: 6px 0 0; }
-.volts .per { display: block; font: 500 0.82rem var(--body); color: var(--muted); letter-spacing: 0; margin-top: 6px; white-space: nowrap; }
-.zones { display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: center; font-size: 0.85rem; color: var(--muted); }
-.back { display: inline-block; margin: 0 0 1.2rem; color: var(--accent); text-decoration: none; font-size: 0.92rem; }
+.volts .per { display: block; font: 500 0.95rem var(--body); color: var(--muted); letter-spacing: 0; margin-top: 6px; white-space: nowrap; }
+.zones { display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: center; font-size: 0.95rem; color: var(--muted); }
+.back { display: inline-block; margin: 0 0 1.2rem; color: var(--accent); text-decoration: none; font-size: 1rem; }
 .back:hover { text-decoration: underline; }
 </style>
 </head>
@@ -237,7 +261,6 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
   <a class="back" href="/">← back to the homepage</a>
   <header>
     <h1>Mineral Redox Calculator</h1>
-    <p class="lede">Pick a mineral and a partner. Get the voltage between them, and whether a microbe could live on it.</p>
   </header>
 
   <section class="panel stack" aria-labelledby="ask-h">
@@ -265,7 +288,6 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
         </select>
       </div>
     </form>
-    <div class="chips" id="examples" aria-label="Examples"></div>
     <div id="polymorphs"></div>
     <p class="hint">25 &deg;C. Every gas (O<sub>2</sub>, H<sub>2</sub>, CH<sub>4</sub>, CO<sub>2</sub>, N<sub>2</sub>) is at 1 bar, and everything dissolved is at the concentration chosen above.</p>
   </section>
@@ -275,28 +297,26 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
   </section>
 
   <section class="panel stack" aria-labelledby="all-h">
-    <div>
-      <h2 id="all-h">Redox ladder</h2>
-      <p class="hint">The scale runs from H<sub>2</sub> at the bottom to O<sub>2</sub> at the top. Energy for life is the gap between two rungs, in kJ per mole of electrons. Rungs are placed in volts on the hydrogen scale (SHE).</p>
-    </div>
+    <h2 id="all-h">Redox ladder</h2>
+    <details class="more"><summary>How to read it</summary><p class="hint">The scale runs from H<sub>2</sub> at the bottom to O<sub>2</sub> at the top. Energy for life is the gap between two rungs, in kJ per mole of electrons. Rungs are placed in volts on the hydrogen scale (SHE).</p></details>
     <div id="partners-out"></div>
   </section>
 
-  <section class="panel stack" aria-labelledby="num-h">
-    <div>
-      <h2 id="num-h">Redox rank against O<sub>2</sub></h2>
-      <p class="hint">For ranking minerals from reduced to oxidized. kJ per mole of electrons, O<sub>2</sub> = 0. Positive: O<sub>2</sub> can oxidize it. Negative: it can only be reduced. Zero: inert.</p>
-    </div>
-    <div id="numbers-out"></div>
-  </section>
-
-  <section class="panel stack" aria-labelledby="src-h">
-    <h2 id="src-h">Numbers used in this answer</h2>
-    <div id="sources-out"></div>
-  </section>
-
-  <section class="panel stack" aria-labelledby="how-h">
-    <h2 id="how-h">How it works</h2>
+  <div class="folds">
+    <details class="fold">
+      <summary><h2 id="num-h">Redox rank against O<sub>2</sub></h2><span class="tag" id="num-tag"></span></summary>
+      <div class="fold-body">
+        <p class="hint">For ranking minerals from reduced to oxidized. kJ per mole of electrons, O<sub>2</sub> = 0. Positive: O<sub>2</sub> can oxidize it. Negative: it can only be reduced. Zero: inert.</p>
+        <div id="numbers-out"></div>
+      </div>
+    </details>
+    <details class="fold">
+      <summary><h2 id="src-h">Numbers used in this answer</h2></summary>
+      <div class="fold-body"><div id="sources-out"></div></div>
+    </details>
+    <details class="fold">
+      <summary><h2 id="how-h">How it works</h2></summary>
+      <div class="fold-body">
     <ul class="how">
       <li><b>Input.</b> The mineral&rsquo;s Gibbs energy of formation, measured, from twelve published databases. Every IMA mineral can be looked up by name. If it has no measured value, the energy is estimated from its IMA formula and flagged. For 440 minerals without oxygen (sulfides and their kin, alloys, carbides, nitrides, phosphides, silicides) it is instead an energy computed by density functional theory (OQMD and Materials Project databases), corrected against measured solids. The &plusmn; shows how far the value could be off.</li>
       <li><b>Reaction.</b> At the redox potential the partner sets, energy minimization finds the most stable products in water at your pH.</li>
@@ -307,7 +327,10 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
     </ul>
     <p class="fine" id="db-info"></p>
     <div id="user-info" class="fine"></div>
-  </section>
+      </div>
+    </details>
+  </div>
+
   <section class="panel stack" aria-labelledby="list-h" id="all-list">
     <h2 id="list-h">Every IMA mineral</h2>
     <div id="batch-status" class="hint" aria-live="polite"></div>
@@ -320,30 +343,31 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
     <p class="hint" id="csv-hint" hidden>The &plusmn; is the error of the value. The CSV has one signed redox value per mineral against O<sub>2</sub>, the same value in volts, its &plusmn;, the value against H<sub>2</sub> where H<sub>2</sub> reduces the mineral, and where each came from.</p>
     <label for="csvbox" class="hint" id="csvbox-label" hidden>CSV text, ready to select and copy</label>
     <textarea id="csvbox" readonly></textarea>
+    <div class="coderun"><button type="button" id="run-all">Run every IMA mineral</button><span class="hint" id="code-run-status">Runs the code below on every IMA mineral. The code prints out while it works, then the list above fills in.</span></div>
   </section>
 
-  <div class="coderun"><button type="button" id="run-all">Run every IMA mineral</button><span class="hint" id="code-run-status">Runs the code below on every IMA mineral. The code prints out while it works, then the list above fills in.</span></div>
-
-  <section class="panel stack" aria-labelledby="code-h" id="code">
-    <h2 id="code-h">The code behind the numbers</h2>
+  <details class="fold" id="code">
+    <summary><h2 id="code-h">The code behind the numbers</h2></summary>
+    <div class="fold-body">
     <p class="fine">Every value on this page comes from the three files below, which run in your browser: one computes the redox value of a species, one estimates formation energies that were never measured, and one decides which formation energy a mineral gets. The listing is loaded from the files the page is running, so it is always the current code. Wherever a line does arithmetic, the line above it, in yellow and marked ##, gives the same equation in ordinary notation.</p>
     <div class="chips" id="code-files"></div>
     <div class="codehead"><span class="hint" id="code-what"></span></div>
     <div class="chips" id="code-fns"></div>
     <div class="codebox" id="code-box" tabindex="0" aria-label="Code listing"><pre id="code-pre"></pre></div>
     <p class="fine" id="code-data"></p>
-  </section>
+    </div>
+  </details>
   <a class="back" href="/" style="margin-top:1.4rem">← back to the homepage</a>
 </main>
 
-<script src="redox/engine.js?v=20261125c"></script>
-<script src="redox/estimator.js?v=20261125c"></script>
-<script src="redox/minerals.js?v=20261125c"></script>
-<script src="redox/partners.js?v=20261125c"></script>
+<script src="redox/engine.js?v=20261125d"></script>
+<script src="redox/estimator.js?v=20261125d"></script>
+<script src="redox/minerals.js?v=20261125d"></script>
+<script src="redox/partners.js?v=20261125d"></script>
 <script>
 (function () {
   "use strict";
-  var VER = "20261125c";            // changed with every release, so that a browser never mixes old and new files
+  var VER = "20261125d";            // changed with every release, so that a browser never mixes old and new files
   var MR = window.MineralRedox, MD = window.MineralData;
   var $ = function (id) { return document.getElementById(id); };
   // The calculation lives in three files: engine.js (the redox value), estimator.js (formation energies never measured) and
@@ -352,8 +376,6 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
   var S = MD.S;
   S.pick = null; S.batch = null; S.downloads = null; S.asked = false; S.partner = "O2"; S.named = Object.create(null);
   var plain = MD.plain, norm = MD.norm, count = MD.count, cond = MD.cond, loadLibrary = MD.loadLibrary, loadIma = MD.loadIma, loadCross = MD.loadCross, loadComputed = MD.loadComputed, crossOf = MD.crossOf, imaFind = MD.imaFind, lookup = MD.lookup, sameCompound = MD.sameCompound, imaHits = MD.imaHits, apart = MD.apart, oneFor = MD.oneFor, fallback = MD.fallback, placeholder = MD.placeholder, shifted = MD.shifted, scoreOf = MD.scoreOf, rangeOf = MD.rangeOf, uEff = MD.uEff, errOf = MD.errOf, ownErr = MD.ownErr, refErr = MD.refErr, withH2 = MD.withH2;
-  var EXAMPLES = ["pyrite", "pyrrhotite", "mackinawite", "magnetite", "hematite", "goethite", "pyrolusite", "siderite",
-                  "vivianite", "fayalite", "chalcopyrite", "uraninite", "quartz"];
   var STORE_USER = "mineral-redox-user-species", STORE_STATE = "mineral-redox-state";
   var SHOW_MISSING = 300;
 
@@ -485,12 +507,9 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
   function render(typing) {            // typing: called while the name is still being typed
     var text = $("mineral").value.trim();
     readControls();
-    document.querySelectorAll("#examples .chip").forEach(function (c) {
-      c.setAttribute("aria-pressed", c.dataset.name === text.toLowerCase() ? "true" : "false");
-    });
     saveState();
     $("polymorphs").innerHTML = "";
-    if (!text) { blank("Type a mineral name or formula, or pick one of the examples."); return; }
+    if (!text) { blank("Type a mineral name or formula."); return; }
     var r = lookup(text), sp, info = null, other = imaHits(text, r);
     if (!r.hits.length) {
       var ima = imaFind(text);
@@ -498,7 +517,7 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
         $("result").innerHTML = '<div class="panel stack"><div class="note"><b>' + esc(ima.name) + "</b> is on the IMA list but has no value here: " +
           esc(ima.note || "its formula could not be read into a composition") + (ima.ima ? " (IMA formula: " + esc(ima.ima) + ")" : "") +
           ". Enter one specific formula below.</div>" + addForm(ima.name, "", false) + "</div>";
-        $("partners-out").innerHTML = $("numbers-out").innerHTML = $("sources-out").innerHTML = '<p class="hint">Nothing to show yet.</p>';
+        $("partners-out").innerHTML = $("numbers-out").innerHTML = $("sources-out").innerHTML = '<p class="hint">Nothing to show yet.</p>'; $("num-tag").textContent = "";
         return;
       }
       var formula = ima ? ima.formula : r.readable ? text : S.named[norm(text)];
@@ -540,8 +559,10 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
     }
     var chosen = pairs.filter(function (p) { return p && p.partner.id === S.partner; })[0];
     if (info) info.range = rangeOf(sp, info.u, res, c);
+    var wasOpen = $("result").querySelector("details.working"); wasOpen = !!(wasOpen && wasOpen.open);      // an open calculation stays open
     renderVerdict(sp, chosen, res, c, info);
     try { $("result").insertAdjacentHTML("beforeend", working(sp, res, c, info)); } catch (err) { /* the panel is an extra: never let it break the answer */ }
+    if (wasOpen && $("result").querySelector("details.working")) $("result").querySelector("details.working").open = true;
     renderPartners(pairs, c, sp, res);
     renderNumbers(sp, res, info);
     renderSources(sp, res, chosen);
@@ -675,8 +696,8 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
     }
     return wrap(steps, ok);
     function wrap(list, good) {
-      return '<details class="panel working" data-check="' + (good ? "ok" : "off") + '"><summary>Show the calculation, step by step</summary><ol>' +
-        list.map(function (t) { return "<li>" + t + "</li>"; }).join("") + '</ol><p class="fine">For a partner other than O<sub>2</sub>, steps 3 to 7 are repeated at that partner’s potential. Energies are in kJ/mol.</p></details>';
+      return '<details class="working" data-check="' + (good ? "ok" : "off") + '"><summary>Show the calculation, step by step</summary><div class="panel stack"><ol>' +
+        list.map(function (t) { return "<li>" + t + "</li>"; }).join("") + '</ol><p class="fine">For a partner other than O<sub>2</sub>, steps 3 to 7 are repeated at that partner’s potential. Energies are in kJ/mol.</p></div></details>';
     }
   }
 
@@ -791,6 +812,7 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
     document.addEventListener("click", function (e) {
       var b = e.target.closest("[data-file]");
       if (!b) return;
+      if (!b.closest("#code")) $("code").open = true;
       codeShow(b.dataset.file, b.dataset.fn || null, !b.closest("#code"));
     });
     codeShow("engine", null, false);
@@ -829,6 +851,7 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
       var label = function () { return '<span class="spin"></span>' + fmt(prog.count) + " of " + fmt(prog.total) + " minerals"; };
       if (still) { status.innerHTML = label(); }
       else {
+        $("code").open = true;
         reveal.on = true; codeShown = null; pre.innerHTML = ""; $("code-fns").innerHTML = "";
         document.querySelectorAll("#code-files .chip").forEach(function (b) { b.setAttribute("aria-pressed", "false"); });
         $("code-what").innerHTML = "<b>Running.</b> The three files print out while every mineral is computed.";
@@ -901,7 +924,7 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
 
   function blank(html) {
     $("result").innerHTML = '<div class="panel">' + html + "</div>";
-    $("partners-out").innerHTML = $("numbers-out").innerHTML = $("sources-out").innerHTML = '<p class="hint">Nothing to show yet.</p>';
+    $("partners-out").innerHTML = $("numbers-out").innerHTML = $("sources-out").innerHTML = '<p class="hint">Nothing to show yet.</p>'; $("num-tag").textContent = "";
   }
 
   function missing(text, r, fb) {
@@ -918,7 +941,7 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
     }
     $("result").innerHTML = '<div class="panel stack"><div class="' + (calm ? "note" : "error") + '">' + msg + "</div>" +
       addForm(r.readable ? "" : text, r.readable ? text : "", false) + "</div>";
-    $("partners-out").innerHTML = $("numbers-out").innerHTML = $("sources-out").innerHTML = '<p class="hint">Nothing to show yet.</p>';
+    $("partners-out").innerHTML = $("numbers-out").innerHTML = $("sources-out").innerHTML = '<p class="hint">Nothing to show yet.</p>'; $("num-tag").textContent = "";
   }
 
   function renderVerdict(sp, pr, res, c, info) {
@@ -1053,13 +1076,13 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
     var color = gap ? (sel.zone === "green" ? "var(--yes)" : sel.zone === "yellow" ? "#F2D45C" : "var(--no)") : "";
     var yO = y(c.E_O2), yH = y(c.E_H2);
     var g = '<line x1="' + X + '" y1="' + yO.toFixed(1) + '" x2="' + X + '" y2="' + yH.toFixed(1) + '" stroke="var(--muted)" stroke-width="3"/>';
-    spread(rungs, function (a, b) { return a.key || b.key ? 19 : 15; }).forEach(function (r) {
+    spread(rungs, function (a, b) { return a.key || b.key ? 20 : 16; }).forEach(function (r) {
       var on = sel && r.ids.indexOf(sel.partner.id) >= 0, w = r.key ? 16 : 7;
       g += '<line x1="' + (X - w) + '" y1="' + r.y.toFixed(1) + '" x2="' + (r.key ? X + w : X) + '" y2="' + r.y.toFixed(1) + '" stroke="var(--' + (r.key ? "ink" : "muted") + ')" stroke-width="' + (r.key ? 3 : 1.5) + '"/>' +
         '<line x1="' + (X - 16 - (r.key ? 6 : 0)) + '" y1="' + r.ly.toFixed(1) + '" x2="' + (X - w) + '" y2="' + r.y.toFixed(1) + '" stroke="var(--muted)" stroke-opacity="0.45"/>' +
         '<text class="' + (r.key ? "key" : on ? "on" : "") + '" x="' + (X - 26) + '" y="' + (r.ly + (r.key ? 5 : 4)).toFixed(1) + '" text-anchor="end">' + esc(r.label) + "  " + signed(r.E, 3) + " V</text>";
     });
-    spread(mine, function () { return 16; }).forEach(function (r) {
+    spread(mine, function () { return 17; }).forEach(function (r) {
       g += '<line x1="' + X + '" y1="' + r.y.toFixed(1) + '" x2="' + (X + 22) + '" y2="' + r.y.toFixed(1) + '" stroke="var(--accent)" stroke-width="3"/>' +
         '<text class="me" x="' + (X + 28) + '" y="' + (r.ly - 6).toFixed(1) + '">' + esc(r.label) + "  " + signed(r.E, 3) + " V</text>";
     });
@@ -1123,6 +1146,7 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
       num(Math.abs(res.number / MR.F), 3) + " V apart" + (res.fuel ? "." : res.number > 0 ? ". Positive because the couple is above O<sub>2</sub>: it is a stronger oxidant than O<sub>2</sub>."
         : res.deep && res.deep.up ? ". Negative because the couple is above O<sub>2</sub>." : ". Negative because the mineral is the oxidized side.");
     var tiles = tile("Fuel number (against O<sub>2</sub>)", res.fuel, res.O2, "O2") + tile("Oxidant number (against H<sub>2</sub>)", res.oxidant, res.H2, "H2");
+    $("num-tag").innerHTML = (res.role === "inert" && !res.deep ? "0" : signed(res.number, 1)) + " kJ per mol e<sup>−</sup>";
     $("numbers-out").innerHTML = '<div class="stack"><div class="headline"><span class="bignum">' +
       (res.role === "inert" && !res.deep ? "0" : signed(res.number, 1)) + '</span><span class="pm">kJ per mol e<sup>−</sup> = ' +
       (res.role === "inert" && !res.deep ? "0" : signed(res.number / MR.F, 3)) + " V</span>" +
@@ -1337,9 +1361,6 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
           return '<option value="' + esc(p.id) + '">' + esc(plainLabel(p.label)) + "</option>";
         }).join("") + "</optgroup>";
     }).join("");
-    $("examples").innerHTML = EXAMPLES.map(function (n) {
-      return '<button type="button" class="chip" data-name="' + n + '" aria-pressed="false">' + n + "</button>";
-    }).join("");
     var saved = readStore(STORE_STATE, {}) || {};
     if (typeof saved.mineral === "string" && saved.mineral) $("mineral").value = saved.mineral;
     if (partnerById(saved.partner)) $("partner").value = saved.partner;
@@ -1390,10 +1411,6 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
     ["partner", "ph", "solutes"].forEach(function (id) { $(id).addEventListener("change", function () { if (S.water) render(); }); });
     $("ph").addEventListener("input", later);
     $("ask").addEventListener("submit", function (e) { e.preventDefault(); clearTimeout(timer); if (S.water) render(); });
-    $("examples").addEventListener("click", function (e) {
-      var b = e.target.closest(".chip"); if (!b || !S.water) return;
-      $("mineral").value = b.dataset.name; S.pick = null; render();
-    });
     $("polymorphs").addEventListener("click", function (e) {
       var b = e.target.closest("[data-pick]"); if (!b) return;
       S.pick = b.dataset.pick; render();
