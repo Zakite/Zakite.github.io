@@ -290,11 +290,21 @@
       // ## acid-base term: ΔfH = Σ n h − Σ o (a − ā)²,   ā = Σ o a / Σ o      (written here as Σ o a² − (Σ o a)² / Σ o)
       if (NO > 0) dH -= sq - mean * mean / NO;
     }
-    var unc = model.uncertainty[cls], err;
-    if (!fam) err = unc.p68;
-    else if (pick.own) err = fam.own.p68;
-    else if (fam.blocks) err = (fam.fallback || unc.all_class_model || unc).p68;
-    else err = fam.p68;
+    var unc = model.uncertainty[cls], err, src;
+    if (!fam) src = unc;
+    else if (pick.own) src = fam.own;
+    else if (fam.blocks) src = fam.fallback || unc.all_class_model || unc;
+    else src = fam;
+    err = src.p68;
+    // Sulfides and the like: in the blind test the error grows with the size of the formula (per mole of atoms it is the same
+    // from 2 to 13 atoms), so one figure per formula would understate a large sulfosalt. Oxygen-bearing minerals keep one
+    // figure per formula: there the error grows far more slowly.
+    // ## ± = (68 % blind error per mole of atoms) × atoms in the formula
+    if (cls === "sulfide" && src.p68_atom) {
+      var atoms = 0;
+      Object.keys(b).forEach(function (x) { atoms += b[x]; });
+      err = src.p68_atom * atoms;
+    }
     if (rare.length) flags.push("low confidence: " + rare.map(function (x) { return x.split("|")[0]; }).join(", ") + " seen in fewer than " + MIN_SEEN + " training minerals");
     // Tellurate rests on two measured solids only, and the block fitted to them misses solid telluric acid (from its dissolved
     // energy, Filella and May 2019, and its solubility) by 35 kJ/mol. That is the give-or-take used per tellurium(VI).

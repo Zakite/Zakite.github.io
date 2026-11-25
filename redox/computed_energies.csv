@@ -1,0 +1,343 @@
+# Computed formation energies used where nothing is measured (minerals without oxygen). Made by build_computed.py.
+# Source of the values: OQMD (Saal et al. 2013; Kirklin et al. 2015), CC BY 4.0. Checked against the Materials Project (Jain et al. 2013; 2018 snapshot of Matbench, Dunn et al. 2020).
+# dGf = (OQMD formation energy, not above the hull, corrected per element) x atoms + entropy term. uncertainty = blind 68 % error per atom x atoms.
+mineral,formula,class,dGf_kJ_mol,uncertainty_kJ_mol,atoms,table,formation_energy_eV_per_atom,above_hull_kJ_per_mol_atoms,correction_kJ_mol,entropy_term_kJ_mol,other_table,other_table_difference_kJ_per_mol_atoms,formula_model_dGf_kJ_mol,note
+Aikinite,CuPbBiS3,sulfide class,-234.9,79.3,6,OQMD,-0.505215,0.939,62.0,1.2,agrees,0.7,-241.8,low confidence: no correction for Bi (fewer than 3 measured solids hold it)
+Aktashite,Cu6Hg3As4S12,sulfide class,-728.2,187.0,25,OQMD,-0.318295,0.142,24.0,19.1,agrees,-0.3,-642.3,
+Alacránite,As8S9,sulfide class,-367.5,127.2,17,OQMD,-0.284201,0.014,87.3,11.6,agrees,0.9,-359.7,
+Allabogdanite,(Fe)2P,alloy class,-132.0,26.8,3,OQMD,-0.549708,-2.215,27.1,0.0,agrees,1.1,0,
+Alloclasite,CoAsS,sulfide class,-140.8,22.4,3,OQMD,-0.5449,-7.784,11.7,5.2,agrees,1.4,-80.3,
+Andreyivanovite,FeCrP,alloy class,-171.2,26.8,3,OQMD,-0.644607,-11.338,15.4,0.0,agrees,0.6,0,
+Anduoite,RuAs2,sulfide class,-109.9,22.4,3,OQMD,-0.395478,-21.247,-6.9,11.5,agrees,0.5,-57.0,
+Anyuiite,AuPb2,alloy class,-34.3,18.6,3,OQMD,-0.087342,-2.533,-9.0,0.0,agrees,-3.5,0,
+Aramayoite,Ag3Sb2(Bi)S6,sulfide class,-350.9,165.8,12,OQMD,-0.351079,0.867,73.5,-7.5,no entry,,-201.2,"low confidence: no correction for Bi (fewer than 3 measured solids hold it); low confidence: only one computed table holds this composition, so nothing confirms it"
+Argentopyrite,AgFe2S3,sulfide class,-279.7,65.0,6,OQMD,-0.413765,15.035,55.6,-5.6,agrees,0.4,-264.8,"low confidence: the computed structure of this composition is unstable against other compounds, so the energy of that mixture is used"
+Arsenohauchecornite,Ni18Bi3AsS16,sulfide class,-1695.3,502.0,38,OQMD,-0.480499,1.006,63.6,41.0,agrees,0.7,-1719.4,low confidence: no correction for Bi (fewer than 3 measured solids hold it)
+Atokite,Pd3Sn,alloy class,-208.9,24.8,4,OQMD,-0.539331,-10.415,-0.8,0.0,agrees,-1.1,0,
+Auerbakhite,MnTl2As2S5,sulfide class,-405.2,74.8,10,OQMD,-0.461761,1.35,45.2,8.6,agrees,0.7,-441.8,
+Auricupride,Cu3Au,alloy class,-0.9,24.8,4,OQMD,-0.041227,-1.432,15.0,0.0,agrees,-1.5,0,
+Aurihydrargyrumite,Au6Hg5,alloy class,-3.6,90.6,11,OQMD,0.051166,4.937,-3.6,0.0,agrees,-4.7,0,low confidence: no correction for Hg (fewer than 3 measured solids hold it)
+Auroselenide,AuSe,sulfide class,-13.1,15.0,2,OQMD,-0.088956,-8.583,3.4,0.7,agrees,-1.7,-35.7,
+Aurostibite,AuSb2,sulfide class,-2.2,22.4,3,OQMD,-0.075241,-7.26,18.5,1.1,agrees,0.8,152.3,
+Awaruite,Ni3Fe,alloy class,-2.5,24.8,4,OQMD,-0.089099,-5.278,31.9,0.0,agrees,-0.4,0,
+Badengzhuite,TiP,alloy class,-250.3,17.9,2,OQMD,-1.322975,-11.859,5.0,0.0,agrees,-2.0,0,
+Barkovite,Ni1.5Sn,alloy class,-70.7,15.5,2.5,OQMD,-0.313297,-4.78,4.9,0.0,agrees,1.7,0,
+Barquillite,Cu2CdGeS4,sulfide class,-420.0,59.8,8,OQMD,-0.556741,-0.691,9.6,0.1,agrees,0.4,-352.9,
+Barringerite,(Fe)2P,alloy class,-132.0,26.8,3,OQMD,-0.549708,-2.215,27.1,0.0,agrees,1.1,0,
+Baumstarkite,Ag3Sb3S6,sulfide class,-354.6,89.8,12,OQMD,-0.342075,-0.717,48.6,-7.1,agrees,0.3,-112.7,
+Belendorffite,Cu7Hg6,alloy class,36.4,169.1,13,OQMD,0.297826,28.736,36.4,0.0,differs,-19.0,0,"low confidence: no correction for Hg (fewer than 3 measured solids hold it); low confidence: the computed structure of this composition is unstable against other compounds, so the energy of that mixture is used; low confidence: the two computed tables disagree on this composition"
+Benavidesite,Pb4MnSb6S14,sulfide class,-1101.6,187.0,25,OQMD,-0.536554,0.043,184.3,9.4,agrees,1.0,-647.3,
+Benjaminite,Ag3Bi7S12,sulfide class,-695.3,290.6,22,OQMD,-0.453,0.508,281.0,-3.6,agrees,1.0,-751.4,low confidence: no correction for Bi (fewer than 3 measured solids hold it)
+Billingsleyite,Ag7AsS6,sulfide class,-260.4,104.7,14,OQMD,-0.197665,0.158,34.2,-25.4,agrees,-0.1,-349.1,
+Bogdanovite,(Au)3(Cu),alloy class,-6.8,24.8,4,OQMD,-0.024385,0.193,3.4,0.0,agrees,-2.2,0,
+Bohdanowiczite,AgBiSe2,sulfide class,-103.9,52.8,4,OQMD,-0.274899,-0.388,5.1,-2.9,agrees,0.4,-89.8,low confidence: no correction for Bi (fewer than 3 measured solids hold it)
+Bornhardtite,CoCo2Se4,sulfide class,-220.1,52.4,7,OQMD,-0.29296,0.208,-35.0,14.2,agrees,0.9,-269.3,
+Bournonite,CuPbSbS3,sulfide class,-245.7,44.9,6,OQMD,-0.489448,0.162,37.0,1.6,agrees,0.5,-153.2,
+Bowieite,Rh2S3,sulfide class,-284.6,66.1,5,OQMD,-0.643746,-1.901,23.9,2.1,agrees,-0.1,-161.7,low confidence: no correction for Rh (fewer than 3 measured solids hold it)
+Brownleeite,MnSi,alloy class,-78.0,12.4,2,OQMD,-0.464251,-6.714,11.6,0.0,agrees,2.1,0,
+Bytízite,Cu3SbSe3,sulfide class,-170.9,52.4,7,OQMD,-0.142436,3.19,-50.4,-2.0,agrees,0.4,-76.4,
+Cabriite,Pd2CuSn,alloy class,-163.1,24.8,4,OQMD,-0.425322,0.544,3.2,0.0,agrees,-0.6,0,
+Cadmoindite,CdIn2S4,sulfide class,-489.8,52.4,7,OQMD,-0.771463,-2.35,16.1,15.1,agrees,0.5,-474.6,
+Calaverite,AuTe2,sulfide class,-30.4,22.4,3,OQMD,-0.083212,-4.055,-5.3,-1.0,agrees,1.5,-10.7,
+Canfieldite,Ag8SnS6,sulfide class,-354.8,112.2,15,OQMD,-0.252431,-0.537,34.0,-23.5,agrees,-0.2,-424.5,
+Carletonmooreite,Ni3Si,alloy class,-158.0,24.8,4,OQMD,-0.46467,-1.59,21.3,0.0,agrees,1.7,0,
+Carlsbergite,CrN,alloy class,-79.4,17.9,2,OQMD,-0.567264,-21.981,1.5,28.6,agrees,-3.8,0,
+Caswellsilverite,NaCrS2,sulfide class,-409.3,29.9,4,OQMD,-1.110937,-10.679,16.2,3.3,agrees,-0.4,-331.1,
+Catamarcaite,Cu6GeWS8,sulfide class,-817.2,211.4,16,OQMD,-0.539641,-4.192,20.9,-5.0,agrees,0.4,-541.7,low confidence: no correction for W (fewer than 3 measured solids hold it)
+Chalcostibite,CuSbS2,sulfide class,-140.8,29.9,4,OQMD,-0.393986,-1.251,10.9,0.4,agrees,0.3,-46.8,
+Changchengite,IrBiS,sulfide class,-56.5,39.6,3,OQMD,-0.345049,-3.568,42.6,0.8,agrees,3.3,-66.3,"low confidence: no correction for Bi, Ir (fewer than 3 measured solids hold it)"
+Chengdeite,Ir3Fe,alloy class,14.2,24.8,4,OQMD,-0.062338,-5.07,38.3,0.0,agrees,5.2,0,
+Cherepanovite,RhAs,sulfide class,-92.7,26.4,2,OQMD,-0.491516,0.291,2.0,0.7,agrees,0.9,15.7,low confidence: no correction for Rh (fewer than 3 measured solids hold it)
+Chlorbartonite,K6Fe24S26Cl,sulfide class,-3379.7,787.7,57,OQMD,-0.699122,2.085,555.0,29.1,no entry,-0.3,-3574.2,"low confidence: only one computed table holds this composition, so nothing confirms it"
+Christite,TlHgAsS3,sulfide class,-171.2,44.9,6,OQMD,-0.353173,0.448,22.7,13.2,agrees,-0.4,-167.2,
+Clerite,MnSb2S4,sulfide class,-327.4,52.4,7,OQMD,-0.514865,-0.697,22.0,-1.7,agrees,0.7,-202.9,
+Cobaltite,CoAsS,sulfide class,-140.8,22.4,3,OQMD,-0.5449,-7.784,11.7,5.2,agrees,1.4,-80.3,
+Cohenite,CFe3,alloy class,21.1,35.7,4,OQMD,0.047277,4.562,21.1,0.0,agrees,0.8,0,
+Colimaite,K3VS4,sulfide class,-1005.7,105.7,8,OQMD,-1.315237,-18.543,-19.2,28.7,agrees,-1.1,-718.8,low confidence: no correction for V (fewer than 3 measured solids hold it)
+Coloradoite,HgTe,sulfide class,-42.0,15.0,2,OQMD,-0.137295,-13.247,-20.7,5.2,agrees,-2.0,5.6,
+Corderoite,Hg3S2Cl2,sulfide class,-290.3,96.7,7,OQMD,-0.551117,-39.448,63.3,18.6,no entry,-8.6,-75.1,"low confidence: only one computed table holds this composition, so nothing confirms it"
+Costibite,CoSbS,sulfide class,-117.5,22.4,3,OQMD,-0.465729,-2.4,12.2,5.1,agrees,1.2,-19.9,
+Cuboargyrite,AgSbS2,sulfide class,-118.2,29.9,4,OQMD,-0.342075,-0.717,16.2,-2.4,agrees,0.3,-37.6,
+Cupalite,CuAl,alloy class,-39.0,12.4,2,OQMD,-0.213019,-3.131,2.1,0.0,agrees,-0.4,0,
+Cuproauride,Cu3Au,alloy class,-0.9,24.8,4,OQMD,-0.041227,-1.432,15.0,0.0,agrees,-1.5,0,
+Cuproiridsite,Cu(IrIr)S4,sulfide class,-319.7,92.5,7,OQMD,-0.532597,-2.864,38.7,1.3,agrees,2.0,-230.8,low confidence: no correction for Ir (fewer than 3 measured solids hold it)
+Cuprostibite,Cu2(Sb),sulfide class,-15.1,22.4,3,OQMD,0.011332,1.093,-12.6,-2.5,agrees,0.1,45.9,
+Damiaoite,PtIn2,alloy class,-149.8,18.6,3,OQMD,-0.490764,-4.601,-7.7,0.0,agrees,-0.9,0,
+Danbaite,CuZn2,alloy class,-29.2,18.6,3,OQMD,-0.07116,1.967,-2.7,0.0,no entry,,0,
+Demicheleite-(Br),BiSBr,sulfide class,-159.6,41.5,3,OQMD,-0.748173,-44.106,45.7,11.3,no entry,10.9,-171.5,"low confidence: no correction for Bi, Br (fewer than 3 measured solids hold it); low confidence: only one computed table holds this composition, so nothing confirms it"
+Demicheleite-(Cl),BiSCl,sulfide class,-173.3,41.5,3,OQMD,-0.864403,-55.321,76.1,0.8,no entry,-6.4,-66.3,"low confidence: no correction for Bi (fewer than 3 measured solids hold it); low confidence: only one computed table holds this composition, so nothing confirms it"
+Demicheleite-(I),BiSI,sulfide class,-105.0,41.5,3,OQMD,-0.561234,-26.069,52.7,4.8,no entry,6.4,-106.7,"low confidence: no correction for Bi, I (fewer than 3 measured solids hold it); low confidence: only one computed table holds this composition, so nothing confirms it"
+Dienerite,Ni3As,sulfide class,-104.5,29.9,4,OQMD,-0.16855,5.527,-22.7,5.4,agrees,3.1,-123.5,
+Dimorphite,As4S3,sulfide class,-125.0,52.4,7,OQMD,-0.235757,0.309,31.7,4.7,agrees,1.1,-99.0,
+Domeykite,Cu3As,sulfide class,-24.6,29.9,4,OQMD,0.012702,1.226,-20.7,-3.9,agrees,0.0,-29.7,
+Domeykite-β,Cu3As,sulfide class,-24.6,29.9,4,OQMD,0.012702,1.226,-20.7,-3.9,agrees,0.0,-29.7,
+Driekopite,PtBi,alloy class,-55.4,12.4,2,OQMD,-0.288715,-9.319,0.3,0.0,agrees,-2.5,0,
+Dulanggouite,Bi6Te3,sulfide class,20.9,118.9,9,OQMD,-0.029035,9.995,136.8,-0.7,agrees,5.0,-90.3,low confidence: no correction for Bi (fewer than 3 measured solids hold it)
+Edgarite,FeNb3S6,sulfide class,-1058.5,132.1,10,OQMD,-1.166742,-4.53,64.7,2.5,agrees,-1.0,-372.1,low confidence: no correction for Nb (fewer than 3 measured solids hold it)
+Edscottite,Fe5C2,alloy class,29.0,62.5,7,OQMD,0.049161,4.743,29.0,0.0,agrees,0.6,0,
+Ellisite,Tl3AsS3,sulfide class,-234.4,52.4,7,OQMD,-0.446516,-1.962,50.4,16.8,agrees,0.7,-242.1,
+Emplectite,CuBiS2,sulfide class,-130.0,52.8,4,OQMD,-0.429651,-0.946,35.8,0.0,agrees,0.8,-135.3,low confidence: no correction for Bi (fewer than 3 measured solids hold it)
+Empressite,AgTe,sulfide class,-25.8,15.0,2,OQMD,-0.048951,-0.002,-11.6,-4.8,agrees,0.5,-11.2,
+Enargite,Cu3AsS4,sulfide class,-256.9,59.8,8,OQMD,-0.345896,-0.73,11.2,-1.1,agrees,0.1,-245.4,
+Erlichmanite,OsS2,sulfide class,-143.7,39.6,3,OQMD,-0.552701,-53.327,14.9,1.4,agrees,-1.2,-107.8,low confidence: no correction for Os (fewer than 3 measured solids hold it)
+Erniggliite,Tl2SnAs2S6,sulfide class,-408.1,82.3,11,OQMD,-0.472819,-0.958,72.0,21.7,agrees,0.7,-409.9,
+Eskebornite,CuFeSe2,sulfide class,-116.4,43.3,4,OQMD,-0.144017,12.055,-10.7,-1.9,agrees,-0.2,-135.2,"low confidence: the computed structure of this composition is unstable against other compounds, so the energy of that mixture is used"
+Famatinite,Cu3SbS4,sulfide class,-280.3,59.8,8,OQMD,-0.376725,-0.768,11.7,-1.2,agrees,0.2,-184.9,
+Fangite,Tl3AsS4,sulfide class,-265.7,59.8,8,OQMD,-0.442559,-2.164,58.4,17.5,agrees,0.5,-296.0,
+Felbertalite,Cu2Pb6Bi8S19,sulfide class,-1409.4,462.4,35,OQMD,-0.557693,0.15,465.1,14.1,agrees,1.0,-1468.7,low confidence: no correction for Bi (fewer than 3 measured solids hold it)
+Ferronickelplatinum,Pt2FeNi,alloy class,-40.4,24.8,4,OQMD,-0.216132,-4.369,43.0,0.0,agrees,-0.1,0,
+Ferroskutterudite,FeAs3,sulfide class,-54.7,55.3,4,OQMD,0.144066,33.351,22.9,0.2,no entry,,-1.5,"low confidence: the computed structure of this composition is unstable against other compounds, so the energy of that mixture is used; low confidence: only one computed table holds this composition, so nothing confirms it"
+Fischesserite,Ag3AuSe2,sulfide class,-80.6,44.9,6,OQMD,-0.096236,-2.021,-13.3,-11.6,agrees,-0.7,-89.2,
+Freieslebenite,AgPbSbS3,sulfide class,-223.2,44.9,6,OQMD,-0.441612,1.452,42.4,-1.2,agrees,0.5,-144.0,
+Frohbergite,FeTe2,sulfide class,-56.4,22.4,3,OQMD,-0.179771,-13.641,-1.7,-2.7,agrees,2.0,-59.3,
+Froodite,PdBi2,alloy class,-93.6,18.6,3,OQMD,-0.248558,-3.285,-21.7,0.0,agrees,-2.3,0,
+Galenobismutite,PbBi2S4,sulfide class,-277.4,92.5,7,OQMD,-0.567647,0.364,105.0,3.5,agrees,1.0,-292.9,low confidence: no correction for Bi (fewer than 3 measured solids hold it)
+Gallite,CuGaS2,sulfide class,-301.3,29.9,4,OQMD,-0.726852,-10.946,-24.2,3.4,agrees,0.2,-248.4,
+Garavellite,FeSbBiS4,sulfide class,-283.7,92.5,7,OQMD,-0.366138,16.716,78.8,1.8,agrees,0.8,-200.5,"low confidence: no correction for Bi (fewer than 3 measured solids hold it); low confidence: the computed structure of this composition is unstable against other compounds, so the energy of that mixture is used"
+Gersdorffite,NiAsS,sulfide class,-119.2,22.4,3,OQMD,-0.428055,-3.903,1.7,3.0,agrees,0.7,-84.6,
+Gersdorffite-P213,NiAsS,sulfide class,-119.2,22.4,3,OQMD,-0.428055,-3.903,1.7,3.0,agrees,0.7,-84.6,
+Gersdorffite-Pa3,NiAsS,sulfide class,-119.2,22.4,3,OQMD,-0.428055,-3.903,1.7,3.0,agrees,0.7,-84.6,
+Gersdorffite-Pca21,NiAsS,sulfide class,-119.2,22.4,3,OQMD,-0.428055,-3.903,1.7,3.0,agrees,0.7,-84.6,
+Geversite,PtSb2,sulfide class,-115.4,22.4,3,OQMD,-0.486884,-19.632,18.7,6.8,agrees,0.7,137.8,
+Goldfieldite,(Cu4)Cu6Te4S13,sulfide class,-735.8,373.1,27,OQMD,-0.269459,0.604,-9.5,-8.0,no entry,,-873.5,"low confidence: only one computed table holds this composition, so nothing confirms it"
+Gratonite,Pb9As4S15,sulfide class,-1172.9,209.4,28,OQMD,-0.548069,-0.16,290.5,17.3,agrees,0.7,-1218.5,
+Grechishchevite,Hg3S2BrCl0.5I0.5,sulfide class,-244.9,96.7,7.0,OQMD,-0.439561,-28.685,21.0,31.0,no entry,1.5,-200.5,"low confidence: no correction for Br, I (fewer than 3 measured solids hold it); low confidence: only one computed table holds this composition, so nothing confirms it"
+Grumiplucite,HgBi2S4,sulfide class,-227.1,92.5,7,OQMD,-0.460931,-1.481,75.4,8.8,agrees,-0.2,-229.5,low confidence: no correction for Bi (fewer than 3 measured solids hold it)
+Gudmundite,FeSbS,sulfide class,-107.5,22.4,3,OQMD,-0.465105,-2.653,27.5,-0.4,agrees,0.6,-26.3,
+Gupeiite,Fe3Si,alloy class,-84.6,24.8,4,OQMD,-0.328121,-3.731,42.0,0.0,agrees,2.3,0,
+Halamishite,Ni5P4,alloy class,-480.5,80.4,9,OQMD,-0.592616,-2.768,34.1,0.0,agrees,0.6,0,
+Hanauerite,AgHgSI,sulfide class,-103.6,55.3,4,OQMD,-0.314545,-18.35,11.7,6.1,no entry,2.5,-89.3,"low confidence: no correction for I (fewer than 3 measured solids hold it); low confidence: only one computed table holds this composition, so nothing confirms it"
+Hanswilkeite,KFeS2,sulfide class,-324.2,29.9,4,OQMD,-0.900469,0.213,15.9,8.3,agrees,-0.1,-324.1,
+Hapkeite,Fe2Si,alloy class,-84.0,18.6,3,OQMD,-0.385551,0.418,28.9,0.0,agrees,2.6,0,
+Hessite,Ag2Te,sulfide class,-41.8,22.4,3,OQMD,-0.065273,-3.152,-13.8,-9.1,agrees,-0.2,-17.1,
+Hocartite,Ag2FeSnS4,sulfide class,-328.8,59.8,8,OQMD,-0.409478,7.546,48.3,-0.7,agrees,0.5,-329.8,
+Hollisterite,Al3Fe,alloy class,-96.5,24.8,4,OQMD,-0.174999,8.171,3.7,0.0,agrees,2.8,0,
+Hongshiite,PtCu,alloy class,-15.7,12.4,2,OQMD,-0.169203,-5.223,17.0,0.0,agrees,-1.1,0,
+Hunchunite,Au2Pb,alloy class,-27.0,18.6,3,OQMD,-0.074472,-2.978,-5.4,0.0,agrees,-3.4,0,
+Imiterite,Ag2HgS2,sulfide class,-95.2,37.4,5,OQMD,-0.164553,2.885,0.1,-1.5,agrees,-1.4,-108.7,
+Insizwaite,PtBi2,alloy class,-85.3,18.6,3,OQMD,-0.256304,-6.177,-11.1,0.0,agrees,-1.6,0,
+Iridarsenite,IrAs2,sulfide class,-126.0,39.6,3,OQMD,-0.477978,-9.432,11.1,1.3,agrees,3.4,31.4,low confidence: no correction for Ir (fewer than 3 measured solids hold it)
+Isoferroplatinum,Pt3Fe,alloy class,-28.9,43.6,4,OQMD,-0.200584,-7.747,48.5,0.0,differs,26.5,0,low confidence: the two computed tables disagree on this composition
+Isovite,(Cr)23C6,alloy class,-307.3,259.0,29,OQMD,-0.083333,-0.95,-74.1,0.0,agrees,1.1,0,
+Jalpaite,Ag3CuS2,sulfide class,-123.5,44.9,6,OQMD,-0.167736,2.504,1.7,-13.1,agrees,0.3,-140.7,
+Jamesonite,Pb4FeSb6S14,sulfide class,-1061.3,187.0,25,OQMD,-0.494517,3.92,216.2,13.3,agrees,0.7,-556.4,
+Jolliffeite,NiAsSe,sulfide class,-99.4,22.4,3,OQMD,-0.296955,-4.231,-16.3,2.9,agrees,0.7,-66.5,
+Kalgoorlieite,As2Te3,sulfide class,-31.8,37.4,5,OQMD,-0.015336,-1.48,-24.2,-0.2,agrees,2.1,15.4,
+Kalungaite,PdAsSe,sulfide class,-91.1,22.4,3,OQMD,-0.360289,-5.679,11.3,1.9,agrees,0.3,-29.1,
+Kashinite,Ir2S3,sulfide class,-215.6,66.1,5,OQMD,-0.530702,-0.219,38.3,2.1,agrees,2.8,-161.7,low confidence: no correction for Ir (fewer than 3 measured solids hold it)
+Kawazulite,Bi2Te2Se,sulfide class,-120.0,66.1,5,OQMD,-0.302585,-5.245,26.1,-0.1,agrees,1.5,-71.2,low confidence: no correction for Bi (fewer than 3 measured solids hold it)
+Keithconnite,Pd20Te7,sulfide class,-430.3,202.0,27,OQMD,-0.292932,-2.862,323.6,9.2,agrees,-0.4,-218.9,
+Kenhsuite,Hg3S2Cl2,sulfide class,-290.3,96.7,7,OQMD,-0.551117,-39.448,63.3,18.6,no entry,-8.6,-75.1,"low confidence: only one computed table holds this composition, so nothing confirms it"
+Khatyrkite,CuAl2,alloy class,-51.8,18.6,3,OQMD,-0.174995,-3.196,-1.1,0.0,agrees,-0.2,0,
+Kieftite,CoSb3,sulfide class,-61.0,29.9,4,OQMD,-0.196299,-5.516,9.3,5.5,agrees,1.6,186.4,
+Kingstonite,Rh3S4,sulfide class,-403.1,92.5,7,OQMD,-0.648117,-3.424,31.8,2.8,agrees,-0.1,-215.7,low confidence: no correction for Rh (fewer than 3 measured solids hold it)
+Kishonite,VH2,alloy class,-26.6,26.8,3,OQMD,-0.199395,-9.479,-7.9,39.0,agrees,-0.2,0,
+Kitagohaite,Pt7Cu,alloy class,28.9,49.7,8,OQMD,-0.076177,-3.269,87.7,0.0,agrees,-1.1,0,
+Kochkarite,PbBi4Te7,sulfide class,-246.5,158.5,12,OQMD,-0.264421,0.019,62.4,-2.5,agrees,2.0,-139.4,low confidence: no correction for Bi (fewer than 3 measured solids hold it)
+Kolymite,Cu7Hg6,alloy class,36.4,169.1,13,OQMD,0.297826,28.736,36.4,0.0,differs,-19.0,0,"low confidence: no correction for Hg (fewer than 3 measured solids hold it); low confidence: the computed structure of this composition is unstable against other compounds, so the energy of that mixture is used; low confidence: the two computed tables disagree on this composition"
+Koutekite,Cu5As2,sulfide class,-40.1,52.4,7,OQMD,0.040071,3.866,-33.8,-6.3,agrees,0.4,-44.3,
+Krupkaite,CuPbBi3S6,sulfide class,-407.2,145.3,11,OQMD,-0.514499,0.506,140.8,3.6,agrees,1.0,-428.3,low confidence: no correction for Bi (fewer than 3 measured solids hold it)
+Krutovite,NiAs2,sulfide class,-76.0,22.4,3,OQMD,-0.257796,-5.984,-4.3,2.9,agrees,1.1,-15.0,
+Kryachkoite,(Al)6(Fe),alloy class,-138.9,43.5,7,OQMD,-0.197205,-0.827,-5.7,0.0,agrees,0.8,0,
+Kufahrite,PtPb,alloy class,-16.5,21.8,2,OQMD,-0.045394,7.678,7.6,0.0,differs,-21.3,0,low confidence: the two computed tables disagree on this composition
+Kvačekite,NiSbSe,sulfide class,-102.1,22.4,3,OQMD,-0.307939,-2.578,-15.8,2.8,agrees,0.8,-6.0,
+Laffittite,AgHgAsS3,sulfide class,-132.6,44.9,6,OQMD,-0.257294,-0.111,12.2,4.2,agrees,-0.7,-141.1,
+Laflammeite,Pd3Pb2S2,sulfide class,-227.5,52.4,7,OQMD,-0.506962,-2.539,110.7,4.2,agrees,-0.2,-240.1,
+Laforêtite,AgInS2,sulfide class,-214.7,29.9,4,OQMD,-0.584513,-6.627,8.6,2.3,agrees,0.3,-199.5,
+Laitakarite,Bi4(Se)3,sulfide class,-105.1,92.5,7,OQMD,-0.272838,0.408,79.5,2.5,agrees,1.0,-156.8,low confidence: no correction for Bi (fewer than 3 measured solids hold it)
+Laphamite,As2Se3,sulfide class,-78.7,37.4,5,OQMD,-0.115465,-3.824,-26.3,3.3,agrees,-0.3,-75.8,
+Lautite,CuAsS,sulfide class,-77.8,22.4,3,OQMD,-0.276452,-2.279,2.4,-0.2,agrees,0.6,-53.4,
+Lavrentievite,Hg3S2Cl2,sulfide class,-290.3,96.7,7,OQMD,-0.551117,-39.448,63.3,18.6,no entry,-8.6,-75.1,"low confidence: only one computed table holds this composition, so nothing confirms it"
+Lenaite,AgFeS2,sulfide class,-177.0,43.3,4,OQMD,-0.309199,20.93,30.7,-4.6,agrees,-3.2,-162.3,"low confidence: the computed structure of this composition is unstable against other compounds, so the energy of that mixture is used"
+Lingbaoite,AgTe3,sulfide class,-45.5,29.9,4,OQMD,-0.021908,0.248,-30.3,-5.8,agrees,2.3,-21.9,
+Linzhiite,FeSi2,alloy class,-110.5,18.6,3,OQMD,-0.444604,-9.859,18.2,0.0,agrees,2.6,0,
+Lisiguangite,CuPtBiS3,sulfide class,-237.7,79.3,6,OQMD,-0.520968,-4.674,57.5,6.4,agrees,0.5,-203.8,low confidence: no correction for Bi (fewer than 3 measured solids hold it)
+Litochlebite,Ag2PbBi4Se8,sulfide class,-468.9,207.3,15,OQMD,-0.339965,1.183,43.3,-2.4,no entry,,-399.8,"low confidence: no correction for Bi (fewer than 3 measured solids hold it); low confidence: only one computed table holds this composition, so nothing confirms it"
+Lorándite,TlAsS2,sulfide class,-126.2,29.9,4,OQMD,-0.412039,-2.331,26.1,6.7,agrees,0.7,-124.2,
+Luanheite,Ag3Hg,alloy class,19.0,33.0,4,OQMD,0.03849,3.714,19.0,0.0,agrees,-4.1,0,low confidence: no correction for Hg (fewer than 3 measured solids hold it)
+Luberoite,Pt5Se4,sulfide class,-208.7,67.3,9,OQMD,-0.308285,-5.044,28.0,31.0,agrees,-0.8,-215.6,
+Luzonite,Cu3AsS4,sulfide class,-256.9,59.8,8,OQMD,-0.345896,-0.73,11.2,-1.1,agrees,0.1,-245.4,
+Majakite,PdNiAs,sulfide class,-80.6,22.4,3,OQMD,-0.329289,0.458,13.2,2.9,agrees,0.7,-39.8,
+Maldonite,Au2Bi,alloy class,-29.1,18.6,3,OQMD,-0.056905,-5.49,-12.6,0.0,agrees,-3.1,0,
+Marathonite,Pd25Ge9,alloy class,-1608.9,211.1,34,OQMD,-0.457508,0.579,-88.4,0.0,agrees,-0.5,0,
+Marrite,AgPbAsS3,sulfide class,-192.5,44.9,6,OQMD,-0.402905,-0.033,41.8,-1.1,agrees,0.4,-204.5,
+Maslovite,PtBiTe,sulfide class,-62.9,39.6,3,OQMD,-0.34503,-1.839,31.7,5.3,agrees,1.3,-32.3,low confidence: no correction for Bi (fewer than 3 measured solids hold it)
+Matildite,AgBiS2,sulfide class,-113.8,52.8,4,OQMD,-0.377419,1.628,41.2,-2.8,agrees,0.3,-126.1,low confidence: no correction for Bi (fewer than 3 measured solids hold it)
+Mattagamite,CoTe2,sulfide class,-72.9,22.4,3,OQMD,-0.203117,-15.267,-17.0,2.9,agrees,2.1,-52.8,
+Mavlyanovite,Mn5Si3,alloy class,-251.4,49.7,8,OQMD,-0.348726,4.393,52.9,0.0,agrees,1.9,0,
+Melonite,NiTe2,sulfide class,-91.6,22.4,3,OQMD,-0.225181,-8.824,-27.0,0.6,agrees,1.8,-57.1,
+Merenskyite,PdTe2,sulfide class,-97.0,22.4,3,OQMD,-0.336015,-8.977,0.7,-0.4,agrees,1.2,-19.7,
+Miargyrite,AgSbS2,sulfide class,-118.2,29.9,4,OQMD,-0.342075,-0.717,16.2,-2.4,agrees,0.3,-37.6,
+Michenerite,PdBiTe,sulfide class,-61.8,39.6,3,OQMD,-0.343958,-4.151,37.5,0.3,agrees,1.1,-26.8,low confidence: no correction for Bi (fewer than 3 measured solids hold it)
+Miharaite,PbCu4FeBiS6,sulfide class,-495.4,171.7,13,OQMD,-0.430244,2.541,80.3,-3.0,agrees,0.2,-497.5,low confidence: no correction for Bi (fewer than 3 measured solids hold it)
+Milotaite,PdSbSe,sulfide class,-108.3,22.4,3,OQMD,-0.421788,-6.442,11.9,1.9,agrees,0.2,31.4,
+Minakawaite,RhSb,sulfide class,-95.0,26.4,2,OQMD,-0.508404,-8.178,2.5,0.6,agrees,0.3,76.2,low confidence: no correction for Rh (fewer than 3 measured solids hold it)
+Mitrofanovite,Pt3Te4,sulfide class,-236.5,52.4,7,OQMD,-0.377531,-0.498,3.5,15.0,agrees,0.7,-64.9,
+Moissanite,SiC,alloy class,-56.2,17.9,2,OQMD,-0.208905,-20.156,-15.9,0.0,agrees,2.5,0,
+Moncheite,Pt(Te)2,sulfide class,-115.1,22.4,3,OQMD,-0.396223,-7.387,-5.1,4.7,agrees,1.0,-25.2,
+Monchetundraite,Pd2NiTe2,sulfide class,-142.4,37.4,5,OQMD,-0.323717,-1.756,11.9,1.9,agrees,0.9,-75.2,
+Monipite,MoNiP,alloy class,-178.4,26.8,3,OQMD,-0.645823,-4.709,8.5,0.0,agrees,0.8,0,
+Moëloite,Pb6Sb6S14(S)3,sulfide class,-1152.0,216.9,29,OQMD,-0.510899,-0.287,259.4,18.1,agrees,0.9,-774.5,
+Murashkoite,FeP,alloy class,-126.8,17.9,2,OQMD,-0.729207,-9.907,13.9,0.0,agrees,0.9,0,
+Muthmannite,AuAgTe2,sulfide class,-43.3,43.3,4,OQMD,0.138303,20.982,-7.4,-5.3,agrees,0.3,-16.6,"low confidence: the computed structure of this composition is unstable against other compounds, so the energy of that mixture is used"
+Naldrettite,Pd2Sb,sulfide class,-89.2,22.4,3,OQMD,-0.457579,-1.259,41.4,1.8,agrees,-0.5,58.0,
+Naquite,FeSi,alloy class,-83.5,12.4,2,OQMD,-0.514143,-9.558,15.7,0.0,agrees,2.3,0,
+Nazarovite,Ni12P5,alloy class,-844.0,151.8,17,OQMD,-0.562402,-1.739,78.5,0.0,agrees,1.1,0,
+Negevite,NiP2,alloy class,-146.3,26.8,3,OQMD,-0.531671,-1.577,7.6,0.0,agrees,-0.4,0,
+Nevskite,Bi(Se),sulfide class,-44.1,26.4,2,OQMD,-0.319517,0.328,17.4,0.8,agrees,0.7,-48.1,low confidence: no correction for Bi (fewer than 3 measured solids hold it)
+Nickelphosphide,Ni3P,alloy class,-179.3,35.7,4,OQMD,-0.51498,-3.546,19.5,0.0,agrees,1.0,0,
+Nickelskutterudite,NiAs3,sulfide class,-73.5,55.3,4,OQMD,0.090383,27.394,-2.3,3.5,no entry,,0.7,"low confidence: the computed structure of this composition is unstable against other compounds, so the energy of that mixture is used; low confidence: only one computed table holds this composition, so nothing confirms it"
+Nielsenite,PdCu3,alloy class,-24.7,24.8,4,OQMD,-0.107827,-2.557,16.9,0.0,agrees,-1.4,0,
+Nierite,Si3N4,alloy class,-698.7,62.5,7,OQMD,-1.214512,-117.182,7.3,114.3,agrees,2.8,0,
+Niggliite,PtSn,alloy class,-113.9,12.4,2,OQMD,-0.62787,-10.434,7.3,0.0,agrees,-0.7,0,
+Niningerite,MgS,sulfide class,-320.5,15.0,2,OQMD,-1.579642,-78.057,-16.8,1.1,agrees,0.4,-308.7,
+Niobocarbide,NbC,alloy class,-115.9,17.9,2,OQMD,-0.467185,4.003,-17.7,0.0,agrees,1.2,0,
+Nisbite,NiSb2,sulfide class,-61.0,22.4,3,OQMD,-0.209062,-1.868,-3.2,2.7,agrees,1.1,105.9,
+Nisnite,Ni3Sn,alloy class,-72.2,24.8,4,OQMD,-0.224211,-2.74,14.3,0.0,agrees,1.5,0,
+Novodneprite,AuPb3,alloy class,-38.6,24.8,4,OQMD,-0.057768,0.753,-13.3,0.0,agrees,-4.0,0,
+Oenite,CoSbAs,sulfide class,-65.5,41.5,3,OQMD,-0.045194,21.248,6.2,5.1,no entry,,49.7,"low confidence: the computed structure of this composition is unstable against other compounds, so the energy of that mixture is used; low confidence: only one computed table holds this composition, so nothing confirms it"
+Ognitite,NiBiTe,sulfide class,-34.3,41.5,3,OQMD,0.001204,15.254,9.9,1.2,no entry,,-64.1,"low confidence: no correction for Bi (fewer than 3 measured solids hold it); low confidence: the computed structure of this composition is unstable against other compounds, so the energy of that mixture is used; low confidence: only one computed table holds this composition, so nothing confirms it"
+Okruginite,Cu2SnSe3,sulfide class,-212.7,44.9,6,OQMD,-0.30585,-4.54,-41.4,5.8,agrees,0.5,-191.3,
+Oldhamite,CaS,sulfide class,-458.4,15.0,2,OQMD,-2.313672,-223.235,-14.4,2.5,agrees,0.4,-340.9,
+Olgafrankite,Ni3Ge,alloy class,-110.4,24.8,4,OQMD,-0.300391,-5.867,5.5,0.0,agrees,1.5,0,
+Omeiite,OsAs2,sulfide class,-59.9,39.6,3,OQMD,-0.221294,-21.352,2.9,1.3,agrees,-0.1,31.4,low confidence: no correction for Os (fewer than 3 measured solids hold it)
+Oreillyite,Cr2N,alloy class,-99.4,26.8,3,OQMD,-0.452821,-7.239,3.1,28.6,agrees,0.2,0,
+Orishchinite,Ni2P,alloy class,-151.9,26.8,3,OQMD,-0.570427,-0.016,13.2,0.0,agrees,1.3,0,
+Orthocuproplatinum,Pt3Cu,alloy class,-4.8,43.6,4,OQMD,-0.117496,-0.995,40.5,0.0,differs,239.1,0,low confidence: the two computed tables disagree on this composition
+Orthogersdorffite,NiAsS,sulfide class,-119.2,22.4,3,OQMD,-0.428055,-3.903,1.7,3.0,agrees,0.7,-84.6,
+Padmaite,PdBiSe,sulfide class,-71.5,39.6,3,OQMD,-0.378974,-1.0,36.8,1.4,agrees,1.6,-57.2,low confidence: no correction for Bi (fewer than 3 measured solids hold it)
+Palladoarsenide,Pd2As,sulfide class,-65.5,22.4,3,OQMD,-0.374072,-1.66,40.9,1.9,agrees,-0.4,-2.5,
+Palladobismutharsenide,Pd2(As),sulfide class,-65.5,22.4,3,OQMD,-0.374072,-1.66,40.9,1.9,agrees,-0.4,-2.5,
+Palladodymite,Pd2As,sulfide class,-65.5,22.4,3,OQMD,-0.374072,-1.66,40.9,1.9,agrees,-0.4,-2.5,
+Palladogermanide,Pd2Ge,alloy class,-167.8,18.6,3,OQMD,-0.542398,-6.306,-10.8,0.0,agrees,-0.3,0,
+Palladosilicide,Pd2Si,alloy class,-195.1,18.6,3,OQMD,-0.690983,-10.349,4.9,0.0,agrees,0.4,0,
+Palladothallite,Pd3Tl,alloy class,-91.0,24.8,4,OQMD,-0.220174,-8.633,-6.0,0.0,agrees,-1.6,0,
+Pampaloite,AuSbTe,sulfide class,-16.2,41.5,3,OQMD,0.172489,24.275,6.6,0.1,no entry,,70.8,"low confidence: the computed structure of this composition is unstable against other compounds, so the energy of that mixture is used; low confidence: only one computed table holds this composition, so nothing confirms it"
+Paolovite,Pd2Sn,alloy class,-168.3,18.6,3,OQMD,-0.574609,-2.146,-2.0,0.0,agrees,-1.3,0,
+Paracostibite,CoSbS,sulfide class,-117.5,22.4,3,OQMD,-0.465729,-2.4,12.2,5.1,agrees,1.2,-19.9,
+Paradimorphite,As4S3,sulfide class,-125.0,52.4,7,OQMD,-0.235757,0.309,31.7,4.7,agrees,1.1,-99.0,
+Paragersdorffite,NiAsS,sulfide class,-119.2,22.4,3,OQMD,-0.428055,-3.903,1.7,3.0,agrees,0.7,-84.6,
+Parapierrotite,TlSb5S8,sulfide class,-502.4,104.7,14,OQMD,-0.440431,0.345,84.3,13.1,agrees,0.7,-82.5,
+Pararammelsbergite,NiAs2,sulfide class,-76.0,22.4,3,OQMD,-0.257796,-5.984,-4.3,2.9,agrees,1.1,-15.0,
+Parkerite,Ni3Bi2S2,sulfide class,-212.2,92.5,7,OQMD,-0.392039,-3.772,46.2,6.4,agrees,1.4,-271.8,low confidence: no correction for Bi (fewer than 3 measured solids hold it)
+Patrónite,VS4,sulfide class,-335.0,66.1,5,OQMD,-0.766132,-14.451,31.8,2.8,agrees,-0.9,-215.7,low confidence: no correction for V (fewer than 3 measured solids hold it)
+Pautovite,CsFe2S3,sulfide class,-455.7,79.3,6,OQMD,-0.85861,-1.617,37.2,4.2,agrees,-0.1,-432.1,low confidence: no correction for Cs (fewer than 3 measured solids hold it)
+Pavonite,AgBi3S5,sulfide class,-291.1,118.9,9,OQMD,-0.472884,-0.661,119.9,-0.4,agrees,0.9,-312.6,low confidence: no correction for Bi (fewer than 3 measured solids hold it)
+Paxite,CuAs2,sulfide class,-3.8,22.4,3,OQMD,0.080471,7.764,-3.6,-0.2,agrees,1.2,16.2,
+Pašavaite,Pd3Pb2Te2,sulfide class,-179.8,52.4,7,OQMD,-0.381438,-2.74,76.0,1.8,agrees,0.3,-142.9,
+Permingeatite,Cu3SbSe4,sulfide class,-211.0,59.8,8,OQMD,-0.193281,-1.355,-60.4,-1.4,agrees,0.3,-112.2,
+Petzite,Ag3AuTe2,sulfide class,-69.3,44.9,6,OQMD,-0.075102,-1.081,-11.8,-14.0,agrees,0.2,-28.4,
+Picotpaulite,TlFe2S3,sulfide class,-286.5,44.9,6,OQMD,-0.556955,5.588,66.1,3.4,agrees,0.3,-290.9,
+Pierrotite,Tl2(Sb)10S16,sulfide class,-1004.6,209.4,28,OQMD,-0.440431,0.345,168.7,26.2,agrees,0.7,-164.9,
+Pilsenite,Bi4Te3,sulfide class,-34.7,92.5,7,OQMD,-0.170867,-0.007,81.7,-1.0,agrees,2.2,-65.6,low confidence: no correction for Bi (fewer than 3 measured solids hold it)
+Plagionite,Pb5Sb8S17,sulfide class,-1234.7,224.4,30,OQMD,-0.518188,-0.295,246.5,18.7,agrees,0.9,-569.7,
+Plumosite,Pb2Sb2S5,sulfide class,-386.4,67.3,9,OQMD,-0.535315,0.914,81.1,5.6,agrees,1.0,-222.2,
+Polarite,Pd(Bi),alloy class,-72.4,12.4,2,OQMD,-0.322096,-5.858,-10.2,0.0,agrees,-3.1,0,
+Polekhovskyite,MoNiP2,alloy class,-260.6,35.7,4,OQMD,-0.698964,-1.644,9.2,0.0,agrees,0.4,0,
+Potarite,PdHg,alloy class,-26.3,16.5,2,OQMD,-0.14274,-7.42,1.2,0.0,agrees,-2.7,0,low confidence: no correction for Hg (fewer than 3 measured solids hold it)
+Pratesiite,AgCuTe2,sulfide class,-56.9,29.9,4,OQMD,-0.000367,5.369,-28.5,-6.8,agrees,0.3,-31.7,
+Proustite,Ag3AsS3,sulfide class,-147.7,52.4,7,OQMD,-0.232036,-1.518,19.2,-10.2,agrees,0.2,-163.8,
+Pyradoketosite,Ag3SbS3,sulfide class,-170.9,52.4,7,OQMD,-0.267069,-0.337,19.8,-10.3,agrees,0.1,-103.3,
+Pyrargyrite,Ag3SbS3,sulfide class,-170.9,52.4,7,OQMD,-0.267069,-0.337,19.8,-10.3,agrees,0.1,-103.3,
+Pyrostilpnite,Ag3SbS3,sulfide class,-170.9,52.4,7,OQMD,-0.267069,-0.337,19.8,-10.3,agrees,0.1,-103.3,
+Příbramite,CuSbSe2,sulfide class,-108.5,29.9,4,OQMD,-0.216877,-0.63,-25.2,0.4,agrees,0.5,-10.4,
+Qingsongite,BN,alloy class,-235.7,17.9,2,OQMD,-1.372445,-119.481,0.5,28.6,agrees,0.1,0,
+Qusongite,WC,alloy class,-39.4,17.9,2,OQMD,-0.125659,-10.759,-15.2,0.0,agrees,0.9,0,
+Radtkeite,Hg3S2ClI,sulfide class,-223.9,96.7,7,OQMD,-0.424069,-27.19,39.9,22.6,no entry,-3.2,-115.5,"low confidence: no correction for I (fewer than 3 measured solids hold it); low confidence: only one computed table holds this composition, so nothing confirms it"
+Raguinite,TlFeS2,sulfide class,-183.7,29.9,4,OQMD,-0.519264,7.2,41.1,4.4,agrees,0.0,-188.4,
+Rammelsbergite,NiAs2,sulfide class,-76.0,22.4,3,OQMD,-0.257796,-5.984,-4.3,2.9,agrees,1.1,-15.0,
+Rasvumite,KFe2S3,sulfide class,-431.7,44.9,6,OQMD,-0.828817,-0.741,40.8,7.3,agrees,-0.3,-426.6,
+Rheniite,ReS2,sulfide class,-198.8,22.4,3,OQMD,-0.748771,-72.245,16.5,1.4,agrees,-0.6,-107.8,
+Rhodarsenide,Rh2As,sulfide class,-135.5,39.6,3,OQMD,-0.477526,-14.49,2.0,0.7,agrees,0.5,15.7,low confidence: no correction for Rh (fewer than 3 measured solids hold it)
+Rhodplumsite,Rh3Pb2S2,sulfide class,-256.7,92.5,7,OQMD,-0.460862,-6.673,52.3,2.3,agrees,0.1,-212.8,low confidence: no correction for Rh (fewer than 3 measured solids hold it)
+Roaldite,(Fe)4N,alloy class,32.3,54.5,5,OQMD,-0.082818,1.8,52.7,28.6,differs,24.4,0,low confidence: the two computed tables disagree on this composition
+Rucklidgeite,PbBi2Te4,sulfide class,-158.5,92.5,7,OQMD,-0.28361,0.203,35.8,-1.3,agrees,1.9,-98.6,low confidence: no correction for Bi (fewer than 3 measured solids hold it)
+Rumoiite,AuSn2,alloy class,-64.8,18.6,3,OQMD,-0.190735,-0.828,-9.6,0.0,agrees,-1.0,0,
+Rustenburgite,Pt3Sn,alloy class,-127.0,24.8,4,OQMD,-0.40898,-9.17,30.8,0.0,agrees,-0.7,0,
+Ruthenarsenite,(Ru)As,sulfide class,-55.2,15.0,2,OQMD,-0.263165,3.213,-8.8,10.8,agrees,-0.1,-72.7,
+Samsonite,Ag4MnSb2S6,sulfide class,-447.4,97.2,13,OQMD,-0.341694,2.329,29.1,-17.6,agrees,0.2,-334.3,
+Sartorite,PbAs2S4,sulfide class,-218.2,52.4,7,OQMD,-0.381186,2.748,53.9,4.6,agrees,0.3,-236.8,
+Schreibersite,(Fe)3P,alloy class,-124.3,35.7,4,OQMD,-0.426136,-1.297,40.2,0.0,agrees,0.8,0,
+Seinäjokite,FeSb2,sulfide class,11.0,22.4,3,OQMD,-0.035821,-3.456,22.0,-0.6,agrees,1.3,103.8,
+Seligmannite,CuPbAsS3,sulfide class,-225.5,44.9,6,OQMD,-0.455456,-0.386,36.5,1.7,agrees,0.5,-213.7,
+Shandite,Ni3Pb2S2,sulfide class,-249.7,52.4,7,OQMD,-0.421022,-2.829,27.6,7.1,agrees,0.8,-352.1,
+Shiranuiite,Cu(RhRh)S4,sulfide class,-380.4,92.5,7,OQMD,-0.600994,-4.153,24.2,1.3,agrees,-0.2,-230.8,low confidence: no correction for Rh (fewer than 3 measured solids hold it)
+Shosanbetsuite,Ag3Sn,alloy class,-4.7,24.8,4,OQMD,-0.049781,-4.803,14.5,0.0,agrees,-1.9,0,
+Shuangfengite,IrTe2,sulfide class,-97.4,39.6,3,OQMD,-0.293434,-28.312,-11.5,-1.0,agrees,3.8,-10.7,low confidence: no correction for Ir (fewer than 3 measured solids hold it)
+Sidorovite,PtFe3,alloy class,4.9,24.8,4,OQMD,-0.080697,3.82,51.3,0.0,agrees,-0.3,0,
+Sinnerite,Cu6As4S9,sulfide class,-594.0,142.1,19,OQMD,-0.342555,-1.301,34.2,-0.2,agrees,0.5,-513.2,
+Skaergaardite,PdCu,alloy class,-18.0,12.4,2,OQMD,-0.126538,-3.444,6.4,0.0,agrees,-1.9,0,
+Skinnerite,Cu3SbS3,sulfide class,-230.2,52.4,7,OQMD,-0.321603,2.128,3.8,-1.9,agrees,-0.1,-131.0,
+Skippenite,Bi2Se2Te,sulfide class,-140.0,66.1,5,OQMD,-0.314424,2.954,25.4,1.1,agrees,-1.7,-101.6,low confidence: no correction for Bi (fewer than 3 measured solids hold it)
+Smithite,AgAsS2,sulfide class,-86.8,29.9,4,OQMD,-0.259309,0.034,15.7,-2.3,agrees,0.3,-98.0,
+Sobolevskite,PdBi,alloy class,-72.4,12.4,2,OQMD,-0.322096,-5.858,-10.2,0.0,agrees,-3.1,0,
+Součekite,CuPbBi(S)3,sulfide class,-234.9,79.3,6,OQMD,-0.505215,0.939,62.0,1.2,agrees,0.7,-241.8,low confidence: no correction for Bi (fewer than 3 measured solids hold it)
+Sperrylite,PtAs2,sulfide class,-126.3,22.4,3,OQMD,-0.52139,-50.306,17.6,7.0,agrees,0.9,16.8,
+Stannopalladinite,(Pd)3Sn,alloy class,-208.9,24.8,4,OQMD,-0.539331,-10.415,-0.8,0.0,agrees,-1.1,0,
+Stephanite,Ag5SbS4,sulfide class,-220.9,74.8,10,OQMD,-0.219793,1.395,23.3,-18.2,agrees,-0.2,-169.0,
+Sternbergite,AgFe2S3,sulfide class,-279.7,65.0,6,OQMD,-0.413765,15.035,55.6,-5.6,agrees,0.4,-264.8,"low confidence: the computed structure of this composition is unstable against other compounds, so the energy of that mixture is used"
+Stibarsen,SbAs,sulfide class,5.7,15.0,2,OQMD,0.048628,4.692,4.5,1.2,agrees,-5.7,91.9,
+Stistaite,SnSb,sulfide class,5.2,15.0,2,OQMD,-0.045242,-4.365,6.5,7.4,agrees,2.2,22.4,
+Stolperite,AlCu,alloy class,-39.0,12.4,2,OQMD,-0.213019,-3.131,2.1,0.0,agrees,-0.4,0,
+Stromeyerite,CuAgS,sulfide class,-73.1,22.4,3,OQMD,-0.207827,2.024,-1.8,-5.1,agrees,-0.5,-74.9,
+Stumpflite,PtSb,sulfide class,-59.7,15.0,2,OQMD,-0.425549,-1.097,16.2,6.2,agrees,0.2,61.6,
+Sudburyite,PdSb,sulfide class,-62.8,15.0,2,OQMD,-0.445817,-3.975,22.0,1.2,agrees,0.0,67.1,
+Sudovikovite,PtSe2,sulfide class,-110.8,22.4,3,OQMD,-0.38459,-19.292,-6.5,7.0,agrees,-1.4,-86.0,
+Suessite,Fe3Si,alloy class,-84.6,24.8,4,OQMD,-0.328121,-3.731,42.0,0.0,agrees,2.3,0,
+Sulvanite,Cu3VS4,sulfide class,-569.5,105.7,8,OQMD,-0.747466,-16.588,9.2,-1.7,agrees,-0.8,-261.0,low confidence: no correction for V (fewer than 3 measured solids hold it)
+Suredaite,PbSnS3,sulfide class,-250.1,37.4,5,OQMD,-0.627903,0.508,46.0,9.4,agrees,0.8,-268.0,
+Sylvanite,AgAuTe4,sulfide class,-76.1,44.9,6,OQMD,-0.075325,-1.664,-26.2,-6.3,agrees,1.5,-27.2,
+Tantalcarbide,TaC,alloy class,-125.4,17.9,2,OQMD,-0.583268,-12.476,-12.8,0.0,agrees,1.0,0,
+Telargpalite,(Pd)3Te,sulfide class,-59.3,29.9,4,OQMD,-0.229747,5.264,49.0,1.4,agrees,-0.6,-32.6,
+Tennantite-(Cu),Cu6(Cu4Cu2)As4S13,sulfide class,-937.5,216.9,29,OQMD,-0.34014,-1.49,20.6,-6.4,agrees,0.1,-819.7,
+Testibiopalladite,PdSbTe,sulfide class,-95.3,22.4,3,OQMD,-0.375117,-3.033,12.6,0.7,agrees,0.9,61.8,
+Tetra-auricupride,CuAu,alloy class,-5.6,12.4,2,OQMD,-0.052772,-1.926,4.6,0.0,agrees,-1.8,0,
+Tetradymite,Bi2Te2S,sulfide class,-123.5,66.1,5,OQMD,-0.347556,-2.179,44.2,-0.0,agrees,2.0,-89.4,low confidence: no correction for Bi (fewer than 3 measured solids hold it)
+Tetraferroplatinum,PtFe,alloy class,-21.4,12.4,2,OQMD,-0.240574,-18.021,25.0,0.0,agrees,-0.3,0,
+Tetrahedrite-(Cu),Cu6(Cu4Cu2)Sb4S13,sulfide class,-988.1,216.9,29,OQMD,-0.35888,-1.473,22.9,-6.8,agrees,-0.1,-577.8,
+Tetrataenite,FeNi,alloy class,6.1,12.4,2,OQMD,-0.068796,-0.907,19.4,0.0,agrees,0.3,0,
+Toledoite,TiFeSi,alloy class,-196.5,18.6,3,OQMD,-0.747503,-0.82,19.9,0.0,agrees,0.2,0,
+Tolovkite,IrSbS,sulfide class,-148.0,39.6,3,OQMD,-0.576848,-9.037,17.7,1.3,agrees,2.8,22.3,low confidence: no correction for Ir (fewer than 3 measured solids hold it)
+Tomamaeite,Cu3Pt,alloy class,-27.0,24.8,4,OQMD,-0.140996,-5.441,27.4,0.0,agrees,-1.1,0,
+Tongbaite,Cr3C2,alloy class,-82.3,44.7,5,OQMD,-0.104147,-1.241,-32.1,0.0,agrees,0.5,0,
+Transjordanite,Ni2P,alloy class,-151.9,26.8,3,OQMD,-0.570427,-0.016,13.2,0.0,agrees,1.3,0,
+Trechmannite,AgAsS2,sulfide class,-86.8,29.9,4,OQMD,-0.259309,0.034,15.7,-2.3,agrees,0.3,-98.0,
+Trigodomeykite,Cu3As,sulfide class,-24.6,29.9,4,OQMD,0.012702,1.226,-20.7,-3.9,agrees,0.0,-29.7,
+Tsumoite,BiTe,sulfide class,-20.7,26.4,2,OQMD,-0.199064,-0.021,18.1,-0.4,agrees,2.4,-17.7,low confidence: no correction for Bi (fewer than 3 measured solids hold it)
+Tulameenite,Pt2CuFe,alloy class,-37.2,24.8,4,OQMD,-0.184771,1.941,41.9,0.0,agrees,-0.5,0,
+Tungstenite,WS2,sulfide class,-269.3,39.6,3,OQMD,-1.004787,-96.947,20.1,1.4,agrees,1.2,-107.8,low confidence: no correction for W (fewer than 3 measured solids hold it)
+Tvalchrelidzeite,Hg3SbAsS3,sulfide class,-166.6,59.8,8,OQMD,-0.214853,1.941,-5.7,20.5,agrees,-1.6,-37.2,
+Uakitite,VN,alloy class,-209.4,17.9,2,OQMD,-1.252906,-31.379,3.8,28.6,agrees,0.2,0,
+Ullmannite,NiSbS,sulfide class,-116.1,22.4,3,OQMD,-0.418754,-2.196,2.2,2.9,agrees,0.6,-24.1,
+Urvantsevite,Pd(Bi)2,alloy class,-93.6,18.6,3,OQMD,-0.248558,-3.285,-21.7,0.0,agrees,-2.3,0,
+Uzonite,As4S5,sulfide class,-197.8,67.3,9,OQMD,-0.287428,0.228,47.7,6.1,agrees,0.7,-206.8,
+Vavřínite,Ni2SbTe2,sulfide class,-163.1,37.4,5,OQMD,-0.275908,-2.595,-32.7,2.7,agrees,1.5,-27.3,
+Veenite,Pb2(Sb)2S5,sulfide class,-386.4,67.3,9,OQMD,-0.535315,0.914,81.1,5.6,agrees,1.0,-222.2,
+Verbeekite,PdSe2,sulfide class,-79.8,22.4,3,OQMD,-0.280179,-5.92,-0.7,2.0,agrees,-1.0,-80.6,
+Vincentite,Pd3As,sulfide class,-78.1,29.9,4,OQMD,-0.365261,-4.166,60.3,2.6,agrees,-0.5,-11.5,
+Volynskite,AgBiTe2,sulfide class,-59.5,52.8,4,OQMD,-0.157486,-2.065,6.5,-5.2,agrees,1.7,-29.0,low confidence: no correction for Bi (fewer than 3 measured solids hold it)
+Vulcanite,CuTe,sulfide class,-31.1,15.0,2,OQMD,-0.063078,-6.0,-16.9,-2.0,agrees,0.7,-20.5,
+Vymazalováite,Pd3Bi2S2,sulfide class,-172.7,92.5,7,OQMD,-0.452472,-2.879,129.3,3.6,agrees,0.5,-159.8,low confidence: no correction for Bi (fewer than 3 measured solids hold it)
+Wairauite,CoFe,alloy class,7.6,12.4,2,OQMD,-0.064982,-0.52,20.1,0.0,agrees,1.4,0,
+Wangxibinite,TiFe,alloy class,-69.5,12.4,2,OQMD,-0.450178,-14.387,17.4,0.0,agrees,-0.3,0,
+Wassonite,TiS,sulfide class,-288.2,26.4,2,OQMD,-1.588645,-23.525,17.7,0.7,agrees,-4.8,-53.9,low confidence: no correction for Ti (fewer than 3 measured solids hold it)
+Weissbergite,TlSbS2,sulfide class,-152.8,29.9,4,OQMD,-0.48182,-2.511,26.6,6.6,agrees,0.6,-63.7,
+Willyamite,CoSbS,sulfide class,-117.5,22.4,3,OQMD,-0.465729,-2.4,12.2,5.1,agrees,1.2,-19.9,
+Wittichenite,Cu3BiS3,sulfide class,-210.7,92.5,7,OQMD,-0.336334,1.426,28.7,-2.3,agrees,0.5,-219.5,low confidence: no correction for Bi (fewer than 3 measured solids hold it)
+Xanthoconite,Ag3AsS3,sulfide class,-147.7,52.4,7,OQMD,-0.232036,-1.518,19.2,-10.2,agrees,0.2,-163.8,
+Xifengite,Fe5Si3,alloy class,-251.7,49.7,8,OQMD,-0.387565,3.239,73.4,0.0,agrees,2.3,0,
+Xilingolite,Pb3Bi2S6,sulfide class,-489.1,145.3,11,OQMD,-0.614485,-0.276,157.2,5.9,agrees,1.1,-505.8,low confidence: no correction for Bi (fewer than 3 measured solids hold it)
+Yeite,TiSi,alloy class,-145.8,12.4,2,OQMD,-0.790836,-3.492,6.8,0.0,agrees,0.5,0,
+Yixunite,Pt3In,alloy class,-117.4,24.8,4,OQMD,-0.370537,-5.981,25.6,0.0,agrees,-0.8,0,
+Yuanjiangite,AuSn,alloy class,-49.4,12.4,2,OQMD,-0.229613,-7.829,-5.1,0.0,agrees,-1.6,0,
+Zaccariniite,RhNiAs,sulfide class,-125.3,39.6,3,OQMD,-0.418693,-3.903,-6.3,2.2,agrees,1.3,-30.7,low confidence: no correction for Rh (fewer than 3 measured solids hold it)
+Zangboite,TiFeSi2,alloy class,-229.4,52.0,4,OQMD,-0.235355,40.247,22.4,0.0,differs,-43.1,0,"low confidence: the computed structure of this composition is unstable against other compounds, so the energy of that mixture is used; low confidence: the two computed tables disagree on this composition"
+Zavyalovite,Ag2TeS3,sulfide class,-97.8,44.9,6,OQMD,-0.174353,-9.194,10.1,-7.0,agrees,0.1,-178.9,
+Zhanghengite,CuZn,alloy class,-16.8,12.4,2,OQMD,-0.091952,0.186,1.3,0.0,agrees,-0.4,0,
+Zhiqinite,TiSi2,alloy class,-158.8,18.6,3,OQMD,-0.580592,-5.2,9.3,0.0,agrees,1.9,0,
+Zlatogorite,CuNiSb2,sulfide class,-70.1,29.9,4,OQMD,-0.156584,0.031,-10.7,1.2,agrees,0.7,90.8,
+Zoyashlyukovaite,MoC,alloy class,-33.9,17.9,2,OQMD,-0.088047,-0.137,-16.9,0.0,agrees,1.2,0,
+Zuktamrurite,FeP2,alloy class,-189.1,26.8,3,OQMD,-0.70334,-5.978,14.5,0.0,agrees,0.4,0,
+Zvyagintsevite,Pd3Pb,alloy class,-116.1,24.8,4,OQMD,-0.299651,-21.418,-0.5,0.0,agrees,-2.0,0,
+Ángelaite,Cu2AgPbBiS4,sulfide class,-307.7,118.9,9,OQMD,-0.405157,1.341,60.1,-3.9,agrees,-0.3,-316.7,low confidence: no correction for Bi (fewer than 3 measured solids hold it)
+Černýite,Cu2CdSnS4,sulfide class,-418.8,59.8,8,OQMD,-0.573328,-0.659,15.2,8.5,agrees,0.4,-387.1,

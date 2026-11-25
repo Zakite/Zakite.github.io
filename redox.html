@@ -298,7 +298,7 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
   <section class="panel stack" aria-labelledby="how-h">
     <h2 id="how-h">How it works</h2>
     <ul class="how">
-      <li><b>Input.</b> The mineral&rsquo;s Gibbs energy of formation, measured, from twelve published databases. Every IMA mineral can be looked up by name. If it has no measured value, the energy is estimated from its IMA formula and flagged. The &plusmn; shows how far the value could be off.</li>
+      <li><b>Input.</b> The mineral&rsquo;s Gibbs energy of formation, measured, from twelve published databases. Every IMA mineral can be looked up by name. If it has no measured value, the energy is estimated from its IMA formula and flagged. For 339 minerals without oxygen (sulfides and their kin, alloys, carbides, nitrides, phosphides, silicides) it is instead an energy computed by density functional theory (OQMD database), corrected against measured solids. The &plusmn; shows how far the value could be off.</li>
       <li><b>Reaction.</b> At the redox potential the partner sets, energy minimization finds the most stable products in water at your pH.</li>
       <li><b>Answer.</b> The gap between the mineral and the partner on the redox ladder, in volts and in kJ per mole of electrons. YES is colored by the energy per mole of partner reaction (at least two electrons): green at 20 kJ or more (the cost of moving one ion across a membrane, Schink 1997), yellow from 10 to 20 (the lowest microbes are seen living on, Hoehler et al. 2001), red under 10.</li>
       <li><b>Electrons only.</b> Energy a mineral releases just by sitting in water (dissolving, hydrating, turning into a more stable form), with every element keeping its oxidation state, is not redox energy. It is reported on its own and left out of every value here.</li>
@@ -336,14 +336,14 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
   <a class="back" href="/" style="margin-top:1.4rem">← back to the homepage</a>
 </main>
 
-<script src="redox/engine.js?v=20261124g"></script>
-<script src="redox/estimator.js?v=20261124g"></script>
-<script src="redox/minerals.js?v=20261124g"></script>
-<script src="redox/partners.js?v=20261124g"></script>
+<script src="redox/engine.js?v=20261124h"></script>
+<script src="redox/estimator.js?v=20261124h"></script>
+<script src="redox/minerals.js?v=20261124h"></script>
+<script src="redox/partners.js?v=20261124h"></script>
 <script>
 (function () {
   "use strict";
-  var VER = "20261124g";            // changed with every release, so that a browser never mixes old and new files
+  var VER = "20261124h";            // changed with every release, so that a browser never mixes old and new files
   var MR = window.MineralRedox, MD = window.MineralData;
   var $ = function (id) { return document.getElementById(id); };
   // The calculation lives in three files: engine.js (the redox value), estimator.js (formation energies never measured) and
@@ -351,7 +351,7 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
   // and conditions belong to minerals.js, and the page keeps its own settings on the same object.
   var S = MD.S;
   S.pick = null; S.batch = null; S.downloads = null; S.asked = false; S.partner = "O2"; S.named = Object.create(null);
-  var plain = MD.plain, norm = MD.norm, count = MD.count, cond = MD.cond, loadLibrary = MD.loadLibrary, loadIma = MD.loadIma, loadCross = MD.loadCross, crossOf = MD.crossOf, imaFind = MD.imaFind, lookup = MD.lookup, sameCompound = MD.sameCompound, imaHits = MD.imaHits, apart = MD.apart, oneFor = MD.oneFor, fallback = MD.fallback, placeholder = MD.placeholder, shifted = MD.shifted, scoreOf = MD.scoreOf, rangeOf = MD.rangeOf, uEff = MD.uEff, errOf = MD.errOf, ownErr = MD.ownErr, refErr = MD.refErr, withH2 = MD.withH2;
+  var plain = MD.plain, norm = MD.norm, count = MD.count, cond = MD.cond, loadLibrary = MD.loadLibrary, loadIma = MD.loadIma, loadCross = MD.loadCross, loadComputed = MD.loadComputed, crossOf = MD.crossOf, imaFind = MD.imaFind, lookup = MD.lookup, sameCompound = MD.sameCompound, imaHits = MD.imaHits, apart = MD.apart, oneFor = MD.oneFor, fallback = MD.fallback, placeholder = MD.placeholder, shifted = MD.shifted, scoreOf = MD.scoreOf, rangeOf = MD.rangeOf, uEff = MD.uEff, errOf = MD.errOf, ownErr = MD.ownErr, refErr = MD.refErr, withH2 = MD.withH2;
   var EXAMPLES = ["pyrite", "pyrrhotite", "mackinawite", "magnetite", "hematite", "goethite", "pyrolusite", "siderite",
                   "vivianite", "fayalite", "chalcopyrite", "uraninite", "quartz"];
   var STORE_USER = "mineral-redox-user-species", STORE_STATE = "mineral-redox-state";
@@ -563,6 +563,7 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
     var basis = sp.ref === "user" ? "user" : info ? info.basis : "measured", steps = [], est = info && info.est;
     // 1. the input
     var from = basis === "estimate" ? "It has no measured value. It was estimated from the formula by " + fnLink("estimator", "estimate") + ", called from " + fnLink("minerals", "fallback") + "."
+      : basis === "dft" ? "It has no measured value. It is a computed energy (density functional theory, " + esc(info.dft ? info.dft.table : "OQMD") + " database), corrected against measured solids and read from computed_energies.csv by " + fnLink("minerals", "fallback") + "."
       : basis === "proxy" ? "It is the measured value of a mineral with the same formula, found by " + fnLink("minerals", "fallback") + "."
       : basis === "moved" ? "It is a measured value brought to the ideal formula by " + fnLink("minerals", "oneFor") + "."
       : basis === "element" ? "An element in its reference state: zero by definition."
@@ -574,6 +575,16 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
         Object.keys(est.blocks).map(function (x) { return cf(est.blocks[x]) + " " + esc(x.replace("|", " as ")); }).join(", ") +
         (est.family ? " (family: " + esc(est.family) + ")" : "") + ". " + fnLink("estimator", "core") + " added up their fitted energies" +
         (est.dH !== null && est.S !== null && Math.abs(est.dG - sp.G) < 0.01 ? ": Δ<sub>f</sub>H " + num(est.dH, 1) + " kJ/mol and entropy " + num(est.S, 1) + " J/mol/K, which give the Δ<sub>f</sub>G above" : "") + ".</div>";
+    }
+    if (basis === "dft" && info.dft) {
+      var D = info.dft, per = D.E * 96.485 - Math.max(0, D.above);
+      // ## ΔfG = (E × 96.485 − height above the hull) × atoms + correction per element + entropy term
+      blocksText = '<div class="calc">computed formation energy ' + signed(D.E, 5) + " eV per atom × 96.485 = " + signed(D.E * 96.485, 2) + " kJ per mole of atoms" +
+        (D.above > 0 ? "<br>it lies " + num(D.above, 2) + " above the most stable mixture of other computed compounds; a mineral that exists is taken to be no less stable than that mixture: " + (Math.abs(per) < 0.005 ? "0.00" : signed(per, 2)) : "") +
+        "<br>× " + cf(D.atoms) + " atoms = " + signed(per * D.atoms, 1) + " kJ/mol<br>correction per element, fitted to measured solids: " + signed(D.fix, 1) +
+        "<br>entropy term (from a heat to a Gibbs energy at 25 °C): " + signed(D.entropy, 1) +
+        "<br>Δ<sub>f</sub>G = " + signed(per * D.atoms, 1) + " " + (D.fix < 0 ? "− " + num(-D.fix, 1) : "+ " + num(D.fix, 1)) + " " + (D.entropy < 0 ? "− " + num(-D.entropy, 1) : "+ " + num(D.entropy, 1)) +
+        " = " + signed(D.G, 1) + " kJ/mol, give or take " + num(D.u, 1) + " (the 68 % error of this method on measured solids, per atom, times the atoms)</div>";
     }
     steps.push("<b>The mineral and its formation energy</b>" + fmtFormula(sp.formula) + ", Δ<sub>f</sub>G = " + e3(sp.G) + " kJ/mol. " + from + blocksText +
       '<div class="by">' + fnLink("engine", "parseFormula") + " reads the formula into atoms; " + fnLink("engine", "makeSpecies") + " stores them with the charge and ω, the summed oxidation numbers of everything except O and H (ω = charge + 2 × O − H).</div>");
@@ -682,7 +693,7 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
       fns: [["blocks", "splits a formula into building blocks"], ["core", "adds up the fitted block energies"], ["estimate0", "blocks to a formation energy"], ["estimate", "the estimate, with organic and halide cases"]] },
     minerals: { label: "minerals.js", what: "which formation energy a mineral gets", src: "redox/minerals.js",
       fns: [["lookup", "finds a name or formula in the databases"], ["sameCompound", "is a database entry this mineral?"], ["oneFor", "one entry per mineral, for its ideal formula"],
-            ["fallback", "when nothing is measured under the name"], ["resolve", "a list of names to a list of species"], ["evaluate", "runs the engine on the list"], ["rangeOf", "the plus-or-minus from the mineral's own formation energy"], ["refErr", "the plus-or-minus from the reference data"], ["errOf", "the two combined"], ["withH2", "the value against H2"]] } };
+            ["loadComputed", "reads the computed energies"], ["fallback", "when nothing is measured under the name"], ["resolve", "a list of names to a list of species"], ["evaluate", "runs the engine on the list"], ["rangeOf", "the plus-or-minus from the mineral's own formation energy"], ["refErr", "the plus-or-minus from the reference data"], ["errOf", "the two combined"], ["withH2", "the value against H2"]] } };
   var codeText = {}, codeShown = null;
   function codeLoad(id) {
     if (codeText[id] !== undefined) return Promise.resolve(codeText[id]);
@@ -764,7 +775,8 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
   function codeData() {            // the data files, and the oxides also allowed as products (their formulas are known once the library has loaded)
     $("code-data").innerHTML = "Data files the page reads: " + [["redox/obigt_thermo.csv", "the reaction database"], ["redox/measured_library.csv", "measured values from the other databases"],
       ["redox/base_crosscheck.csv", "how far the databases agree"], ["redox/ima_minerals.csv", "the IMA list with the formula used for each mineral"],
-      ["redox/estimator_model.json", "the fitted numbers of the estimate"]].map(function (f) {
+      ["redox/estimator_model.json", "the fitted numbers of the estimate"],
+      ["redox/computed_energies.csv", "computed energies (density functional theory) for minerals without oxygen that have no measured value"]].map(function (f) {
         return '<a href="' + f[0] + '" target="_blank" rel="noopener">' + f[0].replace("redox/", "") + "</a> (" + f[1] + ")";
       }).join(", ") + ". The reaction database lacks a solid for some oxidation states, so " + MD.EXTRA_PRODUCTS.length + " measured oxides from measured_library.csv are also allowed as products (" +
       MD.EXTRA_PRODUCTS.map(function (n) { var e = S.lib.filter(function (x) { return x.name === n; })[0]; return e ? fmtFormula(e.formula) : esc(n); }).join(", ") + "); minerals.js lists them with the rule." +
@@ -961,6 +973,8 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
       else if (info.basis === "element") text = "Native element: its formation energy is zero by definition.";
       else text = (info.basis === "proxy" ? "<b>No measurement under this name.</b> " : "<b>No measured formation energy.</b> ") + (info.basis === "proxy"
           ? "Using " + esc(info.twin) + ", which has the same formula. " + pm + "."
+          : info.basis === "dft" ? "Computed by density functional theory (" + esc(info.dft ? info.dft.table : "OQMD") + " database) and corrected against measured solids: \u0394<sub>f</sub>G " +
+            num(sp.G, 1) + " \u00b1 " + (info.u >= 5 ? Math.round(info.u) : info.u.toFixed(1)) + " kJ/mol. " + (uV !== null || held ? pm + "." : "")
           : "Estimated from the formula: \u0394<sub>f</sub>G " + (info.u >= 5 ? num(Math.round(sp.G), 0) : num(sp.G, 1)) + " \u00b1 " +
             (info.u >= 5 ? Math.round(info.u) : info.u.toFixed(1)) + " kJ/mol. " + (uV !== null || held ? pm + "." : "")) +
         (pr.volts === null && !held && info.range && info.range.flip ? " A better value could change this answer." : "") +
@@ -1120,6 +1134,7 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
   function sourceCell(s) {
     if (s.ref === "user") return "<b>added by hand</b>: " + esc(s.citation);
     if (s.ref === "estimate") return "<b>estimate, not measured</b>: from the formula";
+    if (s.ref === "dft") return "<b>computed, not measured</b>: density functional theory, OQMD database (Saal et al. 2013; Kirklin et al. 2015), corrected against measured solids";
     if (s.ref === "stand-in") return "<b>stand-in, not measured for this mineral</b>: " + esc(s.citation);
     if (s.ref === "moved") return "<b>measured, brought to the ideal formula</b>: " + esc(s.citation);
     if (s.lib) return "<b>second database</b>: " + esc(s.citation) + (s.lib.n > 1 ? '. <span class="hint">All databases: ' + esc(s.lib.all) + "</span>" : "");
@@ -1183,13 +1198,14 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
     var done = b.rows.filter(function (r) { return r.status === "computed"; });
     var none = b.rows.filter(function (r) { return r.status === "no data"; });
     var failed = b.rows.filter(function (r) { return r.status === "not computed"; });
-    var counts = { fuel: 0, oxidant: 0, inert: 0 }, basis = { measured: 0, library: 0, moved: 0, proxy: 0, estimate: 0, inert: 0, element: 0 };
+    var counts = { fuel: 0, oxidant: 0, inert: 0 }, basis = { measured: 0, library: 0, moved: 0, proxy: 0, dft: 0, estimate: 0, inert: 0, element: 0 };
     done.forEach(function (r) { counts[r.inertOnly ? "inert" : r.res.role]++; basis[r.basis || "measured"]++; });
     $("batch-status").innerHTML = "<b>" + done.length + "</b> computed at pH " + b.pH + ", dissolved species " + solutesText() + ": " +
       plural(counts.fuel, "fuel") + ", " + plural(counts.oxidant, "oxidant") + ", " + counts.inert + " inert. Basis: <b>" + basis.measured + "</b> measured" +
       (basis.library ? ", <b>" + basis.library + "</b> measured in another database" : "") +
       (basis.moved ? ", <b>" + basis.moved + "</b> measured at another water content or a nearby composition and brought to the ideal formula" : "") +
       (basis.proxy ? ", <b>" + basis.proxy + "</b> from a measured mineral of the same formula" : "") +
+      (basis.dft ? ", <b>" + basis.dft + "</b> computed by density functional theory" : "") +
       (basis.estimate ? ", <b>" + basis.estimate + "</b> estimated from the formula" : "") +
       (basis.element ? ", <b>" + basis.element + "</b> native elements" : "") +
       (basis.inert ? ", <b>" + basis.inert + "</b> inert whatever their formation energy" : "") + "." +
@@ -1197,7 +1213,7 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
       (failed.length ? " <b>" + failed.length + "</b> could not be computed." : "") +
       notes.map(function (n) { return '<div class="note" style="margin-top:8px">' + n + "</div>"; }).join("");
     var label = function (r) { return r.ima || (r.sp && r.status === "computed" ? r.sp.name : r.input || ""); };
-    var entry = function (r) { return r.ima && r.sp && !r.sp.ref.match(/^(estimate|stand-in|element|moved)$/) && norm(r.sp.name) !== norm(r.ima) ? r.sp.name : ""; };
+    var entry = function (r) { return r.ima && r.sp && !r.sp.ref.match(/^(estimate|stand-in|element|moved|dft)$/) && norm(r.sp.name) !== norm(r.ima) ? r.sp.name : ""; };
     var all = b.rows.slice().sort(function (x, y) {
       var a = norm(label(x)), c = norm(label(y));
       return a < c ? -1 : a > c ? 1 : 0;
@@ -1212,7 +1228,7 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
       var pm = d ? ' <span class="pm">\u00b1' + pmText(pmv) + "</span>" : "";            // every value carries its ±
       var h2 = withH2(res, r.u, r.range);            // the reaction with H2 has its own column
       var src = r.basis === "library" ? "measured" : r.basis === "moved" ? (r.how === "water" ? "measured (solubility)" : "measured nearby, moved") : r.basis === "proxy" ? "measured (" + esc(r.twin) + ")"
-        : r.basis === "estimate" ? "<b>estimate</b>" : r.basis === "element" ? "native element" : sp.ref === "user" ? "added by hand" : "measured";
+        : r.basis === "dft" ? "<b>computed</b>" : r.basis === "estimate" ? "<b>estimate</b>" : r.basis === "element" ? "native element" : sp.ref === "user" ? "added by hand" : "measured";
       return "<tr><td>" + esc(label(r)) + (entry(r) ? " <small>(" + esc(entry(r)) + ")</small>" : "") + "</td><td>" + fmtFormula(r.show || sp.formula) + '</td><td class="num"><b>' + (d ? signed(res.number, 1) : "0") + "</b>" + pm +
         '</td><td class="num">' + (d ? signed(res.number / MR.F, 3) + ' <span class="pm">\u00b1' + (pmv / MR.F > 0 && pmv / MR.F < 0.0005 ? "<0.001" : (pmv / MR.F).toFixed(3)) + "</span>" : "0") + '</td><td class="num">' + (h2 ? "<b>" + signed(h2.v, 1) + "</b>" + ' <span class="pm">\u00b1' + pmText(h2.pm) + "</span>" : "") + "</td><td>" + src + (res.role === "inert" ? "<small>inert in water</small>" : "") + "</td></tr>";
     }).join("");
@@ -1283,12 +1299,13 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
       var sp = r.sp, res = r.res, d = res.fuel || res.oxidant || res.deep;
       var basis = r.basis === "library" ? "measured" : r.basis === "moved" ? (r.how === "water" ? "measured by solubility, water of the ideal formula counted as liquid water" : "measured at a nearby composition, moved to the ideal formula")
         : r.basis === "proxy" ? "measured value of " + r.twin + " (same formula)"
+        : r.basis === "dft" ? "computed by density functional theory, corrected against measured solids"
         : r.basis === "estimate" ? "estimated from the formula" : r.basis === "element" ? "native element" : sp.ref === "user" ? "added by hand" : "measured";
-      var source = r.basis === "library" ? sp.lib.db + (sp.lib.evaluated ? "" : " (older compilation)")
+      var source = r.basis === "dft" ? (r.dft ? r.dft.table : "OQMD") : r.basis === "library" ? sp.lib.db + (sp.lib.evaluated ? "" : " (older compilation)")
         : r.basis === "moved" ? (r.from.lib ? r.from.lib.db + (r.from.lib.evaluated ? "" : " (older compilation)") : r.from.ref)
         : r.basis === "estimate" || r.basis === "proxy" || r.basis === "element" ? "" : sp.ref;
       var c = b.cond, E = d ? (res.fuel ? res.fuel.E : res.oxidant ? res.oxidant.E : res.deep.E) : null, h2 = withH2(res, r.u, r.range);
-      var real = r.from ? r.from.name + " [" + r.from.formula + "]" : !/^(estimate|stand-in|element)$/.test(sp.ref) && r.ima && norm(sp.name) !== norm(r.ima) ? sp.name : "";
+      var real = r.from ? r.from.name + " [" + r.from.formula + "]" : !/^(estimate|stand-in|element|dft)$/.test(sp.ref) && r.ima && norm(sp.name) !== norm(r.ima) ? sp.name : "";
       lines.push([who(r), r.show || sp.formula, res.role, d ? r4(res.number) : 0, d ? r4(res.number / MR.F) : 0, d ? r4(d.n) : "", d ? r4(errOf(r.u, res, r.range)) : "", d ? Math.round(errOf(r.u, res, r.range) / MR.F * 1e5) / 1e5 : "", h2 ? r4(h2.v) : "", h2 ? r4(h2.pm) : "", basis, source,
         (r.range && r.range.flip ? [unsettled(r.range)] : []).concat(res.notes.map(function (t) { return placeholder(r.flags) ? t.replace(/, releasing [\d.]+ kJ\/mol/, "") : t; }), r.flags || []).join("; "), yes(r), real,
         res.breakdown && res.breakdown.known && !placeholder(r.flags) ? Math.round(-res.breakdown.dG * 10) / 10 : "", plain(who(r))].map(q).join(","));
@@ -1336,12 +1353,14 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
       .catch(function () { return ""; });
     var imaReady = fetch("redox/ima_minerals.csv?v=" + VER).then(function (r) { return r.ok ? r.text() : ""; })
       .catch(function () { return ""; });             // without it only the measured minerals can be looked up by name
+    var dftReady = fetch("redox/computed_energies.csv?v=" + VER).then(function (r) { return r.ok ? r.text() : ""; })
+      .catch(function () { return ""; });             // without it those minerals fall back on the formula estimate
     fetch("redox/obigt_thermo.csv?v=" + VER).then(function (r) {
       if (!r.ok) throw new Error("HTTP " + r.status);
       return r.text();
     }).then(function (text) {
       return modelReady.then(function (model) { S.model = model; return libReady; })
-        .then(function (lib) { return crossReady.then(function (cross) { return imaReady.then(function (ima) { return [text, lib, cross, ima]; }); }); });
+        .then(function (lib) { return crossReady.then(function (cross) { return imaReady.then(function (ima) { return dftReady.then(function (dft) { return [text, lib, cross, ima, dft]; }); }); }); });
     }).then(function (both) {
       var text = both[0], loaded = MR.loadDatabase(text);
       S.base = loaded.species; S.water = loaded.water;
@@ -1349,6 +1368,7 @@ ol.method { margin: 0; padding-left: 1.2em; display: flex; flex-direction: colum
       try { loadLibrary(both[1]); } catch (e) { S.lib = []; }
       try { loadCross(both[2]); } catch (e) { S.cross = Object.create(null); }
       try { loadIma(both[3]); } catch (e) { S.ima = Object.create(null); S.imaList = []; }
+      try { loadComputed(both[4]); } catch (e) { S.computed = Object.create(null); S.computedByComp = Object.create(null); }
       (readStore(STORE_USER, []) || []).forEach(function (u) {
         try { addUser(u.name, u.formula, u.G, u.source, true, true); } catch (e) { /* skip a saved row that no longer reads */ }
       });

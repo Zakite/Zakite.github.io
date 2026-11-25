@@ -6,7 +6,9 @@
  *   2. a measured value of the same mineral at another water content or a nearby composition,
  *      brought to the ideal formula                                                              (oneFor)
  *   3. the measured value of another mineral with the same formula                               (fallback)
- *   4. an estimate from the formula                                                              (fallback, estimator.js)
+ *   4. a computed energy (density functional theory), for minerals without oxygen where that
+ *      tested better than the estimate                                                           (fallback, computed_energies.csv)
+ *   5. an estimate from the formula                                                              (fallback, estimator.js)
  * resolve() makes that choice for a list of names and evaluate() runs the engine on the result. Nothing in this
  * file touches the web page: the same code runs on its own under Node (tests/make_table.js).
  */
@@ -16,7 +18,8 @@
   // Everything read from the data files, and the conditions of the calculation.
   var S = { base: [], user: [], db: [], water: null, elements: [], byName: Object.create(null), byBase: Object.create(null), pH: 7, solutes: 1,
             model: null, lib: [], libByName: Object.create(null), libByBase: Object.create(null), libByComp: Object.create(null),
-            cross: Object.create(null), ima: Object.create(null), imaList: [], imaExtra: [] };
+            cross: Object.create(null), ima: Object.create(null), imaList: [], imaExtra: [],
+            computed: Object.create(null), computedByComp: Object.create(null) };
 
   // ------------------------------------------------------------- names
   // Published databases the second tier of measured values is read from (see How it is calculated).
@@ -103,6 +106,23 @@
     var us = Object.keys(S.cross).map(function (k) { return S.cross[k].u; }).sort(function (a, b) { return a - b; });
     // ## typical ± of a solid = median of the spreads between databases
     S.refSolid = us.length ? us[Math.floor(us.length / 2)] : REF_AQ;
+  }
+  // computed_energies.csv: formation energies computed by density functional theory (the OQMD database), for minerals without
+  // oxygen that have no measured value. build_computed.py (with the build scripts) makes the file and tests the method blind against measured solids;
+  // a mineral is on the list only where the computed value's error is smaller than the formula model's.
+  function loadComputed(text) {
+    S.computed = Object.create(null); S.computedByComp = Object.create(null);
+    table(text).forEach(function (f) {
+      var G = parseFloat(f.dGf_kJ_mol), comp;
+      try { comp = MR.parseFormula(f.formula).comp; } catch (e) { return; }
+      if (!isFinite(G)) return;
+      var c = { name: f.mineral, formula: f.formula, key: compKey(comp), G: G, u: parseFloat(f.uncertainty_kJ_mol), table: f.table,
+                E: parseFloat(f.formation_energy_eV_per_atom), above: parseFloat(f.above_hull_kJ_per_mol_atoms), atoms: parseFloat(f.atoms),
+                fix: parseFloat(f.correction_kJ_mol), entropy: parseFloat(f.entropy_term_kJ_mol), cls: f["class"], other: f.other_table,
+                flags: f.note ? f.note.split("; ") : [] };
+      S.computed[norm(c.name)] = c;
+      if (!S.computedByComp[c.key]) S.computedByComp[c.key] = c;
+    });
   }
   function crossOf(sp) { return sp.ref !== "user" && sp.ref !== "moved" && !sp.lib && sp.state === "cr" ? S.cross[sp.name] : null; }
   // The database in use: the base database, with any values added by hand on this page in place of the entries they replace.
@@ -334,8 +354,9 @@
     } catch (err) { return null; }
   }
   // Where no measured value exists: the measured value of a mineral with the same formula stands
-  // in, and failing that the formula-based estimate. The species made here is used only in its
-  // own calculation; it never enters the database, so it cannot become a product elsewhere.
+  // in; failing that a computed energy, where one is listed (minerals without oxygen); failing that
+  // the formula-based estimate. The species made here is used only in its own calculation; it
+  // never enters the database, so it cannot become a product elsewhere.
   // A hand recipe on a mineral's own row of the list, for the few kinds no model covers: "parts=TiO*3|Ti*7|Fe*3;pm=300" values it
   // as a sum of measured compounds (elements count zero; ions, gases and water at their own energies). REST sends whatever is
   // left of the formula to the formula model. pm is the give-or-take in kJ/mol, set by hand with the recipe.
@@ -407,6 +428,14 @@
       out.flags = ["low confidence: no model covers this kind of mineral, so it is valued as the sum of " + said.join(" + ") + ", with nothing added for combining them"];
       return out;
     }
+    // A computed energy, where one is listed for this mineral (or for this very composition, when a formula was typed).
+    // ## ΔfG = (E(OQMD) × 96.485 − height above the hull) × atoms + correction per element + entropy term      (worked out in build_computed.py)
+    var cKey = compKey(parsed.comp), cp = name && S.computed[norm(name)] || S.computedByComp[cKey];
+    if (cp && cp.key === cKey) {
+      out.sp = attachStates(MR.makeSpecies(label, formula, "cr", cp.G, "dft", "computed by density functional theory (" + cp.table + " database), corrected against measured solids; not measured", ""), hints);
+      out.basis = "dft"; out.u = cp.u; out.flags = cp.flags.slice(); out.dft = cp;
+      return out;
+    }
     if (S.model && root.MineralEstimator) {
       var est = root.MineralEstimator.estimate(formula, parsed.comp, S.model, hints || null);
       if (est.cls === "element") {
@@ -441,7 +470,7 @@
         var one = oneFor(e1, r.hits), sp1 = one.sp, f1 = one.flags || [];
         if (e1.note && r.hits.indexOf(sp1) < 0) f1 = f1.concat(["IMA formula " + e1.ima + ": " + e1.note]);
         rows.push(one.basis === "moved" ? { input: e.input, sp: sp1, by: "moved", basis: "moved", how: one.how, u: one.u, flags: f1, from: one.from }
-          : one.basis ? { input: e.input, sp: sp1, by: one.basis === "proxy" ? "same formula" : "formula estimate", basis: one.basis, u: one.u, flags: f1, twin: one.twin }
+          : one.basis ? { input: e.input, sp: sp1, by: one.basis === "proxy" ? "same formula" : one.basis === "dft" ? "computed" : "formula estimate", basis: one.basis, u: one.u, flags: f1, twin: one.twin, dft: one.fb && one.fb.dft }
           : sp1.lib ? { input: e.input, sp: sp1, by: r.by, basis: "library", u: sp1.lib.u, flags: f1, show: e1.formula }
           : { input: e.input, sp: sp1, by: r.by, basis: "measured", u: crossOf(sp1) ? crossOf(sp1).u : undefined, flags: f1, show: e1.formula });
         return;
@@ -462,7 +491,7 @@
       if (ima && ima.note && fb.sp) fb.flags = (fb.flags || []).concat(["IMA formula " + ima.ima + ": " + ima.note]);
       if (other && other.length && fb.sp) fb.flags = (fb.flags || []).concat(["the databases list " + other[0].name + " as " + other[0].formula + ", which is not the IMA mineral, so that value was not used"]);
       if (fb.sp) {
-        rows.push({ input: e.input, sp: fb.sp, by: fb.basis === "proxy" ? "same formula" : "formula estimate", basis: fb.basis, u: fb.u, flags: fb.flags, twin: fb.twin });
+        rows.push({ input: e.input, sp: fb.sp, by: fb.basis === "proxy" ? "same formula" : fb.basis === "dft" ? "computed" : "formula estimate", basis: fb.basis, u: fb.u, flags: fb.flags, twin: fb.twin, dft: fb.dft });
       } else if (fb.shape && fb.shape.inert) {
         rows.push({ input: e.input, status: "computed", inertOnly: true, basis: "inert", formula: formula });
       } else {
@@ -557,7 +586,7 @@
     // ## ± = √( (± from the mineral)² + (± from the reference data)² )
     return { v: res.oxidant.vsH2, pm: Math.sqrt(a * a + b * b) };
   }
-  var api = { EXTRA_PRODUCTS: EXTRA_PRODUCTS, errOf: errOf, ownErr: ownErr, refErr: refErr, refU: refU, REF_AQ: REF_AQ, withH2: withH2, S: S, DB_NAMES: DB_NAMES, plain: plain, norm: norm, count: count, cond: cond, byG: byG, compKey: compKey, atomsOf: atomsOf, sortLib: sortLib, loadLibrary: loadLibrary, loadIma: loadIma, loadCross: loadCross, crossOf: crossOf, index: index, imaFind: imaFind, lookup: lookup, imaComp: imaComp, sameCompound: sameCompound, imaHits: imaHits, apart: apart, oneFor: oneFor, attachStates: attachStates, recipeOf: recipeOf, fallback: fallback, resolve: resolve, evaluate: evaluate, placeholder: placeholder, shifted: shifted, scoreOf: scoreOf, rangeOf: rangeOf, uEff: uEff };
+  var api = { EXTRA_PRODUCTS: EXTRA_PRODUCTS, errOf: errOf, ownErr: ownErr, refErr: refErr, refU: refU, REF_AQ: REF_AQ, withH2: withH2, S: S, DB_NAMES: DB_NAMES, plain: plain, norm: norm, count: count, cond: cond, byG: byG, compKey: compKey, atomsOf: atomsOf, sortLib: sortLib, loadLibrary: loadLibrary, loadIma: loadIma, loadCross: loadCross, loadComputed: loadComputed, crossOf: crossOf, index: index, imaFind: imaFind, lookup: lookup, imaComp: imaComp, sameCompound: sameCompound, imaHits: imaHits, apart: apart, oneFor: oneFor, attachStates: attachStates, recipeOf: recipeOf, fallback: fallback, resolve: resolve, evaluate: evaluate, placeholder: placeholder, shifted: shifted, scoreOf: scoreOf, rangeOf: rangeOf, uEff: uEff };
   root.MineralData = api;
   if (typeof module !== "undefined" && module.exports) module.exports = api;
 })(typeof window !== "undefined" ? window : globalThis);
